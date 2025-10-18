@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue - International Civil Service Conference 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008751;
+            --primary-dark: #006b40;
+            --primary-light: #00a862;
+            --secondary: #eff1ed;
+            --white: #ffffff;
+            --dark: #212121;
+            --text-dark: #212121;
+            --text-medium: #444444;
+            --text-light: #ffffff;
+            --gray-light: #e9ecef;
+            --light-gray: #f5f5f5;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: var(--light-gray);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Enhanced Header Styles from Index */
+        header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        nav ul li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            padding: 8px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        nav ul li a i {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+  nav ul li a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 0%;
+        }
+
+        nav ul li a:hover i {
+            transform: scale(1.2);
+            color: var(--primary);
+        }
+
+        nav ul li ul {
+            position: absolute;
+            background-color: var(--white);
+            width: 220px;
+            top: 100%;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-hover);
+            border-radius: var(--border-radius);
+            padding: 10px 0;
+            z-index: 1001;
+        }
+
+        nav ul li:hover ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        nav ul li ul li {
+            margin: 0;
+            width: 100%;
+        }
+
+        nav ul li ul li a {
+            display: flex;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-medium);
+            text-transform: none;
+        }
+
+        nav ul li ul li a:hover {
+            color: var(--primary);
+            background-color: var(--gray-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .cta-btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover:after {
+            left: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(0, 135, 81, 0.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .mobile-menu ul {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu ul li {
+            margin: 10px 0;
+        }
+
+        .mobile-menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            font-weight: 500;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .mobile-menu ul li ul {
+            position: static;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            box-shadow: none;
+            padding-left: 20px;
+            background: transparent;
+            margin-top: 10px;
+        }
+
+        .mobile-menu ul li ul li {
+            margin: 5px 0;
+        }
+
+        .mobile-menu ul li ul li a {
+            font-size: 14px;
+            padding: 8px 0;
+            border-bottom: none;
+            color: var(--text-medium);
+        }
+
+        /* Social Media Links in Header */
+        .social-media {
+            display: flex;
+            gap: 10px;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 135, 81, 0.1);
+            border-radius: 50%;
+            color: var(--primary);
+            transition: var(--transition);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 135, 81, 0.8), rgba(0, 135, 81, 0.6)), url('https://icsc.ohcsf.gov.ng/wp-content/uploads/2025/06/Screenshot-2025-06-16-091141.png');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 150px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" fill="%23ffffff"/></svg>');
+            background-size: 100% 100px;
+            background-position: bottom;
+            background-repeat: no-repeat;
+        }
+        
+        .hero h1 {
+            color: var(--white);
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+        
+        .hero-date {
+            display: inline-block;
+            background-color: var(--white);
+            color: var(--primary);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+        
+        /* Venue Info Section */
+        .venue-info {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+        
+        .venue-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .venue-text {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 1s ease forwards;
+        }
+        
+        .venue-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 1s ease forwards;
+        }
+        
+        .venue-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .venue-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .important-note {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+        
+        .important-note strong {
+            color: #e6a700;
+        }
+        
+        /* Location Section */
+        .location {
+            padding: 80px 0;
+            background-color: var(--light-gray);
+        }
+        
+        .location-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+        
+        .address-info {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .map-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+        
+        /* Facilities Section */
+        .facilities {
+            padding: 80px 0;
+            background-color: var(--white);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .facility-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .facility-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .facility-card:nth-child(1) { animation: fadeInUp 1s ease 0.2s forwards; }
+        .facility-card:nth-child(2) { animation: fadeInUp 1s ease 0.4s forwards; }
+        .facility-card:nth-child(3) { animation: fadeInUp 1s ease 0.6s forwards; }
+        .facility-card:nth-child(4) { animation: fadeInUp 1s ease 0.8s forwards; }
+        
+        .facility-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .facility-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .facility-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* Footer from Index */
+        footer {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #000000 100%);
+            color: var(--text-light);
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-col p {
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cccccc;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Header Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .venue-content, .location-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+            
+            .social-media {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .cta-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 0 70px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .venue-info, .location, .facilities {
+                padding: 60px 0;
+            }
+            
+            .facility-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .footer-col {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 100px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-date {
+                font-size: 1rem;
+                padding: 8px 20px;
+            }
+
+            .cta-btn span {
+                display: none;
+            }
+            
+            .cta-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/NG.jpeg" alt="International Civil Service Conference">
+                </a>
+                <div class="logo-text">
+                    <h1>ICSC 206</h1>
+                    <p>Rejuvenate, Innovate & Accelerate!</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
+                            <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                            <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                            <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+                        
+                    </li>
+                    <li>
+                        <a href="Index.html#partners"><i class="fas fa-handshake"></i> Partners</a>
+                        <ul>
+                            <li><a href="#opportunities"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                            <li><a href="#current-partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#about" class="active"><i class="fas fa-info-circle"></i> About</a>
+                        <ul>
+                            <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                            <li><a href="#venue-info"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                        </ul>
+                    </li>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <!-- Social Media Links -->
+                <div class="social-media">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <a href="#Login" class="cta-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Login</span>
+                </a>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li>
+                <a href="#highlights"><i class="fas fa-star"></i> 2025 Highlights</a>
+                <ul>
+                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="#agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="#speakers"><i class="fas fa-microphone"></i> Speakers</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
+                <ul>
+                    <li><a href="#opportunities"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                    <li><a href="#current-partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>VENUE</h1>
+            <p>The inaugural International Civil Service Conference will take place in Eagle Square, Abuja, Nigeria. Join us to see Eagle Square as never before.</p>
+            <div class="hero-date">25-26 June 2026</div>
+        </div>
+    </section>
+
+    <!-- Venue Info Section -->
+    <section class="venue-info">
+        <div class="container">
+            <div class="venue-content">
+                <div class="venue-text">
+                    <h2>Eagle Square</h2>
+                    <p>The space will be brought to life to welcome civil servants from across Nigeria and around the world to discuss how to rejuvenate, innovate and accelerate the public service.</p>
+                    <p>The square will accommodate a major theatre, many breakout theatres, a food court and expansive exhibition, set across three halls.</p>
+                    <div class="important-note">
+                        <p><strong>Important:</strong> Your official government ID must be presented upon entry if you are attending in-person.</p>
+                    </div>
+                </div>
+                <div class="venue-image">
+                    <img src="https://icsc.ohcsf.gov.ng/wp-content/uploads/2025/06/Screenshot-2025-06-16-091141.png" alt="Eagle Square Venue">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="location">
+        <div id="venue-info">
+        <div class="container">
+            <div class="location-content">
+                <div class="address-info">
+                    <h2>Visiting Eagle Square, Abuja</h2>
+                    <p>Eagle Square is located between the Head of Service and the Federal Secretariat buildings in the Central Business District of Abuja.</p>
+                    <p>The venue has a large space for parking, and a bus stop just outside the main entrance making it easily accessible.</p>
+                    <h3>Address:</h3>
+                    <p>Shehu Shagari Way, Three Arms Zone, Abuja, Nigeria</p>
+                </div>
+            </div>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.0321259630355!2d7.494860785101212!3d9.060834067800505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e0bb6fb4dbdf5%3A0xa71910a7746a4601!2sEagle%20Square!5e0!3m2!1sda!2suk!4v1744371583685!5m2!1sda!2suk" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="facilities">
+        <div class="container">
+            <div class="section-title">
+                <h2>Venue Facilities</h2>
+                <p>Eagle Square offers world-class facilities for a premier conference experience</p>
+            </div>
+            <div class="facility-cards">
+                <div class="facility-card">
+                    <div class="facility-icon">🏛️</div>
+                    <h3>Main Conference Hall</h3>
+                    <p>Spacious main hall with state-of-the-art audio-visual equipment and seating for large audiences.</p>
+                </div>
+                <div class="facility-card">
+                    <div class="facility-icon">💬</div>
+                    <h3>Breakout Theaters</h3>
+                    <p>Multiple smaller venues for specialized sessions, workshops, and networking opportunities.</p>
+                </div>
+                <div class="facility-card">
+                    <div class="facility-icon">🍽️</div>
+                    <h3>Food Court</h3>
+                    <p>Varied dining options with local and international cuisine to suit all dietary preferences.</p>
+                </div>
+                <div class="facility-card">
+                    <div class="facility-icon">🛍️</div>
+                    <h3>Exhibition Space</h3>
+                    <p>Expansive area for partners, sponsors, and exhibitors to showcase their products and services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>About ICS Conference</h4>
+                    <p>The International Civil Service Conference brings together public service leaders from around the world to explore innovations, share best practices, and drive transformation in government services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About the Conference</a></li>
+                        <li><a href="agenda.html">Conference Agenda</a></li>
+                        <li><a href="speakers.html">Speakers</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 25-26 June, 2025</p>
+                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
+                    <p><i class="fas fa-phone"></i> +234 800 000 0000</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            // Toggle icon between bars and times
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.mobile-menu').classList.remove('active');
+                    // Reset mobile menu icon
+                    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+                    menuBtnIcon.classList.remove('fa-times');
+                    menuBtnIcon.classList.add('fa-bars');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

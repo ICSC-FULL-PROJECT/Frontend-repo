@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Gallery - International Civil Service Conference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset and Base Styles */
+        :root {
+            --primary-color: #008751;
+            --primary-light: #00a862;
+            --primary-dark: #006540;
+            --secondary-color: #f8f9fa;
+            --accent-color: #5e8772;
+            --text-dark: #212121;
+            --text-medium: #444444;
+            --text-light: #ffffff;
+            --gray-light: #e9ecef;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-medium);
+            overflow-x: hidden;
+            background-color: #ffffff;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 2.2rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-light);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover:after {
+            left: 100%;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: var(--text-medium);
+        }
+
+        /* Enhanced Header Styles */
+        header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        nav ul li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            padding: 8px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        nav ul li a i {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        nav ul li a:hover i {
+            transform: scale(1.2);
+            color: var(--primary-color);
+        }
+
+        nav ul li ul {
+            position: absolute;
+            background-color: var(--text-light);
+            width: 220px;
+            top: 100%;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-hover);
+            border-radius: var(--border-radius);
+            padding: 10px 0;
+            z-index: 1001;
+        }
+
+        nav ul li:hover ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        nav ul li ul li {
+            margin: 0;
+            width: 100%;
+        }
+
+        nav ul li ul li a {
+            display: flex;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-medium);
+            text-transform: none;
+        }
+
+        nav ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-media {
+            display: flex;
+            gap: 15px;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 135, 81, 0.1);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .cta-btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover:after {
+            left: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(0, 135, 81, 0.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background-color: var(--text-light);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .mobile-menu ul {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu ul li {
+            margin: 10px 0;
+        }
+
+        .mobile-menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            font-weight: 500;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .mobile-menu ul li ul {
+            position: static;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            box-shadow: none;
+            padding-left: 20px;
+            background: transparent;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li {
+            margin: 5px 0;
+            background: transparent;
+        }
+
+        .mobile-menu ul li ul li a {
+            font-size: 14px;
+            padding: 10px 0;
+            border-bottom: none;
+            color: var(--text-medium);
+            background: transparent;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+            padding-left: 10px;
+        }
+
+        /* Page Hero Section */
+        .page-hero {
+            background: linear-gradient(135deg, rgba(0, 135, 81, 0.9) 0%, rgba(0, 101, 64, 0.9) 100%), url('https://icsc.ohcsf.gov.ng/wp-content/uploads/2025/07/54643263941_cae5fb8d32_o.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-light);
+            padding: 180px 0 100px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .page-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .page-hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--text-light);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background-color: var(--secondary-color);
+            padding: 15px 0;
+            margin-top: 0;
+        }
+
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-content a {
+            color: var(--text-medium);
+            transition: var(--transition);
+        }
+
+        .breadcrumb-content a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-content span {
+            margin: 0 8px;
+            color: var(--text-medium);
+        }
+
+        .breadcrumb-content .current {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Enhanced Gallery Section */
+        .gallery-section {
+            padding: 80px 0;
+            background-color: var(--secondary-color);
+        }
+
+        .gallery-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        .gallery-intro h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .gallery-intro p {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+        }
+
+        .main-gallery-image {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+
+        .main-gallery-image:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .main-gallery-image a {
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-gallery-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .main-gallery-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 135, 81, 0.9));
+            color: white;
+            padding: 30px;
+            transform: translateY(10px);
+            transition: var(--transition);
+        }
+
+        .main-gallery-image:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .gallery-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 250px;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-item-caption {
+            transform: translateY(0);
+        }
+
+        .gallery-item-caption h4 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .gallery-item-caption p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+
+        .view-more-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #000000 100%);
+            color: var(--text-light);
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-col p {
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cccccc;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            h2 {
+                font-size: 2.5rem;
+            }
+            
+            .page-hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-hero p {
+                font-size: 1.1rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 0;
+            }
+            
+            .page-hero {
+                padding: 150px 0 80px;
+            }
+            
+            .page-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .page-hero p {
+                font-size: 1rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .main-gallery-image img {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-hero {
+                padding: 130px 0 60px;
+            }
+            
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+            
+            .cta-btn span {
+                display: none;
+            }
+            
+            .cta-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-gallery-image img {
+                height: 300px;
+            }
+            
+            .social-media {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/NG.jpeg" alt="International Civil Service Conference">
+                </a>
+                <div class="logo-text">
+                    <h1>ICSC 2026</h1>
+                    <p>Rejuvenate, Innovate & Accelerate!</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                   
+                 
+                    <li><a href="Index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-play-circle"></i>On Demand</a></li>
+                    <li><a href="gallery.html" class="active"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i>Agenda</a></li>
+                    <li><a href="speakers.html"><i class="fas fa-microphone"></i>Speakers</a></li>
+                    <li>
+                        <a href="Index.html#partners"><i class="fas fa-handshake"></i> Partners</a>
+                        <ul>
+                            <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                            <li><a href="index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                        </ul>
+                    <li>
+                        <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+                        <ul>
+                            <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                            <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <!-- Social Media Links -->
+                <div class="social-media">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <a href="#Login" class="cta-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Login</span>
+                </a>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="Index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="gallery.html" class="active"><i class="fas fa-images"></i> 2025 Highlights</a></li>
+            <li><a href="index.html@p=5907.html"><i class="fas fa-handshake"></i> Partners</a></li>
+            <li>
+                <a href="index.html@p=5811.html"><i class="fas fa-info-circle"></i> About</a>
+                <ul>
+                    <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                    <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Page Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>2025 EVENT GALLERY</h1>
+            <p>Relive the memorable moments from the inaugural International Civil Service Conference</p>
+            <a href="#gallery" class="btn">Explore Gallery</a>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <div class="gallery-intro">
+                <h2>VIEW THE 2025 EVENT</h2>
+                <p>On 25 & 26 June we welcomed our partners, speakers and delegates to the Eagle Square in Abuja for an insightful maiden edition of the International Civil Service Conference.</p>
+                <p><strong>Click on the image to view the full gallery and download photos.</strong></p>
+            </div>
+            
+            <div class="main-gallery-image">
+                <a href="https://flic.kr/s/aHBqjCkT9w" target="_blank">
+                    <img src="images/iya-pres.jpeg" alt="International Civil Service Conference 2025">
+                    <div class="gallery-overlay">
+                        <h3>Full Event Gallery</h3>
+                        <p>Click to explore all photos from the 2025 conference</p>
+                    </div>
+            </div>
+                </div>
+            </div>
+            
+            <div class="view-more-container">
+                <a href="https://flic.kr/s/aHBqjCkT9w" target="_blank" class="btn">View Full Gallery</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>About ICS Conference</h4>
+                    <p>The International Civil Service Conference brings together public service leaders from around the world to explore innovations, share best practices, and drive transformation in government services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html@p=5811.html">About the Conference</a></li>
+                        <li><a href="index.html@p=5907.html">Partners</a></li>
+                        <li><a href="gallery.html">2025 Gallery</a></li>
+                        <li><a href="venue.html">Venue Information</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 25-26 May, 2026</p>
+                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
+                    <p><i class="fas fa-phone"></i> +234 800 000 0000</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            // Toggle icon between bars and times
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.mobile-menu').classList.remove('active');
+                    // Reset mobile menu icon
+                    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+                    menuBtnIcon.classList.remove('fa-times');
+                    menuBtnIcon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.gallery-item, .main-gallery-image').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

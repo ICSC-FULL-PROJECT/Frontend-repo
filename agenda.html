@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Agenda - Rejuvenate, Innovate and Accelerate!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008751;
+            --primary-light: #afe1af;
+            --primary-dark: #006400;
+            --secondary: #eff1ed;
+            --dark: #212121;
+            --light: #ffffff;
+            --gray: #f4f4f4;
+            --border: #cccccc;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --transition-slow: all 0.5s ease;
+            --primary-color: #008751;
+            --text-light: #ffffff;
+            --text-medium: #444444;
+            --text-dark: #212121;
+            --gray-light: #e9ecef;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+        }
+        
+        h2 {
+            font-size: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.75rem;
+        }
+        
+        h4 {
+            font-size: 1.25rem;
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            color: var(--light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--light);
+        }
+
+        /* Enhanced Header Styles from Index.html */
+        header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        nav ul li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            padding: 8px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        nav ul li a i {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        nav ul li a:hover i {
+            transform: scale(1.2);
+            color: var(--primary-color);
+        }
+
+        nav ul li ul {
+            position: absolute;
+            background-color: var(--text-light);
+            width: 220px;
+            top: 100%;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-hover);
+            border-radius: var(--border-radius);
+            padding: 10px 0;
+            z-index: 1001;
+        }
+
+        nav ul li:hover ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        nav ul li ul li {
+            margin: 0;
+            width: 100%;
+        }
+
+        nav ul li ul li a {
+            display: flex;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-medium);
+            text-transform: none;
+        }
+
+        nav ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .cta-btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover:after {
+            left: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(0, 135, 81, 0.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background-color: var(--text-light);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .mobile-menu ul {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu ul li {
+            margin: 10px 0;
+        }
+
+        .mobile-menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            font-weight: 500;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .mobile-menu ul li ul {
+            position: static;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            box-shadow: none;
+            padding-left: 20px;
+            background: transparent;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li {
+            margin: 5px 0;
+            background: transparent;
+        }
+
+        .mobile-menu ul li ul li a {
+            font-size: 14px;
+            padding: 10px 0;
+            border-bottom: none;
+            color: var(--text-medium);
+            background: transparent;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+            padding-left: 10px;
+        }
+
+        /* Social Media Links in Header */
+        .social-media {
+            display: flex;
+            gap: 30px;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 135, 81, 0.1);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments for social media */
+        @media (max-width: 992px) {
+            .social-media {
+                display: none;
+            }
+        }
+        
+        /* Hero Section */
+        .hero {
+            background-color: var(--secondary);
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 135, 81, 0.05), transparent);
+            animation: shimmer 8s infinite linear;
+            z-index: 0;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(0deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(360deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero p {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        .day-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-light {
+            background-color: var(--light);
+        }
+        
+        .section-gray {
+            background-color: var(--secondary);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        /* Day Agenda Tabs */
+        .day-agenda {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .day-agenda.active {
+            display: block;
+        }
+        
+        /* Tabs */
+        .tabs {
+            margin-top: 30px;
+        }
+        
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background-color: var(--primary-dark);
+            color: var(--light);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+        
+        .tab-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideInUp 0.5s ease;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Schedule Table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .schedule-table:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .schedule-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        
+        .schedule-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background-color: var(--gray);
+        }
+        
+        .schedule-table tr:hover td {
+            background-color: rgba(0, 135, 81, 0.05);
+            transform: translateX(5px);
+        }
+        
+        .time-col {
+            width: 15%;
+            font-weight: 600;
+            color: var(--primary);
+            vertical-align: top;
+        }
+        
+        .session-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .session-speaker {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .session-description {
+            font-size: 0.9rem;
+        }
+        
+        /* Roundtables */
+        .roundtables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .roundtable-card {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .roundtable-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease;
+        }
+        
+        .roundtable-card:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .roundtable-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .roundtable-time {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .roundtable-card:hover .roundtable-time {
+            background-color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .roundtable-title {
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .roundtable-card:hover .roundtable-title {
+            color: var(--primary);
+        }
+        
+        .roundtable-lead {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .roundtable-audience {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Footer Styles from Index.html */
+        footer {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #000000 100%);
+            color: var(--text-light);
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-col p {
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cccccc;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 135, 81, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 135, 81, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 135, 81, 0);
+            }
+        }
+
+        /* Header Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Day selector animations */
+        .day-btn {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .day-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            .logo {
+                margin-bottom: 20px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav .sub-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                display: none;
+            }
+            
+            nav li.active .sub-menu {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+                margin-top: 15px;
+            }
+            
+            .roundtables {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                margin-top: 70px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .day-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .schedule-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cta-btn span {
+                display: none;
+            }
+            
+            .cta-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/NG.jpeg" alt="International Civil Service Conference">
+                </a>
+                <div class="logo-text">
+                    <h1>ICSC 2026</h1>
+                    <p>Rejuvenate, Innovate & Accelerate!</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html" ><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
+                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="agenda.html" class="active"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+                    <li>
+                        <a href="partners.html"><i class="fas fa-handshake"></i> Partners</a>
+                        <ul>
+                            <li><a href="index.html@p=5907.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                            <li><a href="index.html@p=5191.html"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+                        <ul>
+                            <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                            <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <!-- Social Media Links -->
+                <div class="social-media">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <a href="#Login" class="cta-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Login</span>
+                </a>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
+            <li>
+                <ul>
+                    <li><a href=""><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
+                <ul>
+                    <li><a href=""><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                    <li><a href=""><i class="fas fa-users"></i> 2025 Partners</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+                <ul>
+                    <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                    <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>2026 Agenda</h1>
+                <p>Examining and inspiring innovation in Policy Development, Procurement, Processes Automation, Data, Workspace, Service Design and Delivery, Fraud across central government.</p>
+                <div class="day-selector">
+                    <button class="btn btn-outline day-btn" id="wednesday-btn">Wednesday 25 June</button>
+                    <button class="btn day-btn active" id="thursday-btn">Thursday 26 June</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wednesday Agenda (Initially Hidden) -->
+    <section class="day-agenda section section-light" id="wednesday-agenda">
+        <div class="container">
+            <div class="section-title">
+                <h2>WEDNESDAY 25 June</h2>
+                <p>All times quoted are West Africa Time (WAT).</p>
+                <p>
+                    <a href="#main-stages"><strong>Main stages</strong></a> | 
+                    <a href="#wednesday-roundtables"><strong>Roundtables</strong></a>
+                </p>
+            </div>
+            
+            <div class="section-gray" id="main-stages">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Main Stages</h2>
+                        <p>Bringing together public service leaders from around Nigeria, the <strong>International Civil Service Conference</strong> explored how public servants can face new challenges through rejuvenating, innovating and accelerating public services.</p>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab-nav">
+                            <button class="tab-btn active" data-tab="wed-transform">Transform</button>
+                            <button class="tab-btn" data-tab="wed-rejuvenate">Rejuvenate</button>
+                            <button class="tab-btn" data-tab="wed-innovate">Innovate</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="wed-transform">
+                            <table class="schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Session</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="time-col">08:30-09:00</td>
+                                        <td>
+                                            <div class="session-title">Registration and Welcome Coffee</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">09:00-09:30</td>
+                                        <td>
+                                            <div class="session-title">Opening Ceremony</div>
+                                            <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                            <div class="session-description">
+                                                Official opening of the International Civil Service Conference 2025.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">09:30-10:30</td>
+                                        <td>
+                                            <div class="session-title">Keynote: The Future of Public Service</div>
+                                            <div class="session-speaker">Mrs Didi Esther Walson-Jack</div>
+                                            <div class="session-description">
+                                                Exploring the evolving role of civil servants in a rapidly changing world.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">10:30-11:00</td>
+                                        <td>
+                                            <div class="session-title">Networking Break</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">11:00-12:30</td>
+                                        <td>
+                                            <div class="session-title">Panel: Digital Transformation in Government</div>
+                                            <div class="session-speaker">Dr. Gideon Adogbo, Michael Magaji, Ifeoma Ugoji</div>
+                                            <div class="session-description">
+                                                How digital technologies are reshaping public service delivery and citizen engagement.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="tab-content" id="wed-rejuvenate">
+                            <table class="schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Session</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="time-col">09:00-10:00</td>
+                                        <td>
+                                            <div class="session-title">Workforce Wellness and Resilience</div>
+                                            <div class="session-speaker">Dr. Zainab Marwa</div>
+                                            <div class="session-description">
+                                                Strategies for maintaining mental health and building resilience in public service.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">10:00-11:00</td>
+                                        <td>
+                                            <div class="session-title">Talent Management in the Digital Age</div>
+                                            <div class="session-speaker">Dr. Bolaji Olagunju</div>
+                                            <div class="session-description">
+                                                Developing and retaining talent in an era of rapid technological change.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">11:00-11:30</td>
+                                        <td>
+                                            <div class="session-title">Networking Break</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">11:30-13:00</td>
+                                        <td>
+                                            <div class="session-title">Workshop: Leadership Development</div>
+                                            <div class="session-speaker">Prof. Olusade Olasode</div>
+                                            <div class="session-description">
+                                                Interactive session on developing the next generation of public service leaders.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="tab-content" id="wed-innovate">
+                            <table class="schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Session</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="time-col">09:00-10:30</td>
+                                        <td>
+                                            <div class="session-title">Innovation Labs and Government</div>
+                                            <div class="session-speaker">Innocent Ejolu, Nko-Asanye Esuana</div>
+                                            <div class="session-description">
+                                                How innovation labs are driving change in public service delivery.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">10:30-11:00</td>
+                                        <td>
+                                            <div class="session-title">Networking Break</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">11:00-12:30</td>
+                                        <td>
+                                            <div class="session-title">Case Studies: Successful Public Sector Innovations</div>
+                                            <div class="session-speaker">Various Speakers</div>
+                                            <div class="session-description">
+                                                Real-world examples of innovation transforming public services.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="time-col">12:30-13:30</td>
+                                        <td>
+                                            <div class="session-title">Lunch and Networking</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-light" id="wednesday-roundtables">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Wednesday Roundtable Discussions</h2>
+                        <p>As a part of the event and additional to the core agenda, we curate a series of roundtable discussions for senior leaders to explore specific topics with colleagues from across government and the public service.</p>
+                    </div>
+                    
+                    <div class="roundtables">
+                        <div class="roundtable-card">
+                            <div class="roundtable-time">14:00-15:30</div>
+                            <h3 class="roundtable-title">Digital Service Delivery</h3>
+                            <p>Strategies for implementing citizen-centric digital services</p>
+                            <div class="roundtable-lead">Roundtable Lead: Michael Magaji</div>
+                            <div class="roundtable-audience">This roundtable is open to Federal Perm Secs, State HOS, and Federal CEOs</div>
+                        </div>
+                        
+                        <div class="roundtable-card">
+                            <div class="roundtable-time">14:00-15:30</div>
+                            <h3 class="roundtable-title">Public-Private Partnerships</h3>
+                            <p>Leveraging private sector expertise for public service delivery</p>
+                            <div class="roundtable-lead">Roundtable Lead: Dr Jobson O. Ewalefoh</div>
+                            <div class="roundtable-audience">This roundtable is open to Federal Perm Secs and CEOs</div>
+                        </div>
+                        
+                        <div class="roundtable-card">
+                            <div class="roundtable-time">16:00-17:30</div>
+                            <h3 class="roundtable-title">Data-Driven Decision Making</h3>
+                            <p>Using data analytics to improve policy outcomes</p>
+                            <div class="roundtable-lead">Roundtable Lead: Dr. Emmanuel Meribole</div>
+                            <div class="roundtable-audience">This roundtable is open to Federal Directors and State Commissioners</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thursday Agenda (Initially Visible) -->
+    <section class="day-agenda section section-light active" id="thursday-agenda">
+        <div class="container">
+            <div class="section-title">
+                <h2>THURSDAY 26 June</h2>
+                <p>All times quoted are West Africa Time (WAT).</p>
+                <p>
+                    <a href="#t-main-stages"><strong>Main stages</strong></a> | 
+                    <a href="#thursday-roundtables"><strong>Roundtables</strong></a>
+                </p>
+            </div>
+        </div>
+
+        <section class="section section-gray" id="t-main-stages">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Main Stages</h2>
+                    <p>Bringing together public service leaders from around Nigeria, the <strong>International Civil Service Conference</strong> explored how public servants can face new challenges through rejuvenating, innovating and accelerating public services.</p>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="transform">Transform</button>
+                        <button class="tab-btn" data-tab="rejuvenate">Rejuvenate</button>
+                        <button class="tab-btn" data-tab="innovate">Innovate</button>
+                        <button class="tab-btn" data-tab="accelerate">Accelerate</button>
+                        <button class="tab-btn" data-tab="accomplish">Accomplish</button>
+                        <button class="tab-btn" data-tab="impact">Impact</button>
+                        <button class="tab-btn" data-tab="aspire">Aspire</button>
+                        <button class="tab-btn" data-tab="activate">Activate</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="transform">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">09:00-09:10</td>
+                                    <td>
+                                        <div class="session-title">Opening welcome</div>
+                                        <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">09:10-10:00</td>
+                                    <td>
+                                        <div class="session-title">The Civil Service as the Engine of Governance: Measuring and Monitoring Performance</div>
+                                        <div class="session-speaker">Hadiza Bala Usman</div>
+                                        <div class="session-description">
+                                            This session explores how a capable, high-performing civil service is essential for effective governance. 
+                                            Participants will examine the latest global approaches for measuring institutional and individual performance, 
+                                            and discuss how results-driven leadership can power public sector transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:10-10:20</td>
+                                    <td>
+                                        <div class="session-title">Keynote</div>
+                                        <div class="session-speaker">Oluwaseun Faleye, Esq</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:30-11:20</td>
+                                    <td>
+                                        <div class="session-title">Supporting Public Sector Reforms: A Partner's Experience</div>
+                                        <div class="session-speaker">Aigboje Aig-Imoukhuede CFR</div>
+                                        <div class="session-description">
+                                            Insights from private sector partnerships in driving public service transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">11:30-12:20</td>
+                                    <td>
+                                        <div class="session-title">Leadership & Institutional Innovation: The Role of Exemplary Leadership in Driving Innovation</div>
+                                        <div class="session-speaker">Dr. Olubunmi Tunji-Ojo</div>
+                                        <div class="session-description">
+                                            Leadership in government is evolving. As societies become more complex and citizens more engaged, 
+                                            a new model of management is needed across government and the wider public sector: adaptive, 
+                                            responsive, and people-centred.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="rejuvenate">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">09:00-09:10</td>
+                                    <td>
+                                        <div class="session-title">Live Stream of Opening welcome from Transform Stage</div>
+                                        <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">09:10-10:00</td>
+                                    <td>
+                                        <div class="session-title">Live Stream of The Civil Service as the Engine of Governance from Transform Stage</div>
+                                        <div class="session-speaker">Hadiza Bala Usman</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:05-10:45</td>
+                                    <td>
+                                        <div class="session-title">Performance & Results Orientation</div>
+                                        <div class="session-speaker">Dr. Zakari Lawal, Engr Ahmed Sirika, Mr Benson Ojeikere, Fatima Ango</div>
+                                        <div class="session-description">
+                                            Strengthening M&E for Performance and Reform Impact
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-content active" id="innovate">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">09:00-09:10</td>
+                                    <td>
+                                        <div class="session-title">Opening welcome</div>
+                                        <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">09:10-10:00</td>
+                                    <td>
+                                        <div class="session-title">The Civil Service as the Engine of Governance: Measuring and Monitoring Performance</div>
+                                        <div class="session-speaker">Hadiza Bala Usman</div>
+                                        <div class="session-description">
+                                            This session explores how a capable, high-performing civil service is essential for effective governance. 
+                                            Participants will examine the latest global approaches for measuring institutional and individual performance, 
+                                            and discuss how results-driven leadership can power public sector transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:10-10:20</td>
+                                    <td>
+                                        <div class="session-title">Keynote</div>
+                                        <div class="session-speaker">Oluwaseun Faleye, Esq</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:30-11:20</td>
+                                    <td>
+                                        <div class="session-title">Supporting Public Sector Reforms: A Partner's Experience</div>
+                                        <div class="session-speaker">Aigboje Aig-Imoukhuede CFR</div>
+                                        <div class="session-description">
+                                            Insights from private sector partnerships in driving public service transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">11:30-12:20</td>
+                                    <td>
+                                        <div class="session-title">Leadership & Institutional Innovation: The Role of Exemplary Leadership in Driving Innovation</div>
+                                        <div class="session-speaker">Dr. Olubunmi Tunji-Ojo</div>
+                                        <div class="session-description">
+                                            Leadership in government is evolving. As societies become more complex and citizens more engaged, 
+                                            a new model of management is needed across government and the wider public sector: adaptive, 
+                                            responsive, and people-centred.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-content active" id="transform">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">09:00-09:10</td>
+                                    <td>
+                                        <div class="session-title">Opening welcome</div>
+                                        <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">09:10-10:00</td>
+                                    <td>
+                                        <div class="session-title">The Civil Service as the Engine of Governance: Measuring and Monitoring Performance</div>
+                                        <div class="session-speaker">Hadiza Bala Usman</div>
+                                        <div class="session-description">
+                                            This session explores how a capable, high-performing civil service is essential for effective governance. 
+                                            Participants will examine the latest global approaches for measuring institutional and individual performance, 
+                                            and discuss how results-driven leadership can power public sector transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:10-10:20</td>
+                                    <td>
+                                        <div class="session-title">Keynote</div>
+                                        <div class="session-speaker">Oluwaseun Faleye, Esq</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:30-11:20</td>
+                                    <td>
+                                        <div class="session-title">Supporting Public Sector Reforms: A Partner's Experience</div>
+                                        <div class="session-speaker">Aigboje Aig-Imoukhuede CFR</div>
+                                        <div class="session-description">
+                                            Insights from private sector partnerships in driving public service transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">11:30-12:20</td>
+                                    <td>
+                                        <div class="session-title">Leadership & Institutional Innovation: The Role of Exemplary Leadership in Driving Innovation</div>
+                                        <div class="session-speaker">Dr. Olubunmi Tunji-Ojo</div>
+                                        <div class="session-description">
+                                            Leadership in government is evolving. As societies become more complex and citizens more engaged, 
+                                            a new model of management is needed across government and the wider public sector: adaptive, 
+                                            responsive, and people-centred.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-content active" id="accelerate">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="time-col">09:00-09:10</td>
+                                    <td>
+                                        <div class="session-title">Opening welcome</div>
+                                        <div class="session-speaker">Dr. Deborah O.N. Odoh</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">09:10-10:00</td>
+                                    <td>
+                                        <div class="session-title">The Civil Service as the Engine of Governance: Measuring and Monitoring Performance</div>
+                                        <div class="session-speaker">Hadiza Bala Usman</div>
+                                        <div class="session-description">
+                                            This session explores how a capable, high-performing civil service is essential for effective governance. 
+                                            Participants will examine the latest global approaches for measuring institutional and individual performance, 
+                                            and discuss how results-driven leadership can power public sector transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:10-10:20</td>
+                                    <td>
+                                        <div class="session-title">Keynote</div>
+                                        <div class="session-speaker">Oluwaseun Faleye, Esq</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">10:30-11:20</td>
+                                    <td>
+                                        <div class="session-title">Supporting Public Sector Reforms: A Partner's Experience</div>
+                                        <div class="session-speaker">Aigboje Aig-Imoukhuede CFR</div>
+                                        <div class="session-description">
+                                            Insights from private sector partnerships in driving public service transformation.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="time-col">11:30-12:20</td>
+                                    <td>
+                                        <div class="session-title">Leadership & Institutional Innovation: The Role of Exemplary Leadership in Driving Innovation</div>
+                                        <div class="session-speaker">Dr. Olubunmi Tunji-Ojo</div>
+                                        <div class="session-description">
+                                            Leadership in government is evolving. As societies become more complex and citizens more engaged, 
+                                            a new model of management is needed across government and the wider public sector: adaptive, 
+                                            responsive, and people-centred.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Add other tab contents for other stages -->
+                    
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-light" id="thursday-roundtables">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Roundtable Discussions</h2>
+                    <p>As a part of the event and additional to the core agenda, we curate a series of roundtable discussions for senior leaders to explore specific topics with colleagues from across government and the public service.</p>
+                </div>
+                
+                <div class="roundtables">
+                    <div class="roundtable-card">
+                        <div class="roundtable-time">10:00-11:30</div>
+                        <h3 class="roundtable-title">Fostering Harmonious Workplace Relations in the Public Sector</h3>
+                        <p>Rebuilding Trust Between Unions, Management, and Civil Servants</p>
+                        <div class="roundtable-lead">Roundtable Lead: Ayuba Wabba, mni</div>
+                        <div class="roundtable-audience">This roundtable is only open to Labour Unions reps, Director Labour Matters- Fed & State Min of Labour, Directors HR (Fed and State, Gen Z)</div>
+                    </div>
+                    
+                    <div class="roundtable-card">
+                        <div class="roundtable-time">10:00-11:30</div>
+                        <h3 class="roundtable-title">Civil Service Leadership Roundtable</h3>
+                        <p>Aligning MDAs with FCSSIP25 Implementation Goals</p>
+                        <div class="roundtable-lead">Roundtable Lead: Dr. Deborah O.N. Odoh</div>
+                        <div class="roundtable-audience">This roundtable is only open to Federal Perm Secs and CEOs</div>
+                    </div>
+                    
+                    <div class="roundtable-card">
+                        <div class="roundtable-time">10:00-11:30</div>
+                        <h3 class="roundtable-title">Managing Technical and Political Advisors in the Civil Service</h3>
+                        <p>As governments face complex and fast-moving challenges, the presence of technical and political advisers has become more common — but often creates tension with the institutional role of the civil service.</p>
+                        <div class="roundtable-lead">Roundtable Lead: Mr. Olusegun Adekunle</div>
+                        <div class="roundtable-audience">This roundtable is only open to Federal Perm Secs, State Heads of Service, Fed Directors</div>
+                    </div>
+                    <!-- Add more roundtable cards for other time slots -->
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>About ICS Conference</h4>
+                    <p>The International Civil Service Conference brings together public service leaders from around the world to explore innovations, share best practices, and drive transformation in government services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="Index.html #about">About the Conference</a></li>
+                        <li><a href="agenda.html">Conference Agenda</a></li>
+                        <li><a href="speakers.html">Speakers</a></li>
+                        <li><a href="#partners">Partners</a></li>
+                        <li><a href="venue.html">Venue Information</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 25-26 June, 2026</p>
+                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
+                    <p><i class="fas fa-phone"></i> +234 800 000 0000</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+
+    <script>
+        // Mobile Menu Toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('active');
+            // Toggle icon between bars and times
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.mobile-menu').classList.remove('active');
+                    // Reset mobile menu icon
+                    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+                    menuBtnIcon.classList.remove('fa-times');
+                    menuBtnIcon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Day agenda toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const wednesdayBtn = document.getElementById('wednesday-btn');
+            const thursdayBtn = document.getElementById('thursday-btn');
+            const wednesdayAgenda = document.getElementById('wednesday-agenda');
+            const thursdayAgenda = document.getElementById('thursday-agenda');
+            const dayBtns = document.querySelectorAll('.day-btn');
+            
+            // Initially show Thursday agenda, hide Wednesday
+            wednesdayAgenda.style.display = 'none';
+            thursdayAgenda.style.display = 'block';
+            
+            wednesdayBtn.addEventListener('click', () => {
+                wednesdayAgenda.style.display = 'block';
+                thursdayAgenda.style.display = 'none';
+                
+                // Update button states with animation
+                dayBtns.forEach(btn => btn.classList.remove('active', 'pulse'));
+                wednesdayBtn.classList.remove('btn-outline');
+                wednesdayBtn.classList.add('btn', 'active', 'pulse');
+                thursdayBtn.classList.remove('btn');
+                thursdayBtn.classList.add('btn-outline');
+                
+                // Add fade-in animation to the content
+                wednesdayAgenda.classList.add('fade-in');
+                setTimeout(() => {
+                    wednesdayAgenda.classList.remove('fade-in');
+                }, 800);
+            });
+            
+            thursdayBtn.addEventListener('click', () => {
+                wednesdayAgenda.style.display = 'none';
+                thursdayAgenda.style.display = 'block';
+                
+                // Update button states with animation
+                dayBtns.forEach(btn => btn.classList.remove('active', 'pulse'));
+                thursdayBtn.classList.remove('btn-outline');
+                thursdayBtn.classList.add('btn', 'active', 'pulse');
+                wednesdayBtn.classList.remove('btn');
+                wednesdayBtn.classList.add('btn-outline');
+                
+                // Add fade-in animation to the content
+                thursdayAgenda.classList.add('fade-in');
+                setTimeout(() => {
+                    thursdayAgenda.classList.remove('fade-in');
+                }, 800);
+            });
+            
+            // Tab functionality for both days
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents in the same tab group
+                    const parentTabs = btn.closest('.tabs');
+                    const siblingBtns = parentTabs.querySelectorAll('.tab-btn');
+                    const siblingContents = parentTabs.querySelectorAll('.tab-content');
+                    
+                    siblingBtns.forEach(b => {
+                        b.classList.remove('active');
+                        b.style.transform = 'translateY(0)';
+                    });
+                    siblingContents.forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button with animation
+                    btn.classList.add('active');
+                    btn.style.transform = 'translateY(-2px)';
+                    
+                    // Show corresponding content with animation
+                    const tabId = btn.getAttribute('data-tab');
+                    const targetContent = parentTabs.querySelector(`#${tabId}`);
+                    targetContent.classList.add('active');
+                });
+            });
+            
+            // Mobile submenu toggle
+            const hasSubmenuItems = document.querySelectorAll('.has-submenu');
+            
+            hasSubmenuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 992) {
+                        e.preventDefault();
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+            
+            // Add animation to schedule table rows on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = `${entries.indexOf(entry) * 0.1}s`;
+                        entry.target.classList.add('slide-in-left');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe schedule table rows and roundtable cards
+            document.querySelectorAll('.schedule-table tr, .roundtable-card').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

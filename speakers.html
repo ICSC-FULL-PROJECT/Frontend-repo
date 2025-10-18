@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speakers - International Civil Service Conference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset and Base Styles */
+        :root {
+            --primary-color: #008751;
+            --primary-light: #00a862;
+            --primary-dark: #006540;
+            --secondary-color: #f8f9fa;
+            --accent-color: #5e8772;
+            --text-dark: #212121;
+            --text-medium: #444444;
+            --text-light: #ffffff;
+            --gray-light: #e9ecef;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-medium);
+            overflow-x: hidden;
+            background-color: #ffffff;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 2.2rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-light);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover:after {
+            left: 100%;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: var(--text-medium);
+        }
+
+        /* Enhanced Header Styles */
+        header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        nav ul li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            padding: 8px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        nav ul li a i {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover:after,
+        nav ul li a.active:after {
+            width: 100%;
+        }
+
+        nav ul li a:hover i {
+            transform: scale(1.2);
+            color: var(--primary-color);
+        }
+
+        nav ul li ul {
+            position: absolute;
+            background-color: var(--text-light);
+            width: 220px;
+            top: 100%;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-hover);
+            border-radius: var(--border-radius);
+            padding: 10px 0;
+            z-index: 1001;
+        }
+
+        nav ul li:hover ul {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        nav ul li ul li {
+            margin: 0;
+            width: 100%;
+        }
+
+        nav ul li ul li a {
+            display: flex;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: var(--text-medium);
+            text-transform: none;
+        }
+
+        nav ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .cta-btn:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-btn:hover:after {
+            left: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(0, 135, 81, 0.1);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background-color: var(--text-light);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        .mobile-menu ul {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu ul li {
+            margin: 10px 0;
+        }
+
+        .mobile-menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            font-weight: 500;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .mobile-menu ul li ul {
+            position: static;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            box-shadow: none;
+            padding-left: 20px;
+            background: transparent;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li {
+            margin: 5px 0;
+            background: transparent;
+        }
+
+        .mobile-menu ul li ul li a {
+            font-size: 14px;
+            padding: 10px 0;
+            border-bottom: none;
+            color: var(--text-medium);
+            background: transparent;
+            width: 100%;
+        }
+
+        .mobile-menu ul li ul li a:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-light);
+            padding-left: 10px;
+        }
+
+        /* Social Media Links in Header */
+        .social-media {
+            display: flex;
+            gap: 30px;
+            margin-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 135, 81, 0.1);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        /* Speakers Section Styles */
+        .speakers-section {
+            background-color: var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .speakers-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23008751" fill-opacity="0.05" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,192C672,181,768,139,864,138.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .speaker-card {
+            background: var(--text-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .speaker-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .speaker-image {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .speaker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .speaker-card:hover .speaker-image img {
+            transform: scale(1.05);
+        }
+
+        .speaker-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 135, 81, 0.9));
+            color: white;
+            padding: 20px;
+            transform: translateY(5px);
+            transition: var(--transition);
+        }
+
+        .speaker-card:hover .speaker-overlay {
+            transform: translateY(0);
+        }
+
+        .speaker-info {
+            padding: 25px 20px;
+        }
+
+        .speaker-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+        }
+
+        .speaker-info h4 {
+            color: var(--text-medium);
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .speaker-info p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+            color: var(--text-medium);
+        }
+
+        .speaker-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .speaker-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--gray-light);
+            border-radius: 50%;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .speaker-social a:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            transform: translateY(-3px);
+        }
+
+        /* Speaker Categories */
+        .speaker-categories {
+            margin-top: 60px;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .category-tab {
+            background: var(--text-light);
+            color: var(--text-dark);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .category-tab.active,
+        .category-tab:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-color: var(--primary-color);
+        }
+
+        .category-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .category-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #000000 100%);
+            color: var(--text-light);
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h4 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-col p {
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #cccccc;
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .footer-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .social-media {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 0;
+            }
+            
+            .speakers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 30px;
+            }
+            
+            .category-tabs {
+                gap: 10px;
+            }
+            
+            .category-tab {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo img {
+                height: 50px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+            
+            .cta-btn span {
+                display: none;
+            }
+            
+            .cta-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+            
+            .speakers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* --- Ensure tab contents are clickable and transition smoothly --- */
+
+.category-tabs {
+  position: relative;
+  z-index: 5; /* ensure tabs are above lower content */
+}
+
+/* Hide contents by default but keep pointer events off when hidden */
+.category-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .32s ease, transform .32s ease;
+  pointer-events: none; /* avoid clicking hidden content */
+}
+
+/* Shown content */
+.category-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Visual tab active state (keeps familiar look) */
+.category-tab {
+  cursor: pointer;
+  user-select: none;
+}
+
+.category-tab.active {
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+
+/* Make sure no large overlay blocks the tabs. If you have a fixed header, give it lower z-index than tabs */
+header#header { z-index: 1000; } /* keep header above normal page elements */
+.speaker-categories { position: relative; z-index: 2; }
+
+/* Speaker card entrance */
+.speaker-card {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .48s ease, transform .48s ease;
+}
+
+.speaker-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+    </style>
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/NG.jpeg" alt="International Civil Service Conference">
+                </a>
+                <div class="logo-text">
+                    <h1>ICSC 2026</h1>
+                    <p>Rejuvenate, Innovate & Accelerate!</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href= "Index.html"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
+                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="speakers.html" class="active"><i class="fas fa-microphone"></i> Speakers</a></li>
+                    <li>
+                        <a href="index.html#partners"><i class="fas fa-handshake"></i> Partners</a>
+                        <ul>
+                            <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                            <li><a href="index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+                        <ul>
+                            <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                            <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <!-- Social Media Links -->
+                <div class="social-media">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <a href="#Login" class="cta-btn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Login</span>
+                </a>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li>
+                    <li><a href= "index.htmll"><i class="fas fa-home"></i>Home</a></li>
+                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+            </li>
+            <li>
+                <a href="index.html#partners"><i class="fas fa-handshake"></i> Partners</a>
+                <ul>
+                    <li><a href="index.html#opportunities"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                    <li><a href="index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="index.html#about"><i class="fas fa-info-circle"></i> About</a>
+                <ul>
+                    <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                    <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Speakers Section -->
+    <section id="speakers" class="speakers-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Distinguished Speakers</h2>
+                <p>Meet the thought leaders, policymakers, and innovators who will share their insights at the International Civil Service Conference 2026</p>
+            </div>
+            
+            <!-- Speaker Categories -->
+            <div class="speaker-categories">
+                <div class="category-tabs">
+                    <div class="category-tab active" data-category="keynote">Keynote Speakers</div>
+                    <div class="category-tab" data-category="government">Government Leaders</div>
+                    <div class="category-tab" data-category="international">International Experts</div>
+                    <div class="category-tab" data-category="innovation">Innovation Leaders</div>
+                </div>
+                
+                <!-- Keynote Speakers -->
+                <div class="category-content active" id="keynote-content">
+                    <div class="speakers-grid">
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/tinubu.jpeg" alt="President of Nigeria">
+                                <div class="speaker-overlay">
+                                    <h4>Chief Patron</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Bola Ahmed tinubu</h3>
+                                <h4>His Excellency</h4>
+                                <h4>President of Nigeria</h4>
+                                <p>Chief Patron of the International Civil Service Conference and keynote speaker on public service transformation.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Ks.jpeg" alt="Vice President of Nigeria">
+                                <div class="speaker-overlay">
+                                    <h4>Co-Patron</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Kashim Shettima</h3>
+                                <h4>His Excellency</h4>
+                                <h4>Vice President of Nigeria</h4>
+                                <p>Co-Patron of the International Civil Service Conference and keynote speaker on governance innovation.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/didi.jpeg" alt="Head of Civil Service">
+                                <div class="speaker-overlay">
+                                    <h4>Conference Host</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3> Mrs.Didi Esther Walson-Jack</h3>
+                                <h4>Head of the Civil Service of the Federation</h4>
+                                <p>Leading the transformation of Nigeria's civil service through innovation and capacity building.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Government Leaders -->
+                <div class="category-content" id="government-content">
+                    <div class="speakers-grid">
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/sp.jpg" alt="Minister of Finance">
+                                <div class="speaker-overlay">
+                                    <h4>Finance Minister</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Dr. Zainab Ahmed</h3>
+                                <h4>Minister of Finance, Budget and National Planning</h4>
+                                <p>Expert in fiscal policy and economic development with extensive experience in public financial management.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/kerrr.jpg" alt="Minister of Communications">
+                                <div class="speaker-overlay">
+                                    <h4>Digital Economy</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Prof. Isa Ali Pantami</h3>
+                                <h4>Minister of Communications and Digital Economy</h4>
+                                <p>Championing Nigeria's digital transformation and promoting innovation in public service delivery.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/James-Folusho-Kayode-Abiona.jpeg" alt="Governor of Central Bank">
+                                <div class="speaker-overlay">
+                                    <h4>Monetary Policy</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Godwin Emefiele</h3>
+                                <h4>Governor, Central Bank of Nigeria</h4>
+                                <p>Leading monetary policy reforms and financial inclusion initiatives across Nigeria.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- International Experts -->
+                <div class="category-content" id="international-content">
+                    <div class="speakers-grid">
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Honourable-Dr.-Olubunmi-Tunji-Ojo.jpeg" alt="UN Representative">
+                                <div class="speaker-overlay">
+                                    <h4>UN Development</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Mohammed Fall</h3>
+                                <h4>UN Resident Coordinator for Nigeria</h4>
+                                <p>Promoting sustainable development goals and international cooperation in public service.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Dr-Otive-Igbuzor.jpeg" alt="World Bank Director">
+                                <div class="speaker-overlay">
+                                    <h4>World Bank</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Shubham Chaudhuri</h3>
+                                <h4>Country Director, World Bank Nigeria</h4>
+                                <p>Expert in development economics and public sector reforms with global experience.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Dr-Joe-Abah.jpeg" alt="IMF Representative">
+                                <div class="speaker-overlay">
+                                    <h4>IMF</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Ari Aisen</h3>
+                                <h4>IMF Resident Representative for Nigeria</h4>
+                                <p>Specialist in macroeconomic policy and fiscal management in emerging economies.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Innovation Leaders -->
+                <div class="category-content" id="innovation-content">
+                    <div class="speakers-grid">
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Joy-Dariye.jpeg" alt="Tech Entrepreneur">
+                                <div class="speaker-overlay">
+                                    <h4>Digital Innovation</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Bosun Tijani</h3>
+                                <h4>Co-founder, CcHub</h4>
+                                <p>Pioneering technology innovation and digital transformation in Africa's public and private sectors.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Otunba-Bimbo-Ashiru.jpeg" alt="AI Expert">
+                                <div class="speaker-overlay">
+                                    <h4>AI & Governance</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Dr. Oshiorenoya Agabi</h3>
+                                <h4>CEO, Koniku Inc.</h4>
+                                <p>Leading expert in artificial intelligence and its applications in public service and governance.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="speaker-card">
+                            <div class="speaker-image">
+                                <img src="images/Oluwaseun-Faleye.jpeg" alt="Public Policy Expert">
+                                <div class="speaker-overlay">
+                                    <h4>Policy Innovation</h4>
+                                </div>
+                            </div>
+                            <div class="speaker-info">
+                                <h3>Oluwaseun-Faleye</h3>
+                                <h4>Former Minister of Education</h4>
+                                <p>Champion of public sector reforms and transparency in governance across Africa.</p>
+                                <div class="speaker-social">
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>About ICS Conference</h4>
+                    <p>The International Civil Service Conference brings together public service leaders from around the world to explore innovations, share best practices, and drive transformation in government services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#about">About the Conference</a></li>
+                        <li><a href="agenda.html">Conference Agenda</a></li>
+                        <li><a href="speakers.html">Speakers</a></li>
+                        <li><a href="index.html#partners">Partners</a></li>
+                        <li><a href="venue.html">Venue Information</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 25-26 May, 2026</p>
+                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
+                    <p><i class="fas fa-phone"></i> +234 800 000 0000</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+
+   <script>
+(function () {
+  // Defensive helper
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+  // Wait until DOM ready (safe if already ready)
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  onReady(function () {
+    // Grab containers
+    const tabsContainer = $('.category-tabs');
+    const contents = $$('.category-content');
+
+    if (!tabsContainer || contents.length === 0) {
+      console.warn('Tabs or contents not found: ', {tabsContainer, contentsLength: contents.length});
+      return;
+    }
+
+    // Remove any pre-attached click handlers on .category-tab (best-effort)
+    // (can't remove anonymous handlers, but we'll use delegation so duplicates don't matter)
+
+    // Event delegation: single click handler on container
+    tabsContainer.addEventListener('click', function (evt) {
+      // find the closest .category-tab clicked (support child elements)
+      const tab = evt.target.closest('.category-tab');
+      if (!tab || !tabsContainer.contains(tab)) return;
+
+      // prevent default behavior
+      evt.preventDefault();
+
+      const category = tab.getAttribute('data-category');
+      if (!category) return;
+
+      // If already active, re-trigger show (refresh animations)
+      if (tab.classList.contains('active')) {
+        showContent(category, tab);
+        return;
+      }
+
+      // Hide all and show selected
+      hideAll();
+      tab.classList.add('active');
+      showContent(category, tab);
+    });
+
+    // Helper to hide everything
+    function hideAll() {
+      // remove active on all tabs
+      $$('.category-tab').forEach(t => t.classList.remove('active'));
+      // hide all contents and reset cards
+      contents.forEach(c => {
+        c.classList.remove('active');
+        // reset children speaker cards state
+        c.querySelectorAll('.speaker-card').forEach(card => {
+          card.classList.remove('visible');
+          card.style.animationDelay = '';
+        });
+      });
+    }
+
+    // Show matching content safely
+    function showContent(category, tabEl) {
+      const target = document.getElementById(category + '-content');
+      if (!target) {
+        console.warn('No content element for category:', category);
+        return;
+      }
+
+      // Make active
+      target.classList.add('active');
+
+      // Stagger animate speaker-cards inside target
+      // Use requestAnimationFrame to ensure styles applied before anim
+      requestAnimationFrame(() => {
+        const cards = Array.from(target.querySelectorAll('.speaker-card'));
+        cards.forEach((card, idx) => {
+          // small stagger
+          card.style.animationDelay = `${idx * 0.06}s`;
+          // force reflow then add visible to trigger CSS transitions
+          // eslint-disable-next-line no-unused-expressions
+          card.offsetWidth;
+          card.classList.add('visible');
+        });
+      });
+
+      // Optional: ensure only target is focusable / interactive (already handled by pointer-events css)
+    }
+
+    // Initialize: pick first .category-tab with .active, else first tab
+    const initialTab = tabsContainer.querySelector('.category-tab.active') || tabsContainer.querySelector('.category-tab');
+    if (initialTab) {
+      // emulate a click to initialize
+      // but do it safely so we don't cause double listeners
+      hideAll();
+      initialTab.classList.add('active');
+      const initialCategory = initialTab.getAttribute('data-category');
+      if (initialCategory) showContent(initialCategory, initialTab);
+    }
+  });
+})();
+</script>
+</body>
+</html>
