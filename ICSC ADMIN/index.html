@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSC 2026 - Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #008751;
+            --primary-light: #00a862;
+            --primary-dark: #006540;
+            --secondary-color: #f8f9fa;
+            --accent-color: #5e8772;
+            --text-dark: #212121;
+            --text-medium: #444444;
+            --text-light: #ffffff;
+            --gray-light: #e9ecef;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-medium);
+            background-color: #f5f7fa;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .login-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 135, 81, 0.7) 0%, rgba(0, 101, 64, 0.7) 100%);
+            z-index: 1;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(1.05) contrast(1.1);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .login-left-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .title-container {
+            text-align: left;
+        }
+
+        .login-left h1 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: var(--text-light);
+            line-height: 1;
+        }
+
+        .login-left h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .login-left p {
+            font-size: 1.2rem;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .login-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--text-light);
+            border-radius: 20px 0 0 20px;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .form-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-logo .logo {
+            margin: 0 auto 15px;
+            width: 70px;
+            height: 70px;
+        }
+
+        .form-logo .logo img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 135, 81, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-medium);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: var(--text-light);
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 135, 81, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+        }
+
+        .user-type-selector {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .user-type {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background-color: var(--gray-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-type.active {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        /* Ministry Code Field */
+        #ministryCodeGroup {
+            display: none;
+        }
+
+        /* Login Instructions */
+        .login-instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f9f4;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .login-instructions h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .login-instructions p {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Demo Credentials */
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border: 1px dashed var(--gray-light);
+        }
+
+        .demo-credentials h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .credential-label {
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
+        .credential-value {
+            font-family: monospace;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--gray-light);
+        }
+
+        /* Spinner Styles */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .login-right {
+                border-radius: 20px 20px 0 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-left, .login-right {
+                padding: 20px;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .title-container {
+                text-align: center;
+            }
+            
+            .login-left h1 {
+                font-size: 2.5rem;
+            }
+            
+            .login-left h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-left">
+            <div class="slider">
+                <div class="slide active" style="background-image: url('iya-pres.jpeg');"></div>
+                <div class="slide" style="background-image: url('iya-rite.jpg');"></div>
+                <div class="slide" style="background-image: url('rite.jpg');"></div>
+                <div class="slide" style="background-image: url('award.jpg');"></div>
+            </div>
+            <div class="login-left-content">
+                <div class="logo-container">
+                    
+
+                        <!-- Placeholder for ICSC logo - replace with actual logo -->
+                    <div class="title-container">
+                        <h1>ICSC 2026</h1>
+                        <h2>International Civil Service Conference</h2>
+                    </div>
+                </div>
+                <p>Rejuvenate, Innovate & Accelerate the future of civil service</p>
+            </div>
+        </div>
+        <div class="login-right">
+            <div class="login-form">
+                <div class="form-logo">
+                    <div class="logo">
+                        <img src="NG.jpeg" alt="ICSC Logo">
+                    </div>
+                </div>
+                <h2>ICSC 2026 Login</h2>
+                <div class="user-type-selector">
+                    <div class="user-type active" id="superAdminTab">Super Admin</div>
+                    <div class="user-type" id="ministryTab">Ministry</div>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group" id="ministryCodeGroup">
+                        <label for="ministryCode">Ministry Code</label>
+                        <input type="text" id="ministryCode" class="form-control" placeholder="Enter ministry code (e.g., MOF, MOE)">
+                    </div>
+                    <div class="form-group">
+                        <label for="username" id="usernameLabel">Username</label>
+                        <input type="text" id="username" class="form-control" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" class="form-control" placeholder="Enter your password">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn" id="loginBtn">
+                        <div class="btn-content">
+                            <div class="spinner" id="loginSpinner"></div>
+                            <span id="loginBtnText">Login as Super Admin</span>
+                        </div>
+                    </button>
+                    <div class="error-message" id="errorMessage">
+                        Invalid credentials. Please try again.
+                    </div>
+                </form>
+                
+                <div class="login-instructions" id="superAdminInstructions">
+                    <h4>Super Admin Login</h4>
+                    <p>Use your Super Admin credentials to access the full administrative dashboard.</p>
+                </div>
+                
+                <div class="login-instructions" id="ministryInstructions" style="display: none;">
+                    <h4>Ministry Login</h4>
+                    <p>Use your Ministry Code and credentials provided by the Super Admin to manage your ministry's attendees.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const superAdminTab = document.getElementById('superAdminTab');
+        const ministryTab = document.getElementById('ministryTab');
+        const ministryCodeGroup = document.getElementById('ministryCodeGroup');
+        const usernameLabel = document.getElementById('usernameLabel');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const errorMessage = document.getElementById('errorMessage');
+        const superAdminInstructions = document.getElementById('superAdminInstructions');
+        const ministryInstructions = document.getElementById('ministryInstructions');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const loginSpinner = document.getElementById('loginSpinner');
+
+        // Valid credentials for demonstration
+        const validCredentials = {
+            superAdmin: {
+                username: 'admin',
+                password: '0000'
+            },
+            ministries: {
+                'MOF': {
+                    code: 'MOF',
+                    username: 'MOF2026',
+                    password: '0000',
+                    name: 'Ministry of Finance'
+                },
+                'MOE': {
+                    code: 'MOE',
+                    username: 'MOE2024',
+                    password: 'ICSC@MOE2024',
+                    name: 'Ministry of Education'
+                },
+                'MOH': {
+                    code: 'MOH',
+                    username: 'MOH2024',
+                    password: 'ICSC@MOH2024',
+                    name: 'Ministry of Health'
+                }
+            }
+        };
+
+        // Slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function showSlide(index) {
+            // Remove active class from all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Add active class to current slide
+            slides[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        function nextSlide() {
+            let next = currentSlide + 1;
+            if (next >= slides.length) next = 0;
+            showSlide(next);
+        }
+        
+        // Set up automatic slide transition
+        setInterval(nextSlide, 5000);
+
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle eye icon
+            const eyeIcon = this.querySelector('i');
+            if (type === 'text') {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+
+        // Event Listeners
+        loginBtn.addEventListener('click', handleLogin);
+
+        superAdminTab.addEventListener('click', function() {
+            setActiveTab('superAdmin');
+        });
+
+        ministryTab.addEventListener('click', function() {
+            setActiveTab('ministry');
+        });
+
+        // Functions
+        function setActiveTab(tabType) {
+            if (tabType === 'superAdmin') {
+                superAdminTab.classList.add('active');
+                ministryTab.classList.remove('active');
+                ministryCodeGroup.style.display = 'none';
+                usernameLabel.textContent = 'Username';
+                loginBtnText.textContent = 'Login as Super Admin';
+                superAdminInstructions.style.display = 'block';
+                ministryInstructions.style.display = 'none';
+                document.getElementById('username').placeholder = 'Enter your username';
+            } else {
+                superAdminTab.classList.remove('active');
+                ministryTab.classList.add('active');
+                ministryCodeGroup.style.display = 'block';
+                usernameLabel.textContent = 'Ministry Username';
+                loginBtnText.textContent = 'Login as Ministry';
+                superAdminInstructions.style.display = 'none';
+                ministryInstructions.style.display = 'block';
+                document.getElementById('username').placeholder = 'Enter ministry username';
+            }
+            
+            // Clear any previous error messages
+            errorMessage.style.display = 'none';
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const ministryCode = document.getElementById('ministryCode').value;
+            
+            // Validate inputs
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            if (ministryTab.classList.contains('active') && !ministryCode) {
+                showError('Please enter ministry code');
+                return;
+            }
+            
+            // Show spinner and disable button
+            loginSpinner.style.display = 'block';
+            loginBtn.disabled = true;
+            
+            // Simulate login process with a short delay
+            setTimeout(() => {
+                // Authenticate user
+                if (authenticateUser(username, password, ministryCode)) {
+                    // Successful login - redirect to appropriate dashboard
+                    if (superAdminTab.classList.contains('active')) {
+                        // Store login info in localStorage for the Super Admin dashboard
+                        localStorage.setItem('userType', 'superAdmin');
+                        localStorage.setItem('username', username);
+                        // Redirect to Super Admin dashboard
+                        window.location.href = 'super-admin/super-admin-dashboard.html';
+                    } else {
+                        // Store login info in localStorage for the Ministry dashboard
+                        const ministry = validCredentials.ministries[ministryCode];
+                        localStorage.setItem('userType', 'ministry');
+                        localStorage.setItem('ministryCode', ministryCode);
+                        localStorage.setItem('ministryName', ministry.name);
+                        localStorage.setItem('username', username);
+                        // Redirect to Ministry dashboard
+                        window.location.href = 'ministry/ministry-dashboard.html';
+                    }
+                } else {
+                    // Hide spinner and re-enable button
+                    loginSpinner.style.display = 'none';
+                    loginBtn.disabled = false;
+                    showError('Invalid credentials. Please try again.');
+                }
+            }, 1500); // Simulate network delay
+        }
+
+        function authenticateUser(username, password, ministryCode) {
+            if (superAdminTab.classList.contains('active')) {
+                // Check Super Admin credentials
+                return username === validCredentials.superAdmin.username && 
+                       password === validCredentials.superAdmin.password;
+            } else {
+                // Check Ministry credentials
+                if (!validCredentials.ministries[ministryCode]) {
+                    return false;
+                }
+                
+                const ministry = validCredentials.ministries[ministryCode];
+                return username === ministry.username && 
+                       password === ministry.password;
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // Hide error message after 5 seconds
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Allow form submission with Enter key
+        document.getElementById('loginForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const userType = localStorage.getItem('userType');
+            if (userType === 'superAdmin') {
+                window.location.href = 'super-admin/super-admin-dashboard.html';
+            } else if (userType === 'ministry') {
+                window.location.href = 'ministry/ministry-dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

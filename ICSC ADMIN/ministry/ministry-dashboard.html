@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSC 2026 - Ministry Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008751;
+            --secondary: #00c974;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text-dark: #2c3e50;
+            --text-medium: #7f8c8d;
+            --text-light: #bdc3c7;
+            --border: #dfe6e9;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            color: white;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Dashboard Section Styles */
+        .dashboard-section {
+            background: white;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: var(--text-medium);
+        }
+
+        .btn-secondary:hover {
+            background: #6c7a7d;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #219653;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: modalFadeIn 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-medium);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-message i {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: #f8f9fa;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-medium);
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            min-width: 180px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-icon.approved {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.total {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+    
+
+
+        
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-end;
+        }
+
+        /* Ministry Info Box */
+        .ministry-info-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .ministry-info-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .ministry-info-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--text-dark);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .sidebar-menu li {
+                flex: 0 0 auto;
+            }
+            
+            .sidebar-menu a {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-info {
+                margin-top: 15px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .section-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .search-filter-container {
+                flex-direction: column;
+            }
+            
+            .ministry-info-item {
+                flex-direction: column;
+            }
+            
+            .ministry-info-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ministry Dashboard -->
+    <div id="ministryDashboard" class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="../NG.jpeg" alt="ICSC Logo" style="width: 90px; margin-bottom: 10px;">
+                <h2>ICSC 2026</h2>
+                <p>Ministry Dashboard</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> My Attendees</a></li>
+                <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Attendee</a></li>
+                <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
+                <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="../index.html" id="ministryLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1 id="pageTitle">Ministry Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="ministryAvatar">MF</div>
+                    <div>
+                        <div id="ministryNameDisplay">Ministry of Finance</div>
+                        <div style="font-size: 0.8rem; color: var(--text-medium);">Last login: Today, 09:45 AM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <!-- Ministry Info -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Ministry Information</h2>
+                    </div>
+                    <div class="ministry-info-box">
+                        <div class="ministry-info-item">
+                            <div class="ministry-info-label">Ministry Name:</div>
+                            <div id="currentMinistryName">Ministry of Finance</div>
+                        </div>
+                        <div class="ministry-info-item">
+                            <div class="ministry-info-label">Ministry Code:</div>
+                            <div id="currentMinistryCode">MOF</div>
+                        </div>
+                        <div class="ministry-info-item">
+                            <div class="ministry-info-label">Contact Person:</div>
+                            <div id="currentContactPerson">Permanent Secretary Finance</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Attendee Overview</h2>
+                    </div>
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="ministryPendingCount">3</h3>
+                                <p>Pending Verification</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon approved">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="ministryApprovedCount">42</h3>
+                                <p>Approved Attendees</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="ministryTotalCount">45</h3>
+                                <p>Total Attendees</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" id="refreshMinistryActivityBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Attendee</th>
+                                    <th>Position</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ministryActivityTable">
+                                <tr>
+                                    <td>Added</td>
+                                    <td>Samuel Johnson</td>
+                                    <td>Assistant Director</td>
+                                    <td>2023-10-25 14:30</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Added</td>
+                                    <td>Fatima Bello</td>
+                                    <td>Chief Officer</td>
+                                    <td>2023-10-24 11:15</td>
+                                    <td><span class="status-badge status-approved">Approved</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Added</td>
+                                    <td>Michael Adekunle</td>
+                                    <td>Senior Officer</td>
+                                    <td>2023-10-23 09:45</td>
+                                    <td><span class="status-badge status-approved">Approved</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Attendees Tab -->
+            <div id="attendees" class="tab-content">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>My Attendees</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-secondary" id="exportMinistryAttendeesBtn">Export</button>
+                            <a href="#" class="btn" data-tab="add-attendee">Add New Attendee</a>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter Section -->
+                    <div class="search-filter-container">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchMinistryAttendees" class="form-control" placeholder="Search by name, email, NIN, or position...">
+                        </div>
+                        <div class="filter-group">
+                            <select id="filterMinistryStatus" class="form-control filter-select">
+                                <option value="">All Statuses</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                            <select id="filterMinistryDepartment" class="form-control filter-select">
+                                <option value="">All Departments</option>
+                                <option value="Budget & Planning">Budget & Planning</option>
+                                <option value="Accounts">Accounts</option>
+                                <option value="Audit">Audit</option>
+                                <option value="Treasury">Treasury</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <button class="btn btn-secondary" id="clearMinistryFiltersBtn">Clear Filters</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>NIN</th>
+                                    <th>Position</th>
+                                    <th>Department</th>
+                                    <th>Agency</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ministryAttendeesTable">
+                                <tr data-id="1">
+                                    <td>Samuel Johnson</td>
+                                    <td>s.johnson@finance.gov.ng</td>
+                                    <td>12345678901</td>
+                                    <td>Assistant Director</td>
+                                    <td>Audit</td>
+                                    <td>Office of the Accountant General</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
+                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-id="2">
+                                    <td>Fatima Bello</td>
+                                    <td>f.bello@finance.gov.ng</td>
+                                    <td>23456789012</td>
+                                    <td>Chief Officer</td>
+                                    <td>Treasury</td>
+                                    <td>National Treasury</td>
+                                    <td><span class="status-badge status-approved">Approved</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
+                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-id="3">
+                                    <td>Michael Adekunle</td>
+                                    <td>m.adekunle@finance.gov.ng</td>
+                                    <td>34567890123</td>
+                                    <td>Senior Officer</td>
+                                    <td>Budget & Planning</td>
+                                    <td>Budget Office of the Federation</td>
+                                    <td><span class="status-badge status-approved">Approved</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
+                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Attendee Tab -->
+            <div id="add-attendee" class="tab-content">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Add New Attendee</h2>
+                        <div class="section-actions">
+                            <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
+                        </div>
+                    </div>
+                    
+                    <form id="addMinistryAttendeeForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ministryAttendeeName">Full Name *</label>
+                                <input type="text" id="ministryAttendeeName" class="form-control" placeholder="Enter full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ministryAttendeeEmail">Email Address *</label>
+                                <input type="email" id="ministryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ministryAttendeePhone">Phone Number *</label>
+                                <input type="tel" id="ministryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ministryAttendeeNIN">National ID Number (NIN) *</label>
+                                <input type="text" id="ministryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ministryAttendeePosition">Position *</label>
+                                <input type="text" id="ministryAttendeePosition" class="form-control" placeholder="Enter position" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ministryAttendeeGradeLevel">Grade Level *</label>
+                                <select id="ministryAttendeeGradeLevel" class="form-control" required>
+                                    <option value="">Select grade level</option>
+                                    <option value="Director">Director</option>
+                                    <option value="Deputy Director">Deputy Director</option>
+                                    <option value="Assistant Director">Assistant Director</option>
+                                    <option value="Chief Officer">Chief Officer</option>
+                                    <option value="Senior Officer">Senior Officer</option>
+                                    <option value="Officer">Officer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ministryAttendeeDepartment">Department *</label>
+                                <input type="text" id="ministryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ministryAttendeeAgency">Department Agency *</label>
+                                <input type="text" id="ministryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ministryAttendeeStaffId">Staff ID</label>
+                                <input type="text" id="ministryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="ministryAttendeeOffice">Office Location</label>
+                                <input type="text" id="ministryAttendeeOffice" class="form-control" placeholder="Enter office location">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="ministryAttendeeRemarks">Remarks</label>
+                                <textarea id="ministryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-secondary">Reset Form</button>
+                            <button type="submit" class="btn">Add Attendee</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Reports & Analytics</h2>
+                        <div class="section-actions">
+                            <button class="btn">Generate Report</button>
+                        </div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p>Ministry-specific reports and analytics will be implemented here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Ministry Settings</h2>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p>Ministry settings and configuration options will be implemented here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Success!</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="successMessage">Attendee has been successfully added!</p>
+                    <p style="font-size: 0.9rem; color: var(--text-medium);">The attendee is now pending verification by the Super Admin.</p>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" id="addAnotherBtn">Add Another</button>
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Attendee Modal -->
+    <div id="editMinistryAttendeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Attendee</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editMinistryAttendeeForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeName">Full Name *</label>
+                            <input type="text" id="editMinistryAttendeeName" class="form-control" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeEmail">Email Address *</label>
+                            <input type="email" id="editMinistryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMinistryAttendeePhone">Phone Number *</label>
+                            <input type="tel" id="editMinistryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeNIN">National ID Number (NIN) *</label>
+                            <input type="text" id="editMinistryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMinistryAttendeePosition">Position *</label>
+                            <input type="text" id="editMinistryAttendeePosition" class="form-control" placeholder="Enter position" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeGradeLevel">Grade Level *</label>
+                            <select id="editMinistryAttendeeGradeLevel" class="form-control" required>
+                                <option value="">Select grade level</option>
+                                <option value="Director">Director</option>
+                                <option value="Deputy Director">Deputy Director</option>
+                                <option value="Assistant Director">Assistant Director</option>
+                                <option value="Chief Officer">Chief Officer</option>
+                                <option value="Senior Officer">Senior Officer</option>
+                                <option value="Officer">Officer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeDepartment">Department *</label>
+                            <input type="text" id="editMinistryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeAgency">Department Agency *</label>
+                            <input type="text" id="editMinistryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeStaffId">Staff ID</label>
+                            <input type="text" id="editMinistryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="editMinistryAttendeeOffice">Office Location</label>
+                            <input type="text" id="editMinistryAttendeeOffice" class="form-control" placeholder="Enter office location">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="editMinistryAttendeeRemarks">Remarks</label>
+                            <textarea id="editMinistryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelMinistryEditBtn">Cancel</button>
+                        <button type="submit" class="btn">Update Attendee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteMinistryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this attendee? This action cannot be undone.</p>
+                <p><strong id="deleteMinistryAttendeeName"></strong></p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelMinistryDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmMinistryDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const addMinistryAttendeeForm = document.getElementById('addMinistryAttendeeForm');
+        const editMinistryAttendeeForm = document.getElementById('editMinistryAttendeeForm');
+        const successModal = document.getElementById('successModal');
+        const editMinistryAttendeeModal = document.getElementById('editMinistryAttendeeModal');
+        const deleteMinistryModal = document.getElementById('deleteMinistryModal');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const addAnotherBtn = document.getElementById('addAnotherBtn');
+        const cancelMinistryEditBtn = document.getElementById('cancelMinistryEditBtn');
+        const cancelMinistryDeleteBtn = document.getElementById('cancelMinistryDeleteBtn');
+        const confirmMinistryDeleteBtn = document.getElementById('confirmMinistryDeleteBtn');
+        const ministryAttendeesTable = document.getElementById('ministryAttendeesTable');
+        const searchMinistryAttendees = document.getElementById('searchMinistryAttendees');
+        const filterMinistryStatus = document.getElementById('filterMinistryStatus');
+        const filterMinistryDepartment = document.getElementById('filterMinistryDepartment');
+        const clearMinistryFiltersBtn = document.getElementById('clearMinistryFiltersBtn');
+        
+        // Tab Navigation
+        const tabs = document.querySelectorAll('.tab-content');
+        const tabLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
+        const pageTitle = document.getElementById('pageTitle');
+        
+        // Current ministry information
+        const currentMinistry = {
+            id: 1,
+            name: 'Ministry of Finance',
+            code: 'MOF',
+            contactPerson: 'Permanent Secretary Finance',
+            username: 'MOF2024'
+        };
+        
+        // Sample data for demonstration - Ministry-specific attendees
+        let ministryAttendees = [
+            {
+                id: 1,
+                name: 'Samuel Johnson',
+                email: 's.johnson@finance.gov.ng',
+                phone: '08012345678',
+                nin: '12345678901',
+                position: 'Assistant Director',
+                gradeLevel: 'Assistant Director',
+                ministry: 'Ministry of Finance',
+                department: 'Audit',
+                agency: 'Office of the Accountant General',
+                staffId: 'MOF/AD/001',
+                office: 'Abuja HQ',
+                status: 'Pending',
+                remarks: '',
+                addedBy: 'Ministry',
+                dateAdded: '2023-10-20'
+            },
+            {
+                id: 2,
+                name: 'Fatima Bello',
+                email: 'f.bello@finance.gov.ng',
+                phone: '08023456789',
+                nin: '23456789012',
+                position: 'Chief Officer',
+                gradeLevel: 'Chief Officer',
+                ministry: 'Ministry of Finance',
+                department: 'Treasury',
+                agency: 'National Treasury',
+                staffId: 'MOF/CO/045',
+                office: 'Abuja HQ',
+                status: 'Approved',
+                remarks: '',
+                addedBy: 'Ministry',
+                dateAdded: '2023-10-22'
+            },
+            {
+                id: 3,
+                name: 'Michael Adekunle',
+                email: 'm.adekunle@finance.gov.ng',
+                phone: '08034567890',
+                nin: '34567890123',
+                position: 'Senior Officer',
+                gradeLevel: 'Senior Officer',
+                ministry: 'Ministry of Finance',
+                department: 'Budget & Planning',
+                agency: 'Budget Office of the Federation',
+                staffId: 'MOF/SO/128',
+                office: 'Abuja HQ',
+                status: 'Approved',
+                remarks: '',
+                addedBy: 'Ministry',
+                dateAdded: '2023-10-23'
+            }
+        ];
+
+        // Current attendee being edited or deleted
+        let currentMinistryAttendeeId = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTabs();
+            initializeEventListeners();
+            updateMinistryStats();
+            displayMinistryInfo();
+        });
+
+        // Tab Navigation
+        function initializeTabs() {
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected tab content
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Update page title
+                    pageTitle.textContent = getTabTitle(tabId);
+                });
+            });
+
+            // Add event listeners for buttons that navigate between tabs
+            document.querySelectorAll('[data-tab]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.hasAttribute('data-tab')) {
+                        e.preventDefault();
+                        const tabId = this.getAttribute('data-tab');
+                        
+                        // Update active tab
+                        tabLinks.forEach(l => l.classList.remove('active'));
+                        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                        
+                        // Show selected tab content
+                        tabs.forEach(tab => tab.classList.remove('active'));
+                        document.getElementById(tabId).classList.add('active');
+                        
+                        // Update page title
+                        pageTitle.textContent = getTabTitle(tabId);
+                    }
+                });
+            });
+        }
+
+        function getTabTitle(tabId) {
+            const titles = {
+                'dashboard': 'Ministry Dashboard',
+                'attendees': 'My Attendees',
+                'add-attendee': 'Add New Attendee',
+                'reports': 'Reports & Analytics',
+                'settings': 'Ministry Settings'
+            };
+            return titles[tabId] || 'Ministry Dashboard';
+        }
+
+        // Event Listeners
+        function initializeEventListeners() {
+            // Form submissions
+            addMinistryAttendeeForm.addEventListener('submit', handleAddMinistryAttendee);
+            editMinistryAttendeeForm.addEventListener('submit', handleEditMinistryAttendee);
+            
+            // Modal controls
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    successModal.classList.remove('active');
+                    editMinistryAttendeeModal.classList.remove('active');
+                    deleteMinistryModal.classList.remove('active');
+                });
+            });
+            
+            addAnotherBtn.addEventListener('click', function() {
+                successModal.classList.remove('active');
+            });
+            
+            cancelMinistryEditBtn.addEventListener('click', function() {
+                editMinistryAttendeeModal.classList.remove('active');
+            });
+            
+            cancelMinistryDeleteBtn.addEventListener('click', function() {
+                deleteMinistryModal.classList.remove('active');
+            });
+            
+            confirmMinistryDeleteBtn.addEventListener('click', handleDeleteMinistryAttendee);
+            
+            // Search and filter
+            searchMinistryAttendees.addEventListener('input', filterMinistryAttendees);
+            filterMinistryStatus.addEventListener('change', filterMinistryAttendees);
+            filterMinistryDepartment.addEventListener('change', filterMinistryAttendees);
+            clearMinistryFiltersBtn.addEventListener('click', clearMinistryFilters);
+            
+            // Edit and delete buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('edit-ministry-attendee-btn')) {
+                    const row = e.target.closest('tr');
+                    const attendeeId = parseInt(row.getAttribute('data-id'));
+                    openEditMinistryModal(attendeeId);
+                }
+                
+                if (e.target.classList.contains('delete-ministry-attendee-btn')) {
+                    const row = e.target.closest('tr');
+                    const attendeeId = parseInt(row.getAttribute('data-id'));
+                    const attendeeName = row.cells[0].textContent;
+                    openDeleteMinistryModal(attendeeId, attendeeName);
+                }
+            });
+            
+            // Refresh buttons
+            document.getElementById('refreshMinistryActivityBtn').addEventListener('click', function() {
+                alert('Refreshing recent activity...');
+            });
+            
+            // Export button
+            document.getElementById('exportMinistryAttendeesBtn').addEventListener('click', function() {
+                alert('Exporting ministry attendees data...');
+            });
+        }
+
+        // Form Handlers
+        function handleAddMinistryAttendee(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                id: ministryAttendees.length > 0 ? Math.max(...ministryAttendees.map(a => a.id)) + 1 : 1,
+                name: document.getElementById('ministryAttendeeName').value,
+                email: document.getElementById('ministryAttendeeEmail').value,
+                phone: document.getElementById('ministryAttendeePhone').value,
+                nin: document.getElementById('ministryAttendeeNIN').value,
+                position: document.getElementById('ministryAttendeePosition').value,
+                gradeLevel: document.getElementById('ministryAttendeeGradeLevel').value,
+                ministry: currentMinistry.name,
+                department: document.getElementById('ministryAttendeeDepartment').value,
+                agency: document.getElementById('ministryAttendeeAgency').value,
+                staffId: document.getElementById('ministryAttendeeStaffId').value,
+                office: document.getElementById('ministryAttendeeOffice').value,
+                status: 'Pending', // Always pending when added by ministry
+                remarks: document.getElementById('ministryAttendeeRemarks').value,
+                addedBy: 'Ministry',
+                dateAdded: new Date().toISOString().split('T')[0]
+            };
+            
+            // Add to ministry attendees array
+            ministryAttendees.push(formData);
+            
+            // Simulate sending to Super Admin for approval
+            sendToSuperAdminForApproval(formData);
+            
+            // Update UI
+            updateMinistryAttendeesTable();
+            updateMinistryStats();
+            
+            // Show success message
+            document.getElementById('successMessage').textContent = 'Attendee has been successfully added!';
+            successModal.classList.add('active');
+            
+            // Reset form
+            addMinistryAttendeeForm.reset();
+        }
+
+        function handleEditMinistryAttendee(e) {
+            e.preventDefault();
+            
+            // Update attendee data
+            const attendeeIndex = ministryAttendees.findIndex(a => a.id === currentMinistryAttendeeId);
+            if (attendeeIndex !== -1) {
+                ministryAttendees[attendeeIndex] = {
+                    ...ministryAttendees[attendeeIndex],
+                    name: document.getElementById('editMinistryAttendeeName').value,
+                    email: document.getElementById('editMinistryAttendeeEmail').value,
+                    phone: document.getElementById('editMinistryAttendeePhone').value,
+                    nin: document.getElementById('editMinistryAttendeeNIN').value,
+                    position: document.getElementById('editMinistryAttendeePosition').value,
+                    gradeLevel: document.getElementById('editMinistryAttendeeGradeLevel').value,
+                    department: document.getElementById('editMinistryAttendeeDepartment').value,
+                    agency: document.getElementById('editMinistryAttendeeAgency').value,
+                    staffId: document.getElementById('editMinistryAttendeeStaffId').value,
+                    office: document.getElementById('editMinistryAttendeeOffice').value,
+                    remarks: document.getElementById('editMinistryAttendeeRemarks').value
+                };
+                
+                // Update UI
+                updateMinistryAttendeesTable();
+                updateMinistryStats();
+                
+                // Show success message
+                document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
+                successModal.classList.add('active');
+                
+                // Close modal
+                editMinistryAttendeeModal.classList.remove('active');
+            }
+        }
+
+        function handleDeleteMinistryAttendee() {
+            // Remove attendee from array
+            ministryAttendees = ministryAttendees.filter(a => a.id !== currentMinistryAttendeeId);
+            
+            // Update UI
+            updateMinistryAttendeesTable();
+            updateMinistryStats();
+            
+            // Show success message
+            document.getElementById('successMessage').textContent = 'Attendee has been successfully deleted!';
+            successModal.classList.add('active');
+            
+            // Close modal
+            deleteMinistryModal.classList.remove('active');
+        }
+
+        // Modal Functions
+        function openEditMinistryModal(attendeeId) {
+            const attendee = ministryAttendees.find(a => a.id === attendeeId);
+            if (attendee) {
+                currentMinistryAttendeeId = attendeeId;
+                
+                // Populate form with attendee data
+                document.getElementById('editMinistryAttendeeName').value = attendee.name;
+                document.getElementById('editMinistryAttendeeEmail').value = attendee.email;
+                document.getElementById('editMinistryAttendeePhone').value = attendee.phone;
+                document.getElementById('editMinistryAttendeeNIN').value = attendee.nin;
+                document.getElementById('editMinistryAttendeePosition').value = attendee.position;
+                document.getElementById('editMinistryAttendeeGradeLevel').value = attendee.gradeLevel;
+                document.getElementById('editMinistryAttendeeDepartment').value = attendee.department;
+                document.getElementById('editMinistryAttendeeAgency').value = attendee.agency;
+                document.getElementById('editMinistryAttendeeStaffId').value = attendee.staffId;
+                document.getElementById('editMinistryAttendeeOffice').value = attendee.office;
+                document.getElementById('editMinistryAttendeeRemarks').value = attendee.remarks;
+                
+                // Show modal
+                editMinistryAttendeeModal.classList.add('active');
+            }
+        }
+
+        function openDeleteMinistryModal(attendeeId, attendeeName) {
+            currentMinistryAttendeeId = attendeeId;
+            document.getElementById('deleteMinistryAttendeeName').textContent = attendeeName;
+            deleteMinistryModal.classList.add('active');
+        }
+
+        // Search and Filter Functions
+        function filterMinistryAttendees() {
+            const searchTerm = searchMinistryAttendees.value.toLowerCase();
+            const statusFilter = filterMinistryStatus.value;
+            const departmentFilter = filterMinistryDepartment.value;
+            
+            const filteredAttendees = ministryAttendees.filter(attendee => {
+                const matchesSearch = 
+                    attendee.name.toLowerCase().includes(searchTerm) ||
+                    attendee.email.toLowerCase().includes(searchTerm) ||
+                    attendee.nin.includes(searchTerm) ||
+                    attendee.position.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = statusFilter ? attendee.status === statusFilter : true;
+                const matchesDepartment = departmentFilter ? attendee.department === departmentFilter : true;
+                
+                return matchesSearch && matchesStatus && matchesDepartment;
+            });
+            
+            renderMinistryAttendeesTable(filteredAttendees);
+        }
+
+        function clearMinistryFilters() {
+            searchMinistryAttendees.value = '';
+            filterMinistryStatus.value = '';
+            filterMinistryDepartment.value = '';
+            renderMinistryAttendeesTable(ministryAttendees);
+        }
+
+        // Super Admin Integration
+        function sendToSuperAdminForApproval(attendeeData) {
+            // In a real application, this would be an API call to the Super Admin system
+            console.log('Sending attendee to Super Admin for approval:', attendeeData);
+            
+            // Simulate API call
+            setTimeout(() => {
+                console.log('Attendee sent to Super Admin successfully. Pending approval.');
+            }, 1000);
+        }
+
+        // UI Update Functions
+        function displayMinistryInfo() {
+            document.getElementById('currentMinistryName').textContent = currentMinistry.name;
+            document.getElementById('currentMinistryCode').textContent = currentMinistry.code;
+            document.getElementById('currentContactPerson').textContent = currentMinistry.contactPerson;
+            document.getElementById('ministryNameDisplay').textContent = currentMinistry.name;
+            document.getElementById('ministryAvatar').textContent = currentMinistry.code.substring(0, 2);
+        }
+
+        function updateMinistryStats() {
+            const pendingCount = ministryAttendees.filter(a => a.status === 'Pending').length;
+            const approvedCount = ministryAttendees.filter(a => a.status === 'Approved').length;
+            const totalCount = ministryAttendees.length;
+            
+            document.getElementById('ministryPendingCount').textContent = pendingCount;
+            document.getElementById('ministryApprovedCount').textContent = approvedCount;
+            document.getElementById('ministryTotalCount').textContent = totalCount;
+        }
+
+        function updateMinistryAttendeesTable() {
+            renderMinistryAttendeesTable(ministryAttendees);
+        }
+
+        function renderMinistryAttendeesTable(attendeesList) {
+            let html = '';
+            
+            attendeesList.forEach(attendee => {
+                const statusClass = `status-${attendee.status.toLowerCase()}`;
+                
+                html += `
+                    <tr data-id="${attendee.id}">
+                        <td>${attendee.name}</td>
+                        <td>${attendee.email}</td>
+                        <td>${attendee.nin}</td>
+                        <td>${attendee.position}</td>
+                        <td>${attendee.department}</td>
+                        <td>${attendee.agency}</td>
+                        <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            ministryAttendeesTable.innerHTML = html;
+        }
+
+        // Initialize tables
+        renderMinistryAttendeesTable(ministryAttendees);
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const logoutBtn = document.getElementById('ministryLogoutBtn');
+  const modal = document.getElementById('logoutConfirmModal');
+  const confirmLogout = document.getElementById('confirmLogoutBtn');
+  const cancelLogout = document.getElementById('cancelLogoutBtn');
+
+  // Show confirmation modal
+  logoutBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    modal.style.display = 'flex';
+  });
+
+  // Cancel logout
+  cancelLogout.addEventListener('click', function () {
+    modal.style.display = 'none';
+  });
+
+  // Confirm logout
+  confirmLogout.addEventListener('click', function () {
+    // Clear session data
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Optional "Logging out..." message before redirect
+    modal.innerHTML = '<div style="color:white;font-size:1.3rem;">Logging out...</div>';
+    modal.style.background = 'rgba(0,0,0,0.8)';
+
+    // Redirect after short delay
+    setTimeout(() => {
+      window.location.href = '../index.html'; // adjust this path if needed
+    }, 1500);
+  });
+});
+</script>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutConfirmModal" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+">
+  <div style="
+    background: #fff;
+    color: #333;
+    padding: 25px 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+  ">
+    <h3 style="margin-bottom: 10px;">Confirm Logout</h3>
+    <p style="margin-bottom: 20px;">Are you sure you want to log out?</p>
+    <button id="confirmLogoutBtn" style="
+      background: #d9534f;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    ">Yes, Logout</button>
+    <button id="cancelLogoutBtn" style="
+      background: #6c757d;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    ">Cancel</button>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+</body>
+</html>
