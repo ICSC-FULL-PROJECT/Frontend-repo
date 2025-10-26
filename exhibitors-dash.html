@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exhibitor Dashboard - ICSC 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008751;
+            --primary-light: #afe1af;
+            --primary-dark: #006400;
+            --secondary: #eff1ed;
+            --dark: #212121;
+            --light: #ffffff;
+            --gray: #f4f4f4;
+            --border: #cccccc;
+            --exhibitor: #e76f51;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .role-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .exhibitor-badge {
+            background-color: var(--exhibitor);
+            color: white;
+        }
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #f0f5ff;
+            color: var(--primary);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .content-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .agenda-container {
+            margin-bottom: 30px;
+        }
+        
+        .agenda-day {
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .day-header {
+            background-color: #f0f5ff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .day-header h3 {
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .day-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .attend-day-btn {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .attend-day-btn:hover {
+            background-color: #c8e6c9;
+        }
+        
+        .attending-day {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        
+        .attending-day:hover {
+            background-color: #388e3c;
+        }
+        
+        .exhibit-day-btn {
+            background-color: #ffecb3;
+            color: #7d6608;
+            border: 1px solid #ffd54f;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .exhibit-day-btn:hover {
+            background-color: #ffd54f;
+        }
+        
+        .exhibiting-day {
+            background-color: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+        
+        .exhibiting-day:hover {
+            background-color: #f57c00;
+        }
+        
+        .day-content {
+            padding: 20px;
+        }
+        
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .event-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 135, 81, 0.15);
+        }
+        
+        .event-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .event-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .event-time {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 120px;
+            text-align: right;
+        }
+        
+        .sidebar-widget {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .widget-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .widget-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .payment-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .payment-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: var(--shadow-hover);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: var(--primary);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .file-upload i {
+            font-size: 2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .booth-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        
+        .booth-option {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .booth-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .booth-option.selected {
+            border-color: var(--primary);
+            background-color: #f0f5ff;
+        }
+        
+        .booth-option.sold-out {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .sold-out-badge {
+            background-color: #ff5252;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+        
+        .event-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .live-now {
+            background-color: #ff5252;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .up-next {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        .later-today {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .on-demand-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .video-container {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .video-placeholder {
+            background-color: #f5f5f5;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .resource-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 135, 81, 0.15);
+        }
+        
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .booth-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .api-indicator {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .api-indicator strong {
+            color: #1976d2;
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .booth-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .day-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .attend-day-btn, .exhibit-day-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .booth-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h1>ICSC 2026 Dashboard</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">MC</div>
+                    <div>
+                        <div class="user-name">Michael Chen</div>
+                        <div class="role-badge exhibitor-badge">Exhibitor</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="#" data-tab="on-demand"><i class="fas fa-play-circle"></i> On Demand</a></li>
+                    <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
+                    <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" data-tab="help"><i class="fas fa-question-circle"></i> Help</a></li>
+                </ul>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="main-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-content active" id="dashboard">
+                        <div class="content-header">
+                            <h2>Conference Agenda</h2>
+                        </div>
+                        
+                        <!-- BACKEND INTEGRATION: Agenda data from main site -->
+                        <div class="api-indicator">
+                            <strong>BACKEND INTEGRATION:</strong> Agenda data will be fetched from <code>/api/agenda</code> endpoint
+                        </div>
+                        
+                        <div class="agenda-container" id="dashboard-agenda">
+                            <!-- Agenda content will be dynamically populated by JavaScript from backend -->
+                        </div>
+                        
+                        <div class="content-header">
+                            <h2>Exhibitor Dashboard</h2>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="booth-number">--</div>
+                                <div class="stat-label">Your Booth</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="exhibition-count">0</div>
+                                <div class="stat-label">Exhibition Sessions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">42</div>
+                                <div class="stat-label">Visitor Interactions</div>
+                            </div>
+                        </div>
+                        <p>Welcome to your personalized exhibitor dashboard. Here you can manage your conference schedule, set up exhibitions, and access resources.</p>
+                    </div>
+                    
+                    <!-- Agenda Tab -->
+                    <div class="tab-content" id="agenda">
+                        <div class="content-header">
+                            <h2>Full Conference Agenda</h2>
+                        </div>
+                        
+                        <!-- BACKEND INTEGRATION: Full agenda data from main site -->
+                        <div class="api-indicator">
+                            <strong>BACKEND INTEGRATION:</strong> Full agenda data will be fetched from <code>/api/agenda/full</code> endpoint
+                        </div>
+                        
+                        <div class="agenda-container" id="full-agenda">
+                            <!-- Full agenda will be dynamically populated by JavaScript from backend -->
+                        </div>
+                    </div>
+                    
+                    <!-- On Demand Tab -->
+                    <div class="tab-content" id="on-demand">
+                        <div class="content-header">
+                            <h2>On Demand & Live Stream</h2>
+                        </div>
+                        
+                        <!-- BACKEND INTEGRATION: Live stream from main site -->
+                        <div class="api-indicator">
+                            <strong>BACKEND INTEGRATION:</strong> Live stream data will be fetched from <code>/api/live-stream</code> endpoint
+                        </div>
+                        
+                        <div class="on-demand-content">
+                            <h3>Live Stream</h3>
+                            <p>Watch the conference live stream directly from this page. The stream will be active during conference hours.</p>
+                            
+                            <div class="video-container" id="live-stream-container">
+                                <!-- Live stream will be dynamically populated by JavaScript from backend -->
+                            </div>
+                            
+                            <h3>Recorded Sessions</h3>
+                            <p>Missed a session? Watch the recordings here after the event.</p>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-number">18</div>
+                                    <div class="stat-label">Recorded Sessions Available</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">42</div>
+                                    <div class="stat-label">Hours of Content</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">95%</div>
+                                    <div class="stat-label">Attendee Satisfaction</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resources Tab -->
+                    <div class="tab-content" id="resources">
+                        <div class="content-header">
+                            <h2>Exhibition Resources</h2>
+                        </div>
+                        
+                        <!-- BACKEND INTEGRATION: Resources from user submissions -->
+                        <div class="api-indicator">
+                            <strong>BACKEND INTEGRATION:</strong> Resources will be fetched from <code>/api/resources</code> endpoint
+                        </div>
+                        
+                        <p>All your exhibition materials and resources will appear here after submission.</p>
+                        
+                        <div class="resources-grid" id="resources-container">
+                            <!-- Resources will be dynamically populated by JavaScript from backend -->
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Tab -->
+                    <div class="tab-content" id="settings">
+                        <div class="content-header">
+                            <h2>Account Settings</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company-name">Company Name</label>
+                            <input type="text" id="company-name" value="Tech Innovations Ltd">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-email">Contact Email</label>
+                            <input type="email" id="contact-email" value="michael@techinnovations.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone-number">Phone Number</label>
+                            <input type="tel" id="phone-number" value="+1 (555) 123-4567">
+                        </div>
+                        
+                        <button class="payment-btn">Save Changes</button>
+                    </div>
+                    
+                    <!-- Help Tab -->
+                    <div class="tab-content" id="help">
+                        <div class="content-header">
+                            <h2>Help & Support</h2>
+                        </div>
+                        
+                        <div class="help-content">
+                            <h3>Frequently Asked Questions</h3>
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>How do I set up an exhibition?</h4>
+                                    <p>Click "Exhibit This Day" on any day in the Dashboard tab to set up your exhibition.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Where can I watch live streams?</h4>
+                                    <p>All live streams are available in the "On Demand" tab during conference hours.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>How do I contact support?</h4>
+                                    <p>Use the contact information below to reach our support team.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-info">
+                                <h3>Contact Information</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Exhibitor Support Hotline</h4>
+                                        <p>+234 800 000 0001</p>
+                                        <p>Available 24/7 during the conference</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Email Support</h4>
+                                        <p>exhibitors@icsc2026.gov.ng</p>
+                                        <p>Response within 2 hours</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-widgets">
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3>My Schedule</h3>
+                        </div>
+                        <div id="selected-events">
+                            <p>No days selected yet. Click "Attend This Day" or "Exhibit" to add days to your schedule.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-bell"></i>
+                            <h3>Upcoming Events</h3>
+                        </div>
+                        <div id="upcoming-events">
+                            <p class="no-events">No upcoming events. Select days to see them here.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Booth Statistics</h3>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Booths</div>
+                            <div class="info-value">200</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Available</div>
+                            <div class="info-value" id="available-booths">200</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Sold Out</div>
+                            <div class="info-value" id="sold-out-booths">0</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Your Booths</div>
+                            <div class="info-value" id="your-booths">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Exhibit Modal -->
+    <div class="modal" id="exhibit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Exhibition Setup</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <!-- BACKEND INTEGRATION: Booth selection and payment -->
+            <div class="api-indicator">
+                <strong>BACKEND INTEGRATION:</strong> Booth data and payment processing via <code>/api/booths</code> and <code>/api/payments</code>
+            </div>
+            
+            <div class="form-group">
+                <label for="exhibition-title">Exhibition Title</label>
+                <input type="text" id="exhibition-title" placeholder="Enter your exhibition title">
+            </div>
+            <div class="form-group">
+                <label for="exhibition-description">Description</label>
+                <textarea id="exhibition-description" placeholder="Describe what you'll be exhibiting"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Booth Selection</label>
+                <div class="booth-stats">
+                    <div>Total: 200</div>
+                    <div>Available: <span id="modal-available">200</span></div>
+                    <div>Sold Out: <span id="modal-sold-out">0</span></div>
+                </div>
+                <div class="booth-grid" id="booth-grid">
+                    <!-- Booth options will be dynamically populated by JavaScript from backend -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Upload Exhibition Materials</label>
+                <div class="file-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop files here or click to browse</p>
+                    <input type="file" id="exhibition-files" multiple style="display: none;">
+                    <button class="payment-btn" id="browse-files" style="width: auto; margin-top: 10px;">Browse Files</button>
+                </div>
+                <div id="file-list"></div>
+            </div>
+            <div class="form-group">
+                <label for="exhibition-budget">Budget (₦)</label>
+                <input type="number" id="exhibition-budget" placeholder="Enter your exhibition budget in Naira">
+            </div>
+            <button class="payment-btn" id="submit-exhibition">Submit Exhibition & Make Payment</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <div class="notification-text">Event added to your schedule!</div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // BACKEND API INTEGRATION POINTS
+        // =====================================================================
+        
+        // API ENDPOINTS - Replace these with actual backend endpoints
+        const API_ENDPOINTS = {
+            // Agenda endpoints
+            AGENDA: '/api/agenda',
+            AGENDA_FULL: '/api/agenda/full',
+            
+            // Booth management endpoints
+            BOOTHS: '/api/booths',
+            BOOTHS_STATUS: '/api/booths/status',
+            
+            // Exhibition endpoints
+            EXHIBITIONS: '/api/exhibitions',
+            EXHIBITIONS_SUBMIT: '/api/exhibitions/submit',
+            
+            // Payment endpoints
+            PAYMENTS: '/api/payments',
+            PAYMENTS_PROCESS: '/api/payments/process',
+            
+            // Live stream endpoints
+            LIVE_STREAM: '/api/live-stream',
+            LIVE_STREAM_STATUS: '/api/live-stream/status',
+            
+            // Resources endpoints
+            RESOURCES: '/api/resources',
+            RESOURCES_UPLOAD: '/api/resources/upload',
+            
+            // Admin notification endpoints
+            NOTIFY_ADMIN: '/api/admin/notify',
+            
+            // Real-time updates endpoint
+            REAL_TIME_UPDATES: '/api/real-time/updates'
+        };
+
+        // Global state for real-time booth management
+        let globalBooths = {
+            total: 200,
+            available: 200,
+            soldOut: 0,
+            boothDetails: {}
+        };
+
+        // Initialize state
+        let selectedDays = [];
+        let agendaData = {};
+        let currentExhibitDay = null;
+
+        // =====================================================================
+        // REAL-TIME API FUNCTIONS
+        // =====================================================================
+        
+        // Fetch agenda data from backend API
+        async function fetchAgendaData() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.AGENDA);
+                // const data = await response.json();
+                // return data;
+                
+                // Sample data for demo - will be replaced by backend
+                return {
+                    "wednesday": [
+                        {
+                            "id": "wed-1",
+                            "time": "08:30-09:00",
+                            "title": "Registration and Welcome Coffee",
+                            "location": "Main Hall",
+                            "description": "",
+                            "hasLiveStream": false
+                        },
+                        {
+                            "id": "wed-2",
+                            "time": "09:00-09:30",
+                            "title": "Opening Ceremony",
+                            "location": "Main Stage",
+                            "description": "Official opening of the International Civil Service Conference 2026",
+                            "hasLiveStream": true
+                        }
+                    ],
+                    "thursday": [
+                        {
+                            "id": "thu-1",
+                            "time": "09:00-09:10",
+                            "title": "Opening Welcome",
+                            "location": "Main Stage",
+                            "description": "",
+                            "hasLiveStream": true
+                        },
+                        {
+                            "id": "thu-2",
+                            "time": "09:10-10:00",
+                            "title": "The Civil Service as the Engine of Governance",
+                            "location": "Transform Stage",
+                            "description": "Measuring and monitoring performance in public service",
+                            "hasLiveStream": true
+                        }
+                    ]
+                };
+            } catch (error) {
+                console.error('Error fetching agenda data:', error);
+                // Fallback to sample data
+                return {
+                    "wednesday": [],
+                    "thursday": []
+                };
+            }
+        }
+        
+        // Fetch full agenda data from backend API
+        async function fetchFullAgendaData() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.AGENDA_FULL);
+                // const data = await response.json();
+                // return data;
+                
+                // Sample data for demo - will be replaced by backend
+                return await fetchAgendaData();
+            } catch (error) {
+                console.error('Error fetching full agenda data:', error);
+                return await fetchAgendaData(); // Fallback to regular agenda
+            }
+        }
+        
+        // Fetch booth data from backend API
+        async function fetchBoothData() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.BOOTHS);
+                // const data = await response.json();
+                // return data;
+                
+                // Using global state for demo
+                return globalBooths;
+            } catch (error) {
+                console.error('Error fetching booth data:', error);
+                return globalBooths; // Fallback to global state
+            }
+        }
+        
+        // Update booth status in backend
+        async function updateBoothStatus(boothData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.BOOTHS_STATUS, {
+                //     method: 'PUT',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(boothData)
+                // });
+                // return await response.json();
+                
+                console.log('Booth status updated:', boothData);
+                return { success: true };
+            } catch (error) {
+                console.error('Error updating booth status:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Submit exhibition to backend
+        async function submitExhibition(exhibitionData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.EXHIBITIONS_SUBMIT, {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(exhibitionData)
+                // });
+                // return await response.json();
+                
+                console.log('Exhibition submitted:', exhibitionData);
+                return { success: true, id: 'exh-' + Date.now() };
+            } catch (error) {
+                console.error('Error submitting exhibition:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Process payment
+        async function processPayment(paymentData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.PAYMENTS_PROCESS, {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(paymentData)
+                // });
+                // return await response.json();
+                
+                console.log('Payment processed:', paymentData);
+                return { success: true, transactionId: 'txn-' + Date.now() };
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Fetch live stream data from backend
+        async function fetchLiveStreamData() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.LIVE_STREAM);
+                // return await response.json();
+                
+                // Sample data for demo
+                return {
+                    isLive: true,
+                    streamUrl: "https://www.youtube.com/embed/live_stream?channel=UC_SAMPLE",
+                    currentEvent: "Keynote: The Future of Public Service",
+                    upcomingEvents: [
+                        "Panel: Digital Transformation in Government",
+                        "Networking Break"
+                    ]
+                };
+            } catch (error) {
+                console.error('Error fetching live stream data:', error);
+                return { isLive: false };
+            }
+        }
+        
+        // Fetch resources from backend
+        async function fetchResources() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.RESOURCES);
+                // return await response.json();
+                
+                // Sample data for demo
+                return [];
+            } catch (error) {
+                console.error('Error fetching resources:', error);
+                return [];
+            }
+        }
+        
+        // Save resources to backend
+        async function saveResources(resourceData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.RESOURCES_UPLOAD, {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(resourceData)
+                // });
+                // return await response.json();
+                
+                console.log('Resources saved:', resourceData);
+                return { success: true };
+            } catch (error) {
+                console.error('Error saving resources:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Notify admin
+        async function notifyAdmin(notificationData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.NOTIFY_ADMIN, {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(notificationData)
+                // });
+                // return await response.json();
+                
+                console.log('Admin notified:', notificationData);
+                return { success: true };
+            } catch (error) {
+                console.error('Error notifying admin:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        // Get real-time updates
+        async function getRealTimeUpdates() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.REAL_TIME_UPDATES);
+                // return await response.json();
+                
+                // Sample updates for demo
+                return {
+                    boothUpdates: {},
+                    agendaUpdates: {},
+                    liveStreamStatus: { isLive: true }
+                };
+            } catch (error) {
+                console.error('Error fetching real-time updates:', error);
+                return {};
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadInitialData();
+            
+            // Set up real-time updates
+            setInterval(updateRealTimeData, 10000); // Update every 10 seconds
+            
+            // Tab switching functionality
+            const tabLinks = document.querySelectorAll('.sidebar-menu a');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab link
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Load specific data for tab if needed
+                    if (tabId === 'on-demand') {
+                        loadLiveStreamData();
+                    } else if (tabId === 'resources') {
+                        renderResources();
+                    }
+                });
+            });
+            
+            // Load initial data
+            async function loadInitialData() {
+                // Load agenda data from backend
+                agendaData = await fetchAgendaData();
+                renderDashboardAgenda(agendaData);
+                
+                // Load full agenda data from backend
+                const fullAgendaData = await fetchFullAgendaData();
+                renderFullAgenda(fullAgendaData);
+                
+                // Load booth data from backend
+                await loadBoothData();
+                
+                // Load resources from backend
+                await renderResources();
+            }
+            
+            // Update real-time data
+            async function updateRealTimeData() {
+                // Get real-time updates from backend
+                const updates = await getRealTimeUpdates();
+                
+                // Update booth data if there are updates
+                if (updates.boothUpdates && Object.keys(updates.boothUpdates).length > 0) {
+                    await loadBoothData();
+                }
+                
+                // Update agenda if there are updates
+                if (updates.agendaUpdates && Object.keys(updates.agendaUpdates).length > 0) {
+                    agendaData = await fetchAgendaData();
+                    renderDashboardAgenda(agendaData);
+                }
+                
+                // Update live stream status
+                if (updates.liveStreamStatus) {
+                    // If on demand tab is active, update the stream
+                    if (document.getElementById('on-demand').classList.contains('active')) {
+                        loadLiveStreamData();
+                    }
+                }
+                
+                // Update dashboard if needed
+                updateBoothStats();
+                
+                // Update exhibit modal if open
+                if (document.getElementById('exhibit-modal').style.display === 'flex') {
+                    renderBoothGrid(currentExhibitDay.id);
+                }
+            }
+            
+            // Load booth data from backend
+            async function loadBoothData() {
+                const boothData = await fetchBoothData();
+                globalBooths = boothData;
+                updateBoothStats();
+            }
+            
+            // Update booth statistics
+            function updateBoothStats() {
+                document.getElementById('available-booths').textContent = globalBooths.available;
+                document.getElementById('sold-out-booths').textContent = globalBooths.soldOut;
+                document.getElementById('modal-available').textContent = globalBooths.available;
+                document.getElementById('modal-sold-out').textContent = globalBooths.soldOut;
+                
+                // Update your booths count
+                const yourBooths = selectedDays.filter(day => day.type === 'exhibit' && day.exhibitionDetails).length;
+                document.getElementById('your-booths').textContent = yourBooths;
+                
+                // Update your booth number if you have one
+                const yourBooth = selectedDays.find(day => day.type === 'exhibit' && day.exhibitionDetails);
+                if (yourBooth) {
+                    document.getElementById('booth-number').textContent = yourBooth.exhibitionDetails.booth;
+                }
+            }
+            
+            // Render agenda for dashboard from backend data
+            function renderDashboardAgenda(agendaData) {
+                const container = document.getElementById('dashboard-agenda');
+                let html = '';
+                
+                for (const [day, events] of Object.entries(agendaData)) {
+                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    const dayId = day;
+                    
+                    // Check if day is already selected
+                    const daySelection = selectedDays.find(d => d.id === dayId);
+                    
+                    html += `
+                        <div class="agenda-day">
+                            <div class="day-header">
+                                <h3>${dayTitle}</h3>
+                                <div class="day-actions">
+                                    <button class="attend-day-btn ${daySelection && daySelection.type === 'attend' ? 'attending-day' : ''}" data-day="${dayId}">
+                                        ${daySelection && daySelection.type === 'attend' ? 'Attending' : 'Attend This Day'}
+                                    </button>
+                                    <button class="exhibit-day-btn ${daySelection && daySelection.type === 'exhibit' ? 'exhibiting-day' : ''}" data-day="${dayId}">
+                                        ${daySelection && daySelection.type === 'exhibit' ? 'Exhibiting' : 'Exhibit'}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="day-content">
+                    `;
+                    
+                    events.forEach(event => {
+                        html += `
+                            <div class="event-item" data-event-id="${event.id}">
+                                <div class="event-info">
+                                    <h4>${event.title}</h4>
+                                    <p>${event.description}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                                </div>
+                                <div class="event-time">${event.time}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                attachEventListeners();
+            }
+            
+            // Render full agenda for agenda tab from backend data
+            function renderFullAgenda(agendaData) {
+                const container = document.getElementById('full-agenda');
+                let html = '';
+                
+                for (const [day, events] of Object.entries(agendaData)) {
+                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    
+                    html += `
+                        <div class="agenda-day">
+                            <div class="day-header">
+                                <h3>${dayTitle}</h3>
+                            </div>
+                            <div class="day-content">
+                    `;
+                    
+                    events.forEach(event => {
+                        html += `
+                            <div class="event-item" data-event-id="${event.id}">
+                                <div class="event-info">
+                                    <h4>${event.title}</h4>
+                                    <p>${event.description}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                                </div>
+                                <div class="event-time">${event.time}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+            }
+            
+            // Render live stream from backend data
+            async function loadLiveStreamData() {
+                const streamData = await fetchLiveStreamData();
+                const container = document.getElementById('live-stream-container');
+                
+                if (streamData.isLive) {
+                    container.innerHTML = `
+                        <iframe 
+                            width="100%" 
+                            height="400" 
+                            src="${streamData.streamUrl}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                        <div style="padding: 15px; background: #f5f5f5;">
+                            <strong>Now Live:</strong> ${streamData.currentEvent}
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="video-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <h4>Live Stream will appear here</h4>
+                            <p>The live stream will be available during conference hours</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Render resources from backend data
+            async function renderResources() {
+                const resources = await fetchResources();
+                const container = document.getElementById('resources-container');
+                
+                // Also include exhibition resources from local state
+                const exhibitionResources = selectedDays.filter(day => day.type === 'exhibit' && day.exhibitionDetails);
+                
+                if (resources.length === 0 && exhibitionResources.length === 0) {
+                    container.innerHTML = '<p>No exhibition resources yet. Set up an exhibition to see your materials here.</p>';
+                    return;
+                }
+                
+                let html = '';
+                
+                // Add resources from backend
+                resources.forEach(resource => {
+                    html += `
+                        <div class="resource-card">
+                            <div class="resource-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <h4>${resource.title}</h4>
+                            <p>${resource.description}</p>
+                            <button class="payment-btn" style="margin-top: 10px;">Download</button>
+                        </div>
+                    `;
+                });
+                
+                // Add exhibition resources from local state
+                exhibitionResources.forEach(day => {
+                    html += `
+                        <div class="resource-card">
+                            <div class="resource-icon">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <h4>${day.exhibitionDetails.title}</h4>
+                            <p>${day.title}</p>
+                            <p>Booth: ${day.exhibitionDetails.booth}</p>
+                            <p>Budget: ₦${day.exhibitionDetails.budget.toLocaleString()}</p>
+                            <button class="payment-btn" style="margin-top: 10px;">View Details</button>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+            
+            // Render booth grid for exhibit modal from backend data
+            function renderBoothGrid(day) {
+                const container = document.getElementById('booth-grid');
+                let html = '';
+                
+                // Generate 200 booths
+                for (let i = 1; i <= 200; i++) {
+                    const boothId = `B${i}`;
+                    const isSoldOut = globalBooths.boothDetails[boothId] && globalBooths.boothDetails[boothId].soldOut;
+                    
+                    html += `
+                        <div class="booth-option ${isSoldOut ? 'sold-out' : ''}" data-booth-id="${boothId}">
+                            ${boothId}
+                            ${isSoldOut ? '<span class="sold-out-badge">Sold</span>' : ''}
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                
+                // Add event listeners to booth options
+                document.querySelectorAll('.booth-option:not(.sold-out)').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.booth-option').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                    });
+                });
+            }
+            
+            // Attach event listeners to dynamically created elements
+            function attachEventListeners() {
+                // Day attendance functionality
+                const attendButtons = document.querySelectorAll('.attend-day-btn');
+                const exhibitButtons = document.querySelectorAll('.exhibit-day-btn');
+                
+                // Handle attend day button clicks
+                attendButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const day = this.getAttribute('data-day');
+                        const dayHeader = this.closest('.day-header');
+                        const dayTitle = dayHeader.querySelector('h3').textContent;
+                        
+                        // Check if day is already selected for exhibit
+                        const dayIndex = selectedDays.findIndex(d => d.id === day);
+                        
+                        if (dayIndex === -1) {
+                            // Add day to selected days for attendance
+                            selectedDays.push({
+                                id: day,
+                                title: dayTitle,
+                                type: 'attend'
+                            });
+                            
+                            this.textContent = 'Attending';
+                            this.classList.add('attending-day');
+                            
+                            // Disable exhibit button for this day
+                            const exhibitBtn = this.parentNode.querySelector('.exhibit-day-btn');
+                            exhibitBtn.disabled = true;
+                            
+                            showNotification(`${dayTitle} added to your schedule!`);
+                        } else if (selectedDays[dayIndex].type === 'attend') {
+                            // Remove day from selected days
+                            selectedDays.splice(dayIndex, 1);
+                            
+                            this.textContent = 'Attend This Day';
+                            this.classList.remove('attending-day');
+                            
+                            // Enable exhibit button for this day
+                            const exhibitBtn = this.parentNode.querySelector('.exhibit-day-btn');
+                            exhibitBtn.disabled = false;
+                            
+                            showNotification(`${dayTitle} removed from your schedule!`);
+                        }
+                        
+                        updateSelectedEventsDisplay();
+                        updateUpcomingEventsDisplay();
+                        updateStats();
+                    });
+                });
+                
+                // Handle exhibit day button clicks
+                exhibitButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const day = this.getAttribute('data-day');
+                        const dayHeader = this.closest('.day-header');
+                        const dayTitle = dayHeader.querySelector('h3').textContent;
+                        
+                        // Check if day is already selected for attendance
+                        const dayIndex = selectedDays.findIndex(d => d.id === day);
+                        
+                        if (dayIndex === -1) {
+                            // Open exhibit modal
+                            currentExhibitDay = {
+                                id: day,
+                                title: dayTitle
+                            };
+                            openExhibitModal(day);
+                        } else if (selectedDays[dayIndex].type === 'exhibit') {
+                            // Remove day from selected days
+                            selectedDays.splice(dayIndex, 1);
+                            
+                            this.textContent = 'Exhibit';
+                            this.classList.remove('exhibiting-day');
+                            
+                            // Enable attend button for this day
+                            const attendBtn = this.parentNode.querySelector('.attend-day-btn');
+                            attendBtn.disabled = false;
+                            
+                            showNotification(`Exhibition removed from ${dayTitle}!`);
+                            
+                            updateSelectedEventsDisplay();
+                            updateUpcomingEventsDisplay();
+                            updateStats();
+                            renderResources();
+                        }
+                    });
+                });
+            }
+            
+            // Open exhibit modal
+            function openExhibitModal(day) {
+                const modal = document.getElementById('exhibit-modal');
+                
+                // Render booth grid from backend data
+                renderBoothGrid(day);
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // File upload functionality
+                document.getElementById('browse-files').addEventListener('click', function() {
+                    document.getElementById('exhibition-files').click();
+                });
+                
+                document.getElementById('exhibition-files').addEventListener('change', function() {
+                    const fileList = document.getElementById('file-list');
+                    fileList.innerHTML = '';
+                    
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'info-item';
+                        fileItem.innerHTML = `
+                            <div class="info-label">${file.name}</div>
+                            <div class="info-value">${(file.size / 1024).toFixed(2)} KB</div>
+                        `;
+                        fileList.appendChild(fileItem);
+                    }
+                });
+                
+                // Submit exhibition
+                document.getElementById('submit-exhibition').addEventListener('click', async function() {
+                    const title = document.getElementById('exhibition-title').value;
+                    const description = document.getElementById('exhibition-description').value;
+                    const budget = document.getElementById('exhibition-budget').value;
+                    const selectedBooth = document.querySelector('.booth-option.selected');
+                    
+                    if (!title || !description || !selectedBooth || !budget) {
+                        showNotification('Please fill in all required fields and select a booth.');
+                        return;
+                    }
+                    
+                    const boothId = selectedBooth.getAttribute('data-booth-id');
+                    
+                    // Process payment via backend
+                    const paymentResult = await processPayment({
+                        amount: budget,
+                        currency: 'NGN',
+                        description: `Exhibition: ${title} at ${currentExhibitDay.title}`,
+                        booth: boothId
+                    });
+                    
+                    if (!paymentResult.success) {
+                        showNotification('Payment failed. Please try again.');
+                        return;
+                    }
+                    
+                    // Submit exhibition to backend
+                    const exhibitionResult = await submitExhibition({
+                        title: title,
+                        description: description,
+                        day: currentExhibitDay.id,
+                        dayTitle: currentExhibitDay.title,
+                        booth: boothId,
+                        budget: budget,
+                        files: document.getElementById('exhibition-files').files.length
+                    });
+                    
+                    if (!exhibitionResult.success) {
+                        showNotification('Exhibition submission failed. Please try again.');
+                        return;
+                    }
+                    
+                    // Update booth status in backend
+                    await updateBoothStatus({
+                        boothId: boothId,
+                        soldOut: true,
+                        exhibitor: 'Michael Chen',
+                        company: 'Tech Innovations Ltd'
+                    });
+                    
+                    // Update global booth state
+                    globalBooths.available--;
+                    globalBooths.soldOut++;
+                    globalBooths.boothDetails[boothId] = {
+                        soldOut: true,
+                        exhibitor: 'Michael Chen',
+                        company: 'Tech Innovations Ltd'
+                    };
+                    
+                    // Save resources to backend
+                    await saveResources({
+                        exhibitionId: exhibitionResult.id,
+                        title: title,
+                        description: description,
+                        booth: boothId,
+                        files: document.getElementById('exhibition-files').files
+                    });
+                    
+                    // Add day to selected days for exhibition
+                    selectedDays.push({
+                        id: currentExhibitDay.id,
+                        title: currentExhibitDay.title,
+                        type: 'exhibit',
+                        exhibitionDetails: {
+                            title: title,
+                            description: description,
+                            booth: boothId,
+                            budget: budget,
+                            files: document.getElementById('exhibition-files').files,
+                            paymentId: paymentResult.transactionId,
+                            exhibitionId: exhibitionResult.id
+                        }
+                    });
+                    
+                    // Update UI
+                    const exhibitBtn = document.querySelector(`.exhibit-day-btn[data-day="${day}"]`);
+                    exhibitBtn.textContent = 'Exhibiting';
+                    exhibitBtn.classList.add('exhibiting-day');
+                    
+                    // Disable attend button for this day
+                    const attendBtn = document.querySelector(`.attend-day-btn[data-day="${day}"]`);
+                    attendBtn.disabled = true;
+                    
+                    // Notify admin via backend
+                    await notifyAdmin({
+                        type: 'exhibition_booking',
+                        exhibitor: 'Michael Chen',
+                        company: 'Tech Innovations Ltd',
+                        day: currentExhibitDay.title,
+                        booth: boothId,
+                        budget: `₦${budget}`,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Close modal
+                    modal.style.display = 'none';
+                    
+                    // Reset form
+                    document.getElementById('exhibition-title').value = '';
+                    document.getElementById('exhibition-description').value = '';
+                    document.getElementById('exhibition-budget').value = '';
+                    document.getElementById('file-list').innerHTML = '';
+                    document.getElementById('exhibition-files').value = '';
+                    
+                    showNotification(`Exhibition setup complete for ${currentExhibitDay.title}! Payment processed and booth ${boothId} reserved.`);
+                    
+                    updateSelectedEventsDisplay();
+                    updateUpcomingEventsDisplay();
+                    updateStats();
+                    renderResources();
+                });
+            }
+            
+            // Update selected events display
+            function updateSelectedEventsDisplay() {
+                const selectedEventsContainer = document.getElementById('selected-events');
+                
+                if (selectedDays.length === 0) {
+                    selectedEventsContainer.innerHTML = '<p>No days selected yet. Click "Attend This Day" or "Exhibit" to add days to your schedule.</p>';
+                    return;
+                }
+                
+                let html = '';
+                selectedDays.forEach(day => {
+                    const typeBadge = day.type === 'attend' ? 
+                        '<span style="color: #4caf50; font-size: 0.8rem;">(Attending)</span>' : 
+                        '<span style="color: #ff9800; font-size: 0.8rem;">(Exhibiting)</span>';
+                    
+                    let details = '';
+                    if (day.type === 'exhibit' && day.exhibitionDetails) {
+                        details = `<div style="font-size: 0.8rem; color: #666;">Booth: ${day.exhibitionDetails.booth}</div>`;
+                    }
+                    
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">${day.title} ${typeBadge}</div>
+                            <div class="info-value">Full Day</div>
+                            ${details}
+                        </div>
+                    `;
+                });
+                
+                html += `<button class="payment-btn" id="submit-schedule">Submit Schedule to Admin</button>`;
+                selectedEventsContainer.innerHTML = html;
+                
+                // Add event listener to the submit button
+                document.getElementById('submit-schedule').addEventListener('click', function() {
+                    submitToAdmin(selectedDays, 'exhibitor');
+                });
+            }
+            
+            // Update upcoming events display
+            function updateUpcomingEventsDisplay() {
+                const upcomingEventsContainer = document.getElementById('upcoming-events');
+                
+                if (selectedDays.length === 0) {
+                    upcomingEventsContainer.innerHTML = '<p class="no-events">No upcoming events. Select days to see them here.</p>';
+                    return;
+                }
+                
+                // For day-based attendance/exhibition, we'll show the next day that's selected
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                let html = '';
+                
+                // Check if today is selected (for demo purposes, we'll assume today is Wednesday)
+                const todaySelected = selectedDays.find(day => day.id === 'wednesday');
+                if (todaySelected) {
+                    const status = todaySelected.type === 'exhibit' ? 'exhibiting' : 'attending';
+                    const statusClass = todaySelected.type === 'exhibit' ? 'up-next' : 'live-now';
+                    const statusText = todaySelected.type === 'exhibit' ? 'EXHIBITING NOW' : 'LIVE NOW';
+                    
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">
+                                ${todaySelected.title} 
+                                <span class="event-status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="info-value">Today</div>
+                        </div>
+                    `;
+                }
+                
+                // Add any other selected days
+                selectedDays
+                    .filter(day => day.id !== 'wednesday')
+                    .forEach(day => {
+                        const status = day.type === 'exhibit' ? 'exhibiting' : 'attending';
+                        const statusClass = day.type === 'exhibit' ? 'later-today' : 'up-next';
+                        const statusText = day.type === 'exhibit' ? 'EXHIBITING' : 'ATTENDING';
+                        
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">
+                                    ${day.title} 
+                                    <span class="event-status ${statusClass}">${statusText}</span>
+                                </div>
+                                <div class="info-value">Tomorrow</div>
+                            </div>
+                        `;
+                    });
+                
+                if (html === '') {
+                    upcomingEventsContainer.innerHTML = '<p class="no-events">No upcoming events from your schedule.</p>';
+                } else {
+                    upcomingEventsContainer.innerHTML = html;
+                }
+            }
+            
+            // Update stats
+            function updateStats() {
+                const exhibitionCount = selectedDays.filter(day => day.type === 'exhibit').length;
+                document.getElementById('exhibition-count').textContent = exhibitionCount;
+            }
+            
+            // Close modal when clicking close button
+            document.querySelectorAll('.close-modal').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            function submitToAdmin(data, role) {
+                // In a real application, this would send data to the backend
+                const submissionData = {
+                    role: role,
+                    userId: 'user123', // This would come from authentication
+                    data: data,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('Submitting to admin:', submissionData);
+                
+                // Simulate API call
+                setTimeout(() => {
+                    showNotification('Your information has been submitted to the administrator!');
+                }, 1000);
+            }
+            
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                notification.querySelector('.notification-text').textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

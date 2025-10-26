@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSC 2026 - International Civil Service Conference</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,400italic,700italic" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --primary-dark: #218838;
+            --secondary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+        
+        .site-background {
+            background-color: #ffffff !important;
+        }
+        
+        .navbar {
+            background: white;
+            border: none;
+            margin-bottom: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .jumbotron {
+            background-color: #ffffff;
+            margin-bottom: 0;
+            padding: 40px 0;
+        }
+        
+        .logo img {
+            max-height: 80px;
+        }
+        
+        .progress-container {
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 15px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border: 3px solid white;
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .progress-step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .progress-step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .registrant-cards {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .registrant-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .registrant-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .registrant-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .registrant-card h3 {
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+        
+        .registrant-card p {
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        
+        .registrant-card .price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--success-color);
+            margin-top: 12px;
+        }
+        
+        .has-star::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .btn-standard {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .btn-standard:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-outline-standard {
+            background-color: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 30px;
+            font-weight: bold;
+        }
+        
+        .btn-outline-standard:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .social-media-links a {
+            color: var(--primary-color) !important;
+        }
+        
+        .footer-container {
+            background-color: var(--light-gray);
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .help-block-error {
+            color: var(--danger-color);
+            font-size: 0.875em;
+            display: none;
+        }
+        
+        .hint-block {
+            font-size: 0.875em;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--danger-color);
+        }
+        
+        .booking-note {
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--text-light);
+        }
+        
+        .confirmation-details {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .confirmation-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .confirmation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .confirmation-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .confirmation-value {
+            color: var(--text-light);
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .amend-dropdown {
+            max-width: 300px;
+            margin: 20px 0;
+        }
+        
+        .terms-box {
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .package-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .package-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .package-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .package-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .package-card h4 {
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            text-align: center;
+        }
+        
+        .package-card .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success-color);
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .package-card ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .package-card li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+        
+        .package-card .limited {
+            color: var(--danger-color);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .payment-section {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .payment-option input {
+            margin-right: 10px;
+        }
+        
+        .payment-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .payment-form {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .iti {
+            width: 100%;
+        }
+        
+        .phone-input-container {
+            position: relative;
+        }
+        
+        .phone-input-container .form-control {
+            padding-left: 52px;
+        }
+        
+        .pdf-viewer {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: var(--light-gray);
+        }
+        
+        .pdf-viewer h5 {
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .pdf-placeholder {
+            background: white;
+            border-radius: 6px;
+            padding: 40px;
+            text-align: center;
+            border: 2px dashed var(--border-color);
+        }
+        
+        .pdf-placeholder i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 20px;
+            }
+            
+            .progress-steps {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .progress-step {
+                flex: 1;
+                min-width: 80px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .registrant-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .package-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-standard, .btn-outline-standard {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .d-flex.justify-content-between {
+                flex-direction: column;
+            }
+            
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .logo img {
+                max-height: 60px;
+            }
+            
+            .jumbotron {
+                padding: 20px 0;
+            }
+            
+            .jumbotron h1 {
+                font-size: 1.8rem;
+            }
+            
+            .jumbotron .lead {
+                font-size: 1rem;
+            }
+            
+            .progress-container {
+                margin: 20px 0;
+            }
+            
+            .step-label {
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .form-section {
+                padding: 15px;
+            }
+            
+            .registrant-card, .package-card {
+                padding: 15px;
+            }
+            
+            .confirmation-details, .payment-section {
+                padding: 15px;
+            }
+            
+            .pdf-viewer {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="standard-page">
+    <!-- Navigation -->
+    <div id="nav-wrap">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <div class="logo me-3">
+                    <img src="images/NG.jpeg" alt="ICSC 2026" class="img-fluid">
+                    <span class="navbar-brand mb-0 h1">ICSC 2026</span>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">SIGN IN OR REGISTER</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">AGENDA</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Meetings
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Registrant Directory</a></li>
+                                <li><a class="dropdown-item" href="#">My Schedule</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <div id="header-wrap" class="jumbotron site-background">
+        <div class="container">
+            <div class="text-center">
+                <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE (ICSC) 2026</h1>
+                <p class="lead">Building Global Civil Service Excellence</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-section">
+        <div class="container">
+            <!-- Progress Indicator -->
+            <div class="progress-container">
+                <div class="progress-steps">
+                    <div class="progress-step active" id="step-1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Registrant Type</div>
+                    </div>
+                    <div class="progress-step" id="step-2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Account Information</div>
+                    </div>
+                    <div class="progress-step" id="step-3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Profile Information</div>
+                    </div>
+                    <div class="progress-step" id="step-4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Package Selection</div>
+                    </div>
+                    <div class="progress-step" id="step-5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                    <div class="progress-step" id="step-6">
+                        <div class="step-number">6</div>
+                        <div class="step-label">Confirmation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Text -->
+            <div class="text-center mb-4">
+                <p class="lead"><strong>If you want to return to the International Civil Service Conference website please click <a href="https://kevins178.sg-host.com/" target="_blank">here</a>.</strong></p>
+            </div>
+
+            <!-- Registration Form Sections -->
+            
+            <!-- Step 1: Registrant Type Selection -->
+            <div id="registrant-type-section" class="form-section">
+                <h1 class="text-center mb-4">Select a registrant type</h1>
+                <div class="error-message" id="registrant-error">Please select a registrant type to continue</div>
+                
+                <div class="registrant-cards">
+                    <!-- Attendee Card -->
+                    <div class="registrant-card" data-type="attendee">
+                        <h3>Attendee</h3>
+                        <p><strong>International civil servants and those working in the wider public sector are welcome to register for free using the form below.</strong></p>
+                        <p><strong>Group registrations</strong><br>
+                        Once you have completed the details of the registration, you can then process your booking information from your dashboard. All attendees, once registered, will receive their own booking confirmation via email, allowing them to update or amend their booking at a later date on their dashboard.</p>
+                        <div class="price">Free Registration</div>
+                    </div>
+                    
+                    <!-- Speaker Card -->
+                    <div class="registrant-card" data-type="speaker">
+                        <h3>Speaker</h3>
+                        <p><strong>Speaker registration for the International Civil Service Conference.</strong></p>
+                        <p>Speakers will have access to speaker preparation sessions, presentation guidelines, and dedicated speaker support. Please complete your registration to confirm your participation.</p>
+                        <p class="text-primary"><strong>Note: Speaker registration requires package selection and payment.</strong></p>
+                    </div>
+                    
+                    <!-- Partner Card -->
+                    <div class="registrant-card" data-type="partner">
+                        <h3>Event Partner</h3>
+                        <p><strong>Event Partner Registration Form</strong></p>
+                        <p>Partners will receive premium visibility and engagement opportunities at the conference. Select from our partnership packages to maximize your impact.</p>
+                        <p class="text-primary"><strong>Note: Partner registration requires package selection and payment.</strong></p>
+                    </div>
+                    
+                    <!-- Exhibitor Card -->
+                    <div class="registrant-card" data-type="exhibitor">
+                        <h3>Exhibitor</h3>
+                        <p><strong>Exhibitor Registration Form</strong></p>
+                        <p>Exhibitors will have the opportunity to showcase their products and services to an international audience of civil service professionals.</p>
+                        <p>Once the form is submitted, the booth space will be held for 12 hours. If you do not complete payment within 12 hours, your booth reservation will be released.</p>
+            
+                        <div class="booking-note">
+                            <small>Booth space will be held for 12 hours after form submission</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="button" id="continue-btn" class="btn btn-standard" disabled>
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Account Creation Section -->
+            <div id="account-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Create Your Account</h2>
+                
+                <form id="account-form">
+                    <div class="form-group">
+                        <label class="has-star" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                        <div class="help-block-error" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="password">Choose a Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                        <div class="help-block-error" id="password-error"></div>
+                        <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="confirmPassword">Repeat Your Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                        <div class="help-block-error" id="confirmPassword-error"></div>
+                    </div>
+                </form>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-type-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-profile-btn">
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Profile Information Section -->
+            <div id="profile-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4" id="profile-title">Profile Information</h2>
+                
+                <form id="profile-form">
+                    <div id="attendee-profile" style="display: none;">
+                        <div class="form-group">
+                            <label class="has-star" for="prefix">Prefix</label>
+                            <select id="prefix" name="prefix" class="form-control" required>
+                                <option value="">Select Prefix</option>
+                                <option value="mr">Mr</option>
+                                <option value="mrs">Mrs</option>
+                                <option value="miss">Miss</option>
+                                <option value="ms">Ms</option>
+                                <option value="dr">Dr</option>
+                                <option value="prof">Prof</option>
+                            </select>
+                            <div class="help-block-error" id="prefix-error"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control" required>
+                                <div class="help-block-error" id="firstName-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-control" required>
+                                <div class="help-block-error" id="lastName-error"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="country">Country</label>
+                            <select id="country" name="country" class="form-control" required>
+                                <option value="">Select Country</option>
+                                <option value="US">United States</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="IN">India</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="KE">Kenya</option>
+                                <option value="GH">Ghana</option>
+                            </select>
+                            <div class="help-block-error" id="country-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="jobTitle">Job Title</label>
+                            <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
+                            <div class="help-block-error" id="jobTitle-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="organization">Organization</label>
+                            <input type="text" id="organization" name="organization" class="form-control" required>
+                            <div class="help-block-error" id="organization-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="workPhone">Work Phone</label>
+                            <div class="phone-input-container">
+                                <input type="tel" id="workPhone" name="workPhone" class="form-control" required>
+                            </div>
+                            <div class="help-block-error" id="workPhone-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="speaker-profile" style="display: none;">
+                        <div class="form-group">
+                            <label class="has-star" for="speakerPrefix">Prefix</label>
+                            <select id="speakerPrefix" name="speakerPrefix" class="form-control" required>
+                                <option value="">Select Prefix</option>
+                                <option value="mr">Mr</option>
+                                <option value="mrs">Mrs</option>
+                                <option value="miss">Miss</option>
+                                <option value="ms">Ms</option>
+                                <option value="dr">Dr</option>
+                                <option value="prof">Prof</option>
+                            </select>
+                            <div class="help-block-error" id="speakerPrefix-error"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="speakerFirstName">First Name</label>
+                                <input type="text" id="speakerFirstName" name="speakerFirstName" class="form-control" required>
+                                <div class="help-block-error" id="speakerFirstName-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="speakerLastName">Last Name</label>
+                                <input type="text" id="speakerLastName" name="speakerLastName" class="form-control" required>
+                                <div class="help-block-error" id="speakerLastName-error"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerCountry">Country</label>
+                            <select id="speakerCountry" name="speakerCountry" class="form-control" required>
+                                <option value="">Select Country</option>
+                                <option value="US">United States</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="IN">India</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="KE">Kenya</option>
+                                <option value="GH">Ghana</option>
+                            </select>
+                            <div class="help-block-error" id="speakerCountry-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerJobTitle">Job Title</label>
+                            <input type="text" id="speakerJobTitle" name="speakerJobTitle" class="form-control" required>
+                            <div class="help-block-error" id="speakerJobTitle-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerOrganization">Organization</label>
+                            <input type="text" id="speakerOrganization" name="speakerOrganization" class="form-control" required>
+                            <div class="help-block-error" id="speakerOrganization-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerPhone">Work Phone</label>
+                            <div class="phone-input-container">
+                                <input type="tel" id="speakerPhone" name="speakerPhone" class="form-control" required>
+                            </div>
+                            <div class="help-block-error" id="speakerPhone-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerBio">Brief Introduction/Bio</label>
+                            <textarea id="speakerBio" name="speakerBio" class="form-control" rows="4" required placeholder="Please provide a brief introduction about yourself and your expertise"></textarea>
+                            <div class="help-block-error" id="speakerBio-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="speakerTopic">Proposed Topic/Area of Expertise</label>
+                            <input type="text" id="speakerTopic" name="speakerTopic" class="form-control" placeholder="What topic would you like to speak about?">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="speakerExperience">Previous Speaking Experience</label>
+                            <textarea id="speakerExperience" name="speakerExperience" class="form-control" rows="3" placeholder="Please describe any previous speaking experience"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="partner-profile" style="display: none;">
+                        <div class="form-group">
+                            <label class="has-star" for="companyPrefix">Prefix</label>
+                            <select id="companyPrefix" name="companyPrefix" class="form-control" required>
+                                <option value="">Select Prefix</option>
+                                <option value="company">Company</option>
+                                <option value="organization">Organization</option>
+                                <option value="institution">Institution</option>
+                                <option value="agency">Agency</option>
+                            </select>
+                            <div class="help-block-error" id="companyPrefix-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="companyName">Company/Organization Name</label>
+                            <input type="text" id="companyName" name="companyName" class="form-control" required>
+                            <div class="help-block-error" id="companyName-error"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="contactFirstName">Contact First Name</label>
+                                <input type="text" id="contactFirstName" name="contactFirstName" class="form-control" required>
+                                <div class="help-block-error" id="contactFirstName-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="contactLastName">Contact Last Name</label>
+                                <input type="text" id="contactLastName" name="contactLastName" class="form-control" required>
+                                <div class="help-block-error" id="contactLastName-error"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="contactEmail">Contact Email</label>
+                            <input type="email" id="contactEmail" name="contactEmail" class="form-control" required>
+                            <div class="help-block-error" id="contactEmail-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="contactPhone">Contact Phone</label>
+                            <div class="phone-input-container">
+                                <input type="tel" id="contactPhone" name="contactPhone" class="form-control" required>
+                            </div>
+                            <div class="help-block-error" id="contactPhone-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="url" id="website" name="website" class="form-control" placeholder="https://">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="socialMedia">Social Media Links</label>
+                            <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="LinkedIn, Twitter, Facebook, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="companyDescription">Company/Organization Description</label>
+                            <textarea id="companyDescription" name="companyDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="exhibitor-profile" style="display: none;">
+                        <div class="form-group">
+                            <label class="has-star" for="exhibitorCompanyName">Company Name</label>
+                            <input type="text" id="exhibitorCompanyName" name="exhibitorCompanyName" class="form-control" required>
+                            <div class="help-block-error" id="exhibitorCompanyName-error"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="exhibitorFirstName">Contact First Name</label>
+                                <input type="text" id="exhibitorFirstName" name="exhibitorFirstName" class="form-control" required>
+                                <div class="help-block-error" id="exhibitorFirstName-error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="exhibitorLastName">Contact Last Name</label>
+                                <input type="text" id="exhibitorLastName" name="exhibitorLastName" class="form-control" required>
+                                <div class="help-block-error" id="exhibitorLastName-error"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="exhibitorEmail">Contact Email</label>
+                            <input type="email" id="exhibitorEmail" name="exhibitorEmail" class="form-control" required>
+                            <div class="help-block-error" id="exhibitorEmail-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="exhibitorPhone">Contact Phone</label>
+                            <div class="phone-input-container">
+                                <input type="tel" id="exhibitorPhone" name="exhibitorPhone" class="form-control" required>
+                            </div>
+                            <div class="help-block-error" id="exhibitorPhone-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exhibitorWebsite">Website</label>
+                            <input type="url" id="exhibitorWebsite" name="exhibitorWebsite" class="form-control" placeholder="https://">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exhibitorDescription">Company Description</label>
+                            <textarea id="exhibitorDescription" name="exhibitorDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exhibitorProducts">Products/Services to Exhibit</label>
+                            <textarea id="exhibitorProducts" name="exhibitorProducts" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                            <label class="form-check-label has-star" for="terms">
+                                I agree to the Terms and Conditions
+                            </label>
+                            <div class="help-block-error" id="terms-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+                            <label class="form-check-label" for="newsletter">
+                                Subscribe to newsletters and updates
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-next-btn">
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Package Selection Section -->
+            <div id="package-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Select Your Package</h2>
+                <p class="text-center mb-4">Please review the available packages and select the one that best fits your needs.</p>
+                
+                <!-- PDF Viewer -->
+                <div class="pdf-viewer">
+                    <h5>Partnership Packages Overview</h5>
+                    <div class="pdf-placeholder">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>ICSC 2026 Partnership Packages PDF</p>
+                        <a href="ICSC Sponsor Packages.pdf" target="_blank" class="btn btn-outline-standard">
+                            <i class="fas fa-download me-2"></i> Download Package Details
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="package-cards">
+                    <!-- Diamond Partner -->
+                    <div class="package-card" data-package="diamond">
+                        <h4>Diamond Partner</h4>
+                        <div class="limited">Limited to 4 partners</div>
+                        <ul>
+                            <li>Keynote speaking opportunity</li>
+                            <li>Panel speaking opportunity</li>
+                            <li>Invitation-only roundtable</li>
+                            <li>Profile promotion</li>
+                            <li>News coverage</li>
+                            <li>Full promotional coverage</li>
+                            <li>Logo on website and event screens</li>
+                            <li>9x3m exhibition space</li>
+                            <li>10 full event passes</li>
+                            <li>3 guest passes</li>
+                            <li>Registration report</li>
+                            <li>Final delegate list</li>
+                            <li>Analytics report</li>
+                        </ul>
+                        <div class="price">$15,000</div>
+                    </div>
+                    
+                    <!-- Gold Knowledge Partner -->
+                    <div class="package-card" data-package="gold">
+                        <h4>Gold Knowledge Partner</h4>
+                        <ul>
+                            <li>Panel speaking opportunity</li>
+                            <li>Profile promotion</li>
+                            <li>News coverage</li>
+                            <li>Full promotional coverage</li>
+                            <li>Logo on website and event screens</li>
+                            <li>3x3m exhibition space</li>
+                            <li>6 full event passes</li>
+                            <li>2 guest passes</li>
+                            <li>Panel registration list</li>
+                            <li>Analytics report</li>
+                        </ul>
+                        <div class="price">$10,000</div>
+                    </div>
+                    
+                    <!-- Silver Roundtable Partner -->
+                    <div class="package-card" data-package="silver">
+                        <h4>Silver Roundtable Partner</h4>
+                        <div class="limited">Limited to 10 partners</div>
+                        <ul>
+                            <li>Roundtable hosting (x2)</li>
+                            <li>Profile promotion</li>
+                            <li>News coverage</li>
+                            <li>Full promotional coverage</li>
+                            <li>Logo on website and event screens</li>
+                            <li>3x3m exhibition space</li>
+                            <li>4 full event passes</li>
+                            <li>2 guest passes</li>
+                            <li>Roundtable attendees list</li>
+                            <li>Analytics report</li>
+                        </ul>
+                        <div class="price">$7,500</div>
+                    </div>
+                    
+                    <!-- Bronze Exhibition Partner -->
+                    <div class="package-card" data-package="bronze">
+                        <h4>Bronze Exhibition Partner</h4>
+                        <ul>
+                            <li>Basic promotional coverage</li>
+                            <li>Logo on website</li>
+                            <li>3x3m exhibition space</li>
+                            <li>3 full event passes</li>
+                            <li>Analytics report</li>
+                        </ul>
+                        <div class="price">$5,000</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p><strong>Selected Package: <span id="selected-package-text">None</span></strong></p>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
+                        Continue to Payment <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Payment Section -->
+            <div id="payment-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Payment Information</h2>
+                
+                <div class="payment-details mb-4">
+                    <h4>Package: <span id="payment-package-name"></span></h4>
+                    <h4>Amount: <span id="payment-amount"></span></h4>
+                </div>
+                
+                <div class="payment-section">
+                    <h5 class="mb-3">Select Payment Method</h5>
+                    
+                    <div class="payment-option" data-method="card">
+                        <input type="radio" id="card-payment" name="payment-method" value="card">
+                        <label for="card-payment">Credit/Debit Card</label>
+                    </div>
+                    
+                    <div class="payment-option" data-method="bank">
+                        <input type="radio" id="bank-payment" name="payment-method" value="bank">
+                        <label for="bank-payment">Bank Transfer</label>
+                    </div>
+                    
+                    <div class="payment-option" data-method="invoice">
+                        <input type="radio" id="invoice-payment" name="payment-method" value="invoice">
+                        <label for="invoice-payment">Request Invoice</label>
+                    </div>
+                    
+                    <!-- Card Payment Form -->
+                    <div id="card-payment-form" class="payment-form">
+                        <div class="form-group">
+                            <label class="has-star" for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="form-control" placeholder="1234 5678 9012 3456">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" class="form-control" placeholder="MM/YY">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="cardName">Name on Card</label>
+                            <input type="text" id="cardName" name="cardName" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Transfer Form -->
+                    <div id="bank-payment-form" class="payment-form">
+                        <div class="alert alert-info">
+                            <h6>Bank Transfer Details</h6>
+                            <p><strong>Bank Name:</strong> Global Trust Bank</p>
+                            <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
+                            <p><strong>Account Number:</strong> 1234567890</p>
+                            <p><strong>Routing Number:</strong> 021000021</p>
+                            <p><strong>SWIFT/BIC:</strong> GTBIUS33</p>
+                            <p><strong>Reference:</strong> <span id="bank-reference"></span></p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bank-proof">Upload Proof of Payment</label>
+                            <input type="file" id="bank-proof" name="bank-proof" class="form-control">
+                            <div class="hint-block">Please upload a screenshot or scanned copy of your bank transfer confirmation</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Invoice Request Form -->
+                    <div id="invoice-payment-form" class="payment-form">
+                        <div class="alert alert-warning">
+                            <p>An invoice will be generated and sent to your email address. Your registration will be confirmed once payment is received.</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="billingName">Billing Name</label>
+                            <input type="text" id="billingName" name="billingName" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="billingAddress">Billing Address</label>
+                            <textarea id="billingAddress" name="billingAddress" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="purchaseOrder">Purchase Order Number (if applicable)</label>
+                            <input type="text" id="purchaseOrder" name="purchaseOrder" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-package-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="process-payment-btn">
+                        Process Payment <i class="fas fa-credit-card ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 6: Confirmation Section -->
+            <div id="confirmation-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Registration Complete</h2>
+                
+                <div class="success-message">
+                    <i class="fas fa-check-circle fa-3x mb-3" style="color: #28a745;"></i>
+                    <h3>Registration Successful!</h3>
+                    <p>Your registration for the International Civil Service Conference has been completed successfully.</p>
+                    <p>A confirmation email with your registration details has been sent to <strong id="confirmation-email"></strong>.</p>
+                    <p id="payment-confirmation-text"></p>
+                </div>
+                
+                <div class="confirmation-details" id="confirmation-details">
+                    <!-- Confirmation details will be populated by JavaScript -->
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p><strong>You can now log in to your dashboard using the email and password you created.</strong></p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <button type="button" class="btn btn-outline-standard" id="report-payment-btn">
+                            Report Payment Issue <i class="fas fa-envelope ms-2"></i>
+                        </button>
+                        <a href="login.html" class="btn btn-standard" id="login-btn">
+                            Go to Login <i class="fas fa-sign-in-alt ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="text-center mt-4">
+                <p class="lead"><strong>Already have an account ? <a href="login.html">Click here to sign in.</a></strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-container">
+        <div class="container">
+            <div class="text-center">
+                <p><strong>Helping civil service leaders globally to meet their challenges by building their expertise, knowledge and connections</strong></p>
+                
+                <div class="social-media-links my-4">
+                    <a href="https://twitter.com/globegov" target="_blank" class="mx-3">
+                        <i class="fab fa-x-twitter fa-2x"></i>
+                    </a>
+                </div>
+                
+                <div class="text-muted">
+                    Event management software powered by <a href="#" target="_blank">LYT24TECH</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    
+    <script>
+        // Global variables to track form state
+        let currentRegistrantType = null;
+        let currentStep = 1;
+        let formData = {};
+        let selectedPackage = null;
+        let selectedPaymentMethod = null;
+        let phoneInput = null;
+        let speakerPhoneInput = null;
+        let partnerPhoneInput = null;
+        let exhibitorPhoneInput = null;
+        
+        // Package details - This would be replaced with backend API call
+        const packages = {
+            diamond: { name: "Diamond Partner", price: 15000 },
+            gold: { name: "Gold Knowledge Partner", price: 10000 },
+            silver: { name: "Silver Roundtable Partner", price: 7500 },
+            bronze: { name: "Bronze Exhibition Partner", price: 5000 }
+        };
+        
+        // Initialize the application
+        $(document).ready(function() {
+            initializeEventListeners();
+            initializePhoneInputs();
+            setupCountryPhoneSync();
+        });
+        
+        function initializeEventListeners() {
+            // Registrant type selection
+            $('.registrant-card').on('click', function() {
+                $('.registrant-card').removeClass('selected');
+                $(this).addClass('selected');
+                currentRegistrantType = $(this).data('type');
+                $('#continue-btn').prop('disabled', false);
+                $('#registrant-error').hide();
+            });
+            
+            // Continue to account creation
+            $('#continue-btn').on('click', function() {
+                if (!currentRegistrantType) {
+                    $('#registrant-error').show();
+                    return;
+                }
+                
+                showAccountSection();
+            });
+            
+            // Back to registrant type selection
+            $('#back-to-type-btn').on('click', function() {
+                showRegistrantTypeSection();
+            });
+            
+            // Continue to profile info
+            $('#continue-to-profile-btn').on('click', function() {
+                if (validateAccountForm()) {
+                    // Save account data
+                    formData.email = $('#email').val();
+                    formData.password = $('#password').val();
+                    showProfileSection();
+                }
+            });
+            
+            // Back to account creation
+            $('#back-to-account-btn').on('click', function() {
+                showAccountSection();
+            });
+            
+            // Continue to next section (package or confirmation)
+            $('#continue-to-next-btn').on('click', function() {
+                if (validateProfileForm()) {
+                    // Save profile data based on registrant type
+                    if (currentRegistrantType === 'attendee') {
+                        formData.prefix = $('#prefix').val();
+                        formData.firstName = $('#firstName').val();
+                        formData.lastName = $('#lastName').val();
+                        formData.country = $('#country').val();
+                        formData.jobTitle = $('#jobTitle').val();
+                        formData.organization = $('#organization').val();
+                        formData.workPhone = phoneInput.getNumber();
+                    } else if (currentRegistrantType === 'speaker') {
+                        formData.speakerPrefix = $('#speakerPrefix').val();
+                        formData.speakerFirstName = $('#speakerFirstName').val();
+                        formData.speakerLastName = $('#speakerLastName').val();
+                        formData.speakerCountry = $('#speakerCountry').val();
+                        formData.speakerJobTitle = $('#speakerJobTitle').val();
+                        formData.speakerOrganization = $('#speakerOrganization').val();
+                        formData.speakerPhone = speakerPhoneInput.getNumber();
+                        formData.speakerBio = $('#speakerBio').val();
+                        formData.speakerTopic = $('#speakerTopic').val();
+                        formData.speakerExperience = $('#speakerExperience').val();
+                    } else if (currentRegistrantType === 'partner') {
+                        formData.companyPrefix = $('#companyPrefix').val();
+                        formData.companyName = $('#companyName').val();
+                        formData.contactFirstName = $('#contactFirstName').val();
+                        formData.contactLastName = $('#contactLastName').val();
+                        formData.contactEmail = $('#contactEmail').val();
+                        formData.contactPhone = partnerPhoneInput.getNumber();
+                        formData.website = $('#website').val();
+                        formData.socialMedia = $('#socialMedia').val();
+                        formData.companyDescription = $('#companyDescription').val();
+                    } else if (currentRegistrantType === 'exhibitor') {
+                        formData.exhibitorCompanyName = $('#exhibitorCompanyName').val();
+                        formData.exhibitorFirstName = $('#exhibitorFirstName').val();
+                        formData.exhibitorLastName = $('#exhibitorLastName').val();
+                        formData.exhibitorEmail = $('#exhibitorEmail').val();
+                        formData.exhibitorPhone = exhibitorPhoneInput.getNumber();
+                        formData.exhibitorWebsite = $('#exhibitorWebsite').val();
+                        formData.exhibitorDescription = $('#exhibitorDescription').val();
+                        formData.exhibitorProducts = $('#exhibitorProducts').val();
+                    }
+                    
+                    formData.terms = $('#terms').is(':checked');
+                    formData.newsletter = $('#newsletter').is(':checked');
+                    
+                    // Show package section for speakers and partners, confirmation for attendees and exhibitors
+                    if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
+                        showPackageSection();
+                    } else {
+                        showConfirmationSection();
+                    }
+                }
+            });
+            
+            // Back to profile info
+            $('#back-to-profile-btn').on('click', function() {
+                showProfileSection();
+            });
+            
+            // Package selection
+            $('.package-card').on('click', function() {
+                $('.package-card').removeClass('selected');
+                $(this).addClass('selected');
+                selectedPackage = $(this).data('package');
+                $('#selected-package-text').text(packages[selectedPackage].name);
+                $('#continue-to-payment-btn').prop('disabled', false);
+            });
+            
+            // Continue to payment
+            $('#continue-to-payment-btn').on('click', function() {
+                if (!selectedPackage) {
+                    alert('Please select a package to continue');
+                    return;
+                }
+                showPaymentSection();
+            });
+            
+            // Back to package selection
+            $('#back-to-package-btn').on('click', function() {
+                showPackageSection();
+            });
+            
+            // Payment method selection
+            $('.payment-option').on('click', function() {
+                $('.payment-option').removeClass('selected');
+                $(this).addClass('selected');
+                selectedPaymentMethod = $(this).data('method');
+                $('.payment-form').hide();
+                $(`#${selectedPaymentMethod}-payment-form`).show();
+            });
+            
+            // Process payment - This would be replaced with backend API call
+            $('#process-payment-btn').on('click', function() {
+                if (!selectedPaymentMethod) {
+                    alert('Please select a payment method');
+                    return;
+                }
+                
+                // Mock payment processing
+                processPayment();
+            });
+            
+            // Report payment issue - This would be replaced with backend contact form
+            $('#report-payment-btn').on('click', function() {
+                alert('In a real application, this would open a contact form or initiate a call.');
+                // window.location.href = 'mailto:support@icsc2026.com';
+            });
+            
+            // Form field validation on blur
+            $('input, select').on('blur', function() {
+                validateField(this);
+            });
+            
+            // Clear errors on input
+            $('input, select').on('input', function() {
+                clearFieldError(this);
+            });
+        }
+        
+        function setupCountryPhoneSync() {
+            // Sync country dropdown with phone input for all profile types
+            $('#country').on('change', function() {
+                const countryCode = $(this).val();
+                if (countryCode && phoneInput) {
+                    phoneInput.setCountry(countryCode);
+                }
+            });
+            
+            $('#speakerCountry').on('change', function() {
+                const countryCode = $(this).val();
+                if (countryCode && speakerPhoneInput) {
+                    speakerPhoneInput.setCountry(countryCode);
+                }
+            });
+            
+            $('#contactCountry').on('change', function() {
+                const countryCode = $(this).val();
+                if (countryCode && partnerPhoneInput) {
+                    partnerPhoneInput.setCountry(countryCode);
+                }
+            });
+            
+            $('#exhibitorCountry').on('change', function() {
+                const countryCode = $(this).val();
+                if (countryCode && exhibitorPhoneInput) {
+                    exhibitorPhoneInput.setCountry(countryCode);
+                }
+            });
+        }
+        
+        function initializePhoneInputs() {
+            // Initialize phone input for attendees
+            phoneInput = window.intlTelInput(document.querySelector("#workPhone"), {
+                initialCountry: "us",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+            
+            // Initialize phone input for speakers
+            speakerPhoneInput = window.intlTelInput(document.querySelector("#speakerPhone"), {
+                initialCountry: "us",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+            
+            // Initialize phone input for partners
+            partnerPhoneInput = window.intlTelInput(document.querySelector("#contactPhone"), {
+                initialCountry: "us",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+            
+            // Initialize phone input for exhibitors
+            exhibitorPhoneInput = window.intlTelInput(document.querySelector("#exhibitorPhone"), {
+                initialCountry: "us",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+        }
+        
+        function showRegistrantTypeSection() {
+            currentStep = 1;
+            updateProgressIndicator();
+            $('#account-section').hide();
+            $('#profile-section').hide();
+            $('#package-section').hide();
+            $('#payment-section').hide();
+            $('#confirmation-section').hide();
+            $('#registrant-type-section').show();
+        }
+        
+        function showAccountSection() {
+            currentStep = 2;
+            updateProgressIndicator();
+            $('#registrant-type-section').hide();
+            $('#profile-section').hide();
+            $('#package-section').hide();
+            $('#payment-section').hide();
+            $('#confirmation-section').hide();
+            $('#account-section').show();
+        }
+        
+        function showProfileSection() {
+            currentStep = 3;
+            updateProgressIndicator();
+            $('#account-section').hide();
+            $('#registrant-type-section').hide();
+            $('#package-section').hide();
+            $('#payment-section').hide();
+            $('#confirmation-section').hide();
+            $('#profile-section').show();
+            
+            // Update profile section based on registrant type
+            if (currentRegistrantType === 'attendee') {
+                $('#profile-title').text('Attendee Information');
+                $('#attendee-profile').show();
+                $('#speaker-profile').hide();
+                $('#partner-profile').hide();
+                $('#exhibitor-profile').hide();
+            } else if (currentRegistrantType === 'speaker') {
+                $('#profile-title').text('Speaker Information');
+                $('#attendee-profile').hide();
+                $('#speaker-profile').show();
+                $('#partner-profile').hide();
+                $('#exhibitor-profile').hide();
+            } else if (currentRegistrantType === 'partner') {
+                $('#profile-title').text('Partner Information');
+                $('#attendee-profile').hide();
+                $('#speaker-profile').hide();
+                $('#partner-profile').show();
+                $('#exhibitor-profile').hide();
+            } else if (currentRegistrantType === 'exhibitor') {
+                $('#profile-title').text('Exhibitor Information');
+                $('#attendee-profile').hide();
+                $('#speaker-profile').hide();
+                $('#partner-profile').hide();
+                $('#exhibitor-profile').show();
+            }
+        }
+        
+        function showPackageSection() {
+            currentStep = 4;
+            updateProgressIndicator();
+            $('#account-section').hide();
+            $('#profile-section').hide();
+            $('#registrant-type-section').hide();
+            $('#payment-section').hide();
+            $('#confirmation-section').hide();
+            $('#package-section').show();
+        }
+        
+        function showPaymentSection() {
+            currentStep = 5;
+            updateProgressIndicator();
+            $('#account-section').hide();
+            $('#profile-section').hide();
+            $('#package-section').hide();
+            $('#registrant-type-section').hide();
+            $('#confirmation-section').hide();
+            $('#payment-section').show();
+            
+            // Update payment details
+            $('#payment-package-name').text(packages[selectedPackage].name);
+            $('#payment-amount').text('$' + packages[selectedPackage].price.toLocaleString());
+            
+            // Generate bank reference
+            const ref = 'ICSC-' + Math.floor(100000 + Math.random() * 900000);
+            $('#bank-reference').text(ref);
+        }
+        
+        function showConfirmationSection() {
+            currentStep = 6;
+            updateProgressIndicator();
+            $('#account-section').hide();
+            $('#profile-section').hide();
+            $('#package-section').hide();
+            $('#payment-section').hide();
+            $('#registrant-type-section').hide();
+            $('#confirmation-section').show();
+            
+            // Populate confirmation details
+            populateConfirmationDetails();
+            
+            // Update confirmation email
+            $('#confirmation-email').text(formData.email);
+            
+            // Update payment confirmation text
+            if (currentRegistrantType === 'attendee' || currentRegistrantType === 'exhibitor') {
+                $('#payment-confirmation-text').text('Your registration has been confirmed.');
+            } else {
+                $('#payment-confirmation-text').text('Your payment has been processed successfully. A receipt has been sent to your email and will be available in your dashboard.');
+            }
+        }
+        
+        function updateProgressIndicator() {
+            $('.progress-step').removeClass('active completed');
+            
+            // Mark previous steps as completed and current step as active
+            for (let i = 0; i < currentStep; i++) {
+                if (i < currentStep - 1) {
+                    $('.progress-step').eq(i).addClass('completed');
+                } else {
+                    $('.progress-step').eq(i).addClass('active');
+                }
+            }
+        }
+        
+        function populateConfirmationDetails() {
+            const details = $('#confirmation-details');
+            details.empty();
+            
+            // Account Information
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Account Information</div>
+                    <div class="confirmation-value">Email: ${formData.email}</div>
+                </div>
+            `);
+            
+            // Personal/Company Information
+            if (currentRegistrantType === 'attendee') {
+                const prefixText = {
+                    'mr': 'Mr',
+                    'mrs': 'Mrs', 
+                    'miss': 'Miss',
+                    'ms': 'Ms',
+                    'dr': 'Dr',
+                    'prof': 'Prof'
+                };
+                
+                details.append(`
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Personal Information</div>
+                        <div class="confirmation-value">
+                            ${prefixText[formData.prefix] || ''} ${formData.firstName} ${formData.lastName}<br>
+                            ${formData.jobTitle}<br>
+                            ${formData.organization}<br>
+                            ${formData.country}<br>
+                            Phone: ${formData.workPhone}
+                        </div>
+                    </div>
+                `);
+            } else if (currentRegistrantType === 'speaker') {
+                const prefixText = {
+                    'mr': 'Mr',
+                    'mrs': 'Mrs', 
+                    'miss': 'Miss',
+                    'ms': 'Ms',
+                    'dr': 'Dr',
+                    'prof': 'Prof'
+                };
+                
+                details.append(`
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Speaker Information</div>
+                        <div class="confirmation-value">
+                            ${prefixText[formData.speakerPrefix] || ''} ${formData.speakerFirstName} ${formData.speakerLastName}<br>
+                            ${formData.speakerJobTitle}<br>
+                            ${formData.speakerOrganization}<br>
+                            ${formData.speakerCountry}<br>
+                            Phone: ${formData.speakerPhone}<br>
+                            Bio: ${formData.speakerBio}<br>
+                            ${formData.speakerTopic ? 'Topic: ' + formData.speakerTopic + '<br>' : ''}
+                            ${formData.speakerExperience ? 'Experience: ' + formData.speakerExperience : ''}
+                        </div>
+                    </div>
+                `);
+            } else if (currentRegistrantType === 'partner') {
+                const companyPrefixText = {
+                    'company': 'Company',
+                    'organization': 'Organization',
+                    'institution': 'Institution',
+                    'agency': 'Agency'
+                };
+                
+                details.append(`
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Company Information</div>
+                        <div class="confirmation-value">
+                            ${companyPrefixText[formData.companyPrefix] || ''}: ${formData.companyName}<br>
+                            Contact: ${formData.contactFirstName} ${formData.contactLastName}<br>
+                            Email: ${formData.contactEmail}<br>
+                            Phone: ${formData.contactPhone}<br>
+                            ${formData.website ? 'Website: ' + formData.website + '<br>' : ''}
+                            ${formData.socialMedia ? 'Social Media: ' + formData.socialMedia + '<br>' : ''}
+                            ${formData.companyDescription ? 'Description: ' + formData.companyDescription : ''}
+                        </div>
+                    </div>
+                `);
+            } else if (currentRegistrantType === 'exhibitor') {
+                details.append(`
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Exhibitor Information</div>
+                        <div class="confirmation-value">
+                            Company: ${formData.exhibitorCompanyName}<br>
+                            Contact: ${formData.exhibitorFirstName} ${formData.exhibitorLastName}<br>
+                            Email: ${formData.exhibitorEmail}<br>
+                            Phone: ${formData.exhibitorPhone}<br>
+                            ${formData.exhibitorWebsite ? 'Website: ' + formData.exhibitorWebsite + '<br>' : ''}
+                            ${formData.exhibitorDescription ? 'Description: ' + formData.exhibitorDescription + '<br>' : ''}
+                            ${formData.exhibitorProducts ? 'Products: ' + formData.exhibitorProducts : ''}
+                        </div>
+                    </div>
+                `);
+            }
+            
+            // Package Information (for speakers and partners)
+            if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
+                details.append(`
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Package Information</div>
+                        <div class="confirmation-value">
+                            Package: ${packages[selectedPackage].name}<br>
+                            Amount: $${packages[selectedPackage].price.toLocaleString()}<br>
+                            Payment Method: ${selectedPaymentMethod ? selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1) : 'N/A'}
+                        </div>
+                    </div>
+                `);
+            }
+            
+            // Preferences
+            const newsletterText = formData.newsletter ? 'Yes' : 'No';
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Preferences</div>
+                    <div class="confirmation-value">
+                        Newsletter Subscription: ${newsletterText}<br>
+                        Terms Accepted: Yes
+                    </div>
+                </div>
+            `);
+        }
+        
+        function processPayment() {
+            // Mock payment processing
+            // In a real application, this would connect to a payment gateway
+            
+            // Show loading state
+            $('#process-payment-btn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Processing...');
+            
+            // Simulate API call - This would be replaced with actual backend integration
+            setTimeout(() => {
+                // Mock successful payment
+                showConfirmationSection();
+            }, 2000);
+        }
+        
+        function validateAccountForm() {
+            let isValid = true;
+            
+            // Validate email
+            if (!validateField($('#email')[0])) isValid = false;
+            
+            // Validate password
+            if (!validateField($('#password')[0])) isValid = false;
+            
+            // Validate password confirmation
+            const password = $('#password').val();
+            const confirmPassword = $('#confirmPassword').val();
+            if (!confirmPassword) {
+                showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Please confirm your password');
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Passwords do not match');
+                isValid = false;
+            } else {
+                clearFieldError($('#confirmPassword')[0], $('#confirmPassword-error'));
+            }
+            
+            return isValid;
+        }
+        
+        function validateProfileForm() {
+            let isValid = true;
+            
+            // Validate required fields based on registrant type
+            if (currentRegistrantType === 'attendee') {
+                const requiredFields = [
+                    '#prefix', '#firstName', '#lastName', '#country', 
+                    '#jobTitle', '#organization'
+                ];
+                
+                requiredFields.forEach(fieldId => {
+                    if (!validateField($(fieldId)[0])) isValid = false;
+                });
+                
+                // Validate phone
+                if (!phoneInput.isValidNumber()) {
+                    showFieldError($('#workPhone')[0], $('#workPhone-error'), 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearFieldError($('#workPhone')[0], $('#workPhone-error'));
+                }
+            } else if (currentRegistrantType === 'speaker') {
+                const requiredFields = [
+                    '#speakerPrefix', '#speakerFirstName', '#speakerLastName', '#speakerCountry', 
+                    '#speakerJobTitle', '#speakerOrganization', '#speakerBio'
+                ];
+                
+                requiredFields.forEach(fieldId => {
+                    if (!validateField($(fieldId)[0])) isValid = false;
+                });
+                
+                // Validate phone
+                if (!speakerPhoneInput.isValidNumber()) {
+                    showFieldError($('#speakerPhone')[0], $('#speakerPhone-error'), 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearFieldError($('#speakerPhone')[0], $('#speakerPhone-error'));
+                }
+            } else if (currentRegistrantType === 'partner') {
+                const requiredFields = [
+                    '#companyPrefix', '#companyName', '#contactFirstName', 
+                    '#contactLastName', '#contactEmail'
+                ];
+                
+                requiredFields.forEach(fieldId => {
+                    if (!validateField($(fieldId)[0])) isValid = false;
+                });
+                
+                // Validate phone
+                if (!partnerPhoneInput.isValidNumber()) {
+                    showFieldError($('#contactPhone')[0], $('#contactPhone-error'), 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearFieldError($('#contactPhone')[0], $('#contactPhone-error'));
+                }
+            } else if (currentRegistrantType === 'exhibitor') {
+                const requiredFields = [
+                    '#exhibitorCompanyName', '#exhibitorFirstName', 
+                    '#exhibitorLastName', '#exhibitorEmail'
+                ];
+                
+                requiredFields.forEach(fieldId => {
+                    if (!validateField($(fieldId)[0])) isValid = false;
+                });
+                
+                // Validate phone
+                if (!exhibitorPhoneInput.isValidNumber()) {
+                    showFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'), 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'));
+                }
+            }
+            
+            // Validate terms and conditions
+            if (!$('#terms').is(':checked')) {
+                showFieldError($('#terms')[0], $('#terms-error'), 'You must agree to the terms and conditions');
+                isValid = false;
+            } else {
+                clearFieldError($('#terms')[0], $('#terms-error'));
+            }
+            
+            return isValid;
+        }
+        
+        function validateField(field) {
+            const value = $(field).val().trim();
+            const errorElement = $(field).next('.help-block-error');
+            
+            if ($(field).prop('required') && !value) {
+                showFieldError(field, errorElement, 'This field is required');
+                return false;
+            }
+            
+            // Email validation
+            if ($(field).attr('type') === 'email' && value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    showFieldError(field, errorElement, 'Please enter a valid email address');
+                    return false;
+                }
+            }
+            
+            // Password validation
+            if ($(field).attr('name') === 'password' && value) {
+                if (value.length < 8) {
+                    showFieldError(field, errorElement, 'Password must be at least 8 characters long');
+                    return false;
+                }
+            }
+            
+            clearFieldError(field, errorElement);
+            return true;
+        }
+        
+        function showFieldError(field, errorElement, message) {
+            $(field).addClass('error');
+            errorElement.text(message).show();
+        }
+        
+        function clearFieldError(field, errorElement = null) {
+            $(field).removeClass('error');
+            if (!errorElement) {
+                errorElement = $(field).next('.help-block-error');
+            }
+            errorElement.hide();
+        }
+    </script>
+</body>
+</html>

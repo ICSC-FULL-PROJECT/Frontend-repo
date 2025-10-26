@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Dashboard - ICSC 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #008751;
+            --primary-light: #afe1af;
+            --primary-dark: #006400;
+            --secondary: #eff1ed;
+            --dark: #212121;
+            --light: #ffffff;
+            --gray: #f4f4f4;
+            --border: #cccccc;
+            --partner: #6b9080;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .role-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .partner-badge {
+            background-color: var(--partner);
+            color: white;
+        }
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #f0f5ff;
+            color: var(--primary);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .content-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .agenda-container {
+            margin-bottom: 30px;
+        }
+        
+        .agenda-day {
+            margin-bottom: 25px;
+        }
+        
+        .agenda-day h3 {
+            background-color: #f0f5ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .event-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 135, 81, 0.15);
+        }
+        
+        .event-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .event-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .event-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .attend-btn {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .attend-btn:hover {
+            background-color: #c8e6c9;
+        }
+        
+        .attending {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        
+        .attending:hover {
+            background-color: #388e3c;
+        }
+        
+        .sidebar-widget {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .widget-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .widget-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .payment-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .payment-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        .donation-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .donation-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .donation-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .donation-option.selected {
+            border-color: var(--primary);
+            background-color: #f0f9ff;
+        }
+        
+        .donation-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .donation-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .custom-donation {
+            margin-top: 20px;
+        }
+        
+        .custom-donation input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .donation-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .donation-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h1>ICSC 2026 Dashboard</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">SJ</div>
+                    <div>
+                        <div class="user-name">Sarah Johnson</div>
+                        <div class="role-badge partner-badge">Partner</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="#"><i class="fas fa-handshake"></i> Partnership</a></li>
+                    <li><a href="#"><i class="fas fa-file-alt"></i> Resources</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                </ul>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="main-content">
+                    <div class="content-header">
+                        <h2>Conference Agenda</h2>
+                        <div class="day-selector">
+                            <button class="tab-btn active" data-day="wednesday">Wednesday 25 June</button>
+                            <button class="tab-btn" data-day="thursday">Thursday 26 June</button>
+                        </div>
+                    </div>
+                    
+                    <div class="agenda-container">
+                        <div class="agenda-day active" id="wednesday-agenda">
+                            <h3>Wednesday 25 June 2026</h3>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Registration and Welcome Coffee</h4>
+                                    <p><i class="far fa-clock"></i> 08:30-09:00 | <i class="fas fa-map-marker-alt"></i> Main Hall</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Opening Ceremony</h4>
+                                    <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                    <p>Official opening of the International Civil Service Conference 2026</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Keynote: The Future of Public Service</h4>
+                                    <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    <p>Exploring the evolving role of civil servants in a rapidly changing world</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Networking Break</h4>
+                                    <p><i class="far fa-clock"></i> 10:30-11:00 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Panel: Digital Transformation in Government</h4>
+                                    <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    <p>How digital technologies are reshaping public service delivery</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="agenda-day" id="thursday-agenda">
+                            <h3>Thursday 26 June 2026</h3>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Opening Welcome</h4>
+                                    <p><i class="far fa-clock"></i> 09:00-09:10 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>The Civil Service as the Engine of Governance</h4>
+                                    <p><i class="far fa-clock"></i> 09:10-10:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    <p>Measuring and monitoring performance in public service</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Keynote</h4>
+                                    <p><i class="far fa-clock"></i> 10:10-10:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Supporting Public Sector Reforms: A Partner's Experience</h4>
+                                    <p><i class="far fa-clock"></i> 10:30-11:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    <p>Insights from private sector partnerships in driving public service transformation</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Leadership & Institutional Innovation</h4>
+                                    <p><i class="far fa-clock"></i> 11:30-12:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    <p>The role of exemplary leadership in driving innovation</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="attend-btn">Attend</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-header">
+                        <h2>Partner Dashboard</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">Gold</div>
+                            <div class="stat-label">Partnership Level</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">15</div>
+                            <div class="stat-label">Leads Generated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">$5,000</div>
+                            <div class="stat-label">Partnership Value</div>
+                        </div>
+                    </div>
+                    <p>As a partner, you have access to exclusive networking opportunities and visibility at the conference. Consider upgrading your partnership for additional benefits.</p>
+                    
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="partnership-info">Partnership Info</button>
+                        <button class="tab-btn" data-tab="donation">Make a Donation</button>
+                        <button class="tab-btn" data-tab="upgrade">Upgrade Partnership</button>
+                    </div>
+                    <div class="tab-content active" id="partnership-info">
+                        <h4>Your Partnership Benefits</h4>
+                        <div class="event-item">
+                            <div class="event-info">
+                                <h4>Gold Level Partnership</h4>
+                                <p>Your current partnership level includes:</p>
+                                <ul>
+                                    <li>Logo on event website and materials</li>
+                                    <li>2 complimentary conference passes</li>
+                                    <li>Access to partner lounge</li>
+                                    <li>Recognition during opening ceremony</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="donation">
+                        <h4>Support the Conference</h4>
+                        <p>Your donation helps us continue providing high-quality content and experiences for all attendees.</p>
+                        
+                        <div class="donation-options">
+                            <div class="donation-option" data-amount="100">
+                                <div class="donation-amount">$100</div>
+                                <div class="donation-description">Supports one student scholarship</div>
+                            </div>
+                            <div class="donation-option" data-amount="250">
+                                <div class="donation-amount">$250</div>
+                                <div class="donation-description">Helps fund conference materials</div>
+                            </div>
+                            <div class="donation-option" data-amount="500">
+                                <div class="donation-amount">$500</div>
+                                <div class="donation-description">Supports speaker travel expenses</div>
+                            </div>
+                        </div>
+                        
+                        <div class="custom-donation">
+                            <h4>Or enter a custom amount:</h4>
+                            <input type="number" id="custom-amount" placeholder="Enter amount in USD">
+                            <button class="payment-btn" id="process-donation">Process Donation</button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="upgrade">
+                        <h4>Upgrade Your Partnership</h4>
+                        <div class="event-item">
+                            <div class="event-info">
+                                <h4>Platinum Partnership - $10,000</h4>
+                                <p>Upgrade to enjoy these additional benefits:</p>
+                                <ul>
+                                    <li>Premium logo placement on all materials</li>
+                                    <li>5 complimentary conference passes</li>
+                                    <li>Dedicated exhibition space</li>
+                                    <li>Speaking opportunity in partner track</li>
+                                    <li>VIP access to all social events</li>
+                                </ul>
+                            </div>
+                            <div class="event-actions">
+                                <button class="attend-btn">Upgrade Now</button>
+                            </div>
+                        </div>
+                        
+                        <div class="event-item">
+                            <div class="event-info">
+                                <h4>Diamond Partnership - $25,000</h4>
+                                <p>The ultimate partnership package includes:</p>
+                                <ul>
+                                    <li>Keynote speaking opportunity</li>
+                                    <li>Exclusive branding as "Presenting Partner"</li>
+                                    <li>10 complimentary conference passes</li>
+                                    <li>Premium exhibition space</li>
+                                    <li>Private meeting room access</li>
+                                    <li>Dedicated event staff support</li>
+                                </ul>
+                            </div>
+                            <div class="event-actions">
+                                <button class="attend-btn">Upgrade Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-widgets">
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-calendar-check"></i>
+                            <h3>My Schedule</h3>
+                        </div>
+                        <div id="selected-events">
+                            <p>No events selected yet. Click "Attend" on events to add them to your schedule.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-bell"></i>
+                            <h3>Notifications</h3>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Partner Reception</div>
+                            <div class="info-value">Today, 18:00</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Lead Follow-up</div>
+                            <div class="info-value">5 new leads</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Partnership Meeting</div>
+                            <div class="info-value">Tomorrow, 14:00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Partnership Stats</h3>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Partnership Level</div>
+                            <div class="info-value">Gold</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Investment</div>
+                            <div class="info-value">$5,000</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">ROI Estimate</div>
+                            <div class="info-value">215%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Networking Score</div>
+                            <div class="info-value">87/100</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <div class="notification-text">Event added to your schedule!</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Day switching functionality
+            const dayButtons = document.querySelectorAll('.tab-btn[data-day]');
+            const agendaDays = document.querySelectorAll('.agenda-day');
+            
+            dayButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const day = this.getAttribute('data-day');
+                    
+                    // Update active button
+                    dayButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding day
+                    agendaDays.forEach(dayElement => dayElement.classList.remove('active'));
+                    document.getElementById(`${day}-agenda`).classList.add('active');
+                });
+            });
+            
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tab = this.getAttribute('data-tab');
+                    const parent = this.closest('.main-content');
+                    
+                    // Update active button in this tab group
+                    const siblingButtons = parent.querySelectorAll('.tab-btn[data-tab]');
+                    siblingButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    const tabContents = parent.querySelectorAll('.tab-content');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    parent.querySelector(`#${tab}`).classList.add('active');
+                });
+            });
+            
+            // Event attendance functionality
+            const attendButtons = document.querySelectorAll('.attend-btn');
+            const selectedEventsContainer = document.getElementById('selected-events');
+            const notification = document.getElementById('notification');
+            let selectedEvents = [];
+            
+            // Skip upgrade buttons in the partnership tab
+            attendButtons.forEach(button => {
+                if (button.closest('#upgrade')) return;
+                
+                button.addEventListener('click', function() {
+                    const eventItem = this.closest('.event-item');
+                    const eventTitle = eventItem.querySelector('h4').textContent;
+                    const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
+                    
+                    // Check if event is already selected
+                    const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle);
+                    
+                    if (eventIndex === -1) {
+                        // Add event to selected events
+                        selectedEvents.push({
+                            title: eventTitle,
+                            time: eventTime
+                        });
+                        
+                        this.textContent = 'Added';
+                        this.classList.add('attending');
+                        
+                        showNotification('Event added to your schedule!');
+                    } else {
+                        // Remove event from selected events
+                        selectedEvents.splice(eventIndex, 1);
+                        
+                        this.textContent = 'Attend';
+                        this.classList.remove('attending');
+                        
+                        showNotification('Event removed from your schedule!');
+                    }
+                    
+                    updateSelectedEventsDisplay();
+                });
+            });
+            
+            function updateSelectedEventsDisplay() {
+                if (selectedEvents.length === 0) {
+                    selectedEventsContainer.innerHTML = '<p>No events selected yet. Click "Attend" on events to add them to your schedule.</p>';
+                    return;
+                }
+                
+                let html = '';
+                selectedEvents.forEach(event => {
+                    html += `
+                        <div class="info-item">
+                            <div class="info-label">${event.title}</div>
+                            <div class="info-value">${event.time}</div>
+                        </div>
+                    `;
+                });
+                
+                html += `<button class="payment-btn" id="submit-schedule">Submit Schedule to Admin</button>`;
+                selectedEventsContainer.innerHTML = html;
+                
+                // Add event listener to the submit button
+                document.getElementById('submit-schedule').addEventListener('click', function() {
+                    submitToAdmin(selectedEvents, 'partner');
+                });
+            }
+            
+            // Donation functionality
+            const donationOptions = document.querySelectorAll('.donation-option');
+            let selectedDonationAmount = 0;
+            
+            donationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    donationOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Set selected amount
+                    selectedDonationAmount = parseInt(this.getAttribute('data-amount'));
+                    
+                    // Update custom amount field
+                    document.getElementById('custom-amount').value = selectedDonationAmount;
+                });
+            });
+            
+            // Custom amount input
+            document.getElementById('custom-amount').addEventListener('input', function() {
+                const customAmount = parseInt(this.value) || 0;
+                selectedDonationAmount = customAmount;
+                
+                // Remove selected class from all options if custom amount is entered
+                if (customAmount > 0) {
+                    donationOptions.forEach(opt => opt.classList.remove('selected'));
+                }
+            });
+            
+            // Process donation
+            document.getElementById('process-donation').addEventListener('click', function() {
+                if (selectedDonationAmount <= 0) {
+                    showNotification('Please select or enter a donation amount.');
+                    return;
+                }
+                
+                // In a real application, this would process the payment
+                const donationData = {
+                    userId: 'user123',
+                    amount: selectedDonationAmount,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('Processing donation:', donationData);
+                showNotification(`Thank you for your $${selectedDonationAmount} donation!`);
+                
+                // Reset form
+                donationOptions.forEach(opt => opt.classList.remove('selected'));
+                document.getElementById('custom-amount').value = '';
+                selectedDonationAmount = 0;
+            });
+            
+            // Partnership upgrade buttons
+            const upgradeButtons = document.querySelectorAll('#upgrade .attend-btn');
+            upgradeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageName = this.closest('.event-item').querySelector('h4').textContent;
+                    
+                    // In a real application, this would initiate the upgrade process
+                    console.log('Upgrading partnership to:', packageName);
+                    showNotification(`Initiating upgrade to ${packageName}. Our team will contact you shortly.`);
+                });
+            });
+            
+            function submitToAdmin(events, role) {
+                // In a real application, this would send data to the backend
+                const submissionData = {
+                    role: role,
+                    userId: 'user123', // This would come from authentication
+                    events: events,
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('Submitting to admin:', submissionData);
+                
+                // Simulate API call
+                setTimeout(() => {
+                    showNotification('Your schedule has been submitted to the administrator!');
+                }, 1000);
+            }
+            
+            function showNotification(message) {
+                notification.querySelector('.notification-text').textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
