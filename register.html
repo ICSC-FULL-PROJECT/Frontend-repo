@@ -292,19 +292,20 @@
             margin: 20px 0;
         }
         
-        .amend-dropdown {
-            max-width: 300px;
+        .auto-login-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
             margin: 20px 0;
+            text-align: center;
         }
         
-        .terms-box {
-            background: var(--light-gray);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            max-height: 200px;
-            overflow-y: auto;
+        .countdown {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
         }
         
         .package-cards {
@@ -593,11 +594,11 @@
                         <div class="step-number">3</div>
                         <div class="step-label">Profile Information</div>
                     </div>
-                    <div class="progress-step" id="step-4">
+                    <div class="progress-step speaker-partner-only" id="step-4">
                         <div class="step-number">4</div>
                         <div class="step-label">Package Selection</div>
                     </div>
-                    <div class="progress-step" id="step-5">
+                    <div class="progress-step speaker-partner-only" id="step-5">
                         <div class="step-number">5</div>
                         <div class="step-label">Payment</div>
                     </div>
@@ -733,6 +734,83 @@
                                 <input type="text" id="lastName" name="lastName" class="form-control" required>
                                 <div class="help-block-error" id="lastName-error"></div>
                             </div>
+                            <!-- New Attendee Fields -->
+<div class="form-group">
+    <label class="has-star" for="nin">National Identification Number (NIN)</label>
+    <input type="text" id="nin" name="nin" class="form-control" required>
+</div>
+
+<div class="form-group">
+    <label class="has-star" for="ministry">Ministry (Select One)</label>
+    <select id="ministry" name="ministry" class="form-control" required>
+        <option value="">Select Ministry</option>
+        <option>Federal Ministry of Agriculture and Rural Development</option>
+        <option>Federal Ministry of Education</option>
+        <option>Federal Ministry of Finance, Budget and National Planning</option>
+        <option>Federal Ministry of Health</option>
+        <option>Federal Ministry of Information and Culture</option>
+        <option>Federal Ministry of Interior</option>
+        <option>Federal Ministry of Justice</option>
+        <option>Federal Ministry of Labour and Employment</option>
+        <option>Federal Ministry of Power</option>
+        <option>Federal Ministry of Transportation</option>
+        <option>Federal Ministry of Works and Housing</option>
+        <option>Federal Ministry of Women Affairs</option>
+        <option>Federal Ministry of Youth and Sports Development</option>
+        <option>Other</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label class="has-star" for="gradeLevel">Grade Level</label>
+    <select id="gradeLevel" name="gradeLevel" class="form-control" required>
+        <option value="">Select Grade Level</option>
+        <option>Director</option>
+        <option>Deputy Director</option>
+        <option>Assistant Director</option>
+        <option>Chief Officer</option>
+        <option>Principal Officer</option>
+        <option>Senior Officer</option>
+        <option>Officer</option>
+    </select>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label class="has-star" for="department">Department</label>
+        <input type="text" id="department" name="department" class="form-control">
+    </div>
+    <div class="form-group">
+        <label class="has-star" for="agency">Agency</label>
+        <input type="text" id="agency" name="agency" class="form-control">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label class="has-star" for="staffId">Staff ID</label>
+        <input type="text" id="staffId" name="staffId" class="form-control">
+    </div>
+    <div class="form-group">
+        <label class="has-star" for="officeLocation">Office Location</label>
+        <input type="text" id="officeLocation" name="officeLocation" class="form-control">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label class="has-star" for="attendeeEmail">Official Email</label>
+        <input type="email" id="attendeeEmail" name="attendeeEmail" class="form-control">
+    </div>
+    <div class="form-group">
+        <label class="has-star" for="attendeePhone">Phone Number</label>
+        <div class="phone-input-container">
+            <input type="tel" id="attendeePhone" name="attendeePhone" class="form-control" required>
+        </div>
+    </div>
+</div>
+<!-- End of new fields -->
+
                         </div>
                         
                         <div class="form-group">
@@ -1221,6 +1299,13 @@
                     <p id="payment-confirmation-text"></p>
                 </div>
                 
+                <!-- Auto-login message for all user types -->
+                <div id="auto-login-message" class="auto-login-message">
+                    <h4><i class="fas fa-user-check me-2"></i> Automatic Login</h4>
+                    <p>You will be automatically logged into your <span id="dashboard-type">dashboard</span> in <span class="countdown">5</span> seconds.</p>
+                    <p>If you are not redirected, <a href="#" id="manual-login-link">click here to access your dashboard</a>.</p>
+                </div>
+                
                 <div class="confirmation-details" id="confirmation-details">
                     <!-- Confirmation details will be populated by JavaScript -->
                 </div>
@@ -1228,7 +1313,8 @@
                 <div class="text-center mt-4">
                     <p><strong>You can now log in to your dashboard using the email and password you created.</strong></p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <button type="button" class="btn btn-outline-standard" id="report-payment-btn">
+                        <!-- Report Payment Issue button - only for attendees and partners -->
+                        <button type="button" class="btn btn-outline-standard" id="report-payment-btn" style="display: none;">
                             Report Payment Issue <i class="fas fa-envelope ms-2"></i>
                         </button>
                         <a href="login.html" class="btn btn-standard" id="login-btn">
@@ -1269,674 +1355,823 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     
-    <script>
-        // Global variables to track form state
-        let currentRegistrantType = null;
-        let currentStep = 1;
-        let formData = {};
-        let selectedPackage = null;
-        let selectedPaymentMethod = null;
-        let phoneInput = null;
-        let speakerPhoneInput = null;
-        let partnerPhoneInput = null;
-        let exhibitorPhoneInput = null;
-        
-        // Package details - This would be replaced with backend API call
-        const packages = {
-            diamond: { name: "Diamond Partner", price: 15000 },
-            gold: { name: "Gold Knowledge Partner", price: 10000 },
-            silver: { name: "Silver Roundtable Partner", price: 7500 },
-            bronze: { name: "Bronze Exhibition Partner", price: 5000 }
-        };
-        
-        // Initialize the application
-        $(document).ready(function() {
-            initializeEventListeners();
-            initializePhoneInputs();
-            setupCountryPhoneSync();
+   <script>
+    // Global variables to track form state
+    let currentRegistrantType = null;
+    let currentStep = 1;
+    let formData = {};
+    let selectedPackage = null;
+    let selectedPaymentMethod = null;
+    let phoneInput = null;
+    let speakerPhoneInput = null;
+    let partnerPhoneInput = null;
+    let exhibitorPhoneInput = null;
+    let autoLoginTimer = null;
+    
+    // Package details - This would be replaced with backend API call
+    const packages = {
+        diamond: { name: "Diamond Partner", price: 15000 },
+        gold: { name: "Gold Knowledge Partner", price: 10000 },
+        silver: { name: "Silver Roundtable Partner", price: 7500 },
+        bronze: { name: "Bronze Exhibition Partner", price: 5000 }
+    };
+    
+    // Dashboard URLs based on user type
+    const dashboardUrls = {
+        attendee: 'attendee-dashboard.html',
+        speaker: 'speaker-dashboard.html',
+        partner: 'partner-dashboard.html',
+        exhibitor: 'exhibitor-dashboard.html'
+    };
+    
+    // Dashboard names for display
+    const dashboardNames = {
+        attendee: 'Attendee Dashboard',
+        speaker: 'Speaker Dashboard',
+        partner: 'Partner Dashboard',
+        exhibitor: 'Exhibitor Dashboard'
+    };
+    
+    // Initialize the application
+    $(document).ready(function() {
+        initializeEventListeners();
+        initializePhoneInputs();
+        setupCountryPhoneSync();
+    });
+    
+    function initializeEventListeners() {
+        // Registrant type selection
+        $('.registrant-card').on('click', function() {
+            $('.registrant-card').removeClass('selected');
+            $(this).addClass('selected');
+            currentRegistrantType = $(this).data('type');
+            $('#continue-btn').prop('disabled', false);
+            $('#registrant-error').hide();
+            
+            // Update progress indicator based on registrant type
+            updateProgressIndicatorVisibility();
         });
         
-        function initializeEventListeners() {
-            // Registrant type selection
-            $('.registrant-card').on('click', function() {
-                $('.registrant-card').removeClass('selected');
-                $(this).addClass('selected');
-                currentRegistrantType = $(this).data('type');
-                $('#continue-btn').prop('disabled', false);
-                $('#registrant-error').hide();
-            });
+        // Continue to account creation
+        $('#continue-btn').on('click', function() {
+            if (!currentRegistrantType) {
+                $('#registrant-error').show();
+                return;
+            }
             
-            // Continue to account creation
-            $('#continue-btn').on('click', function() {
-                if (!currentRegistrantType) {
-                    $('#registrant-error').show();
-                    return;
-                }
-                
-                showAccountSection();
-            });
-            
-            // Back to registrant type selection
-            $('#back-to-type-btn').on('click', function() {
-                showRegistrantTypeSection();
-            });
-            
-            // Continue to profile info
-            $('#continue-to-profile-btn').on('click', function() {
-                if (validateAccountForm()) {
-                    // Save account data
-                    formData.email = $('#email').val();
-                    formData.password = $('#password').val();
-                    showProfileSection();
-                }
-            });
-            
-            // Back to account creation
-            $('#back-to-account-btn').on('click', function() {
-                showAccountSection();
-            });
-            
-            // Continue to next section (package or confirmation)
-            $('#continue-to-next-btn').on('click', function() {
-                if (validateProfileForm()) {
-                    // Save profile data based on registrant type
-                    if (currentRegistrantType === 'attendee') {
-                        formData.prefix = $('#prefix').val();
-                        formData.firstName = $('#firstName').val();
-                        formData.lastName = $('#lastName').val();
-                        formData.country = $('#country').val();
-                        formData.jobTitle = $('#jobTitle').val();
-                        formData.organization = $('#organization').val();
-                        formData.workPhone = phoneInput.getNumber();
-                    } else if (currentRegistrantType === 'speaker') {
-                        formData.speakerPrefix = $('#speakerPrefix').val();
-                        formData.speakerFirstName = $('#speakerFirstName').val();
-                        formData.speakerLastName = $('#speakerLastName').val();
-                        formData.speakerCountry = $('#speakerCountry').val();
-                        formData.speakerJobTitle = $('#speakerJobTitle').val();
-                        formData.speakerOrganization = $('#speakerOrganization').val();
-                        formData.speakerPhone = speakerPhoneInput.getNumber();
-                        formData.speakerBio = $('#speakerBio').val();
-                        formData.speakerTopic = $('#speakerTopic').val();
-                        formData.speakerExperience = $('#speakerExperience').val();
-                    } else if (currentRegistrantType === 'partner') {
-                        formData.companyPrefix = $('#companyPrefix').val();
-                        formData.companyName = $('#companyName').val();
-                        formData.contactFirstName = $('#contactFirstName').val();
-                        formData.contactLastName = $('#contactLastName').val();
-                        formData.contactEmail = $('#contactEmail').val();
-                        formData.contactPhone = partnerPhoneInput.getNumber();
-                        formData.website = $('#website').val();
-                        formData.socialMedia = $('#socialMedia').val();
-                        formData.companyDescription = $('#companyDescription').val();
-                    } else if (currentRegistrantType === 'exhibitor') {
-                        formData.exhibitorCompanyName = $('#exhibitorCompanyName').val();
-                        formData.exhibitorFirstName = $('#exhibitorFirstName').val();
-                        formData.exhibitorLastName = $('#exhibitorLastName').val();
-                        formData.exhibitorEmail = $('#exhibitorEmail').val();
-                        formData.exhibitorPhone = exhibitorPhoneInput.getNumber();
-                        formData.exhibitorWebsite = $('#exhibitorWebsite').val();
-                        formData.exhibitorDescription = $('#exhibitorDescription').val();
-                        formData.exhibitorProducts = $('#exhibitorProducts').val();
-                    }
-                    
-                    formData.terms = $('#terms').is(':checked');
-                    formData.newsletter = $('#newsletter').is(':checked');
-                    
-                    // Show package section for speakers and partners, confirmation for attendees and exhibitors
-                    if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
-                        showPackageSection();
-                    } else {
-                        showConfirmationSection();
-                    }
-                }
-            });
-            
-            // Back to profile info
-            $('#back-to-profile-btn').on('click', function() {
+            showAccountSection();
+        });
+        
+        // Back to registrant type selection
+        $('#back-to-type-btn').on('click', function() {
+            showRegistrantTypeSection();
+        });
+        
+        // Continue to profile info
+        $('#continue-to-profile-btn').on('click', function() {
+            if (validateAccountForm()) {
+                // Save account data
+                formData.email = $('#email').val();
+                formData.password = $('#password').val();
                 showProfileSection();
-            });
-            
-            // Package selection
-            $('.package-card').on('click', function() {
-                $('.package-card').removeClass('selected');
-                $(this).addClass('selected');
-                selectedPackage = $(this).data('package');
-                $('#selected-package-text').text(packages[selectedPackage].name);
-                $('#continue-to-payment-btn').prop('disabled', false);
-            });
-            
-            // Continue to payment
-            $('#continue-to-payment-btn').on('click', function() {
-                if (!selectedPackage) {
-                    alert('Please select a package to continue');
-                    return;
-                }
-                showPaymentSection();
-            });
-            
-            // Back to package selection
-            $('#back-to-package-btn').on('click', function() {
-                showPackageSection();
-            });
-            
-            // Payment method selection
-            $('.payment-option').on('click', function() {
-                $('.payment-option').removeClass('selected');
-                $(this).addClass('selected');
-                selectedPaymentMethod = $(this).data('method');
-                $('.payment-form').hide();
-                $(`#${selectedPaymentMethod}-payment-form`).show();
-            });
-            
-            // Process payment - This would be replaced with backend API call
-            $('#process-payment-btn').on('click', function() {
-                if (!selectedPaymentMethod) {
-                    alert('Please select a payment method');
-                    return;
+            }
+        });
+        
+        // Back to account creation
+        $('#back-to-account-btn').on('click', function() {
+            showAccountSection();
+        });
+        
+        // Continue to next section (package or confirmation)
+        $('#continue-to-next-btn').on('click', function() {
+            if (validateProfileForm()) {
+                // Save profile data based on registrant type
+                if (currentRegistrantType === 'attendee') {
+                    formData.prefix = $('#prefix').val();
+                    formData.firstName = $('#firstName').val();
+                    formData.lastName = $('#lastName').val();
+                    formData.country = $('#country').val();
+                    formData.jobTitle = $('#jobTitle').val();
+                    formData.organization = $('#organization').val();
+                    formData.workPhone = phoneInput.getNumber();
+                    
+                    // Save additional attendee fields
+                    formData.nin = $('#nin').val();
+                    formData.ministry = $('#ministry').val();
+                    formData.gradeLevel = $('#gradeLevel').val();
+                    formData.department = $('#department').val();
+                    formData.agency = $('#agency').val();
+                    formData.staffId = $('#staffId').val();
+                    formData.officeLocation = $('#officeLocation').val();
+                    formData.attendeeEmail = $('#attendeeEmail').val();
+                    formData.attendeePhone = $('#attendeePhone').val();
+                    
+                } else if (currentRegistrantType === 'speaker') {
+                    formData.speakerPrefix = $('#speakerPrefix').val();
+                    formData.speakerFirstName = $('#speakerFirstName').val();
+                    formData.speakerLastName = $('#speakerLastName').val();
+                    formData.speakerCountry = $('#speakerCountry').val();
+                    formData.speakerJobTitle = $('#speakerJobTitle').val();
+                    formData.speakerOrganization = $('#speakerOrganization').val();
+                    formData.speakerPhone = speakerPhoneInput.getNumber();
+                    formData.speakerBio = $('#speakerBio').val();
+                    formData.speakerTopic = $('#speakerTopic').val();
+                    formData.speakerExperience = $('#speakerExperience').val();
+                } else if (currentRegistrantType === 'partner') {
+                    formData.companyPrefix = $('#companyPrefix').val();
+                    formData.companyName = $('#companyName').val();
+                    formData.contactFirstName = $('#contactFirstName').val();
+                    formData.contactLastName = $('#contactLastName').val();
+                    formData.contactEmail = $('#contactEmail').val();
+                    formData.contactPhone = partnerPhoneInput.getNumber();
+                    formData.website = $('#website').val();
+                    formData.socialMedia = $('#socialMedia').val();
+                    formData.companyDescription = $('#companyDescription').val();
+                } else if (currentRegistrantType === 'exhibitor') {
+                    formData.exhibitorCompanyName = $('#exhibitorCompanyName').val();
+                    formData.exhibitorFirstName = $('#exhibitorFirstName').val();
+                    formData.exhibitorLastName = $('#exhibitorLastName').val();
+                    formData.exhibitorEmail = $('#exhibitorEmail').val();
+                    formData.exhibitorPhone = exhibitorPhoneInput.getNumber();
+                    formData.exhibitorWebsite = $('#exhibitorWebsite').val();
+                    formData.exhibitorDescription = $('#exhibitorDescription').val();
+                    formData.exhibitorProducts = $('#exhibitorProducts').val();
                 }
                 
-                // Mock payment processing
-                processPayment();
-            });
-            
-            // Report payment issue - This would be replaced with backend contact form
-            $('#report-payment-btn').on('click', function() {
-                alert('In a real application, this would open a contact form or initiate a call.');
-                // window.location.href = 'mailto:support@icsc2026.com';
-            });
-            
-            // Form field validation on blur
-            $('input, select').on('blur', function() {
-                validateField(this);
-            });
-            
-            // Clear errors on input
-            $('input, select').on('input', function() {
-                clearFieldError(this);
-            });
-        }
-        
-        function setupCountryPhoneSync() {
-            // Sync country dropdown with phone input for all profile types
-            $('#country').on('change', function() {
-                const countryCode = $(this).val();
-                if (countryCode && phoneInput) {
-                    phoneInput.setCountry(countryCode);
-                }
-            });
-            
-            $('#speakerCountry').on('change', function() {
-                const countryCode = $(this).val();
-                if (countryCode && speakerPhoneInput) {
-                    speakerPhoneInput.setCountry(countryCode);
-                }
-            });
-            
-            $('#contactCountry').on('change', function() {
-                const countryCode = $(this).val();
-                if (countryCode && partnerPhoneInput) {
-                    partnerPhoneInput.setCountry(countryCode);
-                }
-            });
-            
-            $('#exhibitorCountry').on('change', function() {
-                const countryCode = $(this).val();
-                if (countryCode && exhibitorPhoneInput) {
-                    exhibitorPhoneInput.setCountry(countryCode);
-                }
-            });
-        }
-        
-        function initializePhoneInputs() {
-            // Initialize phone input for attendees
-            phoneInput = window.intlTelInput(document.querySelector("#workPhone"), {
-                initialCountry: "us",
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-            });
-            
-            // Initialize phone input for speakers
-            speakerPhoneInput = window.intlTelInput(document.querySelector("#speakerPhone"), {
-                initialCountry: "us",
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-            });
-            
-            // Initialize phone input for partners
-            partnerPhoneInput = window.intlTelInput(document.querySelector("#contactPhone"), {
-                initialCountry: "us",
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-            });
-            
-            // Initialize phone input for exhibitors
-            exhibitorPhoneInput = window.intlTelInput(document.querySelector("#exhibitorPhone"), {
-                initialCountry: "us",
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-            });
-        }
-        
-        function showRegistrantTypeSection() {
-            currentStep = 1;
-            updateProgressIndicator();
-            $('#account-section').hide();
-            $('#profile-section').hide();
-            $('#package-section').hide();
-            $('#payment-section').hide();
-            $('#confirmation-section').hide();
-            $('#registrant-type-section').show();
-        }
-        
-        function showAccountSection() {
-            currentStep = 2;
-            updateProgressIndicator();
-            $('#registrant-type-section').hide();
-            $('#profile-section').hide();
-            $('#package-section').hide();
-            $('#payment-section').hide();
-            $('#confirmation-section').hide();
-            $('#account-section').show();
-        }
-        
-        function showProfileSection() {
-            currentStep = 3;
-            updateProgressIndicator();
-            $('#account-section').hide();
-            $('#registrant-type-section').hide();
-            $('#package-section').hide();
-            $('#payment-section').hide();
-            $('#confirmation-section').hide();
-            $('#profile-section').show();
-            
-            // Update profile section based on registrant type
-            if (currentRegistrantType === 'attendee') {
-                $('#profile-title').text('Attendee Information');
-                $('#attendee-profile').show();
-                $('#speaker-profile').hide();
-                $('#partner-profile').hide();
-                $('#exhibitor-profile').hide();
-            } else if (currentRegistrantType === 'speaker') {
-                $('#profile-title').text('Speaker Information');
-                $('#attendee-profile').hide();
-                $('#speaker-profile').show();
-                $('#partner-profile').hide();
-                $('#exhibitor-profile').hide();
-            } else if (currentRegistrantType === 'partner') {
-                $('#profile-title').text('Partner Information');
-                $('#attendee-profile').hide();
-                $('#speaker-profile').hide();
-                $('#partner-profile').show();
-                $('#exhibitor-profile').hide();
-            } else if (currentRegistrantType === 'exhibitor') {
-                $('#profile-title').text('Exhibitor Information');
-                $('#attendee-profile').hide();
-                $('#speaker-profile').hide();
-                $('#partner-profile').hide();
-                $('#exhibitor-profile').show();
-            }
-        }
-        
-        function showPackageSection() {
-            currentStep = 4;
-            updateProgressIndicator();
-            $('#account-section').hide();
-            $('#profile-section').hide();
-            $('#registrant-type-section').hide();
-            $('#payment-section').hide();
-            $('#confirmation-section').hide();
-            $('#package-section').show();
-        }
-        
-        function showPaymentSection() {
-            currentStep = 5;
-            updateProgressIndicator();
-            $('#account-section').hide();
-            $('#profile-section').hide();
-            $('#package-section').hide();
-            $('#registrant-type-section').hide();
-            $('#confirmation-section').hide();
-            $('#payment-section').show();
-            
-            // Update payment details
-            $('#payment-package-name').text(packages[selectedPackage].name);
-            $('#payment-amount').text('$' + packages[selectedPackage].price.toLocaleString());
-            
-            // Generate bank reference
-            const ref = 'ICSC-' + Math.floor(100000 + Math.random() * 900000);
-            $('#bank-reference').text(ref);
-        }
-        
-        function showConfirmationSection() {
-            currentStep = 6;
-            updateProgressIndicator();
-            $('#account-section').hide();
-            $('#profile-section').hide();
-            $('#package-section').hide();
-            $('#payment-section').hide();
-            $('#registrant-type-section').hide();
-            $('#confirmation-section').show();
-            
-            // Populate confirmation details
-            populateConfirmationDetails();
-            
-            // Update confirmation email
-            $('#confirmation-email').text(formData.email);
-            
-            // Update payment confirmation text
-            if (currentRegistrantType === 'attendee' || currentRegistrantType === 'exhibitor') {
-                $('#payment-confirmation-text').text('Your registration has been confirmed.');
-            } else {
-                $('#payment-confirmation-text').text('Your payment has been processed successfully. A receipt has been sent to your email and will be available in your dashboard.');
-            }
-        }
-        
-        function updateProgressIndicator() {
-            $('.progress-step').removeClass('active completed');
-            
-            // Mark previous steps as completed and current step as active
-            for (let i = 0; i < currentStep; i++) {
-                if (i < currentStep - 1) {
-                    $('.progress-step').eq(i).addClass('completed');
+                formData.terms = $('#terms').is(':checked');
+                formData.newsletter = $('#newsletter').is(':checked');
+                
+                // Show package section for speakers and partners, confirmation for attendees and exhibitors
+                if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
+                    showPackageSection();
                 } else {
-                    $('.progress-step').eq(i).addClass('active');
+                    // For attendees and exhibitors, show confirmation (step 4)
+                    showConfirmationSection();
                 }
             }
-        }
+        });
         
-        function populateConfirmationDetails() {
-            const details = $('#confirmation-details');
-            details.empty();
-            
-            // Account Information
-            details.append(`
-                <div class="confirmation-item">
-                    <div class="confirmation-label">Account Information</div>
-                    <div class="confirmation-value">Email: ${formData.email}</div>
-                </div>
-            `);
-            
-            // Personal/Company Information
-            if (currentRegistrantType === 'attendee') {
-                const prefixText = {
-                    'mr': 'Mr',
-                    'mrs': 'Mrs', 
-                    'miss': 'Miss',
-                    'ms': 'Ms',
-                    'dr': 'Dr',
-                    'prof': 'Prof'
-                };
-                
-                details.append(`
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Personal Information</div>
-                        <div class="confirmation-value">
-                            ${prefixText[formData.prefix] || ''} ${formData.firstName} ${formData.lastName}<br>
-                            ${formData.jobTitle}<br>
-                            ${formData.organization}<br>
-                            ${formData.country}<br>
-                            Phone: ${formData.workPhone}
-                        </div>
-                    </div>
-                `);
-            } else if (currentRegistrantType === 'speaker') {
-                const prefixText = {
-                    'mr': 'Mr',
-                    'mrs': 'Mrs', 
-                    'miss': 'Miss',
-                    'ms': 'Ms',
-                    'dr': 'Dr',
-                    'prof': 'Prof'
-                };
-                
-                details.append(`
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Speaker Information</div>
-                        <div class="confirmation-value">
-                            ${prefixText[formData.speakerPrefix] || ''} ${formData.speakerFirstName} ${formData.speakerLastName}<br>
-                            ${formData.speakerJobTitle}<br>
-                            ${formData.speakerOrganization}<br>
-                            ${formData.speakerCountry}<br>
-                            Phone: ${formData.speakerPhone}<br>
-                            Bio: ${formData.speakerBio}<br>
-                            ${formData.speakerTopic ? 'Topic: ' + formData.speakerTopic + '<br>' : ''}
-                            ${formData.speakerExperience ? 'Experience: ' + formData.speakerExperience : ''}
-                        </div>
-                    </div>
-                `);
-            } else if (currentRegistrantType === 'partner') {
-                const companyPrefixText = {
-                    'company': 'Company',
-                    'organization': 'Organization',
-                    'institution': 'Institution',
-                    'agency': 'Agency'
-                };
-                
-                details.append(`
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Company Information</div>
-                        <div class="confirmation-value">
-                            ${companyPrefixText[formData.companyPrefix] || ''}: ${formData.companyName}<br>
-                            Contact: ${formData.contactFirstName} ${formData.contactLastName}<br>
-                            Email: ${formData.contactEmail}<br>
-                            Phone: ${formData.contactPhone}<br>
-                            ${formData.website ? 'Website: ' + formData.website + '<br>' : ''}
-                            ${formData.socialMedia ? 'Social Media: ' + formData.socialMedia + '<br>' : ''}
-                            ${formData.companyDescription ? 'Description: ' + formData.companyDescription : ''}
-                        </div>
-                    </div>
-                `);
-            } else if (currentRegistrantType === 'exhibitor') {
-                details.append(`
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Exhibitor Information</div>
-                        <div class="confirmation-value">
-                            Company: ${formData.exhibitorCompanyName}<br>
-                            Contact: ${formData.exhibitorFirstName} ${formData.exhibitorLastName}<br>
-                            Email: ${formData.exhibitorEmail}<br>
-                            Phone: ${formData.exhibitorPhone}<br>
-                            ${formData.exhibitorWebsite ? 'Website: ' + formData.exhibitorWebsite + '<br>' : ''}
-                            ${formData.exhibitorDescription ? 'Description: ' + formData.exhibitorDescription + '<br>' : ''}
-                            ${formData.exhibitorProducts ? 'Products: ' + formData.exhibitorProducts : ''}
-                        </div>
-                    </div>
-                `);
+        // Back to profile info
+        $('#back-to-profile-btn').on('click', function() {
+            showProfileSection();
+        });
+        
+        // Package selection
+        $('.package-card').on('click', function() {
+            $('.package-card').removeClass('selected');
+            $(this).addClass('selected');
+            selectedPackage = $(this).data('package');
+            $('#selected-package-text').text(packages[selectedPackage].name);
+            $('#continue-to-payment-btn').prop('disabled', false);
+        });
+        
+        // Continue to payment
+        $('#continue-to-payment-btn').on('click', function() {
+            if (!selectedPackage) {
+                alert('Please select a package to continue');
+                return;
+            }
+            showPaymentSection();
+        });
+        
+        // Back to package selection
+        $('#back-to-package-btn').on('click', function() {
+            showPackageSection();
+        });
+        
+        // Payment method selection
+        $('.payment-option').on('click', function() {
+            $('.payment-option').removeClass('selected');
+            $(this).addClass('selected');
+            selectedPaymentMethod = $(this).data('method');
+            $('.payment-form').hide();
+            $(`#${selectedPaymentMethod}-payment-form`).show();
+        });
+        
+        // Process payment - This would be replaced with backend API call
+        $('#process-payment-btn').on('click', function() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return;
             }
             
-            // Package Information (for speakers and partners)
-            if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
-                details.append(`
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Package Information</div>
-                        <div class="confirmation-value">
-                            Package: ${packages[selectedPackage].name}<br>
-                            Amount: $${packages[selectedPackage].price.toLocaleString()}<br>
-                            Payment Method: ${selectedPaymentMethod ? selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1) : 'N/A'}
-                        </div>
-                    </div>
-                `);
-            }
-            
-            // Preferences
-            const newsletterText = formData.newsletter ? 'Yes' : 'No';
-            details.append(`
-                <div class="confirmation-item">
-                    <div class="confirmation-label">Preferences</div>
-                    <div class="confirmation-value">
-                        Newsletter Subscription: ${newsletterText}<br>
-                        Terms Accepted: Yes
-                    </div>
-                </div>
-            `);
-        }
-        
-        function processPayment() {
             // Mock payment processing
-            // In a real application, this would connect to a payment gateway
-            
-            // Show loading state
-            $('#process-payment-btn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Processing...');
-            
-            // Simulate API call - This would be replaced with actual backend integration
-            setTimeout(() => {
-                // Mock successful payment
-                showConfirmationSection();
-            }, 2000);
+            processPayment();
+        });
+        
+        // Manual login link
+        $('#manual-login-link').on('click', function(e) {
+            e.preventDefault();
+            redirectToDashboard();
+        });
+        
+        // Form field validation on blur
+        $('input, select').on('blur', function() {
+            validateField(this);
+        });
+        
+        // Clear errors on input
+        $('input, select').on('input', function() {
+            clearFieldError(this);
+        });
+    }
+
+    function updateProgressIndicatorVisibility() {
+        if (currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') {
+            $('.speaker-partner-only').show();
+        } else {
+            $('.speaker-partner-only').hide();
+        }
+        updateProgressIndicator();
+    }
+
+    function updateProgressIndicator() {
+        $('.progress-step').removeClass('active completed');
+        const visibleSteps = $('.progress-step:visible');
+        if (!visibleSteps.length) return;
+
+        let activeStepNumber = Math.min(currentStep, visibleSteps.length);
+        if (activeStepNumber < 1) activeStepNumber = 1;
+
+        const activeIndex = activeStepNumber - 1;
+        visibleSteps.each(function(idx) {
+            if (idx < activeIndex) {
+                $(this).addClass('completed');
+            } else if (idx === activeIndex) {
+                $(this).addClass('active');
+            }
+        });
+    }
+
+    function setupCountryPhoneSync() {
+        // Sync country dropdown with phone input for all profile types
+        $('#country').on('change', function() {
+            const countryCode = $(this).val();
+            if (countryCode && phoneInput) {
+                phoneInput.setCountry(countryCode);
+            }
+        });
+        
+        $('#speakerCountry').on('change', function() {
+            const countryCode = $(this).val();
+            if (countryCode && speakerPhoneInput) {
+                speakerPhoneInput.setCountry(countryCode);
+            }
+        });
+        
+        $('#contactCountry').on('change', function() {
+            const countryCode = $(this).val();
+            if (countryCode && partnerPhoneInput) {
+                partnerPhoneInput.setCountry(countryCode);
+            }
+        });
+        
+        $('#exhibitorCountry').on('change', function() {
+            const countryCode = $(this).val();
+            if (countryCode && exhibitorPhoneInput) {
+                exhibitorPhoneInput.setCountry(countryCode);
+            }
+        });
+    }
+    
+    function initializePhoneInputs() {
+        // Initialize phone input for attendees
+        phoneInput = window.intlTelInput(document.querySelector("#workPhone"), {
+            initialCountry: "ng",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+        
+        // Initialize phone input for speakers
+        speakerPhoneInput = window.intlTelInput(document.querySelector("#speakerPhone"), {
+            initialCountry: "ng",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+        
+        // Initialize phone input for partners
+        partnerPhoneInput = window.intlTelInput(document.querySelector("#contactPhone"), {
+            initialCountry: "ng",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+        
+        // Initialize phone input for exhibitors
+        exhibitorPhoneInput = window.intlTelInput(document.querySelector("#exhibitorPhone"), {
+            initialCountry: "ng",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    }
+    
+    function showRegistrantTypeSection() {
+        currentStep = 1;
+        updateProgressIndicator();
+        $('#account-section').hide();
+        $('#profile-section').hide();
+        $('#package-section').hide();
+        $('#payment-section').hide();
+        $('#confirmation-section').hide();
+        $('#registrant-type-section').show();
+    }
+    
+    function showAccountSection() {
+        currentStep = 2;
+        updateProgressIndicator();
+        $('#registrant-type-section').hide();
+        $('#profile-section').hide();
+        $('#package-section').hide();
+        $('#payment-section').hide();
+        $('#confirmation-section').hide();
+        $('#account-section').show();
+    }
+    
+    function showProfileSection() {
+        currentStep = 3;
+        updateProgressIndicator();
+        $('#account-section').hide();
+        $('#registrant-type-section').hide();
+        $('#package-section').hide();
+        $('#payment-section').hide();
+        $('#confirmation-section').hide();
+        $('#profile-section').show();
+        
+        // Update profile section based on registrant type
+        if (currentRegistrantType === 'attendee') {
+            $('#profile-title').text('Attendee Information');
+            $('#attendee-profile').show();
+            $('#speaker-profile').hide();
+            $('#partner-profile').hide();
+            $('#exhibitor-profile').hide();
+        } else if (currentRegistrantType === 'speaker') {
+            $('#profile-title').text('Speaker Information');
+            $('#attendee-profile').hide();
+            $('#speaker-profile').show();
+            $('#partner-profile').hide();
+            $('#exhibitor-profile').hide();
+        } else if (currentRegistrantType === 'partner') {
+            $('#profile-title').text('Partner Information');
+            $('#attendee-profile').hide();
+            $('#speaker-profile').hide();
+            $('#partner-profile').show();
+            $('#exhibitor-profile').hide();
+        } else if (currentRegistrantType === 'exhibitor') {
+            $('#profile-title').text('Exhibitor Information');
+            $('#attendee-profile').hide();
+            $('#speaker-profile').hide();
+            $('#partner-profile').hide();
+            $('#exhibitor-profile').show();
+        }
+    }
+    
+    function showPackageSection() {
+        currentStep = 4;
+        updateProgressIndicator();
+        $('#account-section').hide();
+        $('#profile-section').hide();
+        $('#registrant-type-section').hide();
+        $('#payment-section').hide();
+        $('#confirmation-section').hide();
+        $('#package-section').show();
+    }
+    
+    function showPaymentSection() {
+        currentStep = 5;
+        updateProgressIndicator();
+        $('#account-section').hide();
+        $('#profile-section').hide();
+        $('#package-section').hide();
+        $('#registrant-type-section').hide();
+        $('#confirmation-section').hide();
+        $('#payment-section').show();
+        
+        // Update payment details
+        $('#payment-package-name').text(packages[selectedPackage].name);
+        $('#payment-amount').text('$' + packages[selectedPackage].price.toLocaleString());
+        
+        // Generate bank reference
+        const ref = 'ICSC-' + Math.floor(100000 + Math.random() * 900000);
+        $('#bank-reference').text(ref);
+    }
+
+    function showConfirmationSection() {
+        // Set correct step based on registrant type
+        if (currentRegistrantType === 'attendee' || currentRegistrantType === 'exhibitor') {
+            currentStep = 4; // Step 4 for attendees and exhibitors
+        } else {
+            currentStep = 6; // Step 6 for speakers and partners
         }
         
-        function validateAccountForm() {
-            let isValid = true;
+        // Hide all sections
+        $('#account-section').hide();
+        $('#profile-section').hide();
+        $('#package-section').hide();
+        $('#payment-section').hide();
+        $('#registrant-type-section').hide();
+        $('#confirmation-section').show();
+        
+        // Update progress indicator
+        updateProgressIndicator();
+        
+        // Populate confirmation details
+        populateConfirmationDetails();
+        
+        // Confirmation text updates
+        $('#confirmation-email').text(formData.email || '');
+        
+        if (currentRegistrantType === 'attendee' || currentRegistrantType === 'exhibitor') {
+            $('#payment-confirmation-text').text('Your registration has been confirmed.');
+        } else {
+            $('#payment-confirmation-text').text('Your payment has been processed successfully. A receipt has been sent to your email and will be available in your dashboard.');
+        }
+        
+        // Show/hide report payment button
+        if (currentRegistrantType === 'attendee' || currentRegistrantType === 'partner') {
+            $('#report-payment-btn').show();
+        } else {
+            $('#report-payment-btn').hide();
+        }
+        
+        $('#dashboard-type').text(dashboardNames[currentRegistrantType] || '');
+        
+        // Start auto-login
+        startAutoLogin();
+    }
+    
+    function startAutoLogin() {
+        // Show auto-login message
+        $('#auto-login-message').show();
+        
+        // Start countdown
+        let countdown = 5;
+        const countdownElement = $('.countdown');
+        countdownElement.text(countdown);
+        
+        autoLoginTimer = setInterval(() => {
+            countdown--;
+            countdownElement.text(countdown);
             
-            // Validate email
-            if (!validateField($('#email')[0])) isValid = false;
+            if (countdown <= 0) {
+                clearInterval(autoLoginTimer);
+                redirectToDashboard();
+            }
+        }, 1000);
+    }
+    
+    function redirectToDashboard() {
+        // Store login data in localStorage
+        localStorage.setItem("userEmail", formData.email);
+        localStorage.setItem("userType", currentRegistrantType.toLowerCase());
+        localStorage.setItem("loggedInUser", formData.email);
+
+        // Optional: also keep existing icsc_user object for compatibility
+        localStorage.setItem('icsc_user', JSON.stringify({
+            email: formData.email,
+            firstName: formData.firstName || formData.speakerFirstName || formData.contactFirstName || formData.exhibitorFirstName,
+            lastName: formData.lastName || formData.speakerLastName || formData.contactLastName || formData.exhibitorLastName,
+            type: currentRegistrantType,
+            loggedIn: true
+        }));
+
+        // Use unified redirect function
+        handleRegistrationSuccess(currentRegistrantType, formData.email);
+    }
+
+    // Reusable handler for all user types
+    function handleRegistrationSuccess(userType, email) {
+        userType = userType.toLowerCase();
+        let redirectUrl = "";
+
+        switch (userType) {
+            case "attendee":
+                redirectUrl = "attendee-dash.html";
+                break;
+            case "speaker":
+                redirectUrl = "speakers-dash.html";
+                break;
+            case "partner":
+                redirectUrl = "partners-dash.html";
+                break;
+            case "exhibitor":
+                redirectUrl = "exhibitors-dash.html";
+                break;
+            default:
+                redirectUrl = "index.html";
+        }
+
+        // Friendly message & smooth redirect
+        alert(`Login successful! Redirecting to your ${userType} dashboard...`);
+        setTimeout(() => {
+            window.location.href = redirectUrl;
+        }, 1000);
+    }
+    
+    function populateConfirmationDetails() {
+        const details = $('#confirmation-details');
+        details.empty();
+        
+        // Account Information
+        details.append(`
+            <div class="confirmation-item">
+                <div class="confirmation-label">Account Information</div>
+                <div class="confirmation-value">Email: ${formData.email}</div>
+            </div>
+        `);
+        
+        // Personal/Company Information
+        if (currentRegistrantType === 'attendee') {
+            const prefixText = {
+                'mr': 'Mr',
+                'mrs': 'Mrs', 
+                'miss': 'Miss',
+                'ms': 'Ms',
+                'dr': 'Dr',
+                'prof': 'Prof'
+            };
             
-            // Validate password
-            if (!validateField($('#password')[0])) isValid = false;
+            let attendeeDetails = `
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Personal Information</div>
+                    <div class="confirmation-value">
+                        ${prefixText[formData.prefix] || ''} ${formData.firstName} ${formData.lastName}<br>
+                        ${formData.jobTitle}<br>
+                        ${formData.organization}<br>
+                        ${formData.country}<br>
+                        Phone: ${formData.workPhone}
+            `;
             
-            // Validate password confirmation
-            const password = $('#password').val();
-            const confirmPassword = $('#confirmPassword').val();
-            if (!confirmPassword) {
-                showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Please confirm your password');
-                isValid = false;
-            } else if (password !== confirmPassword) {
-                showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Passwords do not match');
+            // Add additional attendee fields if they exist
+            if (formData.nin) attendeeDetails += `<br>NIN: ${formData.nin}`;
+            if (formData.ministry) attendeeDetails += `<br>Ministry: ${formData.ministry}`;
+            if (formData.gradeLevel) attendeeDetails += `<br>Grade Level: ${formData.gradeLevel}`;
+            if (formData.department) attendeeDetails += `<br>Department: ${formData.department}`;
+            if (formData.agency) attendeeDetails += `<br>Agency: ${formData.agency}`;
+            if (formData.staffId) attendeeDetails += `<br>Staff ID: ${formData.staffId}`;
+            if (formData.officeLocation) attendeeDetails += `<br>Office Location: ${formData.officeLocation}`;
+            if (formData.attendeeEmail) attendeeDetails += `<br>Official Email: ${formData.attendeeEmail}`;
+            if (formData.attendeePhone) attendeeDetails += `<br>Phone: ${formData.attendeePhone}`;
+            
+            attendeeDetails += `</div></div>`;
+            details.append(attendeeDetails);
+            
+        } else if (currentRegistrantType === 'speaker') {
+            const prefixText = {
+                'mr': 'Mr',
+                'mrs': 'Mrs', 
+                'miss': 'Miss',
+                'ms': 'Ms',
+                'dr': 'Dr',
+                'prof': 'Prof'
+            };
+            
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Speaker Information</div>
+                    <div class="confirmation-value">
+                        ${prefixText[formData.speakerPrefix] || ''} ${formData.speakerFirstName} ${formData.speakerLastName}<br>
+                        ${formData.speakerJobTitle}<br>
+                        ${formData.speakerOrganization}<br>
+                        ${formData.speakerCountry}<br>
+                        Phone: ${formData.speakerPhone}<br>
+                        Bio: ${formData.speakerBio}<br>
+                        ${formData.speakerTopic ? 'Topic: ' + formData.speakerTopic + '<br>' : ''}
+                        ${formData.speakerExperience ? 'Experience: ' + formData.speakerExperience : ''}
+                    </div>
+                </div>
+            `);
+        } else if (currentRegistrantType === 'partner') {
+            const companyPrefixText = {
+                'company': 'Company',
+                'organization': 'Organization',
+                'institution': 'Institution',
+                'agency': 'Agency'
+            };
+            
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Company Information</div>
+                    <div class="confirmation-value">
+                        ${companyPrefixText[formData.companyPrefix] || ''}: ${formData.companyName}<br>
+                        Contact: ${formData.contactFirstName} ${formData.contactLastName}<br>
+                        Email: ${formData.contactEmail}<br>
+                        Phone: ${formData.contactPhone}<br>
+                        ${formData.website ? 'Website: ' + formData.website + '<br>' : ''}
+                        ${formData.socialMedia ? 'Social Media: ' + formData.socialMedia + '<br>' : ''}
+                        ${formData.companyDescription ? 'Description: ' + formData.companyDescription : ''}
+                    </div>
+                </div>
+            `);
+        } else if (currentRegistrantType === 'exhibitor') {
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Exhibitor Information</div>
+                    <div class="confirmation-value">
+                        Company: ${formData.exhibitorCompanyName}<br>
+                        Contact: ${formData.exhibitorFirstName} ${formData.exhibitorLastName}<br>
+                        Email: ${formData.exhibitorEmail}<br>
+                        Phone: ${formData.exhibitorPhone}<br>
+                        ${formData.exhibitorWebsite ? 'Website: ' + formData.exhibitorWebsite + '<br>' : ''}
+                        ${formData.exhibitorDescription ? 'Description: ' + formData.exhibitorDescription + '<br>' : ''}
+                        ${formData.exhibitorProducts ? 'Products: ' + formData.exhibitorProducts : ''}
+                    </div>
+                </div>
+            `);
+        }
+        
+        // Package Information (for speakers and partners only)
+        if ((currentRegistrantType === 'speaker' || currentRegistrantType === 'partner') && selectedPackage) {
+            details.append(`
+                <div class="confirmation-item">
+                    <div class="confirmation-label">Package Information</div>
+                    <div class="confirmation-value">
+                        Package: ${packages[selectedPackage].name}<br>
+                        Amount: $${packages[selectedPackage].price.toLocaleString()}<br>
+                        Payment Method: ${selectedPaymentMethod ? selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1) : 'N/A'}
+                    </div>
+                </div>
+            `);
+        }
+        
+        // Preferences
+        const newsletterText = formData.newsletter ? 'Yes' : 'No';
+        details.append(`
+            <div class="confirmation-item">
+                <div class="confirmation-label">Preferences</div>
+                <div class="confirmation-value">
+                    Newsletter Subscription: ${newsletterText}<br>
+                    Terms Accepted: Yes
+                </div>
+            </div>
+        `);
+    }
+    
+    function processPayment() {
+        // Mock payment processing
+        // In a real application, this would connect to a payment gateway
+        
+        // Show loading state
+        $('#process-payment-btn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Processing...');
+        
+        // Simulate API call - This would be replaced with actual backend integration
+        setTimeout(() => {
+            // Mock successful payment
+            showConfirmationSection();
+        }, 2000);
+    }
+    
+    function validateAccountForm() {
+        let isValid = true;
+        
+        // Validate email
+        if (!validateField($('#email')[0])) isValid = false;
+        
+        // Validate password
+        if (!validateField($('#password')[0])) isValid = false;
+        
+        // Validate password confirmation
+        const password = $('#password').val();
+        const confirmPassword = $('#confirmPassword').val();
+        if (!confirmPassword) {
+            showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Please confirm your password');
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            showFieldError($('#confirmPassword')[0], $('#confirmPassword-error'), 'Passwords do not match');
+            isValid = false;
+        } else {
+            clearFieldError($('#confirmPassword')[0], $('#confirmPassword-error'));
+        }
+        
+        return isValid;
+    }
+    
+    function validateProfileForm() {
+        let isValid = true;
+        
+        // Validate required fields based on registrant type
+        if (currentRegistrantType === 'attendee') {
+            const requiredFields = [
+                '#prefix', '#firstName', '#lastName', '#country', 
+                '#jobTitle', '#organization'
+            ];
+            
+            requiredFields.forEach(fieldId => {
+                if (!validateField($(fieldId)[0])) isValid = false;
+            });
+            
+            // Validate phone
+            if (!phoneInput.isValidNumber()) {
+                showFieldError($('#workPhone')[0], $('#workPhone-error'), 'Please enter a valid phone number');
                 isValid = false;
             } else {
-                clearFieldError($('#confirmPassword')[0], $('#confirmPassword-error'));
+                clearFieldError($('#workPhone')[0], $('#workPhone-error'));
             }
+        } else if (currentRegistrantType === 'speaker') {
+            const requiredFields = [
+                '#speakerPrefix', '#speakerFirstName', '#speakerLastName', '#speakerCountry', 
+                '#speakerJobTitle', '#speakerOrganization', '#speakerBio'
+            ];
             
-            return isValid;
-        }
-        
-        function validateProfileForm() {
-            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                if (!validateField($(fieldId)[0])) isValid = false;
+            });
             
-            // Validate required fields based on registrant type
-            if (currentRegistrantType === 'attendee') {
-                const requiredFields = [
-                    '#prefix', '#firstName', '#lastName', '#country', 
-                    '#jobTitle', '#organization'
-                ];
-                
-                requiredFields.forEach(fieldId => {
-                    if (!validateField($(fieldId)[0])) isValid = false;
-                });
-                
-                // Validate phone
-                if (!phoneInput.isValidNumber()) {
-                    showFieldError($('#workPhone')[0], $('#workPhone-error'), 'Please enter a valid phone number');
-                    isValid = false;
-                } else {
-                    clearFieldError($('#workPhone')[0], $('#workPhone-error'));
-                }
-            } else if (currentRegistrantType === 'speaker') {
-                const requiredFields = [
-                    '#speakerPrefix', '#speakerFirstName', '#speakerLastName', '#speakerCountry', 
-                    '#speakerJobTitle', '#speakerOrganization', '#speakerBio'
-                ];
-                
-                requiredFields.forEach(fieldId => {
-                    if (!validateField($(fieldId)[0])) isValid = false;
-                });
-                
-                // Validate phone
-                if (!speakerPhoneInput.isValidNumber()) {
-                    showFieldError($('#speakerPhone')[0], $('#speakerPhone-error'), 'Please enter a valid phone number');
-                    isValid = false;
-                } else {
-                    clearFieldError($('#speakerPhone')[0], $('#speakerPhone-error'));
-                }
-            } else if (currentRegistrantType === 'partner') {
-                const requiredFields = [
-                    '#companyPrefix', '#companyName', '#contactFirstName', 
-                    '#contactLastName', '#contactEmail'
-                ];
-                
-                requiredFields.forEach(fieldId => {
-                    if (!validateField($(fieldId)[0])) isValid = false;
-                });
-                
-                // Validate phone
-                if (!partnerPhoneInput.isValidNumber()) {
-                    showFieldError($('#contactPhone')[0], $('#contactPhone-error'), 'Please enter a valid phone number');
-                    isValid = false;
-                } else {
-                    clearFieldError($('#contactPhone')[0], $('#contactPhone-error'));
-                }
-            } else if (currentRegistrantType === 'exhibitor') {
-                const requiredFields = [
-                    '#exhibitorCompanyName', '#exhibitorFirstName', 
-                    '#exhibitorLastName', '#exhibitorEmail'
-                ];
-                
-                requiredFields.forEach(fieldId => {
-                    if (!validateField($(fieldId)[0])) isValid = false;
-                });
-                
-                // Validate phone
-                if (!exhibitorPhoneInput.isValidNumber()) {
-                    showFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'), 'Please enter a valid phone number');
-                    isValid = false;
-                } else {
-                    clearFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'));
-                }
-            }
-            
-            // Validate terms and conditions
-            if (!$('#terms').is(':checked')) {
-                showFieldError($('#terms')[0], $('#terms-error'), 'You must agree to the terms and conditions');
+            // Validate phone
+            if (!speakerPhoneInput.isValidNumber()) {
+                showFieldError($('#speakerPhone')[0], $('#speakerPhone-error'), 'Please enter a valid phone number');
                 isValid = false;
             } else {
-                clearFieldError($('#terms')[0], $('#terms-error'));
+                clearFieldError($('#speakerPhone')[0], $('#speakerPhone-error'));
             }
+        } else if (currentRegistrantType === 'partner') {
+            const requiredFields = [
+                '#companyPrefix', '#companyName', '#contactFirstName', 
+                '#contactLastName', '#contactEmail'
+            ];
             
-            return isValid;
+            requiredFields.forEach(fieldId => {
+                if (!validateField($(fieldId)[0])) isValid = false;
+            });
+            
+            // Validate phone
+            if (!partnerPhoneInput.isValidNumber()) {
+                showFieldError($('#contactPhone')[0], $('#contactPhone-error'), 'Please enter a valid phone number');
+                isValid = false;
+            } else {
+                clearFieldError($('#contactPhone')[0], $('#contactPhone-error'));
+            }
+        } else if (currentRegistrantType === 'exhibitor') {
+            const requiredFields = [
+                '#exhibitorCompanyName', '#exhibitorFirstName', 
+                '#exhibitorLastName', '#exhibitorEmail'
+            ];
+            
+            requiredFields.forEach(fieldId => {
+                if (!validateField($(fieldId)[0])) isValid = false;
+            });
+            
+            // Validate phone
+            if (!exhibitorPhoneInput.isValidNumber()) {
+                showFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'), 'Please enter a valid phone number');
+                isValid = false;
+            } else {
+                clearFieldError($('#exhibitorPhone')[0], $('#exhibitorPhone-error'));
+            }
         }
         
-        function validateField(field) {
-            const value = $(field).val().trim();
-            const errorElement = $(field).next('.help-block-error');
-            
-            if ($(field).prop('required') && !value) {
-                showFieldError(field, errorElement, 'This field is required');
+        // Validate terms and conditions
+        if (!$('#terms').is(':checked')) {
+            showFieldError($('#terms')[0], $('#terms-error'), 'You must agree to the terms and conditions');
+            isValid = false;
+        } else {
+            clearFieldError($('#terms')[0], $('#terms-error'));
+        }
+        
+        return isValid;
+    }
+    
+    function validateField(field) {
+        const value = $(field).val().trim();
+        const errorElement = $(field).next('.help-block-error');
+        
+        if ($(field).prop('required') && !value) {
+            showFieldError(field, errorElement, 'This field is required');
+            return false;
+        }
+        
+        // Email validation
+        if ($(field).attr('type') === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showFieldError(field, errorElement, 'Please enter a valid email address');
                 return false;
             }
-            
-            // Email validation
-            if ($(field).attr('type') === 'email' && value) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    showFieldError(field, errorElement, 'Please enter a valid email address');
-                    return false;
-                }
-            }
-            
-            // Password validation
-            if ($(field).attr('name') === 'password' && value) {
-                if (value.length < 8) {
-                    showFieldError(field, errorElement, 'Password must be at least 8 characters long');
-                    return false;
-                }
-            }
-            
-            clearFieldError(field, errorElement);
-            return true;
         }
         
-        function showFieldError(field, errorElement, message) {
-            $(field).addClass('error');
-            errorElement.text(message).show();
+        // Password validation
+        if ($(field).attr('name') === 'password' && value) {
+            if (value.length < 8) {
+                showFieldError(field, errorElement, 'Password must be at least 8 characters long');
+                return false;
+            }
         }
         
-        function clearFieldError(field, errorElement = null) {
-            $(field).removeClass('error');
-            if (!errorElement) {
-                errorElement = $(field).next('.help-block-error');
-            }
-            errorElement.hide();
+        clearFieldError(field, errorElement);
+        return true;
+    }
+    
+    function showFieldError(field, errorElement, message) {
+        $(field).addClass('error');
+        errorElement.text(message).show();
+    }
+    
+    function clearFieldError(field, errorElement = null) {
+        $(field).removeClass('error');
+        if (!errorElement) {
+            errorElement = $(field).next('.help-block-error');
         }
-    </script>
+        errorElement.hide();
+    }
+</script>
+
 </body>
 </html>

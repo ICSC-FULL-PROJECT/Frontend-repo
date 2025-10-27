@@ -6,6 +6,7 @@
     <title>Speaker Dashboard - ICSC 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* All previous CSS remains exactly the same */
         :root {
             --primary: #008751;
             --primary-light: #afe1af;
@@ -689,6 +690,101 @@
             font-weight: bold;
         }
         
+        /* New styles for additional tabs */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .resource-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .resource-card h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .resource-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        
+        .settings-section h4 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .help-category {
+            margin-bottom: 25px;
+        }
+        
+        .help-category h4 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .help-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .help-item:last-child {
+            border-bottom: none;
+        }
+        
+        .help-question {
+            font-weight: 600;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .help-answer {
+            color: #666;
+            font-size: 0.9rem;
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .help-answer.active {
+            display: block;
+        }
+        
+        .contact-support {
+            background-color: #f0f9f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
         @media (max-width: 992px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
@@ -706,10 +802,14 @@
                 flex-direction: column;
                 gap: 0;
             }
+            
+            .resource-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 576px) {
-            .stats-grid, .payment-options {
+            .stats-grid, .payment-options, .resource-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -742,253 +842,761 @@
         <div class="dashboard-container">
             <div class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
-                    <li><a href="#"><i class="fas fa-microphone"></i> My Sessions</a></li>
-                    <li><a href="#"><i class="fas fa-file-alt"></i> Resources</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                    <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                    <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="#" data-tab="sessions"><i class="fas fa-microphone"></i> My Sessions</a></li>
+                    <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
+                    <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" data-tab="help"><i class="fas fa-question-circle"></i> Help</a></li>
                 </ul>
             </div>
             
             <div class="dashboard-content">
                 <div class="main-content">
-                    <div class="content-header">
-                        <h2>Conference Agenda</h2>
-                    </div>
-                    
-                    <div class="agenda-container">
-                        <div class="agenda-day active" id="wednesday-agenda">
-                            <h3>Wednesday 25 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Registration and Welcome Coffee</h4>
-                                    <p><i class="far fa-clock"></i> 08:30-09:00 | <i class="fas fa-map-marker-alt"></i> Main Hall</p>
+                    <!-- Dashboard Tab (Default) -->
+                    <div class="tab-content active" id="dashboard">
+                        <div class="content-header">
+                            <h2>Conference Agenda</h2>
+                        </div>
+                        
+                        <div class="agenda-container">
+                            <div class="agenda-day active" id="wednesday-agenda">
+                                <h3>Wednesday 25 June 2026</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Registration and Welcome Coffee</h4>
+                                        <p><i class="far fa-clock"></i> 08:30-09:00 | <i class="fas fa-map-marker-alt"></i> Main Hall</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Opening Ceremony</h4>
+                                        <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                        <p>Official opening of the International Civil Service Conference 2026</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Keynote: The Future of Public Service</h4>
+                                        <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Exploring the evolving role of civil servants in a rapidly changing world</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Networking Break</h4>
+                                        <p><i class="far fa-clock"></i> 10:30-11:00 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Panel: Digital Transformation in Government</h4>
+                                        <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>How digital technologies are reshaping public service delivery</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Opening Ceremony</h4>
-                                    <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
-                                    <p>Official opening of the International Civil Service Conference 2026</p>
+                            <div class="agenda-day" id="thursday-agenda">
+                                <h3>Thursday 26 June 2026</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Opening Welcome</h4>
+                                        <p><i class="far fa-clock"></i> 09:00-09:10 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>The Civil Service as the Engine of Governance</h4>
+                                        <p><i class="far fa-clock"></i> 09:10-10:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Measuring and monitoring performance in public service</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Keynote</h4>
+                                        <p><i class="far fa-clock"></i> 10:10-10:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Supporting Public Sector Reforms: A Partner's Experience</h4>
+                                        <p><i class="far fa-clock"></i> 10:30-11:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Insights from private sector partnerships in driving public service transformation</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Leadership & Institutional Innovation</h4>
+                                        <p><i class="far fa-clock"></i> 11:30-12:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>The role of exemplary leadership in driving innovation</p>
+                                    </div>
+                                    <div class="event-actions">
+                                        <button class="attend-btn">Attend</button>
+                                        <button class="speak-btn">Speak</button>
+                                    </div>
                                 </div>
                             </div>
-                            
+                        </div>
+                        
+                        <div class="content-header">
+                            <h2>Speaker Dashboard</h2>
+                        </div>
+                        <div class="speaker-level diamond">
+                            <i class="fas fa-gem"></i> Diamond Speaker
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Sessions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">45 min</div>
+                                <div class="stat-label">Total Speaking Time</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">3</div>
+                                <div class="stat-label">Past Events</div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-nav">
+                            <button class="tab-btn active" data-tab="speaker-sessions">My Sessions</button>
+                            <button class="tab-btn" data-tab="upload-materials">Upload Materials</button>
+                            <button class="tab-btn" data-tab="past-events">Past Events</button>
+                        </div>
+                        <div class="tab-content active" id="speaker-sessions">
+                            <h4>Your Speaking Sessions</h4>
                             <div class="event-item">
                                 <div class="event-info">
                                     <h4>Keynote: The Future of Public Service</h4>
                                     <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Exploring the evolving role of civil servants in a rapidly changing world</p>
+                                    <p>You are the main speaker for this session</p>
                                 </div>
                                 <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                    <button class="attend-btn">View Details</button>
                                 </div>
                             </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Networking Break</h4>
-                                    <p><i class="far fa-clock"></i> 10:30-11:00 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
-                                </div>
-                            </div>
-                            
                             <div class="event-item">
                                 <div class="event-info">
                                     <h4>Panel: Digital Transformation in Government</h4>
                                     <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>How digital technologies are reshaping public service delivery</p>
+                                    <p>You are a panelist in this session</p>
                                 </div>
                                 <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                    <button class="attend-btn">View Details</button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="tab-content" id="upload-materials">
+                            <h4>Upload Speaking Materials</h4>
+                            <div class="upload-area" id="upload-area">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop your files here or click to browse</p>
+                                <input type="file" id="file-input" style="display: none;" multiple>
+                                <button class="payment-btn" id="browse-btn">Browse Files</button>
+                            </div>
+                            
+                            <h4>Topic Submission</h4>
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Propose a New Topic</h4>
+                                    <p>Submit a topic you'd like to speak about</p>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="speak-btn" id="propose-topic">Propose Topic</button>
+                                </div>
+                            </div>
+                            
+                            <div class="material-list" id="material-list">
+                                <h4>Uploaded Materials</h4>
+                                <div class="material-item">
+                                    <div class="material-name">Presentation Slides.pptx</div>
+                                    <div class="material-actions">
+                                        <button class="material-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="material-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                                <div class="material-item">
+                                    <div class="material-name">Previous Speaking Video.mp4</div>
+                                    <div class="material-actions">
+                                        <button class="material-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="material-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="past-events">
+                            <h4>Your Past Speaking Engagements</h4>
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>ICSC 2025 - London</h4>
+                                    <p>Keynote: Innovation in Public Service Delivery</p>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Global Gov Forum 2024 - Singapore</h4>
+                                    <p>Panel: Digital Transformation Strategies</p>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>Public Sector Summit 2023 - Abuja</h4>
+                                    <p>Workshop: Leadership in the Digital Age</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Agenda Tab -->
+                    <div class="tab-content" id="agenda">
+                        <div class="content-header">
+                            <h2>Full Conference Agenda</h2>
                         </div>
                         
-                        <div class="agenda-day" id="thursday-agenda">
-                            <h3>Thursday 26 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Opening Welcome</h4>
-                                    <p><i class="far fa-clock"></i> 09:00-09:10 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                        <div class="tab-nav">
+                            <button class="tab-btn active" data-day="wednesday">Wednesday 25 June</button>
+                            <button class="tab-btn" data-day="thursday">Thursday 26 June</button>
+                            <button class="tab-btn" data-day="friday">Friday 27 June</button>
+                        </div>
+                        
+                        <div class="agenda-container">
+                            <div class="agenda-day active" id="wednesday-full">
+                                <h3>Wednesday 25 June 2026</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Registration and Welcome Coffee</h4>
+                                        <p><i class="far fa-clock"></i> 08:30-09:00 | <i class="fas fa-map-marker-alt"></i> Main Hall</p>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Opening Ceremony</h4>
+                                        <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                        <p>Official opening of the International Civil Service Conference 2026</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Keynote: The Future of Public Service</h4>
+                                        <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Exploring the evolving role of civil servants in a rapidly changing world</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Networking Break</h4>
+                                        <p><i class="far fa-clock"></i> 10:30-11:00 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Panel: Digital Transformation in Government</h4>
+                                        <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>How digital technologies are reshaping public service delivery</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Lunch Break</h4>
+                                        <p><i class="far fa-clock"></i> 12:30-13:30 | <i class="fas fa-map-marker-alt"></i> Dining Hall</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Workshop: Public Service Innovation</h4>
+                                        <p><i class="far fa-clock"></i> 13:30-15:00 | <i class="fas fa-map-marker-alt"></i> Workshop Room A</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Roundtable: Sustainable Development Goals</h4>
+                                        <p><i class="far fa-clock"></i> 15:30-17:00 | <i class="fas fa-map-marker-alt"></i> Roundtable Room 1</p>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>The Civil Service as the Engine of Governance</h4>
-                                    <p><i class="far fa-clock"></i> 09:10-10:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Measuring and monitoring performance in public service</p>
+                            <div class="agenda-day" id="thursday-full">
+                                <h3>Thursday 26 June 2026</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Opening Welcome</h4>
+                                        <p><i class="far fa-clock"></i> 09:00-09:10 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>The Civil Service as the Engine of Governance</h4>
+                                        <p><i class="far fa-clock"></i> 09:10-10:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Measuring and monitoring performance in public service</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Keynote</h4>
+                                        <p><i class="far fa-clock"></i> 10:10-10:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Supporting Public Sector Reforms: A Partner's Experience</h4>
+                                        <p><i class="far fa-clock"></i> 10:30-11:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>Insights from private sector partnerships in driving public service transformation</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Leadership & Institutional Innovation</h4>
+                                        <p><i class="far fa-clock"></i> 11:30-12:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                        <p>The role of exemplary leadership in driving innovation</p>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Keynote</h4>
-                                    <p><i class="far fa-clock"></i> 10:10-10:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                            <div class="agenda-day" id="friday-full">
+                                <h3>Friday 27 June 2026</h3>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Morning Networking</h4>
+                                        <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Closing Keynote: The Future of Governance</h4>
+                                        <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Supporting Public Sector Reforms: A Partner's Experience</h4>
-                                    <p><i class="far fa-clock"></i> 10:30-11:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Insights from private sector partnerships in driving public service transformation</p>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Final Panel: Next Steps for Civil Service</h4>
+                                        <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                    </div>
                                 </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Leadership & Institutional Innovation</h4>
-                                    <p><i class="far fa-clock"></i> 11:30-12:20 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>The role of exemplary leadership in driving innovation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                    <button class="speak-btn">Speak</button>
+                                
+                                <div class="event-item">
+                                    <div class="event-info">
+                                        <h4>Closing Ceremony & Awards</h4>
+                                        <p><i class="far fa-clock"></i> 13:00-14:00 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="content-header">
-                        <h2>Speaker Dashboard</h2>
-                    </div>
-                    <div class="speaker-level diamond">
-                        <i class="fas fa-gem"></i> Diamond Speaker
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number">2</div>
-                            <div class="stat-label">Sessions</div>
+                    <!-- My Sessions Tab -->
+                    <div class="tab-content" id="sessions">
+                        <div class="content-header">
+                            <h2>My Speaking Sessions</h2>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number">45 min</div>
-                            <div class="stat-label">Total Speaking Time</div>
+                        
+                        <div class="speaker-level diamond">
+                            <i class="fas fa-gem"></i> Diamond Speaker Package
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number">3</div>
-                            <div class="stat-label">Past Events</div>
-                        </div>
-                    </div>
-                    
-                    <div class="tab-nav">
-                        <button class="tab-btn active" data-tab="speaker-sessions">My Sessions</button>
-                        <button class="tab-btn" data-tab="upload-materials">Upload Materials</button>
-                        <button class="tab-btn" data-tab="past-events">Past Events</button>
-                    </div>
-                    <div class="tab-content active" id="speaker-sessions">
-                        <h4>Your Speaking Sessions</h4>
+                        
                         <div class="event-item">
                             <div class="event-info">
                                 <h4>Keynote: The Future of Public Service</h4>
-                                <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                <p>You are the main speaker for this session</p>
+                                <p><i class="far fa-clock"></i> Wednesday, 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                <p>You are the main speaker for this session. Please arrive 15 minutes early for AV check.</p>
+                                <div class="info-item">
+                                    <div class="info-label">Session Type</div>
+                                    <div class="info-value">Keynote Address</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Duration</div>
+                                    <div class="info-value">45 minutes presentation + 15 minutes Q&A</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">AV Requirements</div>
+                                    <div class="info-value">Projector, Microphone, Clicker</div>
+                                </div>
                             </div>
                             <div class="event-actions">
-                                <button class="attend-btn">View Details</button>
+                                <button class="attend-btn">Edit Details</button>
+                                <button class="speak-btn">Upload Presentation</button>
                             </div>
                         </div>
+                        
                         <div class="event-item">
                             <div class="event-info">
                                 <h4>Panel: Digital Transformation in Government</h4>
-                                <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                <p>You are a panelist in this session</p>
+                                <p><i class="far fa-clock"></i> Wednesday, 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
+                                <p>You are a panelist in this session. Panel briefing at 10:45.</p>
+                                <div class="info-item">
+                                    <div class="info-label">Session Type</div>
+                                    <div class="info-value">Panel Discussion</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Duration</div>
+                                    <div class="info-value">90 minutes</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Moderator</div>
+                                    <div class="info-value">Dr. Robert Chen</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Other Panelists</div>
+                                    <div class="info-value">Sarah Johnson, Michael Torres</div>
+                                </div>
                             </div>
                             <div class="event-actions">
-                                <button class="attend-btn">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-content" id="upload-materials">
-                        <h4>Upload Speaking Materials</h4>
-                        <div class="upload-area" id="upload-area">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Drag & drop your files here or click to browse</p>
-                            <input type="file" id="file-input" style="display: none;" multiple>
-                            <button class="payment-btn" id="browse-btn">Browse Files</button>
-                        </div>
-                        
-                        <h4>Topic Submission</h4>
-                        <div class="event-item">
-                            <div class="event-info">
-                                <h4>Propose a New Topic</h4>
-                                <p>Submit a topic you'd like to speak about</p>
-                            </div>
-                            <div class="event-actions">
-                                <button class="speak-btn" id="propose-topic">Propose Topic</button>
+                                <button class="attend-btn">View Panel Details</button>
+                                <button class="speak-btn">Prepare Talking Points</button>
                             </div>
                         </div>
                         
-                        <div class="material-list" id="material-list">
-                            <h4>Uploaded Materials</h4>
-                            <div class="material-item">
-                                <div class="material-name">Presentation Slides.pptx</div>
-                                <div class="material-actions">
-                                    <button class="material-btn"><i class="fas fa-eye"></i></button>
-                                    <button class="material-btn"><i class="fas fa-trash"></i></button>
-                                </div>
+                        <div class="content-header">
+                            <h2>Speaker Preparation</h2>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">5</div>
+                                <div class="stat-label">Days Until Event</div>
                             </div>
-                            <div class="material-item">
-                                <div class="material-name">Previous Speaking Video.mp4</div>
-                                <div class="material-actions">
-                                    <button class="material-btn"><i class="fas fa-eye"></i></button>
-                                    <button class="material-btn"><i class="fas fa-trash"></i></button>
-                                </div>
+                            <div class="stat-card">
+                                <div class="stat-number">2/3</div>
+                                <div class="stat-label">Tasks Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">1</div>
+                                <div class="stat-label">Upcoming Briefing</div>
+                            </div>
+                        </div>
+                        
+                        <div class="event-item">
+                            <div class="event-info">
+                                <h4>Speaker Briefing Session</h4>
+                                <p><i class="far fa-clock"></i> Monday, 10:00-11:00 | <i class="fas fa-map-marker-alt"></i> Virtual (Zoom)</p>
+                                <p>Mandatory briefing for all speakers. Link will be sent via email.</p>
+                            </div>
+                            <div class="event-actions">
+                                <button class="attend-btn">Add to Calendar</button>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-content" id="past-events">
-                        <h4>Your Past Speaking Engagements</h4>
-                        <div class="event-item">
-                            <div class="event-info">
-                                <h4>ICSC 2025 - London</h4>
-                                <p>Keynote: Innovation in Public Service Delivery</p>
+                    
+                    <!-- Resources Tab -->
+                    <div class="tab-content" id="resources">
+                        <div class="content-header">
+                            <h2>Speaker Resources</h2>
+                        </div>
+                        
+                        <div class="resource-grid">
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <h4>Speaker Guidelines</h4>
+                                <p>Comprehensive guide for speakers including presentation formats, timing, and technical requirements.</p>
+                                <button class="payment-btn">Download PDF</button>
+                            </div>
+                            
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                                <h4>Presentation Templates</h4>
+                                <p>Official ICSC 2026 PowerPoint templates with branded slides and formatting guidelines.</p>
+                                <button class="payment-btn">Download Template</button>
+                            </div>
+                            
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-video"></i>
+                                </div>
+                                <h4>AV Specifications</h4>
+                                <p>Technical requirements for presentations, video formats, and audio-visual equipment available.</p>
+                                <button class="payment-btn">View Details</button>
+                            </div>
+                            
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-hotel"></i>
+                                </div>
+                                <h4>Accommodation & Travel</h4>
+                                <p>Information about recommended hotels, travel arrangements, and conference venue details.</p>
+                                <button class="payment-btn">View Information</button>
+                            </div>
+                            
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4>Networking Guide</h4>
+                                <p>Tips for maximizing your networking opportunities and connecting with other speakers and attendees.</p>
+                                <button class="payment-btn">Download Guide</button>
+                            </div>
+                            
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-file-contract"></i>
+                                </div>
+                                <h4>Speaker Agreement</h4>
+                                <p>Your signed speaker agreement and terms of participation for ICSC 2026.</p>
+                                <button class="payment-btn">View Agreement</button>
                             </div>
                         </div>
+                        
+                        <div class="content-header">
+                            <h2>Recent Updates</h2>
+                        </div>
+                        
                         <div class="event-item">
                             <div class="event-info">
-                                <h4>Global Gov Forum 2024 - Singapore</h4>
-                                <p>Panel: Digital Transformation Strategies</p>
+                                <h4>Presentation Deadline Extended</h4>
+                                <p><i class="far fa-clock"></i> Posted 2 days ago</p>
+                                <p>The deadline for submitting presentation materials has been extended to June 20, 2026.</p>
                             </div>
                         </div>
+                        
                         <div class="event-item">
                             <div class="event-info">
-                                <h4>Public Sector Summit 2023 - Abuja</h4>
-                                <p>Workshop: Leadership in the Digital Age</p>
+                                <h4>New Speaker Portal Features</h4>
+                                <p><i class="far fa-clock"></i> Posted 1 week ago</p>
+                                <p>We've added new features to the speaker portal including real-time audience analytics.</p>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Tab -->
+                    <div class="tab-content" id="settings">
+                        <div class="content-header">
+                            <h2>Account Settings</h2>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h4>Profile Information</h4>
+                            <div class="form-group">
+                                <label for="full-name">Full Name</label>
+                                <input type="text" id="full-name" value="Dr. Elizabeth Williams">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="e.williams@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="organization">Organization</label>
+                                <input type="text" id="organization" value="Global Governance Institute">
+                            </div>
+                            <div class="form-group">
+                                <label for="position">Position/Title</label>
+                                <input type="text" id="position" value="Senior Research Fellow">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Professional Bio</label>
+                                <textarea id="bio" rows="4">Dr. Elizabeth Williams is a leading expert in public sector innovation with over 15 years of experience working with governments worldwide. Her research focuses on digital transformation in public administration.</textarea>
+                            </div>
+                            <button class="payment-btn">Update Profile</button>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h4>Communication Preferences</h4>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> Email notifications for session updates
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> Reminders for upcoming sessions
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox"> Newsletter and conference updates
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> Important announcements
+                                </label>
+                            </div>
+                            <button class="payment-btn">Save Preferences</button>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h4>Security</h4>
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input type="password" id="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input type="password" id="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input type="password" id="confirm-password">
+                            </div>
+                            <button class="payment-btn">Change Password</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Help Tab -->
+                    <div class="tab-content" id="help">
+                        <div class="content-header">
+                            <h2>Help & Support</h2>
+                        </div>
+                        
+                        <div class="help-category">
+                            <h4>Frequently Asked Questions</h4>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    How do I upload my presentation materials?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    You can upload your presentation materials through the "Upload Materials" tab in your dashboard. Supported formats include PowerPoint (PPTX), PDF, and Keynote. The maximum file size is 100MB.
+                                </div>
+                            </div>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    What are the technical requirements for my presentation?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    We recommend using 16:9 aspect ratio for slides. The venue will provide projectors, microphones, and clickers. For detailed technical specifications, please check the "AV Specifications" document in the Resources section.
+                                </div>
+                            </div>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    Can I make changes to my session after registration?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    Minor changes to your presentation title or description can be made up to 2 weeks before the event. For major changes or if you need to cancel your participation, please contact the speaker coordinator as soon as possible.
+                                </div>
+                            </div>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    How do I access the speaker preparation session?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    The speaker preparation session will be conducted virtually via Zoom. The link will be sent to your registered email address 48 hours before the session. Attendance is mandatory for all speakers.
+                                </div>
+                            </div>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    What expenses are covered for speakers?
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    Diamond and Gold package speakers receive complimentary conference registration and accommodation for 2 nights. Silver and Bronze package speakers receive discounted registration. Travel expenses are the responsibility of the speaker unless otherwise arranged.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="help-category">
+                            <h4>Technical Support</h4>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    I'm having trouble accessing the speaker portal
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    Please try clearing your browser cache and cookies, or try using a different browser. If the problem persists, contact our technical support team at techsupport@icsc2026.gov.ng
+                                </div>
+                            </div>
+                            
+                            <div class="help-item">
+                                <div class="help-question">
+                                    My uploaded files aren't appearing in the portal
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                                <div class="help-answer">
+                                    File uploads may take a few minutes to process depending on file size and internet connection. If your files don't appear after 10 minutes, please try uploading again or contact technical support.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-support">
+                            <h4>Contact Speaker Support</h4>
+                            <p>If you need additional assistance, our speaker support team is available to help:</p>
+                            <div class="info-item">
+                                <div class="info-label">Email</div>
+                                <div class="info-value">speakers@icsc2026.gov.ng</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value">+234 800 ICSC HELP</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Response Time</div>
+                                <div class="info-value">Within 24 hours</div>
+                            </div>
+                            <button class="payment-btn">Send Message</button>
                         </div>
                     </div>
                 </div>
@@ -1023,11 +1631,31 @@
                         </div>
                     </div>
                     
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Speaker Analytics</h3>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Profile Views</div>
+                            <div class="info-value">247</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Session Interest</div>
+                            <div class="info-value">High</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Engagement Score</div>
+                            <div class="info-value">92%</div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- All modals remain exactly the same -->
     <!-- Speaker Registration Modal -->
     <div class="modal" id="speaker-modal">
         <div class="modal-content">
@@ -1150,6 +1778,7 @@
     </div>
 
     <script>
+        // All previous JavaScript remains exactly the same
         // API Configuration
         const API_CONFIG = {
             baseUrl: 'https://api.icsc2026.gov.ng',
@@ -1202,6 +1831,45 @@
         let selectedPackage = null;
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching for main navigation
+            const navLinks = document.querySelectorAll('.sidebar-menu a');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tab = this.getAttribute('data-tab');
+                    
+                    // Update active nav link
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tab).classList.add('active');
+                });
+            });
+            
+            // Help FAQ toggle functionality
+            const helpQuestions = document.querySelectorAll('.help-question');
+            helpQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    // Toggle answer visibility
+                    answer.classList.toggle('active');
+                    
+                    // Rotate icon
+                    if (answer.classList.contains('active')) {
+                        icon.className = 'fas fa-chevron-up';
+                    } else {
+                        icon.className = 'fas fa-chevron-down';
+                    }
+                });
+            });
+            
+            // All existing functionality for agenda, events, modals, etc. remains the same
             // Day switching functionality
             const dayButtons = document.querySelectorAll('.tab-btn[data-day]');
             const agendaDays = document.querySelectorAll('.agenda-day');
@@ -1216,13 +1884,11 @@
                     
                     // Show corresponding day
                     agendaDays.forEach(dayElement => dayElement.classList.remove('active'));
-                    document.getElementById(`${day}-agenda`).classList.add('active');
-                    
-                    currentDay = day;
+                    document.getElementById(`${day}-full`).classList.add('active');
                 });
             });
             
-            // Tab switching functionality
+            // Tab switching functionality for dashboard tabs
             const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
             
             tabButtons.forEach(button => {

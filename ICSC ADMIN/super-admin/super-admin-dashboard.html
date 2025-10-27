@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --primary: #008751;
@@ -229,6 +230,12 @@
             text-decoration: none;
             text-align: center;
         }
+        .btn-info {
+    background: #17a2b8;
+}
+.btn-info:hover {
+    background: #138496;
+}
 
         .btn:hover {
             background: #2980b9;
@@ -552,6 +559,53 @@
             margin: 15px 0;
             border-left: 4px solid var(--secondary);
         }
+        /* Resources Grid Styles */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.resource-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.resource-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.resource-card h4 {
+    margin-bottom: 10px;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.resource-card p {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.resource-card .action-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
 
         .credential-item {
             display: flex;
@@ -664,6 +718,10 @@
                 <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Attendee</a></li>
                 <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> All Attendees</a></li>
                 <li><a href="#" data-tab="ministries"><i class="fas fa-building"></i> Ministries</a></li>
+                <li><a href="#" data-tab="booths"><i class="fas fa-th-large"></i> Booths</a></li>
+                <li><a href="#" data-tab="speakers"><i class="fas fa-microphone"></i> Speakers</a></li>
+                <li><a href="#" data-tab="exhibitors"><i class="fas fa-store"></i> Exhibitors</a></li>
+                <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
                 <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
                 <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="index.html" id="superAdminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -683,6 +741,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
@@ -1123,91 +1182,176 @@
                                 </tr>
                             </thead>
                             <tbody id="allAttendeesTable">
-                                <tr>
-                                    <td>Samuel Johnson</td>
-                                    <td>s.johnson@finance.gov.ng</td>
-                                    <td>12345678901</td>
-                                    <td>Assistant Director</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>Audit</td>
-                                    <td>Office of the Accountant General</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Fatima Bello</td>
-                                    <td>f.bello@finance.gov.ng</td>
-                                    <td>23456789012</td>
-                                    <td>Chief Officer</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>Treasury</td>
-                                    <td>National Treasury</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Adekunle</td>
-                                    <td>m.adekunle@finance.gov.ng</td>
-                                    <td>34567890123</td>
-                                    <td>Senior Officer</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>Budget & Planning</td>
-                                    <td>Budget Office of the Federation</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Aisha Mohammed</td>
-                                    <td>a.mohammed@education.gov.ng</td>
-                                    <td>45678901234</td>
-                                    <td>Director</td>
-                                    <td>Ministry of Education</td>
-                                    <td>Policy & Planning</td>
-                                    <td>Federal Ministry of Education</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>James Okoro</td>
-                                    <td>j.okoro@health.gov.ng</td>
-                                    <td>56789012345</td>
-                                    <td>Senior Officer</td>
-                                    <td>Ministry of Health</td>
-                                    <td>Public Health</td>
-                                    <td>Federal Ministry of Health</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+    <tr data-id="1">
+        <td>Samuel Johnson</td>
+        <td>s.johnson@finance.gov.ng</td>
+        <td>12345678901</td>
+        <td>Assistant Director</td>
+        <td>Ministry of Finance</td>
+        <td>Audit</td>
+        <td>Office of the Accountant General</td>
+        <td><span class="status-badge status-pending">Pending</span></td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn btn-info btn-sm view-btn">View</button>
+                <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </div>
+        </td>
+    </tr>
+    <tr data-id="2">
+        <td>Fatima Bello</td>
+        <td>f.bello@finance.gov.ng</td>
+        <td>23456789012</td>
+        <td>Chief Officer</td>
+        <td>Ministry of Finance</td>
+        <td>Treasury</td>
+        <td>National Treasury</td>
+        <td><span class="status-badge status-approved">Approved</span></td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn btn-info btn-sm view-btn">View</button>
+                <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </div>
+        </td>
+    </tr>
+    <tr data-id="3">
+        <td>Michael Adekunle</td>
+        <td>m.adekunle@finance.gov.ng</td>
+        <td>34567890123</td>
+        <td>Senior Officer</td>
+        <td>Ministry of Finance</td>
+        <td>Budget & Planning</td>
+        <td>Budget Office of the Federation</td>
+        <td><span class="status-badge status-approved">Approved</span></td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn btn-info btn-sm view-btn">View</button>
+                <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </div>
+        </td>
+    </tr>
+    <tr data-id="4">
+        <td>Aisha Mohammed</td>
+        <td>a.mohammed@education.gov.ng</td>
+        <td>45678901234</td>
+        <td>Director</td>
+        <td>Ministry of Education</td>
+        <td>Policy & Planning</td>
+        <td>Federal Ministry of Education</td>
+        <td><span class="status-badge status-approved">Approved</span></td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn btn-info btn-sm view-btn">View</button>
+                <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </div>
+        </td>
+    </tr>
+    <tr data-id="5">
+        <td>James Okoro</td>
+        <td>j.okoro@health.gov.ng</td>
+        <td>56789012345</td>
+        <td>Senior Officer</td>
+        <td>Ministry of Health</td>
+        <td>Public Health</td>
+        <td>Federal Ministry of Health</td>
+        <td><span class="status-badge status-pending">Pending</span></td>
+        <td>
+            <div class="action-buttons">
+                <button class="btn btn-info btn-sm view-btn">View</button>
+                <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+            </div>
+        </td>
+    </tr>
+</tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <!-- View Attendee Modal -->
+<div id="viewAttendeeModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Attendee Details</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <p id="viewName" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <p id="viewEmail" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <p id="viewPhone" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>National ID Number (NIN)</label>
+                    <p id="viewNIN" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Position</label>
+                    <p id="viewPosition" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Grade Level</label>
+                    <p id="viewGradeLevel" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ministry</label>
+                    <p id="viewMinistry" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <p id="viewDepartment" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Department Agency</label>
+                    <p id="viewAgency" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Staff ID</label>
+                    <p id="viewStaffId" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Office Location</label>
+                    <p id="viewOffice" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <p id="viewStatus" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label>Remarks</label>
+                    <p id="viewRemarks" class="form-control" style="background: #f8f9fa; min-height: 80px;"></p>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary close-view-modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Ministries Tab -->
             <div id="ministries" class="tab-content">
@@ -1228,6 +1372,7 @@
                                     <th>Pending</th>
                                     <th>Approved</th>
                                     <th>Contact Person</th>
+                                    <th>Contact Email</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1239,6 +1384,7 @@
                                     <td>3</td>
                                     <td>42</td>
                                     <td>Permanent Secretary Finance</td>
+                                    <td>ps-finance@gov.ng</td>
                                     <td>
                                         <div class="action-buttons">
                                             <button class="btn btn-success btn-sm view-ministry-btn">View</button>
@@ -1279,21 +1425,545 @@
                     </div>
                 </div>
             </div>
+            <!-- Booths Tab -->
+<div id="booths" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Booth Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshBoothsBtn">Refresh</button>
+                <button class="btn" id="addBoothBtn">Add Booth</button>
+            </div>
+        </div>
 
-            <!-- Reports Tab -->
-            <div id="reports" class="tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h2>Reports & Analytics</h2>
-                        <div class="section-actions">
-                            <button class="btn">Generate Report</button>
-                        </div>
-                    </div>
-                    <div style="padding: 20px;">
-                        <p>Reports and analytics functionality will be implemented here.</p>
-                    </div>
+        <!-- Booth Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-th-large"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalBooths">200</h3>
+                    <p>Total Booths</p>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="availableBooths">150</h3>
+                    <p>Available</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="soldOutBooths">50</h3>
+                    <p>Sold Out</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBooths" class="form-control" placeholder="Search by booth ID, exhibitor, or location...">
+            </div>
+            <div class="filter-group">
+                <select id="filterBoothStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="available">Available</option>
+                    <option value="sold">Sold Out</option>
+                    <option value="reserved">Reserved</option>
+                </select>
+                <select id="filterBoothLocation" class="form-control filter-select">
+                    <option value="">All Locations</option>
+                    <option value="main-hall">Main Hall</option>
+                    <option value="exhibition-area">Exhibition Area</option>
+                    <option value="networking-zone">Networking Zone</option>
+                </select>
+                <button class="btn btn-secondary" id="clearBoothFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="boothsTable">
+                <thead>
+                    <tr>
+                        <th>Booth ID</th>
+                        <th>Location</th>
+                        <th>Price (₦)</th>
+                        <th>Status</th>
+                        <th>Exhibitor</th>
+                        <th>Company</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-id="B001">
+                        <td>B001</td>
+                        <td>Main Hall A1</td>
+                        <td>500,000</td>
+                        <td><span class="status-badge status-approved">Available</span></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-success btn-sm assign-booth-btn">Assign</button>
+                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="B002">
+                        <td>B002</td>
+                        <td>Main Hall A2</td>
+                        <td>500,000</td>
+                        <td><span class="status-badge status-rejected">Sold Out</span></td>
+                        <td>Michael Chen</td>
+                        <td>Tech Innovations Ltd</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-booth-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="B003">
+                        <td>B003</td>
+                        <td>Exhibition Area B1</td>
+                        <td>300,000</td>
+                        <td><span class="status-badge status-pending">Reserved</span></td>
+                        <td>Sarah Johnson</td>
+                        <td>Global Solutions Inc</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-booth-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Speakers Tab -->
+<div id="speakers" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Speaker Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshSpeakersBtn">Refresh</button>
+                <button class="btn" id="addSpeakerBtn">Add Speaker</button>
+            </div>
+        </div>
+
+        <!-- Speaker Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalSpeakers">45</h3>
+                    <p>Total Speakers</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="confirmedSpeakers">32</h3>
+                    <p>Confirmed</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="pendingSpeakers">13</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchSpeakers" class="form-control" placeholder="Search by name, topic, or affiliation...">
+            </div>
+            <div class="filter-group">
+                <select id="filterSpeakerStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <select id="filterSpeakerDay" class="form-control filter-select">
+                    <option value="">All Days</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                </select>
+                <select id="filterSpeakerLevel" class="form-control filter-select">
+                    <option value="">All Levels</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="bronze">Bronze</option>
+                </select>
+                <button class="btn btn-secondary" id="clearSpeakerFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="speakersTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Topic</th>
+                        <th>Affiliation</th>
+                        <th>Package</th>
+                        <th>Day</th>
+                        <th>Session</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-id="SP001">
+                        <td>Dr. Elizabeth Williams</td>
+                        <td>The Future of Public Service</td>
+                        <td>University of Governance</td>
+                        <td><span class="status-badge status-approved">Diamond</span></td>
+                        <td>Wednesday</td>
+                        <td>Keynote</td>
+                        <td><span class="status-badge status-approved">Confirmed</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-speaker-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
+                                <button class="btn btn-success btn-sm approve-speaker-btn">Approve</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="SP002">
+                        <td>Prof. James Anderson</td>
+                        <td>Digital Transformation Strategies</td>
+                        <td>Tech Policy Institute</td>
+                        <td><span class="status-badge status-pending">Gold</span></td>
+                        <td>Wednesday</td>
+                        <td>Panel</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-speaker-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
+                                <button class="btn btn-success btn-sm approve-speaker-btn">Approve</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="SP003">
+                        <td>Ms. Sarah Johnson</td>
+                        <td>Leadership in Public Service</td>
+                        <td>Global Leadership Forum</td>
+                        <td><span class="status-badge status-approved">Silver</span></td>
+                        <td>Thursday</td>
+                        <td>Workshop</td>
+                        <td><span class="status-badge status-approved">Confirmed</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-speaker-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm reject-speaker-btn">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Exhibitors Tab -->
+<div id="exhibitors" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Exhibitor Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshExhibitorsBtn">Refresh</button>
+                <button class="btn" id="addExhibitorBtn">Add Exhibitor</button>
+            </div>
+        </div>
+
+        <!-- Exhibitor Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalExhibitors">50</h3>
+                    <p>Total Exhibitors</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="confirmedExhibitors">35</h3>
+                    <p>Confirmed</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="pendingExhibitors">15</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchExhibitors" class="form-control" placeholder="Search by name, company, or booth...">
+            </div>
+            <div class="filter-group">
+                <select id="filterExhibitorStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <select id="filterExhibitorDay" class="form-control filter-select">
+                    <option value="">All Days</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                </select>
+                <button class="btn btn-secondary" id="clearExhibitorFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="exhibitorsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Booth</th>
+                        <th>Day</th>
+                        <th>Budget (₦)</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-id="EX001">
+                        <td>Michael Chen</td>
+                        <td>Tech Innovations Ltd</td>
+                        <td>B002</td>
+                        <td>Wednesday</td>
+                        <td>500,000</td>
+                        <td><span class="status-badge status-approved">Confirmed</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                                <button class="btn btn-success btn-sm approve-exhibitor-btn">Approve</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="EX002">
+                        <td>Sarah Johnson</td>
+                        <td>Global Solutions Inc</td>
+                        <td>B003</td>
+                        <td>Wednesday</td>
+                        <td>300,000</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                                <button class="btn btn-success btn-sm approve-exhibitor-btn">Approve</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="EX003">
+                        <td>David Wilson</td>
+                        <td>Innovate Africa Ltd</td>
+                        <td>B005</td>
+                        <td>Thursday</td>
+                        <td>400,000</td>
+                        <td><span class="status-badge status-approved">Confirmed</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm reject-exhibitor-btn">Reject</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Resources Tab -->
+<div id="resources" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Resources & Receipts Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshResourcesBtn">Refresh</button>
+                <button class="btn" id="uploadResourceBtn">Upload Resource</button>
+            </div>
+        </div>
+
+        <!-- Resource Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalResources">127</h3>
+                    <p>Total Resources</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="paymentReceipts">45</h3>
+                    <p>Payment Receipts</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-presentation"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="presentationMaterials">82</h3>
+                    <p>Presentation Materials</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchResources" class="form-control" placeholder="Search by name, type, or uploader...">
+            </div>
+            <div class="filter-group">
+                <select id="filterResourceType" class="form-control filter-select">
+                    <option value="">All Types</option>
+                    <option value="receipt">Payment Receipts</option>
+                    <option value="presentation">Presentation Materials</option>
+                    <option value="document">Documents</option>
+                    <option value="video">Videos</option>
+                    <option value="other">Other Resources</option>
+                </select>
+                <select id="filterResourceCategory" class="form-control filter-select">
+                    <option value="">All Categories</option>
+                    <option value="speaker">Speaker Resources</option>
+                    <option value="exhibitor">Exhibitor Resources</option>
+                    <option value="partner">Partner Resources</option>
+                    <option value="admin">Admin Resources</option>
+                </select>
+                <button class="btn btn-secondary" id="clearResourceFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <!-- Resources Grid -->
+        <div class="resources-grid" id="admin-resources">
+            <div class="resource-card" data-id="RES001">
+                <div class="resource-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <h4>Speaker Payment Receipt - Dr. Williams</h4>
+                <p>Transaction ID: TXN-2026-001234</p>
+                <p>Amount: $5,000 | Diamond Package</p>
+                <p>Uploaded: 2023-10-25</p>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                </div>
+            </div>
+
+            <div class="resource-card" data-id="RES002">
+                <div class="resource-icon">
+                    <i class="fas fa-file-powerpoint"></i>
+                </div>
+                <h4>Presentation Slides - Future of Public Service</h4>
+                <p>Speaker: Dr. Elizabeth Williams</p>
+                <p>Session: Keynote | Wednesday</p>
+                <p>Uploaded: 2023-10-24</p>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                </div>
+            </div>
+
+            <div class="resource-card" data-id="RES003">
+                <div class="resource-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <h4>Exhibitor Payment Receipt - Tech Innovations</h4>
+                <p>Transaction ID: TXN-2026-001235</p>
+                <p>Amount: ₦500,000 | Booth B002</p>
+                <p>Uploaded: 2023-10-23</p>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                </div>
+            </div>
+
+            <div class="resource-card" data-id="RES004">
+                <div class="resource-icon">
+                    <i class="fas fa-file-video"></i>
+                </div>
+                <h4>Speaker Introduction Video - Prof. Anderson</h4>
+                <p>Speaker: Prof. James Anderson</p>
+                <p>Duration: 2:30 | Panel Session</p>
+                <p>Uploaded: 2023-10-22</p>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Settings Tab -->
             <div id="settings" class="tab-content">
@@ -1501,6 +2171,10 @@
                             <label for="contactPerson">Contact Person *</label>
                             <input type="text" id="contactPerson" class="form-control" placeholder="Enter contact person" value="Permanent Secretary" required>
                         </div>
+                        <div class="form-group">
+        <label for="contactPersonEmail">Contact Person Email *</label>
+        <input type="email" id="contactPersonEmail" class="form-control" placeholder="Enter contact person email" required>
+    </div>
                     </div>
                     <div class="credentials-box">
                         <h3>Generated Credentials</h3>
@@ -1548,6 +2222,11 @@
                         <label>Contact Person</label>
                         <p id="viewContactPerson" class="form-control" style="background: #f8f9fa;">Permanent Secretary Finance</p>
                     </div>
+                     <div class="form-group">
+    
+        <label>Contact Person Email</label>
+        <p id="viewContactPersonEmail" class="form-control" style="background: #f8f9fa;">ps-finance@gov.ng</p>
+    </div>
                 </div>
                 <div class="credentials-box">
                     <h3>Login Credentials</h3>
@@ -1591,6 +2270,10 @@
                             <label for="editContactPerson">Contact Person *</label>
                             <input type="text" id="editContactPerson" class="form-control" placeholder="Enter contact person" required>
                         </div>
+                         <div class="form-group">
+        <label for="editContactPersonEmail">Contact Person Email *</label>
+        <input type="email" id="editContactPersonEmail" class="form-control" placeholder="Enter contact person email" required>
+    </div>
                     </div>
                     <div class="credentials-box">
                         <h3>Login Credentials</h3>
@@ -1615,194 +2298,181 @@
         </div>
     </div>
 
-    <script>
-        // DOM Elements
-        const addAttendeeForm = document.getElementById('addAttendeeForm');
-        const editAttendeeForm = document.getElementById('editAttendeeForm');
-        const addMinistryForm = document.getElementById('addMinistryForm');
-        const editMinistryForm = document.getElementById('editMinistryForm');
-        const successModal = document.getElementById('successModal');
-        const editAttendeeModal = document.getElementById('editAttendeeModal');
-        const deleteModal = document.getElementById('deleteModal');
-        const addMinistryModal = document.getElementById('addMinistryModal');
-        const viewMinistryModal = document.getElementById('viewMinistryModal');
-        const editMinistryModal = document.getElementById('editMinistryModal');
-        const closeModalBtns = document.querySelectorAll('.close-modal');
-        const addAnotherBtn = document.getElementById('addAnotherBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-        const cancelAddMinistryBtn = document.getElementById('cancelAddMinistryBtn');
-        const closeViewMinistryBtn = document.getElementById('closeViewMinistryBtn');
-        const cancelEditMinistryBtn = document.getElementById('cancelEditMinistryBtn');
-        const generateNewPasswordBtn = document.getElementById('generateNewPasswordBtn');
-        const allAttendeesTable = document.getElementById('allAttendeesTable');
-        const pendingAttendeesTable = document.getElementById('pendingAttendeesTable');
-        const ministriesTable = document.getElementById('ministriesTable');
-        const searchAttendees = document.getElementById('searchAttendees');
-        const filterMinistry = document.getElementById('filterMinistry');
-        const filterStatus = document.getElementById('filterStatus');
-        const filterDepartment = document.getElementById('filterDepartment');
-        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-        const addMinistryBtn = document.getElementById('addMinistryBtn');
-        
-        // Tab Navigation
-        const tabs = document.querySelectorAll('.tab-content');
-        const tabLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
-        const pageTitle = document.getElementById('pageTitle');
-        
-        // Sample data for demonstration
-        let attendees = [
-            {
-                id: 1,
-                name: 'Samuel Johnson',
-                email: 's.johnson@finance.gov.ng',
-                phone: '08012345678',
-                nin: '12345678901',
-                position: 'Assistant Director',
-                gradeLevel: 'Assistant Director',
-                ministry: 'Ministry of Finance',
-                department: 'Audit',
-                agency: 'Office of the Accountant General',
-                staffId: 'MOF/AD/001',
-                office: 'Abuja HQ',
-                status: 'Pending',
-                remarks: '',
-                addedBy: 'Ministry',
-                dateAdded: '2023-10-20'
-            },
-            {
-                id: 2,
-                name: 'Fatima Bello',
-                email: 'f.bello@finance.gov.ng',
-                phone: '08023456789',
-                nin: '23456789012',
-                position: 'Chief Officer',
-                gradeLevel: 'Chief Officer',
-                ministry: 'Ministry of Finance',
-                department: 'Treasury',
-                agency: 'National Treasury',
-                staffId: 'MOF/CO/045',
-                office: 'Abuja HQ',
-                status: 'Approved',
-                remarks: '',
-                addedBy: 'Super Admin',
-                dateAdded: '2023-10-22'
-            },
-            {
-                id: 3,
-                name: 'Michael Adekunle',
-                email: 'm.adekunle@finance.gov.ng',
-                phone: '08034567890',
-                nin: '34567890123',
-                position: 'Senior Officer',
-                gradeLevel: 'Senior Officer',
-                ministry: 'Ministry of Finance',
-                department: 'Budget & Planning',
-                agency: 'Budget Office of the Federation',
-                staffId: 'MOF/SO/128',
-                office: 'Abuja HQ',
-                status: 'Approved',
-                remarks: '',
-                addedBy: 'Ministry',
-                dateAdded: '2023-10-23'
-            },
-            {
-                id: 4,
-                name: 'Aisha Mohammed',
-                email: 'a.mohammed@education.gov.ng',
-                phone: '08045678901',
-                nin: '45678901234',
-                position: 'Director',
-                gradeLevel: 'Director',
-                ministry: 'Ministry of Education',
-                department: 'Policy & Planning',
-                agency: 'Federal Ministry of Education',
-                staffId: 'MOE/DIR/012',
-                office: 'Abuja HQ',
-                status: 'Approved',
-                remarks: '',
-                addedBy: 'Super Admin',
-                dateAdded: '2023-10-24'
-            },
-            {
-                id: 5,
-                name: 'James Okoro',
-                email: 'j.okoro@health.gov.ng',
-                phone: '08056789012',
-                nin: '56789012345',
-                position: 'Senior Officer',
-                gradeLevel: 'Senior Officer',
-                ministry: 'Ministry of Health',
-                department: 'Public Health',
-                agency: 'Federal Ministry of Health',
-                staffId: 'MOH/SO/067',
-                office: 'Abuja HQ',
-                status: 'Pending',
-                remarks: '',
-                addedBy: 'Ministry',
-                dateAdded: '2023-10-25'
-            }
-        ];
+<script>
+    // DOM Elements
+    const viewAttendeeModal = document.getElementById('viewAttendeeModal');
+    const addAttendeeForm = document.getElementById('addAttendeeForm');
+    const editAttendeeForm = document.getElementById('editAttendeeForm');
+    const addMinistryForm = document.getElementById('addMinistryForm');
+    const editMinistryForm = document.getElementById('editMinistryForm');
+    const successModal = document.getElementById('successModal');
+    const editAttendeeModal = document.getElementById('editAttendeeModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const addMinistryModal = document.getElementById('addMinistryModal');
+    const viewMinistryModal = document.getElementById('viewMinistryModal');
+    const editMinistryModal = document.getElementById('editMinistryModal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    const addAnotherBtn = document.getElementById('addAnotherBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelAddMinistryBtn = document.getElementById('cancelAddMinistryBtn');
+    const closeViewMinistryBtn = document.getElementById('closeViewMinistryBtn');
+    const cancelEditMinistryBtn = document.getElementById('cancelEditMinistryBtn');
+    const generateNewPasswordBtn = document.getElementById('generateNewPasswordBtn');
+    const allAttendeesTable = document.getElementById('allAttendeesTable');
+    const pendingAttendeesTable = document.getElementById('pendingAttendeesTable');
+    const ministriesTable = document.getElementById('ministriesTable');
+    const searchAttendees = document.getElementById('searchAttendees');
+    const filterMinistry = document.getElementById('filterMinistry');
+    const filterStatus = document.getElementById('filterStatus');
+    const filterDepartment = document.getElementById('filterDepartment');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const addMinistryBtn = document.getElementById('addMinistryBtn');
+    
+    // API Configuration
+    const API_BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
+    const CREATE_MINISTRY_URL = `${API_BASE_URL}/admin/create-user`;
+    
+    // Tab Navigation
+    const tabs = document.querySelectorAll('.tab-content');
+    const tabLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    // Sample data for demonstration
+    let attendees = [
+        {
+            id: 1,
+            name: "Samuel Johnson",
+            email: "s.johnson@finance.gov.ng",
+            phone: "+2348012345678",
+            nin: "12345678901",
+            position: "Assistant Director",
+            gradeLevel: "Assistant Director",
+            ministry: "Ministry of Finance",
+            department: "Audit",
+            agency: "Office of the Accountant General",
+            staffId: "MOF-001",
+            office: "Abuja Headquarters",
+            status: "Pending",
+            remarks: "Pending verification",
+            dateAdded: "2023-10-20"
+        },
+        {
+            id: 2,
+            name: "Fatima Bello",
+            email: "f.bello@finance.gov.ng",
+            phone: "+2348023456789",
+            nin: "23456789012",
+            position: "Chief Officer",
+            gradeLevel: "Chief Officer",
+            ministry: "Ministry of Finance",
+            department: "Treasury",
+            agency: "National Treasury",
+            staffId: "MOF-002",
+            office: "Abuja Headquarters",
+            status: "Approved",
+            remarks: "Approved for attendance",
+            dateAdded: "2023-10-22"
+        },
+        {
+            id: 3,
+            name: "Michael Adekunle",
+            email: "m.adekunle@finance.gov.ng",
+            phone: "+2348034567890",
+            nin: "34567890123",
+            position: "Senior Officer",
+            gradeLevel: "Senior Officer",
+            ministry: "Ministry of Finance",
+            department: "Budget & Planning",
+            agency: "Budget Office of the Federation",
+            staffId: "MOF-003",
+            office: "Abuja Headquarters",
+            status: "Approved",
+            remarks: "Confirmed attendance",
+            dateAdded: "2023-10-23"
+        },
+        {
+            id: 4,
+            name: "Aisha Mohammed",
+            email: "a.mohammed@education.gov.ng",
+            phone: "+2348045678901",
+            nin: "45678901234",
+            position: "Director",
+            gradeLevel: "Director",
+            ministry: "Ministry of Education",
+            department: "Policy & Planning",
+            agency: "Federal Ministry of Education",
+            staffId: "MOE-001",
+            office: "Abuja Headquarters",
+            status: "Approved",
+            remarks: "Key participant",
+            dateAdded: "2023-10-24"
+        },
+        {
+            id: 5,
+            name: "James Okoro",
+            email: "j.okoro@health.gov.ng",
+            phone: "+2348056789012",
+            nin: "56789012345",
+            position: "Senior Officer",
+            gradeLevel: "Senior Officer",
+            ministry: "Ministry of Health",
+            department: "Public Health",
+            agency: "Federal Ministry of Health",
+            staffId: "MOH-001",
+            office: "Abuja Headquarters",
+            status: "Pending",
+            remarks: "Awaiting documentation",
+            dateAdded: "2023-10-25"
+        }
+    ];
 
-        let ministries = [
-            {
-                id: 1,
-                name: 'Ministry of Finance',
-                code: 'MOF',
-                attendeesCount: 45,
-                pendingCount: 3,
-                approvedCount: 42,
-                contactPerson: 'Permanent Secretary Finance',
-                username: 'MOF2024',
-                password: 'ICSC@MOF2024'
-            },
-            {
-                id: 2,
-                name: 'Ministry of Education',
-                code: 'MOE',
-                attendeesCount: 32,
-                pendingCount: 2,
-                approvedCount: 30,
-                contactPerson: 'Permanent Secretary Education',
-                username: 'MOE2024',
-                password: 'ICSC@MOE2024'
-            },
-            {
-                id: 3,
-                name: 'Ministry of Health',
-                code: 'MOH',
-                attendeesCount: 28,
-                pendingCount: 5,
-                approvedCount: 23,
-                contactPerson: 'Permanent Secretary Health',
-                username: 'MOH2024',
-                password: 'ICSC@MOH2024'
-            }
-        ];
+    let ministries = [];
+    
+    // Current attendee/ministry being edited or deleted
+    let currentAttendeeId = null;
+    let currentMinistryId = null;
 
-        // Current attendee/ministry being edited or deleted
-        let currentAttendeeId = null;
-        let currentMinistryId = null;
+    // Initialize the dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTabs();
+        initializeEventListeners();
+        updateStats();
+        renderMinistriesTable();
+        fetchMinistries(); // Load ministries from database on page load
+    });
 
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeTabs();
-            initializeEventListeners();
-            updateStats();
-            renderMinistriesTable();
+    // Tab Navigation
+    function initializeTabs() {
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                tabLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show selected tab content
+                tabs.forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update page title
+                pageTitle.textContent = getTabTitle(tabId);
+            });
         });
 
-        // Tab Navigation
-        function initializeTabs() {
-            tabLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+        // Add event listeners for buttons that navigate between tabs
+        document.querySelectorAll('[data-tab]').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.hasAttribute('data-tab')) {
                     e.preventDefault();
                     const tabId = this.getAttribute('data-tab');
                     
                     // Update active tab
                     tabLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
+                    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
                     
                     // Show selected tab content
                     tabs.forEach(tab => tab.classList.remove('active'));
@@ -1810,244 +2480,216 @@
                     
                     // Update page title
                     pageTitle.textContent = getTabTitle(tabId);
-                });
+                }
             });
+        });
+    }
 
-            // Add event listeners for buttons that navigate between tabs
-            document.querySelectorAll('[data-tab]').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    if (this.hasAttribute('data-tab')) {
-                        e.preventDefault();
-                        const tabId = this.getAttribute('data-tab');
-                        
-                        // Update active tab
-                        tabLinks.forEach(l => l.classList.remove('active'));
-                        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-                        
-                        // Show selected tab content
-                        tabs.forEach(tab => tab.classList.remove('active'));
-                        document.getElementById(tabId).classList.add('active');
-                        
-                        // Update page title
-                        pageTitle.textContent = getTabTitle(tabId);
-                    }
-                });
-            });
-        }
+    function getTabTitle(tabId) {
+        const titles = {
+            'dashboard': 'Super Admin Dashboard',
+            'verification': 'Attendee Verification',
+            'add-attendee': 'Add New Attendee',
+            'attendees': 'All Attendees',
+            'ministries': 'Participating Ministries',
+            'reports': 'Reports & Analytics',
+            'settings': 'System Settings'
+        };
+        return titles[tabId] || 'Super Admin Dashboard';
+    }
 
-        function getTabTitle(tabId) {
-            const titles = {
-                'dashboard': 'Super Admin Dashboard',
-                'verification': 'Attendee Verification',
-                'add-attendee': 'Add New Attendee',
-                'attendees': 'All Attendees',
-                'ministries': 'Participating Ministries',
-                'reports': 'Reports & Analytics',
-                'settings': 'System Settings'
-            };
-            return titles[tabId] || 'Super Admin Dashboard';
-        }
-
-        // Event Listeners
-        function initializeEventListeners() {
-            // Form submissions
-            addAttendeeForm.addEventListener('submit', handleAddAttendee);
-            editAttendeeForm.addEventListener('submit', handleEditAttendee);
-            addMinistryForm.addEventListener('submit', handleAddMinistry);
-            editMinistryForm.addEventListener('submit', handleEditMinistry);
-            
-            // Modal controls
-            closeModalBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    successModal.classList.remove('active');
-                    editAttendeeModal.classList.remove('active');
-                    deleteModal.classList.remove('active');
-                    addMinistryModal.classList.remove('active');
-                    viewMinistryModal.classList.remove('active');
-                    editMinistryModal.classList.remove('active');
-                });
-            });
-            
-            addAnotherBtn.addEventListener('click', function() {
+    // Event Listeners
+    function initializeEventListeners() {
+        // Form submissions
+        addAttendeeForm.addEventListener('submit', handleAddAttendee);
+        editAttendeeForm.addEventListener('submit', handleEditAttendee);
+        addMinistryForm.addEventListener('submit', handleAddMinistry);
+        editMinistryForm.addEventListener('submit', handleEditMinistry);
+        
+        // Modal controls
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
                 successModal.classList.remove('active');
-            });
-            
-            cancelEditBtn.addEventListener('click', function() {
                 editAttendeeModal.classList.remove('active');
-            });
-            
-            cancelDeleteBtn.addEventListener('click', function() {
                 deleteModal.classList.remove('active');
-            });
-            
-            confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
-            
-            cancelAddMinistryBtn.addEventListener('click', function() {
                 addMinistryModal.classList.remove('active');
-            });
-            
-            closeViewMinistryBtn.addEventListener('click', function() {
                 viewMinistryModal.classList.remove('active');
-            });
-            
-            cancelEditMinistryBtn.addEventListener('click', function() {
                 editMinistryModal.classList.remove('active');
+                viewAttendeeModal.classList.remove('active');
             });
+        });
+        
+        addAnotherBtn.addEventListener('click', function() {
+            successModal.classList.remove('active');
+        });
+        
+        cancelEditBtn.addEventListener('click', function() {
+            editAttendeeModal.classList.remove('active');
+        });
+        
+        cancelDeleteBtn.addEventListener('click', function() {
+            deleteModal.classList.remove('active');
+        });
+        document.querySelector('.close-view-modal').addEventListener('click', function() {
+            viewAttendeeModal.classList.remove('active');
+        });
+        
+        confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
+        
+        cancelAddMinistryBtn.addEventListener('click', function() {
+            addMinistryModal.classList.remove('active');
+        });
+        
+        closeViewMinistryBtn.addEventListener('click', function() {
+            viewMinistryModal.classList.remove('active');
+        });
+        
+        cancelEditMinistryBtn.addEventListener('click', function() {
+            editMinistryModal.classList.remove('active');
+        });
+        
+        generateNewPasswordBtn.addEventListener('click', generateNewPassword);
+        
+        // Search and filter
+        searchAttendees.addEventListener('input', filterAttendees);
+        filterMinistry.addEventListener('change', filterAttendees);
+        filterStatus.addEventListener('change', filterAttendees);
+        filterDepartment.addEventListener('change', filterAttendees);
+        clearFiltersBtn.addEventListener('click', clearFilters);
+        
+        // Add Ministry button
+        addMinistryBtn.addEventListener('click', function() {
+            document.getElementById('ministryName').value = '';
+            document.getElementById('ministryCode').value = '';
+            document.getElementById('contactPerson').value = 'Permanent Secretary';
+            document.getElementById('contactPersonEmail').value = '';
             
-            generateNewPasswordBtn.addEventListener('click', generateNewPassword);
-            
-            // Search and filter
-            searchAttendees.addEventListener('input', filterAttendees);
-            filterMinistry.addEventListener('change', filterAttendees);
-            filterStatus.addEventListener('change', filterAttendees);
-            filterDepartment.addEventListener('change', filterAttendees);
-            clearFiltersBtn.addEventListener('click', clearFilters);
-            
-            // Add Ministry button
-            addMinistryBtn.addEventListener('click', function() {
-                document.getElementById('ministryName').value = '';
-                document.getElementById('ministryCode').value = '';
-                document.getElementById('contactPerson').value = 'Permanent Secretary';
-                
-                // Generate credentials
-                generateMinistryCredentials();
-                addMinistryModal.classList.add('active');
-            });
-            
-            // Edit and delete buttons
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('edit-btn')) {
-                    const row = e.target.closest('tr');
-                    const attendeeId = parseInt(row.getAttribute('data-id'));
-                    openEditModal(attendeeId);
-                }
-                
-                if (e.target.classList.contains('delete-btn')) {
-                    const row = e.target.closest('tr');
-                    const attendeeId = parseInt(row.getAttribute('data-id'));
-                    const attendeeName = row.cells[0].textContent;
-                    openDeleteModal(attendeeId, attendeeName);
-                }
-                
-                if (e.target.classList.contains('approve-btn')) {
-                    const row = e.target.closest('tr');
-                    const attendeeId = parseInt(row.getAttribute('data-id'));
-                    approveAttendee(attendeeId);
-                }
-                
-                if (e.target.classList.contains('reject-btn')) {
-                    const row = e.target.closest('tr');
-                    const attendeeId = parseInt(row.getAttribute('data-id'));
-                    rejectAttendee(attendeeId);
-                }
-                
-                if (e.target.classList.contains('view-ministry-btn')) {
-                    const row = e.target.closest('tr');
-                    const ministryId = parseInt(row.getAttribute('data-id'));
-                    openViewMinistryModal(ministryId);
-                }
-                
-                if (e.target.classList.contains('edit-ministry-btn')) {
-                    const row = e.target.closest('tr');
-                    const ministryId = parseInt(row.getAttribute('data-id'));
-                    openEditMinistryModal(ministryId);
-                }
-            });
-            
-            // Refresh buttons
-            document.getElementById('refreshActivityBtn').addEventListener('click', function() {
-                alert('Refreshing recent activity...');
-            });
-            
-            document.getElementById('refreshPendingBtn').addEventListener('click', function() {
-                alert('Refreshing pending attendees...');
-            });
-            
-            // Export button
-            document.getElementById('exportAttendeesBtn').addEventListener('click', function() {
-                alert('Exporting attendees data...');
-            });
-        }
-
-        // Form Handlers
-        function handleAddAttendee(e) {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                id: attendees.length > 0 ? Math.max(...attendees.map(a => a.id)) + 1 : 1,
-                name: document.getElementById('attendeeName').value,
-                email: document.getElementById('attendeeEmail').value,
-                phone: document.getElementById('attendeePhone').value,
-                nin: document.getElementById('attendeeNIN').value,
-                position: document.getElementById('attendeePosition').value,
-                gradeLevel: document.getElementById('attendeeGradeLevel').value,
-                ministry: document.getElementById('attendeeMinistry').value,
-                department: document.getElementById('attendeeDepartment').value,
-                agency: document.getElementById('attendeeAgency').value,
-                staffId: document.getElementById('attendeeStaffId').value,
-                office: document.getElementById('attendeeOffice').value,
-                status: document.getElementById('attendeeStatus').value,
-                remarks: document.getElementById('attendeeRemarks').value,
-                addedBy: 'Super Admin',
-                dateAdded: new Date().toISOString().split('T')[0]
-            };
-            
-            // Add to attendees array
-            attendees.push(formData);
-            
-            // Update UI
-            updateAttendeesTable();
-            updateStats();
-            
-            // Show success message
-            document.getElementById('successMessage').textContent = 'Attendee has been successfully added!';
-            successModal.classList.add('active');
-            
-            // Reset form
-            addAttendeeForm.reset();
-        }
-
-        function handleEditAttendee(e) {
-            e.preventDefault();
-            
-            // Update attendee data
-            const attendeeIndex = attendees.findIndex(a => a.id === currentAttendeeId);
-            if (attendeeIndex !== -1) {
-                attendees[attendeeIndex] = {
-                    ...attendees[attendeeIndex],
-                    name: document.getElementById('editAttendeeName').value,
-                    email: document.getElementById('editAttendeeEmail').value,
-                    phone: document.getElementById('editAttendeePhone').value,
-                    nin: document.getElementById('editAttendeeNIN').value,
-                    position: document.getElementById('editAttendeePosition').value,
-                    gradeLevel: document.getElementById('editAttendeeGradeLevel').value,
-                    ministry: document.getElementById('editAttendeeMinistry').value,
-                    department: document.getElementById('editAttendeeDepartment').value,
-                    agency: document.getElementById('editAttendeeAgency').value,
-                    staffId: document.getElementById('editAttendeeStaffId').value,
-                    office: document.getElementById('editAttendeeOffice').value,
-                    status: document.getElementById('editAttendeeStatus').value,
-                    remarks: document.getElementById('editAttendeeRemarks').value
-                };
-                
-                // Update UI
-                updateAttendeesTable();
-                updatePendingTable();
-                updateStats();
-                
-                // Show success message
-                document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
-                successModal.classList.add('active');
-                
-                // Close modal
-                editAttendeeModal.classList.remove('active');
+            // Generate credentials
+            generateMinistryCredentials();
+            addMinistryModal.classList.add('active');
+        });
+        
+        // Edit and delete buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('edit-btn')) {
+                const row = e.target.closest('tr');
+                const attendeeId = parseInt(row.getAttribute('data-id'));
+                openEditModal(attendeeId);
             }
-        }
+            if (e.target.classList.contains('view-btn')) {
+                const row = e.target.closest('tr');
+                const attendeeId = parseInt(row.getAttribute('data-id'));
+                openViewModal(attendeeId);
+            }
+            
+            if (e.target.classList.contains('delete-btn')) {
+                const row = e.target.closest('tr');
+                const attendeeId = parseInt(row.getAttribute('data-id'));
+                const attendeeName = row.cells[0].textContent;
+                openDeleteModal(attendeeId, attendeeName);
+            }
+            
+            if (e.target.classList.contains('approve-btn')) {
+                const row = e.target.closest('tr');
+                const attendeeId = parseInt(row.getAttribute('data-id'));
+                approveAttendee(attendeeId);
+            }
+            
+            if (e.target.classList.contains('reject-btn')) {
+                const row = e.target.closest('tr');
+                const attendeeId = parseInt(row.getAttribute('data-id'));
+                rejectAttendee(attendeeId);
+            }
+            
+            if (e.target.classList.contains('view-ministry-btn')) {
+                const row = e.target.closest('tr');
+                const ministryId = parseInt(row.getAttribute('data-id'));
+                openViewMinistryModal(ministryId);
+            }
+            
+            if (e.target.classList.contains('edit-ministry-btn')) {
+                const row = e.target.closest('tr');
+                const ministryId = parseInt(row.getAttribute('data-id'));
+                openEditMinistryModal(ministryId);
+            }
+        });
+        
+        // Refresh buttons
+        document.getElementById('refreshActivityBtn').addEventListener('click', function() {
+            alert('Refreshing recent activity...');
+        });
+        
+        document.getElementById('refreshPendingBtn').addEventListener('click', function() {
+            alert('Refreshing pending attendees...');
+        });
+        
+        // Export button
+        document.getElementById('exportAttendeesBtn').addEventListener('click', function() {
+            alert('Exporting attendees data...');
+        });
+    }
 
-        function handleDeleteAttendee() {
-            // Remove attendee from array
-            attendees = attendees.filter(a => a.id !== currentAttendeeId);
+    // Form Handlers
+    function handleAddAttendee(e) {
+        e.preventDefault();
+        
+        // Collect form data
+        const formData = {
+            id: attendees.length > 0 ? Math.max(...attendees.map(a => a.id)) + 1 : 1,
+            name: document.getElementById('attendeeName').value,
+            email: document.getElementById('attendeeEmail').value,
+            phone: document.getElementById('attendeePhone').value,
+            nin: document.getElementById('attendeeNIN').value,
+            position: document.getElementById('attendeePosition').value,
+            gradeLevel: document.getElementById('attendeeGradeLevel').value,
+            ministry: document.getElementById('attendeeMinistry').value,
+            department: document.getElementById('attendeeDepartment').value,
+            agency: document.getElementById('attendeeAgency').value,
+            staffId: document.getElementById('attendeeStaffId').value,
+            office: document.getElementById('attendeeOffice').value,
+            status: document.getElementById('attendeeStatus').value,
+            remarks: document.getElementById('attendeeRemarks').value,
+            addedBy: 'Super Admin',
+            dateAdded: new Date().toISOString().split('T')[0]
+        };
+        
+        // Add to attendees array
+        attendees.push(formData);
+        
+        // Update UI
+        updateAttendeesTable();
+        updateStats();
+        
+        // Show success message
+        document.getElementById('successMessage').textContent = 'Attendee has been successfully added!';
+        successModal.classList.add('active');
+        
+        // Reset form
+        addAttendeeForm.reset();
+    }
+
+    function handleEditAttendee(e) {
+        e.preventDefault();
+        
+        // Update attendee data
+        const attendeeIndex = attendees.findIndex(a => a.id === currentAttendeeId);
+        if (attendeeIndex !== -1) {
+            attendees[attendeeIndex] = {
+                ...attendees[attendeeIndex],
+                name: document.getElementById('editAttendeeName').value,
+                email: document.getElementById('editAttendeeEmail').value,
+                phone: document.getElementById('editAttendeePhone').value,
+                nin: document.getElementById('editAttendeeNIN').value,
+                position: document.getElementById('editAttendeePosition').value,
+                gradeLevel: document.getElementById('editAttendeeGradeLevel').value,
+                ministry: document.getElementById('editAttendeeMinistry').value,
+                department: document.getElementById('editAttendeeDepartment').value,
+                agency: document.getElementById('editAttendeeAgency').value,
+                staffId: document.getElementById('editAttendeeStaffId').value,
+                office: document.getElementById('editAttendeeOffice').value,
+                status: document.getElementById('editAttendeeStatus').value,
+                remarks: document.getElementById('editAttendeeRemarks').value
+            };
             
             // Update UI
             updateAttendeesTable();
@@ -2055,353 +2697,464 @@
             updateStats();
             
             // Show success message
-            document.getElementById('successMessage').textContent = 'Attendee has been successfully deleted!';
+            document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
             successModal.classList.add('active');
             
             // Close modal
-            deleteModal.classList.remove('active');
+            editAttendeeModal.classList.remove('active');
+        }
+    }
+
+    function handleDeleteAttendee() {
+        // Remove attendee from array
+        attendees = attendees.filter(a => a.id !== currentAttendeeId);
+        
+        // Update UI
+        updateAttendeesTable();
+        updatePendingTable();
+        updateStats();
+        
+        // Show success message
+        document.getElementById('successMessage').textContent = 'Attendee has been successfully deleted!';
+        successModal.classList.add('active');
+        
+        // Close modal
+        deleteModal.classList.remove('active');
+    }
+
+// ✅ Database Integration for Ministry Creation (Corrected to match backend)
+async function handleAddMinistry(e) {
+    e.preventDefault();
+    
+    // Collect form data from input fields
+    const organization = document.getElementById('ministryName').value;
+    const organization_short_code = document.getElementById('ministryCode').value;
+    const contact_person = document.getElementById('contactPerson').value;
+    const contact_person_email = document.getElementById('contactPersonEmail').value;
+    const username = document.getElementById('generatedUsername').textContent;
+    const password = document.getElementById('generatedPassword').textContent;
+
+    // ✅ Prepare correct payload for backend
+    const ministryData = {
+        organization,
+        organization_short_code,
+        username,
+        contact_person,
+        contact_person_email,
+        password
+    };
+
+    console.log("Sending to API:", ministryData);
+
+    try {
+        // Show loading state
+        const submitBtn = addMinistryForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Creating...';
+        submitBtn.disabled = true;
+
+        // ✅ Get stored Super Admin token
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            alert('Session expired. Please log in again.');
+            window.location.href = '../index.html';
+            return;
         }
 
-        function handleAddMinistry(e) {
-            e.preventDefault();
+        // ✅ Make authenticated API call
+        const response = await axios.post(
+            `${API_BASE_URL}/admin/create-user`,
+            ministryData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+
+        // Restore button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+
+        console.log("API Response:", response.data);
+
+        if (response.data && (response.data.success || response.status === 200)) {
+            document.getElementById('successMessage').textContent =
+                'Ministry has been successfully created!';
+            successModal.classList.add('active');
+
+            // Optional: reset form + close modal
+            addMinistryForm.reset();
+            addMinistryModal.classList.remove('active');
+        } else {
+            throw new Error(response.data.message || 'Failed to create ministry');
+        }
+
+    } catch (error) {
+        console.error('Error creating user:', error.response?.data || error.message);
+
+        // Reset button
+        const submitBtn = addMinistryForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Add Ministry';
+        submitBtn.disabled = false;
+
+        // Show error message
+        alert(`Error creating user: ${error.response?.data?.message || error.message}`);
+    }
+}
+
+
+
+    // Fetch ministries from database (if you have an endpoint for this)
+    async function fetchMinistries() {
+        try {
+            // Replace with your actual endpoint to fetch ministries
+            // const response = await axios.get(`${API_BASE_URL}/admin/ministries`);
+            // ministries = response.data;
+            // renderMinistriesTable();
+            // updateStats();
             
-            // Collect form data
-            const formData = {
-                id: ministries.length > 0 ? Math.max(...ministries.map(m => m.id)) + 1 : 1,
-                name: document.getElementById('ministryName').value,
-                code: document.getElementById('ministryCode').value,
-                contactPerson: document.getElementById('contactPerson').value,
-                username: document.getElementById('generatedUsername').textContent,
-                password: document.getElementById('generatedPassword').textContent,
-                attendeesCount: 0,
-                pendingCount: 0,
-                approvedCount: 0
+            // For now, we'll just use the local array
+            console.log('Fetch ministries functionality would go here');
+        } catch (error) {
+            console.error('Error fetching ministries:', error);
+        }
+    }
+
+    function handleEditMinistry(e) {
+        e.preventDefault();
+        
+        // Update ministry data
+        const ministryIndex = ministries.findIndex(m => m.id === currentMinistryId);
+        if (ministryIndex !== -1) {
+            ministries[ministryIndex] = {
+                ...ministries[ministryIndex],
+                name: document.getElementById('editMinistryName').value,
+                code: document.getElementById('editMinistryCode').value,
+                contactPerson: document.getElementById('editContactPerson').value,
+                contactPersonEmail: document.getElementById('editContactPersonEmail').value,
+                username: document.getElementById('editUsername').value,
+                password: document.getElementById('editPassword').value
             };
-            
-            // Add to ministries array
-            ministries.push(formData);
             
             // Update UI
             renderMinistriesTable();
-            updateStats();
             
             // Show success message
-            document.getElementById('successMessage').textContent = 'Ministry has been successfully added!';
+            document.getElementById('successMessage').textContent = 'Ministry has been successfully updated!';
             successModal.classList.add('active');
             
             // Close modal
-            addMinistryModal.classList.remove('active');
+            editMinistryModal.classList.remove('active');
         }
+    }
 
-        function handleEditMinistry(e) {
-            e.preventDefault();
-            
-            // Update ministry data
-            const ministryIndex = ministries.findIndex(m => m.id === currentMinistryId);
-            if (ministryIndex !== -1) {
-                ministries[ministryIndex] = {
-                    ...ministries[ministryIndex],
-                    name: document.getElementById('editMinistryName').value,
-                    code: document.getElementById('editMinistryCode').value,
-                    contactPerson: document.getElementById('editContactPerson').value,
-                    username: document.getElementById('editUsername').value,
-                    password: document.getElementById('editPassword').value
-                };
-                
-                // Update UI
-                renderMinistriesTable();
-                
-                // Show success message
-                document.getElementById('successMessage').textContent = 'Ministry has been successfully updated!';
-                successModal.classList.add('active');
-                
-                // Close modal
-                editMinistryModal.classList.remove('active');
-            }
-        }
-
-        // Modal Functions
-        function openEditModal(attendeeId) {
-            const attendee = attendees.find(a => a.id === attendeeId);
-            if (attendee) {
-                currentAttendeeId = attendeeId;
-                
-                // Populate form with attendee data
-                document.getElementById('editAttendeeName').value = attendee.name;
-                document.getElementById('editAttendeeEmail').value = attendee.email;
-                document.getElementById('editAttendeePhone').value = attendee.phone;
-                document.getElementById('editAttendeeNIN').value = attendee.nin;
-                document.getElementById('editAttendeePosition').value = attendee.position;
-                document.getElementById('editAttendeeGradeLevel').value = attendee.gradeLevel;
-                document.getElementById('editAttendeeMinistry').value = attendee.ministry;
-                document.getElementById('editAttendeeDepartment').value = attendee.department;
-                document.getElementById('editAttendeeAgency').value = attendee.agency;
-                document.getElementById('editAttendeeStaffId').value = attendee.staffId;
-                document.getElementById('editAttendeeOffice').value = attendee.office;
-                document.getElementById('editAttendeeStatus').value = attendee.status;
-                document.getElementById('editAttendeeRemarks').value = attendee.remarks;
-                
-                // Show modal
-                editAttendeeModal.classList.add('active');
-            }
-        }
-
-        function openDeleteModal(attendeeId, attendeeName) {
+    // Modal Functions
+    function openEditModal(attendeeId) {
+        const attendee = attendees.find(a => a.id === attendeeId);
+        if (attendee) {
             currentAttendeeId = attendeeId;
-            document.getElementById('deleteAttendeeName').textContent = attendeeName;
-            deleteModal.classList.add('active');
-        }
-
-        function openViewMinistryModal(ministryId) {
-            const ministry = ministries.find(m => m.id === ministryId);
-            if (ministry) {
-                currentMinistryId = ministryId;
-                
-                // Populate view with ministry data
-                document.getElementById('viewMinistryName').textContent = ministry.name;
-                document.getElementById('viewMinistryCode').textContent = ministry.code;
-                document.getElementById('viewContactPerson').textContent = ministry.contactPerson;
-                document.getElementById('viewUsername').textContent = ministry.username;
-                document.getElementById('viewPassword').textContent = ministry.password;
-                
-                // Show modal
-                viewMinistryModal.classList.add('active');
-            }
-        }
-
-        function openEditMinistryModal(ministryId) {
-            const ministry = ministries.find(m => m.id === ministryId);
-            if (ministry) {
-                currentMinistryId = ministryId;
-                
-                // Populate form with ministry data
-                document.getElementById('editMinistryName').value = ministry.name;
-                document.getElementById('editMinistryCode').value = ministry.code;
-                document.getElementById('editContactPerson').value = ministry.contactPerson;
-                document.getElementById('editUsername').value = ministry.username;
-                document.getElementById('editPassword').value = ministry.password;
-                
-                // Show modal
-                editMinistryModal.classList.add('active');
-            }
-        }
-
-        // Verification Functions
-        function approveAttendee(attendeeId) {
-            const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
-            if (attendeeIndex !== -1) {
-                attendees[attendeeIndex].status = 'Approved';
-                updateAttendeesTable();
-                updatePendingTable();
-                updateStats();
-                alert('Attendee has been approved!');
-            }
-        }
-
-        function rejectAttendee(attendeeId) {
-            const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
-            if (attendeeIndex !== -1) {
-                attendees[attendeeIndex].status = 'Rejected';
-                updateAttendeesTable();
-                updatePendingTable();
-                updateStats();
-                alert('Attendee has been rejected!');
-            }
-        }
-
-        // Search and Filter Functions
-        function filterAttendees() {
-            const searchTerm = searchAttendees.value.toLowerCase();
-            const ministryFilter = filterMinistry.value;
-            const statusFilter = filterStatus.value;
-            const departmentFilter = filterDepartment.value;
             
-            const filteredAttendees = attendees.filter(attendee => {
-                const matchesSearch = 
-                    attendee.name.toLowerCase().includes(searchTerm) ||
-                    attendee.email.toLowerCase().includes(searchTerm) ||
-                    attendee.nin.includes(searchTerm) ||
-                    attendee.position.toLowerCase().includes(searchTerm);
-                
-                const matchesMinistry = ministryFilter ? attendee.ministry === ministryFilter : true;
-                const matchesStatus = statusFilter ? attendee.status === statusFilter : true;
-                const matchesDepartment = departmentFilter ? attendee.department === departmentFilter : true;
-                
-                return matchesSearch && matchesMinistry && matchesStatus && matchesDepartment;
-            });
+            // Populate form with attendee data
+            document.getElementById('editAttendeeName').value = attendee.name;
+            document.getElementById('editAttendeeEmail').value = attendee.email;
+            document.getElementById('editAttendeePhone').value = attendee.phone;
+            document.getElementById('editAttendeeNIN').value = attendee.nin;
+            document.getElementById('editAttendeePosition').value = attendee.position;
+            document.getElementById('editAttendeeGradeLevel').value = attendee.gradeLevel;
+            document.getElementById('editAttendeeMinistry').value = attendee.ministry;
+            document.getElementById('editAttendeeDepartment').value = attendee.department;
+            document.getElementById('editAttendeeAgency').value = attendee.agency;
+            document.getElementById('editAttendeeStaffId').value = attendee.staffId;
+            document.getElementById('editAttendeeOffice').value = attendee.office;
+            document.getElementById('editAttendeeStatus').value = attendee.status;
+            document.getElementById('editAttendeeRemarks').value = attendee.remarks;
             
-            renderAttendeesTable(filteredAttendees);
+            // Show modal
+            editAttendeeModal.classList.add('active');
         }
+    }
 
-        function clearFilters() {
-            searchAttendees.value = '';
-            filterMinistry.value = '';
-            filterStatus.value = '';
-            filterDepartment.value = '';
-            renderAttendeesTable(attendees);
-        }
-
-        // Ministry Functions
-        function generateMinistryCredentials() {
-            const ministryCode = document.getElementById('ministryCode').value.toUpperCase();
-            if (ministryCode) {
-                const username = `${ministryCode}2024`;
-                const password = `ICSC@${ministryCode}2024`;
-                
-                document.getElementById('generatedUsername').textContent = username;
-                document.getElementById('generatedPassword').textContent = password;
-            }
-        }
-
-        function generateNewPassword() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-            let newPassword = '';
-            for (let i = 0; i < 10; i++) {
-                newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('editPassword').value = newPassword;
-        }
-
-        // UI Update Functions
-        function updateStats() {
-            const pendingCount = attendees.filter(a => a.status === 'Pending').length;
-            const approvedCount = attendees.filter(a => a.status === 'Approved').length;
-            const totalCount = attendees.length;
-            const ministriesCount = ministries.length;
+    function openDeleteModal(attendeeId, attendeeName) {
+        currentAttendeeId = attendeeId;
+        document.getElementById('deleteAttendeeName').textContent = attendeeName;
+        deleteModal.classList.add('active');
+    }
+    
+    function openViewModal(attendeeId) {
+        const attendee = attendees.find(a => a.id === attendeeId);
+        if (attendee) {
+            // Populate view modal with attendee data
+            document.getElementById('viewName').textContent = attendee.name;
+            document.getElementById('viewEmail').textContent = attendee.email;
+            document.getElementById('viewPhone').textContent = attendee.phone;
+            document.getElementById('viewNIN').textContent = attendee.nin;
+            document.getElementById('viewPosition').textContent = attendee.position;
+            document.getElementById('viewGradeLevel').textContent = attendee.gradeLevel;
+            document.getElementById('viewMinistry').textContent = attendee.ministry;
+            document.getElementById('viewDepartment').textContent = attendee.department;
+            document.getElementById('viewAgency').textContent = attendee.agency;
+            document.getElementById('viewStaffId').textContent = attendee.staffId || 'N/A';
+            document.getElementById('viewOffice').textContent = attendee.office || 'N/A';
+            document.getElementById('viewStatus').textContent = attendee.status;
+            document.getElementById('viewRemarks').textContent = attendee.remarks || 'No remarks';
             
-            document.getElementById('pendingCount').textContent = pendingCount;
-            document.getElementById('approvedCount').textContent = approvedCount;
-            document.getElementById('totalCount').textContent = totalCount;
-            document.getElementById('ministriesCount').textContent = ministriesCount;
+            // Show modal
+            viewAttendeeModal.classList.add('active');
         }
+    }
 
-        function updateAttendeesTable() {
-            renderAttendeesTable(attendees);
+    function openViewMinistryModal(ministryId) {
+        const ministry = ministries.find(m => m.id === ministryId);
+        if (ministry) {
+            currentMinistryId = ministryId;
+            
+            // Populate view with ministry data
+            document.getElementById('viewMinistryName').textContent = ministry.name;
+            document.getElementById('viewMinistryCode').textContent = ministry.code;
+            document.getElementById('viewContactPerson').textContent = ministry.contactPerson;
+            document.getElementById('viewContactPersonEmail').textContent = ministry.contactPersonEmail;
+            document.getElementById('viewUsername').textContent = ministry.username;
+            document.getElementById('viewPassword').textContent = ministry.password;
+            
+            // Show modal
+            viewMinistryModal.classList.add('active');
         }
+    }
 
-        function updatePendingTable() {
-            const pendingAttendees = attendees.filter(a => a.status === 'Pending');
-            renderPendingTable(pendingAttendees);
+    function openEditMinistryModal(ministryId) {
+        const ministry = ministries.find(m => m.id === ministryId);
+        if (ministry) {
+            currentMinistryId = ministryId;
+            
+            // Populate form with ministry data
+            document.getElementById('editMinistryName').value = ministry.name;
+            document.getElementById('editMinistryCode').value = ministry.code;
+            document.getElementById('editContactPerson').value = ministry.contactPerson;
+            document.getElementById('editContactPersonEmail').value = ministry.contactPersonEmail;
+            document.getElementById('editUsername').value = ministry.username;
+            document.getElementById('editPassword').value = ministry.password;
+            
+            // Show modal
+            editMinistryModal.classList.add('active');
         }
+    }
 
-        function renderMinistriesTable() {
-            let html = '';
-            
-            ministries.forEach(ministry => {
-                html += `
-                    <tr data-id="${ministry.id}">
-                        <td>${ministry.name}</td>
-                        <td>${ministry.code}</td>
-                        <td>${ministry.attendeesCount}</td>
-                        <td>${ministry.pendingCount}</td>
-                        <td>${ministry.approvedCount}</td>
-                        <td>${ministry.contactPerson}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-success btn-sm view-ministry-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            ministriesTable.innerHTML = html;
+    // Verification Functions
+    function approveAttendee(attendeeId) {
+        const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
+        if (attendeeIndex !== -1) {
+            attendees[attendeeIndex].status = 'Approved';
+            updateAttendeesTable();
+            updatePendingTable();
+            updateStats();
+            alert('Attendee has been approved!');
         }
+    }
 
-        function renderAttendeesTable(attendeesList) {
-            let html = '';
-            
-            attendeesList.forEach(attendee => {
-                const statusClass = `status-${attendee.status.toLowerCase()}`;
-                
-                html += `
-                    <tr data-id="${attendee.id}">
-                        <td>${attendee.name}</td>
-                        <td>${attendee.email}</td>
-                        <td>${attendee.nin}</td>
-                        <td>${attendee.position}</td>
-                        <td>${attendee.ministry}</td>
-                        <td>${attendee.department}</td>
-                        <td>${attendee.agency}</td>
-                        <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-success btn-sm edit-btn">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-btn">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            allAttendeesTable.innerHTML = html;
+    function rejectAttendee(attendeeId) {
+        const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
+        if (attendeeIndex !== -1) {
+            attendees[attendeeIndex].status = 'Rejected';
+            updateAttendeesTable();
+            updatePendingTable();
+            updateStats();
+            alert('Attendee has been rejected!');
         }
+    }
 
-        function renderPendingTable(pendingAttendees) {
-            let html = '';
+    // Search and Filter Functions
+    function filterAttendees() {
+        const searchTerm = searchAttendees.value.toLowerCase();
+        const ministryFilter = filterMinistry.value;
+        const statusFilter = filterStatus.value;
+        const departmentFilter = filterDepartment.value;
+        
+        const filteredAttendees = attendees.filter(attendee => {
+            const matchesSearch = 
+                attendee.name.toLowerCase().includes(searchTerm) ||
+                attendee.email.toLowerCase().includes(searchTerm) ||
+                attendee.nin.includes(searchTerm) ||
+                attendee.position.toLowerCase().includes(searchTerm);
             
-            pendingAttendees.forEach(attendee => {
-                html += `
-                    <tr data-id="${attendee.id}">
-                        <td>${attendee.name}</td>
-                        <td>${attendee.email}</td>
-                        <td>${attendee.position}</td>
-                        <td>${attendee.department}</td>
-                        <td>${attendee.ministry}</td>
-                        <td>${attendee.dateAdded}</td>
-                        <td>
-                            <div class="verification-actions">
-                                <button class="btn btn-success approve-btn">Approve</button>
-                                <button class="btn btn-danger reject-btn">Reject</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
+            const matchesMinistry = ministryFilter ? attendee.ministry === ministryFilter : true;
+            const matchesStatus = statusFilter ? attendee.status === statusFilter : true;
+            const matchesDepartment = departmentFilter ? attendee.department === departmentFilter : true;
             
-            pendingAttendeesTable.innerHTML = html;
-        }
+            return matchesSearch && matchesMinistry && matchesStatus && matchesDepartment;
+        });
+        
+        renderAttendeesTable(filteredAttendees);
+    }
 
-        // Initialize tables
+    function clearFilters() {
+        searchAttendees.value = '';
+        filterMinistry.value = '';
+        filterStatus.value = '';
+        filterDepartment.value = '';
         renderAttendeesTable(attendees);
-        updatePendingTable();
+    }
 
-        // Add event listener for ministry code input to generate credentials
-        document.getElementById('ministryCode').addEventListener('input', generateMinistryCredentials);
+    // Ministry Functions
+    function generateMinistryCredentials() {
+        const ministryCode = document.getElementById('ministryCode').value.toUpperCase();
+        if (ministryCode) {
+            const username = `${ministryCode}2024`;
+            const password = `ICSC@${ministryCode}2024`;
+            
+            document.getElementById('generatedUsername').textContent = username;
+            document.getElementById('generatedPassword').textContent = password;
+        }
+    }
 
+    function generateNewPassword() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+        let newPassword = '';
+        for (let i = 0; i < 10; i++) {
+            newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('editPassword').value = newPassword;
+    }
 
+    // UI Update Functions
+    function updateStats() {
+        const pendingCount = attendees.filter(a => a.status === 'Pending').length;
+        const approvedCount = attendees.filter(a => a.status === 'Approved').length;
+        const totalCount = attendees.length;
+        const ministriesCount = ministries.length;
+        
+        document.getElementById('pendingCount').textContent = pendingCount;
+        document.getElementById('approvedCount').textContent = approvedCount;
+        document.getElementById('totalCount').textContent = totalCount;
+        document.getElementById('ministriesCount').textContent = ministriesCount;
+    }
 
-        document.getElementById('superAdminLogoutBtn').addEventListener('click', function (e) {
-  e.preventDefault(); // prevent default link behavior
-  localStorage.clear(); // clear stored login info
-  sessionStorage.clear(); // clear session too, if used
+    function updateAttendeesTable() {
+        renderAttendeesTable(attendees);
+    }
 
-  // Redirect back to your login page
-  window.location.href = '../index.html';
-});
+    function updatePendingTable() {
+        const pendingAttendees = attendees.filter(a => a.status === 'Pending');
+        renderPendingTable(pendingAttendees);
+    }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const superAdminLogoutBtn = document.getElementById("superAdminLogoutBtn");
+    function renderMinistriesTable() {
+        let html = '';
+        
+        ministries.forEach(ministry => {
+            html += `
+                <tr data-id="${ministry.id}">
+                    <td>${ministry.name}</td>
+                    <td>${ministry.code}</td>
+                    <td>${ministry.attendeesCount}</td>
+                    <td>${ministry.pendingCount}</td>
+                    <td>${ministry.approvedCount}</td>
+                    <td>${ministry.contactPerson}</td>
+                    <td>${ministry.contactPersonEmail}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-success btn-sm view-ministry-btn">View</button>
+                            <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        ministriesTable.innerHTML = html;
+    }
 
-  if (superAdminLogoutBtn) {
-    superAdminLogoutBtn.addEventListener("click", function (event) {
-      event.preventDefault(); // Stop the normal redirect
+    function renderAttendeesTable(attendeesList) {
+        let html = '';
+        
+        attendeesList.forEach(attendee => {
+            const statusClass = `status-${attendee.status.toLowerCase()}`;
+            
+            html += `
+                <tr data-id="${attendee.id}">
+                    <td>${attendee.name}</td>
+                    <td>${attendee.email}</td>
+                    <td>${attendee.nin}</td>
+                    <td>${attendee.position}</td>
+                    <td>${attendee.ministry}</td>
+                    <td>${attendee.department}</td>
+                    <td>${attendee.agency}</td>
+                    <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-info btn-sm view-btn">View</button>
+                            <button class="btn btn-success btn-sm edit-btn">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        allAttendeesTable.innerHTML = html;
+    }
 
-      const confirmLogout = confirm("Are you sure you want to log out?");
-      if (confirmLogout) {
-        // Optional: Clear any session storage if you're using it
-        sessionStorage.clear();
-        localStorage.removeItem("superAdminLoggedIn");
+    function renderPendingTable(pendingAttendees) {
+        let html = '';
+        
+        pendingAttendees.forEach(attendee => {
+            html += `
+                <tr data-id="${attendee.id}">
+                    <td>${attendee.name}</td>
+                    <td>${attendee.email}</td>
+                    <td>${attendee.position}</td>
+                    <td>${attendee.department}</td>
+                    <td>${attendee.ministry}</td>
+                    <td>${attendee.dateAdded}</td>
+                    <td>
+                        <div class="verification-actions">
+                            <button class="btn btn-success approve-btn">Approve</button>
+                            <button class="btn btn-danger reject-btn">Reject</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        pendingAttendeesTable.innerHTML = html;
+    }
 
-        // Redirect to login page
+    // Initialize tables
+    renderAttendeesTable(attendees);
+    updatePendingTable();
+
+    // Add event listener for ministry code input to generate credentials
+    document.getElementById('ministryCode').addEventListener('input', generateMinistryCredentials);
+
+    document.getElementById('superAdminLogoutBtn').addEventListener('click', function (e) {
+        e.preventDefault(); // prevent default link behavior
+        localStorage.clear(); // clear stored login info
+        sessionStorage.clear(); // clear session too, if used
+
+        // Redirect back to your login page
         window.location.href = '../index.html';
-      }
     });
-  }
-});
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const superAdminLogoutBtn = document.getElementById("superAdminLogoutBtn");
 
-    </script>
+        if (superAdminLogoutBtn) {
+            superAdminLogoutBtn.addEventListener("click", function (event) {
+                event.preventDefault(); // Stop the normal redirect
+
+                const confirmLogout = confirm("Are you sure you want to log out?");
+                if (confirmLogout) {
+                    // Optional: Clear any session storage if you're using it
+                    sessionStorage.clear();
+                    localStorage.removeItem("superAdminLoggedIn");
+
+                    // Redirect to login page
+                    window.location.href = '../index.html';
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

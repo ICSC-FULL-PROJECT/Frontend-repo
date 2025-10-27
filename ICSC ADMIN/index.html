@@ -522,219 +522,195 @@
             </div>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+// DOM Elements
+const loginBtn = document.getElementById('loginBtn');
+const superAdminTab = document.getElementById('superAdminTab');
+const ministryTab = document.getElementById('ministryTab');
+const ministryCodeGroup = document.getElementById('ministryCodeGroup');
+const usernameLabel = document.getElementById('usernameLabel');
+const loginBtnText = document.getElementById('loginBtnText');
+const errorMessage = document.getElementById('errorMessage');
+const superAdminInstructions = document.getElementById('superAdminInstructions');
+const ministryInstructions = document.getElementById('ministryInstructions');
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+const loginSpinner = document.getElementById('loginSpinner');
 
-    <script>
-        // DOM Elements
-        const loginBtn = document.getElementById('loginBtn');
-        const superAdminTab = document.getElementById('superAdminTab');
-        const ministryTab = document.getElementById('ministryTab');
-        const ministryCodeGroup = document.getElementById('ministryCodeGroup');
-        const usernameLabel = document.getElementById('usernameLabel');
-        const loginBtnText = document.getElementById('loginBtnText');
-        const errorMessage = document.getElementById('errorMessage');
-        const superAdminInstructions = document.getElementById('superAdminInstructions');
-        const ministryInstructions = document.getElementById('ministryInstructions');
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        const loginSpinner = document.getElementById('loginSpinner');
+// API Base URL
+const API_BASE_URL = "https://icsc-backend-api-code.onrender.com/api/v1";
 
-        // Valid credentials for demonstration
-        const validCredentials = {
-            superAdmin: {
-                username: 'admin',
-                password: '0000'
-            },
-            ministries: {
-                'MOF': {
-                    code: 'MOF',
-                    username: 'MOF2026',
-                    password: '0000',
-                    name: 'Ministry of Finance'
-                },
-                'MOE': {
-                    code: 'MOE',
-                    username: 'MOE2024',
-                    password: 'ICSC@MOE2024',
-                    name: 'Ministry of Education'
-                },
-                'MOH': {
-                    code: 'MOH',
-                    username: 'MOH2024',
-                    password: 'ICSC@MOH2024',
-                    name: 'Ministry of Health'
-                }
-            }
-        };
+// Temporary credentials for ministries (demo)
+const validCredentials = {
+  ministries: {
+    'MOF': {
+      username: 'MOF2026',
+      password: '0000',
+      name: 'Ministry of Finance'
+    },
+    'MOE': {
+      username: 'MOE2024',
+      password: 'ICSC@MOE2024',
+      name: 'Ministry of Education'
+    },
+    'MOH': {
+      username: 'MOH2024',
+      password: 'ICSC@MOH2024',
+      name: 'Ministry of Health'
+    }
+  }
+};
 
-        // Slider functionality
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
+// ===== Password visibility toggle =====
+togglePassword.addEventListener('click', function () {
+  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+  passwordInput.setAttribute('type', type);
+  
+  const eyeIcon = this.querySelector('i');
+  if (type === 'text') {
+    eyeIcon.classList.remove('fa-eye');
+    eyeIcon.classList.add('fa-eye-slash');
+  } else {
+    eyeIcon.classList.remove('fa-eye-slash');
+    eyeIcon.classList.add('fa-eye');
+  }
+});
+
+// ===== Tab switching =====
+superAdminTab.addEventListener('click', () => setActiveTab('superAdmin'));
+ministryTab.addEventListener('click', () => setActiveTab('ministry'));
+
+function setActiveTab(tabType) {
+  if (tabType === 'superAdmin') {
+    superAdminTab.classList.add('active');
+    ministryTab.classList.remove('active');
+    ministryCodeGroup.style.display = 'none';
+    usernameLabel.textContent = 'Username';
+    loginBtnText.textContent = 'Login as Super Admin';
+    superAdminInstructions.style.display = 'block';
+    ministryInstructions.style.display = 'none';
+    document.getElementById('username').placeholder = 'Enter your username';
+  } else {
+    superAdminTab.classList.remove('active');
+    ministryTab.classList.add('active');
+    ministryCodeGroup.style.display = 'block';
+    usernameLabel.textContent = 'Ministry Username';
+    loginBtnText.textContent = 'Login as Ministry';
+    superAdminInstructions.style.display = 'none';
+    ministryInstructions.style.display = 'block';
+    document.getElementById('username').placeholder = 'Enter ministry username';
+  }
+  
+  errorMessage.style.display = 'none';
+}
+
+// ===== Main Login Handler =====
+loginBtn.addEventListener('click', handleLogin);
+
+async function handleLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const ministryCode = document.getElementById('ministryCode').value.trim();
+
+  if (!username || !password) {
+    showError('Please enter both username and password');
+    return;
+  }
+
+  if (ministryTab.classList.contains('active') && !ministryCode) {
+    showError('Please enter ministry code');
+    return;
+  }
+
+  // Show spinner and disable button
+  loginSpinner.style.display = 'block';
+  loginBtn.disabled = true;
+
+  try {
+  // ===== SUPER ADMIN LOGIN (Real API) =====
+if (superAdminTab.classList.contains('active')) {
+  const credentials = {
+    username: "Super Admin",
+    password: "password"
+  };
+
+      
+      console.log("Logging in Super Admin:", credentials);
+      
+      const response = await axios.post(
+        `${API_BASE_URL}/auth/admin-login`, 
+        credentials, 
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      console.log("Login Response:", response.data);
+      
+      if (response.data && response.data.token) {
+        // Save token to localStorage for future API requests
+        localStorage.setItem('accessToken', response.data.token);
+        localStorage.setItem('userType', 'superAdmin');
+        localStorage.setItem('username', username);
         
-        function showSlide(index) {
-            // Remove active class from all slides
-            slides.forEach(slide => slide.classList.remove('active'));
-            
-            // Add active class to current slide
-            slides[index].classList.add('active');
-            currentSlide = index;
-        }
+        // Redirect to Super Admin dashboard
+        window.location.href = 'super-admin/super-admin-dashboard.html';
+      } else {
+        showError(response.data.message || 'Login failed — no token received.');
+      }
+    }
+    
+    // ===== MINISTRY LOGIN (Temporary Simulation) =====
+    else {
+      const ministry = validCredentials.ministries[ministryCode];
+      
+      if (ministry && username === ministry.username && password === ministry.password) {
+        localStorage.setItem('userType', 'ministry');
+        localStorage.setItem('ministryCode', ministryCode);
+        localStorage.setItem('ministryName', ministry.name);
+        localStorage.setItem('username', username);
         
-        function nextSlide() {
-            let next = currentSlide + 1;
-            if (next >= slides.length) next = 0;
-            showSlide(next);
-        }
-        
-        // Set up automatic slide transition
-        setInterval(nextSlide, 5000);
+        window.location.href = 'ministry/ministry-dashboard.html';
+      } else {
+        showError('Invalid ministry credentials. Please check your details.');
+      }
+    }
+  } catch (error) {
+    console.error("Login Error:", error.response?.data || error.message);
+    showError(error.response?.data?.message || 'Login failed. Please try again.');
+  } finally {
+    loginSpinner.style.display = 'none';
+    loginBtn.disabled = false;
+  }
+}
 
-        // Password visibility toggle
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            // Toggle eye icon
-            const eyeIcon = this.querySelector('i');
-            if (type === 'text') {
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            }
-        });
+// ===== Utility Functions =====
+function showError(message) {
+  errorMessage.textContent = message;
+  errorMessage.style.display = 'block';
+  setTimeout(() => (errorMessage.style.display = 'none'), 5000);
+}
 
-        // Event Listeners
-        loginBtn.addEventListener('click', handleLogin);
+// ===== Allow Enter Key to trigger login =====
+document.getElementById('loginForm').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    handleLogin();
+  }
+});
 
-        superAdminTab.addEventListener('click', function() {
-            setActiveTab('superAdmin');
-        });
-
-        ministryTab.addEventListener('click', function() {
-            setActiveTab('ministry');
-        });
-
-        // Functions
-        function setActiveTab(tabType) {
-            if (tabType === 'superAdmin') {
-                superAdminTab.classList.add('active');
-                ministryTab.classList.remove('active');
-                ministryCodeGroup.style.display = 'none';
-                usernameLabel.textContent = 'Username';
-                loginBtnText.textContent = 'Login as Super Admin';
-                superAdminInstructions.style.display = 'block';
-                ministryInstructions.style.display = 'none';
-                document.getElementById('username').placeholder = 'Enter your username';
-            } else {
-                superAdminTab.classList.remove('active');
-                ministryTab.classList.add('active');
-                ministryCodeGroup.style.display = 'block';
-                usernameLabel.textContent = 'Ministry Username';
-                loginBtnText.textContent = 'Login as Ministry';
-                superAdminInstructions.style.display = 'none';
-                ministryInstructions.style.display = 'block';
-                document.getElementById('username').placeholder = 'Enter ministry username';
-            }
-            
-            // Clear any previous error messages
-            errorMessage.style.display = 'none';
-        }
-
-        function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const ministryCode = document.getElementById('ministryCode').value;
-            
-            // Validate inputs
-            if (!username || !password) {
-                showError('Please enter both username and password');
-                return;
-            }
-            
-            if (ministryTab.classList.contains('active') && !ministryCode) {
-                showError('Please enter ministry code');
-                return;
-            }
-            
-            // Show spinner and disable button
-            loginSpinner.style.display = 'block';
-            loginBtn.disabled = true;
-            
-            // Simulate login process with a short delay
-            setTimeout(() => {
-                // Authenticate user
-                if (authenticateUser(username, password, ministryCode)) {
-                    // Successful login - redirect to appropriate dashboard
-                    if (superAdminTab.classList.contains('active')) {
-                        // Store login info in localStorage for the Super Admin dashboard
-                        localStorage.setItem('userType', 'superAdmin');
-                        localStorage.setItem('username', username);
-                        // Redirect to Super Admin dashboard
-                        window.location.href = 'super-admin/super-admin-dashboard.html';
-                    } else {
-                        // Store login info in localStorage for the Ministry dashboard
-                        const ministry = validCredentials.ministries[ministryCode];
-                        localStorage.setItem('userType', 'ministry');
-                        localStorage.setItem('ministryCode', ministryCode);
-                        localStorage.setItem('ministryName', ministry.name);
-                        localStorage.setItem('username', username);
-                        // Redirect to Ministry dashboard
-                        window.location.href = 'ministry/ministry-dashboard.html';
-                    }
-                } else {
-                    // Hide spinner and re-enable button
-                    loginSpinner.style.display = 'none';
-                    loginBtn.disabled = false;
-                    showError('Invalid credentials. Please try again.');
-                }
-            }, 1500); // Simulate network delay
-        }
-
-        function authenticateUser(username, password, ministryCode) {
-            if (superAdminTab.classList.contains('active')) {
-                // Check Super Admin credentials
-                return username === validCredentials.superAdmin.username && 
-                       password === validCredentials.superAdmin.password;
-            } else {
-                // Check Ministry credentials
-                if (!validCredentials.ministries[ministryCode]) {
-                    return false;
-                }
-                
-                const ministry = validCredentials.ministries[ministryCode];
-                return username === ministry.username && 
-                       password === ministry.password;
-            }
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            
-            // Hide error message after 5 seconds
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
-        }
-
-        // Allow form submission with Enter key
-        document.getElementById('loginForm').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleLogin();
-            }
-        });
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is already logged in
-            const userType = localStorage.getItem('userType');
-            if (userType === 'superAdmin') {
-                window.location.href = 'super-admin/super-admin-dashboard.html';
-            } else if (userType === 'ministry') {
-                window.location.href = 'ministry/ministry-dashboard.html';
-            }
-        });
-    </script>
+// ===== Auto-redirect if already logged in =====
+document.addEventListener('DOMContentLoaded', function () {
+  const userType = localStorage.getItem('userType');
+  
+  if (userType === 'superAdmin') {
+    window.location.href = 'super-admin/super-admin-dashboard.html';
+  } else if (userType === 'ministry') {
+    window.location.href = 'ministry/ministry-dashboard.html';
+  }
+});
+</script>
 </body>
 </html>
