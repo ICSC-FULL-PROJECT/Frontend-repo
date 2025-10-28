@@ -53,33 +53,68 @@
             margin: 40px 0;
             position: relative;
         }
-        
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-        }
-        
-        .progress-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--border-color);
-            z-index: 1;
-        }
-        
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            background: white;
-            padding: 0 15px;
-        }
+/* === Animated Dot Progress Indicator === */
+.progress-indicator.dots {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0;
+  width: 80%;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+/* Background line */
+.progress-indicator.dots::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #ddd;
+  transform: translateY(-50%);
+  z-index: 1;
+  border-radius: 2px;
+}
+
+/* Animated fill line */
+.progress-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 3px;
+  background: #008751;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  width: 0%;
+  z-index: 2;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Dots */
+.progress-indicator.dots .dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ccc;
+  position: relative;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+/* Active + completed state */
+.progress-indicator.dots .dot.active {
+  background-color: #008751;
+  transform: scale(1.3);
+}
+
+.progress-indicator.dots .dot.completed {
+  background-color: #4caf50;
+}
+
+
         
         .step-number {
             width: 40px;
@@ -546,19 +581,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">SIGN IN OR REGISTER</a>
+                            <a class="nav-link" href="login.html">SIGN IN</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">AGENDA</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                Meetings
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Registrant Directory</a></li>
-                                <li><a class="dropdown-item" href="#">My Schedule</a></li>
-                            </ul>
+                            <a class="nav-link" href="agenda.html">AGENDA</a>
                         </li>
                     </ul>
                 </div>
@@ -579,39 +605,20 @@
     <!-- Main Content -->
     <div class="content-section">
         <div class="container">
-            <!-- Progress Indicator -->
-            <div class="progress-container">
-                <div class="progress-steps">
-                    <div class="progress-step active" id="step-1">
-                        <div class="step-number">1</div>
-                        <div class="step-label">Registrant Type</div>
-                    </div>
-                    <div class="progress-step" id="step-2">
-                        <div class="step-number">2</div>
-                        <div class="step-label">Account Information</div>
-                    </div>
-                    <div class="progress-step" id="step-3">
-                        <div class="step-number">3</div>
-                        <div class="step-label">Profile Information</div>
-                    </div>
-                    <div class="progress-step speaker-partner-only" id="step-4">
-                        <div class="step-number">4</div>
-                        <div class="step-label">Package Selection</div>
-                    </div>
-                    <div class="progress-step speaker-partner-only" id="step-5">
-                        <div class="step-number">5</div>
-                        <div class="step-label">Payment</div>
-                    </div>
-                    <div class="progress-step" id="step-6">
-                        <div class="step-number">6</div>
-                        <div class="step-label">Confirmation</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Information Text -->
+        <!-- Progress Indicator (Dot Style) -->
+    <div class="progress-container">
+      <div class="progress-indicator dots" id="progress-indicator">
+        <!-- Adjust number of dots for your flow -->
+        <span class="dot active" id="dot-1" title="Registrant Type"></span>
+        <span class="dot" id="dot-2" title="Account Information"></span>
+        <span class="dot" id="dot-3" title="Profile Information"></span>
+        <span class="dot speaker-partner-only" id="dot-4" title="Package Selection"></span>
+        <span class="dot speaker-partner-only" id="dot-5" title="Payment"></span>
+        <span class="dot" id="dot-6" title="Confirmation"></span>
+      </div>
+    </div>
             <div class="text-center mb-4">
-                <p class="lead"><strong>If you want to return to the International Civil Service Conference website please click <a href="https://kevins178.sg-host.com/" target="_blank">here</a>.</strong></p>
+                <p class="lead"><strong>If you want to return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
             </div>
 
             <!-- Registration Form Sections -->
@@ -813,21 +820,14 @@
 
                         </div>
                         
-                        <div class="form-group">
-                            <label class="has-star" for="country">Country</label>
-                            <select id="country" name="country" class="form-control" required>
-                                <option value="">Select Country</option>
-                                <option value="US">United States</option>
-                                <option value="GB">United Kingdom</option>
-                                <option value="NG">Nigeria</option>
-                                <option value="CA">Canada</option>
-                                <option value="AU">Australia</option>
-                                <option value="IN">India</option>
-                                <option value="ZA">South Africa</option>
-                                <option value="KE">Kenya</option>
-                                <option value="GH">Ghana</option>
-                            </select>
-                            <div class="help-block-error" id="country-error"></div>
+                       <div class="form-group">
+  <label class="has-star" for="country">Country</label>
+  <select id="country" name="country" class="form-control" required>
+    <option value="" disabled selected>Select your country</option>
+  </select>
+  <div class="help-block-error" id="country-error"></div>
+</div>
+
                         </div>
                         
                         <div class="form-group">
@@ -881,22 +881,13 @@
                         </div>
                         
                         <div class="form-group">
-                            <label class="has-star" for="speakerCountry">Country</label>
-                            <select id="speakerCountry" name="speakerCountry" class="form-control" required>
-                                <option value="">Select Country</option>
-                                <option value="US">United States</option>
-                                <option value="GB">United Kingdom</option>
-                                <option value="NG">Nigeria</option>
-                                <option value="CA">Canada</option>
-                                <option value="AU">Australia</option>
-                                <option value="IN">India</option>
-                                <option value="ZA">South Africa</option>
-                                <option value="KE">Kenya</option>
-                                <option value="GH">Ghana</option>
-                            </select>
-                            <div class="help-block-error" id="speakerCountry-error"></div>
-                        </div>
-                        
+  <label class="has-star" for="speakerCountry">Country</label>
+  <select id="speakerCountry" name="speakerCountry" class="form-control" required>
+    <option value="" disabled selected>Select your country</option>
+  </select>
+  <div class="help-block-error" id="speakerCountry-error"></div>
+</div>
+
                         <div class="form-group">
                             <label class="has-star" for="speakerJobTitle">Job Title</label>
                             <input type="text" id="speakerJobTitle" name="speakerJobTitle" class="form-control" required>
@@ -1584,23 +1575,26 @@
         }
         updateProgressIndicator();
     }
+function updateProgressIndicator() {
+    const visibleDots = $('#progress-indicator .dot:visible');
+    if (!visibleDots.length) return;
 
-    function updateProgressIndicator() {
-        $('.progress-step').removeClass('active completed');
-        const visibleSteps = $('.progress-step:visible');
-        if (!visibleSteps.length) return;
+    // Ensure currentStep stays within bounds
+    let activeStepNumber = Math.min(currentStep, visibleDots.length);
+    if (activeStepNumber < 1) activeStepNumber = 1;
 
-        let activeStepNumber = Math.min(currentStep, visibleSteps.length);
-        if (activeStepNumber < 1) activeStepNumber = 1;
+    const activeIndex = activeStepNumber - 1;
 
-        const activeIndex = activeStepNumber - 1;
-        visibleSteps.each(function(idx) {
-            if (idx < activeIndex) {
-                $(this).addClass('completed');
-            } else if (idx === activeIndex) {
-                $(this).addClass('active');
-            }
-        });
+    visibleDots.each(function(idx) {
+        $(this).removeClass('active completed');
+        if (idx < activeIndex) {
+            $(this).addClass('completed');
+        } else if (idx === activeIndex) {
+            $(this).addClass('active');
+        }
+    });
+
+
     }
 
     function setupCountryPhoneSync() {
@@ -2171,6 +2165,62 @@
         }
         errorElement.hide();
     }
+
+    // Dynamically populate speaker country dropdown
+document.addEventListener('DOMContentLoaded', () => {
+  const countrySelect = document.getElementById('speakerCountry');
+  if (countrySelect) {
+    try {
+      const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+      const countries = Array.from(new Set(Intl.supportedValuesOf('region'))).sort();
+
+      countries.forEach(code => {
+        const option = document.createElement('option');
+        option.value = code;
+        option.textContent = regionNames.of(code);
+        countrySelect.appendChild(option);
+      });
+
+      // Optional: auto-select user's country by browser locale
+      const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+      const userCountry = locale.split('-')[1];
+      if (userCountry) {
+        const match = countrySelect.querySelector(`option[value="${userCountry.toUpperCase()}"]`);
+        if (match) match.selected = true;
+      }
+    } catch (err) {
+      console.error('Error populating countries:', err);
+    }
+  }
+});
+// Reliable country list population (no API, works everywhere)
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.getElementById('speakerCountry');
+  if (!select) return;
+
+  const countries = [
+    'Afghanistan','Albania','Algeria','Andorra','Angola','Argentina','Armenia',
+    'Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei Darussalam','Bulgaria','Burkina Faso','Burundi',
+    'Cambodia','Cameroon','Canada','Cape Verde','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Congo, Democratic Republic','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Mauritania','Mauritius','Mexico','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Macedonia','Norway','Oman','Pakistan','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Somalia','South Africa','South Korea','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tanzania','Thailand','Togo','Trinidad and Tobago','Tunisia','Turkey','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'
+  ];
+
+  countries.sort().forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  // Optional: pre-select based on browser locale
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale || '';
+  const userCountry = locale.split('-')[1];
+  if (userCountry) {
+    [...select.options].forEach(o => {
+      if (o.text.toLowerCase().includes(userCountry.toLowerCase())) o.selected = true;
+    });
+  }
+});
+
 </script>
 
 </body>
