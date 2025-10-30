@@ -1969,27 +1969,50 @@
   z-index: 0;
   opacity: 0.9;
 }
-
-/* Register/Login Buttons */
+/* Register/Login Buttons - center under Watch on Demand */
 .auth-buttons {
-  position: relative;
-  margin-top: 25px;
+  margin-top: 20px;
   display: flex;
-  justify-content: space-between;
-  width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+  justify-content: center; /* center horizontally */
+  gap: 18px;
+  flex-wrap: wrap;         /* stack on small screens */
+  width: 100%;
 }
 
-.register-btn {
-  background: linear-gradient(to right, #00a862, #008751);
-  padding: 12px 25px;
-}
-
+/* keep same .btn base styles; adjust specifics here */
+.register-btn,
 .login-btn {
-  background: linear-gradient(to right, #008751, #00a862);
-  padding: 12px 25px;
+  padding: 10px 26px;
+  border-radius: 30px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  transition: transform .25s ease, box-shadow .25s ease;
 }
+
+/* different gradients if you want contrast */
+.register-btn { background: linear-gradient(90deg,#00a862,#008751); }
+.login-btn    { background: linear-gradient(90deg,#008751,#00a862); }
+
+.register-btn:hover,
+.login-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,135,81,0.28);
+}
+
+
+/* different gradients if you want contrast */
+.register-btn { background: linear-gradient(90deg,#00a862,#008751); }
+.login-btn    { background: linear-gradient(90deg,#008751,#00a862); }
+
+.register-btn:hover,
+.login-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,135,81,0.28);
+}
+
 
 /* Ensure hero content is above video */
 .hero-content {
@@ -2119,8 +2142,14 @@
             <p>
                 Explore key pillars of public service performance with global leaders. 
                 Discover how governments can build capabilities for the future.
-            </p>
+             </p>
             <a class="btn" href="#on-demand">WATCH ON DEMAND</a>
+
+            <!-- auth buttons moved INSIDE hero-content -->
+            <div class="auth-buttons">
+                <a href="register.html" class="btn register-btn">Register</a>
+                <a href="login.html" class="btn login-btn">Login</a>
+            </div>
         </div>
         <!-- Background video -->
 <video autoplay muted loop playsinline id="heroVideo" class="hero-video">
