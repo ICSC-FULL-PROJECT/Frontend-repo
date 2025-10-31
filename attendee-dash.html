@@ -111,6 +111,7 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
         
         .sidebar-menu {
@@ -321,13 +322,14 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
             width: 100%;
             margin-top: 10px;
+            font-size: 1rem;
         }
         
         .payment-btn:hover {
@@ -527,7 +529,7 @@
         
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 1rem;
@@ -655,13 +657,52 @@
             color: #1976d2;
         }
         
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar-widgets {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
         @media (max-width: 992px) {
             .dashboard-container {
                 grid-template-columns: 1fr;
             }
             
-            .dashboard-content {
-                grid-template-columns: 1fr;
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -300px;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                overflow-y: auto;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
             }
             
             .stats-grid, .breakdown-grid {
@@ -678,17 +719,39 @@
                 width: 100%;
                 justify-content: flex-end;
             }
+            
+            .event-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .event-time {
+                text-align: left;
+                min-width: auto;
+            }
         }
         
-        @media (max-width: 576px) {
-            .stats-grid, .breakdown-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
             }
             
             .header-content {
                 flex-direction: column;
                 gap: 15px;
                 text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .sidebar-widgets {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid, .breakdown-grid {
+                grid-template-columns: 1fr;
             }
             
             .day-actions {
@@ -699,7 +762,101 @@
             .attend-btn, .live-stream-btn {
                 width: 100%;
                 text-align: center;
+                padding: 12px 15px;
             }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .content-header h2 {
+                font-size: 1.3rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .day-content {
+                padding: 15px;
+            }
+            
+            .event-item {
+                padding: 12px;
+            }
+            
+            .notification {
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo i {
+                font-size: 2rem;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .role-badge {
+                padding: 4px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .stat-card, .breakdown-card {
+                padding: 15px;
+            }
+            
+            .stat-number, .breakdown-number {
+                font-size: 1.5rem;
+            }
+            
+            .video-placeholder {
+                height: 250px;
+            }
+            
+            .video-placeholder i {
+                font-size: 3rem;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .contact-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
         }
     </style>
 </head>
@@ -707,6 +864,9 @@
     <div class="container">
         <header>
             <div class="header-content">
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="logo">
                     <i class="fas fa-calendar-alt"></i>
                     <h1>ICSC 2026 Dashboard</h1>
@@ -721,14 +881,16 @@
             </div>
         </header>
         
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
         <div class="dashboard-container">
-            <div class="sidebar">
+            <div class="sidebar" id="sidebar">
                 <ul class="sidebar-menu">
                     <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                     <li><a href="#" data-tab="on-demand"><i class="fas fa-play-circle"></i> On Demand</a></li>
                     <li><a href="#" data-tab="help"><i class="fas fa-question-circle"></i> Help</a></li>
-                    <li><a href="Index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </div>
             
@@ -1035,6 +1197,21 @@
         let agendaData = {};
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
             // Load initial data
             loadInitialData();
             
@@ -1044,6 +1221,11 @@
             
             tabLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
+                    // Don't prevent default for logout link
+                    if (this.getAttribute('href') === 'index.html') {
+                        return; // Allow normal navigation
+                    }
+                    
                     e.preventDefault();
                     const tabId = this.getAttribute('data-tab');
                     
@@ -1054,6 +1236,12 @@
                     // Show corresponding tab content
                     tabContents.forEach(content => content.classList.remove('active'));
                     document.getElementById(tabId).classList.add('active');
+                    
+                    // Close mobile menu after selecting a tab
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
                 });
             });
             
