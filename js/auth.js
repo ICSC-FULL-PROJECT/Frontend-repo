@@ -5,6 +5,11 @@
 	function saveAuth(auth) {
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
+			// keep legacy compatibility keys so older code/guards read the token
+			try { localStorage.setItem('user', JSON.stringify(auth)); } catch (e) {}
+			if (auth && auth.token) {
+				try { localStorage.setItem('accessToken', auth.token); } catch (e) {}
+			}
 		} catch (e) {
 			console.warn('Failed to save auth', e);
 		}
@@ -21,6 +26,10 @@
 
 	function clearAuth() {
 		localStorage.removeItem(STORAGE_KEY);
+		localStorage.removeItem('user');
+		localStorage.removeItem('accessToken');
+		sessionStorage.removeItem(STORAGE_KEY);
+		sessionStorage.removeItem('user');
 	}
 
 	async function loginSuperAdmin(username, password) {
