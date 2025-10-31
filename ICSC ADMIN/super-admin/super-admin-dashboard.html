@@ -1118,74 +1118,116 @@
                     <option value="">All Categories</option>
                     <option value="speaker">Speaker Resources</option>
                     <option value="exhibitor">Exhibitor Resources</option>
+                    <option value="attendee">Attendee Resources</option>
                     <option value="partner">Partner Resources</option>
                     <option value="admin">Admin Resources</option>
+                </select>
+                <select id="filterResourceStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending Review</option>
+                    <option value="rejected">Rejected</option>
                 </select>
                 <button class="btn btn-secondary" id="clearResourceFiltersBtn">Clear Filters</button>
             </div>
         </div>
 
-        <!-- Resources Grid -->
-        <div class="resources-grid" id="admin-resources">
-            <div class="resource-card" data-id="RES001">
-                <div class="resource-icon">
-                    <i class="fas fa-receipt"></i>
-                </div>
-                <h4>Speaker Payment Receipt - Dr. Williams</h4>
-                <p>Transaction ID: TXN-2026-001234</p>
-                <p>Amount: $5,000 | Diamond Package</p>
-                <p>Uploaded: 2023-10-25</p>
-                <div class="action-buttons">
-                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
-                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
-                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
-                </div>
-            </div>
+        <!-- Resources Table View -->
+        <div class="table-responsive" id="resourcesTableView" style="display: block;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Resource Name</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Uploaded By</th>
+                        <th>Date Uploaded</th>
+                        <th>Status</th>
+                        <th>Size</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="resourcesTable">
+                    <tr data-id="RES001">
+                        <td>Speaker Payment Receipt - Dr. Williams</td>
+                        <td>Receipt</td>
+                        <td>Speaker</td>
+                        <td>Super Admin</td>
+                        <td>2023-10-25</td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>2.5 MB</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                                <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                                <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="RES002">
+                        <td>Presentation Slides - Future of Public Service</td>
+                        <td>Presentation</td>
+                        <td>Speaker</td>
+                        <td>Dr. Elizabeth Williams</td>
+                        <td>2023-10-24</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>15.7 MB</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                                <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                                <button class="btn btn-warning btn-sm approve-resource-btn">Approve</button>
+                                <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="RES003">
+                        <td>Exhibitor Payment Receipt - Tech Innovations</td>
+                        <td>Receipt</td>
+                        <td>Exhibitor</td>
+                        <td>Michael Chen</td>
+                        <td>2023-10-23</td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>1.8 MB</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                                <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                                <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="RES004">
+                        <td>Speaker Introduction Video - Prof. Anderson</td>
+                        <td>Video</td>
+                        <td>Speaker</td>
+                        <td>Prof. James Anderson</td>
+                        <td>2023-10-22</td>
+                        <td><span class="status-badge status-rejected">Rejected</span></td>
+                        <td>45.2 MB</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                                <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                                <button class="btn btn-warning btn-sm approve-resource-btn">Approve</button>
+                                <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <div class="resource-card" data-id="RES002">
-                <div class="resource-icon">
-                    <i class="fas fa-file-powerpoint"></i>
-                </div>
-                <h4>Presentation Slides - Future of Public Service</h4>
-                <p>Speaker: Dr. Elizabeth Williams</p>
-                <p>Session: Keynote | Wednesday</p>
-                <p>Uploaded: 2023-10-24</p>
-                <div class="action-buttons">
-                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
-                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
-                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
-                </div>
-            </div>
+        <!-- Resources Grid View -->
+        <div class="resources-grid" id="resourcesGridView" style="display: none;">
+            <!-- Resources will be populated here via JavaScript -->
+        </div>
 
-            <div class="resource-card" data-id="RES003">
-                <div class="resource-icon">
-                    <i class="fas fa-receipt"></i>
-                </div>
-                <h4>Exhibitor Payment Receipt - Tech Innovations</h4>
-                <p>Transaction ID: TXN-2026-001235</p>
-                <p>Amount: ₦500,000 | Booth B002</p>
-                <p>Uploaded: 2023-10-23</p>
-                <div class="action-buttons">
-                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
-                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
-                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
-                </div>
-            </div>
-
-            <div class="resource-card" data-id="RES004">
-                <div class="resource-icon">
-                    <i class="fas fa-file-video"></i>
-                </div>
-                <h4>Speaker Introduction Video - Prof. Anderson</h4>
-                <p>Speaker: Prof. James Anderson</p>
-                <p>Duration: 2:30 | Panel Session</p>
-                <p>Uploaded: 2023-10-22</p>
-                <div class="action-buttons">
-                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
-                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
-                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
-                </div>
-            </div>
+        <!-- View Toggle -->
+        <div class="view-toggle" style="text-align: right; margin: 15px 0;">
+            <button id="toggleViewBtn" class="btn btn-secondary btn-sm">
+                <i class="fas fa-th"></i> Switch to Grid View
+            </button>
         </div>
     </div>
 </div>
@@ -1492,6 +1534,507 @@
             </div>
         </div>
     </div>
+    <!-- Add Booth Modal -->
+<div id="addBoothModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Add New Booth</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <form id="addBoothForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="boothId">Booth ID *</label>
+                        <input type="text" id="boothId" class="form-control" placeholder="Enter booth ID (e.g., B001)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="boothLocation">Location *</label>
+                        <select id="boothLocation" class="form-control" required>
+                            <option value="">Select Location</option>
+                            <option value="main-hall">Main Hall</option>
+                            <option value="exhibition-area">Exhibition Area</option>
+                            <option value="networking-zone">Networking Zone</option>
+                            <option value="premium-area">Premium Area</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="boothPrice">Price (₦) *</label>
+                        <input type="number" id="boothPrice" class="form-control" placeholder="Enter booth price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="boothSize">Booth Size *</label>
+                        <select id="boothSize" class="form-control" required>
+                            <option value="">Select Size</option>
+                            <option value="small">Small (3x3m)</option>
+                            <option value="medium">Medium (3x6m)</option>
+                            <option value="large">Large (6x6m)</option>
+                            <option value="premium">Premium (6x9m)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="boothStatus">Status *</label>
+                        <select id="boothStatus" class="form-control" required>
+                            <option value="available">Available</option>
+                            <option value="reserved">Reserved</option>
+                            <option value="sold">Sold Out</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="boothFeatures">Features</label>
+                        <select id="boothFeatures" class="form-control" multiple>
+                            <option value="electricity">Electricity</option>
+                            <option value="wifi">WiFi</option>
+                            <option value="furniture">Furniture</option>
+                            <option value="lighting">Special Lighting</option>
+                            <option value="display">Display Screen</option>
+                        </select>
+                        <small>Hold Ctrl/Cmd to select multiple features</small>
+                    </div>
+                </div>
+                
+                <!-- Exhibitor Information (shown only if status is reserved or sold) -->
+                <div id="exhibitorInfoSection" style="display: none;">
+                    <h3>Exhibitor Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exhibitorName">Exhibitor Name</label>
+                            <input type="text" id="exhibitorName" class="form-control" placeholder="Enter exhibitor name">
+                        </div>
+                        <div class="form-group">
+                            <label for="exhibitorCompany">Company</label>
+                            <input type="text" id="exhibitorCompany" class="form-control" placeholder="Enter company name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exhibitorEmail">Email</label>
+                            <input type="email" id="exhibitorEmail" class="form-control" placeholder="Enter email address">
+                        </div>
+                        <div class="form-group">
+                            <label for="exhibitorPhone">Phone</label>
+                            <input type="tel" id="exhibitorPhone" class="form-control" placeholder="Enter phone number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paymentStatus">Payment Status</label>
+                            <select id="paymentStatus" class="form-control">
+                                <option value="pending">Pending</option>
+                                <option value="paid">Paid</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentDate">Payment Date</label>
+                            <input type="date" id="paymentDate" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="boothRemarks">Remarks</label>
+                            <textarea id="boothRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAddBoothBtn">Cancel</button>
+                    <button type="submit" class="btn">Add Booth</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Booth Modal -->
+<div id="viewBoothModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Booth Details</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Booth ID</label>
+                    <p id="viewBoothId" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <p id="viewBoothLocation" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price (₦)</label>
+                    <p id="viewBoothPrice" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Size</label>
+                    <p id="viewBoothSize" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status</label>
+                    <p id="viewBoothStatus" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Features</label>
+                    <p id="viewBoothFeatures" class="form-control" style="background: #f8f9fa;"></p>
+                </div>
+            </div>
+            
+            <!-- Exhibitor Information (shown only if status is reserved or sold) -->
+            <div id="viewExhibitorInfoSection" style="display: none;">
+                <h3>Exhibitor Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Exhibitor Name</label>
+                        <p id="viewExhibitorName" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <p id="viewExhibitorCompany" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <p id="viewExhibitorEmail" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <p id="viewExhibitorPhone" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <p id="viewPaymentStatus" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Date</label>
+                        <p id="viewPaymentDate" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Remarks</label>
+                        <p id="viewBoothRemarks" class="form-control" style="background: #f8f9fa; min-height: 80px;"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary close-view-booth-modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Booth Modal -->
+<div id="assignBoothModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Assign Booth to Exhibitor</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="assignBoothForm">
+                <input type="hidden" id="assignBoothId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Booth ID</label>
+                        <p id="assignBoothIdDisplay" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <p id="assignBoothLocation" class="form-control" style="background: #f8f9fa;"></p>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="assignExhibitorName">Exhibitor Name *</label>
+                        <input type="text" id="assignExhibitorName" class="form-control" placeholder="Enter exhibitor name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignExhibitorCompany">Company *</label>
+                        <input type="text" id="assignExhibitorCompany" class="form-control" placeholder="Enter company name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="assignExhibitorEmail">Email *</label>
+                        <input type="email" id="assignExhibitorEmail" class="form-control" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignExhibitorPhone">Phone *</label>
+                        <input type="tel" id="assignExhibitorPhone" class="form-control" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="assignPaymentStatus">Payment Status *</label>
+                        <select id="assignPaymentStatus" class="form-control" required>
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignPaymentDate">Payment Date</label>
+                        <input type="date" id="assignPaymentDate" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="assignBoothRemarks">Remarks</label>
+                        <textarea id="assignBoothRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAssignBoothBtn">Cancel</button>
+                    <button type="submit" class="btn">Assign Booth</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Add Speaker Modal -->
+<div id="addSpeakerModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Add New Speaker</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="api-indicator">
+            <strong>API Status:</strong> <span id="speaker-api-status">Checking...</span>
+        </div>
+        
+        <div class="modal-body">
+            <form id="addSpeakerForm">
+                <div class="form-group">
+                    <label for="speakerEvent">Event *</label>
+                    <select id="speakerEvent" class="form-control" required>
+                        <option value="">Select Event</option>
+                        <option value="Keynote: The Future of Public Service">Keynote: The Future of Public Service</option>
+                        <option value="Panel: Digital Transformation in Government">Panel: Digital Transformation in Government</option>
+                        <option value="The Civil Service as the Engine of Governance">The Civil Service as the Engine of Governance</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerName">Full Name *</label>
+                    <input type="text" id="speakerName" class="form-control" placeholder="Enter speaker's full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerEmail">Email Address *</label>
+                    <input type="email" id="speakerEmail" class="form-control" placeholder="Enter email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerTopic">Topic Title *</label>
+                    <input type="text" id="speakerTopic" class="form-control" placeholder="Enter speaking topic" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerDescription">Brief Description *</label>
+                    <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief description of the talk" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerIntro">Speaker Introduction *</label>
+                    <textarea id="speakerIntro" class="form-control" placeholder="Brief introduction about the speaker" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerAffiliation">Affiliation/Organization *</label>
+                    <input type="text" id="speakerAffiliation" class="form-control" placeholder="Enter organization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerPackage">Speaker Package *</label>
+                    <select id="speakerPackage" class="form-control" required>
+                        <option value="">Select Package</option>
+                        <option value="diamond">Diamond Partner</option>
+                        <option value="gold">Gold Knowledge Partner</option>
+                        <option value="silver">Silver Roundtable Partner</option>
+                        <option value="bronze">Bronze Exhibition Partner</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerStatus">Status</label>
+                    <select id="speakerStatus" class="form-control">
+                        <option value="confirmed">Confirmed</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerPayment">Payment Status</label>
+                    <select id="speakerPayment" class="form-control">
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerLinks">Social Media Links</label>
+                    <textarea id="speakerLinks" class="form-control" placeholder="Enter social media profiles (one per line)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="speakerFile">Upload Profile/Topic PDF</label>
+                    <input type="file" id="speakerFile" class="form-control" accept=".pdf">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAddSpeakerBtn">Cancel</button>
+                    <button type="submit" class="btn">Add Speaker</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Add Exhibitor Modal -->
+<div id="addExhibitorModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Add New Exhibitor</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <!-- BACKEND INTEGRATION: Booth selection and payment -->
+        <div class="api-indicator" style="margin: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3;">
+            <strong>BACKEND INTEGRATION:</strong> Exhibitor data will be saved via API endpoints
+        </div>
+        
+        <div class="modal-body">
+            <form id="addExhibitorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitorName">Exhibitor Name *</label>
+                        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter exhibitor name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitorCompany">Company *</label>
+                        <input type="text" id="exhibitorCompany" class="form-control" placeholder="Enter company name">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitorEmail">Email Address *</label>
+                        <input type="email" id="exhibitorEmail" class="form-control" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitorPhone">Phone Number *</label>
+                        <input type="tel" id="exhibitorPhone" class="form-control" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitionTitle">Exhibition Title *</label>
+                        <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitionDescription">Description</label>
+                        <textarea id="exhibitionDescription" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitorBooth">Booth Assignment *</label>
+                        <select id="exhibitorBooth" class="form-control" required>
+                            <option value="">Select Booth</option>
+                            <option value="B001">B001 - Main Hall A1</option>
+                            <option value="B002">B002 - Main Hall A2</option>
+                            <option value="B003">B003 - Exhibition Area B1</option>
+                            <option value="B004">B004 - Exhibition Area B2</option>
+                            <option value="B005">B005 - Networking Zone C1</option>
+                            <option value="B006">B006 - Networking Zone C2</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitionDay">Exhibition Day *</label>
+                        <select id="exhibitionDay" class="form-control" required>
+                            <option value="">Select Day</option>
+                            <option value="wednesday">Wednesday 25 June 2026</option>
+                            <option value="thursday">Thursday 26 June 2026</option>
+                            <option value="both">Both Days</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitionBudget">Budget (₦)</label>
+                        <input type="number" id="exhibitionBudget" class="form-control" placeholder="Enter budget in Naira">
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitorStatus">Status</label>
+                        <select id="exhibitorStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed" selected>Confirmed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="paymentStatus">Payment Status</label>
+                        <select id="paymentStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="paid" selected>Paid</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitorRemarks">Remarks</label>
+                        <textarea id="exhibitorRemarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAddExhibitorBtn">Cancel</button>
+                    <button type="submit" class="btn">Add Exhibitor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     <!-- Edit Ministry Modal -->
     <div id="editMinistryModal" class="modal">
@@ -1622,6 +2165,2024 @@
             });
         });
     })();
+
+    // Resources Management Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Upload Resource button
+    const uploadResourceBtn = document.getElementById('uploadResourceBtn');
+    const uploadResourceModal = document.getElementById('uploadResourceModal');
+    const cancelUploadResourceBtn = document.getElementById('cancelUploadResourceBtn');
+    const uploadResourceForm = document.getElementById('uploadResourceForm');
+    const refreshResourcesBtn = document.getElementById('refreshResourcesBtn');
+    const toggleViewBtn = document.getElementById('toggleViewBtn');
+    const resourcesTableView = document.getElementById('resourcesTableView');
+    const resourcesGridView = document.getElementById('resourcesGridView');
+    
+    // Open Upload Resource modal
+    if (uploadResourceBtn) {
+        uploadResourceBtn.addEventListener('click', function() {
+            showUploadResourceModal();
+        });
+    }
+    
+    // Refresh resources
+    if (refreshResourcesBtn) {
+        refreshResourcesBtn.addEventListener('click', function() {
+            refreshResources();
+        });
+    }
+    
+    // Toggle between table and grid view
+    if (toggleViewBtn) {
+        toggleViewBtn.addEventListener('click', function() {
+            if (resourcesTableView.style.display === 'block') {
+                resourcesTableView.style.display = 'none';
+                resourcesGridView.style.display = 'grid';
+                toggleViewBtn.innerHTML = '<i class="fas fa-list"></i> Switch to Table View';
+                populateResourcesGrid();
+            } else {
+                resourcesTableView.style.display = 'block';
+                resourcesGridView.style.display = 'none';
+                toggleViewBtn.innerHTML = '<i class="fas fa-th"></i> Switch to Grid View';
+            }
+        });
+    }
+    
+    // Resources table functionality
+    const resourcesTable = document.getElementById('resourcesTable');
+    
+    if (resourcesTable) {
+        resourcesTable.addEventListener('click', function(e) {
+            // View Resource functionality
+            if (e.target.closest('.view-resource-btn')) {
+                const row = e.target.closest('tr');
+                const resourceId = row.getAttribute('data-id');
+                viewResource(resourceId);
+            }
+            
+            // Download Resource functionality
+            if (e.target.closest('.download-resource-btn')) {
+                const row = e.target.closest('tr');
+                const resourceId = row.getAttribute('data-id');
+                const resourceName = row.cells[0].textContent;
+                downloadResource(resourceId, resourceName);
+            }
+            
+            // Approve Resource functionality
+            if (e.target.closest('.approve-resource-btn')) {
+                const row = e.target.closest('tr');
+                const resourceId = row.getAttribute('data-id');
+                const resourceName = row.cells[0].textContent;
+                approveResource(resourceId, resourceName);
+            }
+            
+            // Delete Resource functionality
+            if (e.target.closest('.delete-resource-btn')) {
+                const row = e.target.closest('tr');
+                const resourceId = row.getAttribute('data-id');
+                const resourceName = row.cells[0].textContent;
+                deleteResource(resourceId, resourceName);
+            }
+        });
+    }
+    
+    // Search and filter functionality
+    const searchResourcesInput = document.getElementById('searchResources');
+    const filterResourceType = document.getElementById('filterResourceType');
+    const filterResourceCategory = document.getElementById('filterResourceCategory');
+    const filterResourceStatus = document.getElementById('filterResourceStatus');
+    const clearResourceFiltersBtn = document.getElementById('clearResourceFiltersBtn');
+    
+    if (searchResourcesInput) {
+        searchResourcesInput.addEventListener('input', function() {
+            filterResources();
+        });
+    }
+    
+    if (filterResourceType) {
+        filterResourceType.addEventListener('change', function() {
+            filterResources();
+        });
+    }
+    
+    if (filterResourceCategory) {
+        filterResourceCategory.addEventListener('change', function() {
+            filterResources();
+        });
+    }
+    
+    if (filterResourceStatus) {
+        filterResourceStatus.addEventListener('change', function() {
+            filterResources();
+        });
+    }
+    
+    if (clearResourceFiltersBtn) {
+        clearResourceFiltersBtn.addEventListener('click', function() {
+            clearResourceFilters();
+        });
+    }
+});
+
+// Show Upload Resource Modal
+function showUploadResourceModal() {
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Upload Resource</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadResourceForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resourceName">Resource Name *</label>
+                            <input type="text" id="resourceName" class="form-control" placeholder="Enter resource name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceType">Resource Type *</label>
+                            <select id="resourceType" class="form-control" required>
+                                <option value="">Select Type</option>
+                                <option value="receipt">Payment Receipt</option>
+                                <option value="presentation">Presentation Material</option>
+                                <option value="document">Document</option>
+                                <option value="video">Video</option>
+                                <option value="image">Image</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resourceCategory">Category *</label>
+                            <select id="resourceCategory" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="speaker">Speaker</option>
+                                <option value="exhibitor">Exhibitor</option>
+                                <option value="attendee">Attendee</option>
+                                <option value="partner">Partner</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceOwner">Owner/Uploader *</label>
+                            <input type="text" id="resourceOwner" class="form-control" placeholder="Enter owner name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resourceFile">Select File *</label>
+                            <input type="file" id="resourceFile" class="form-control" required>
+                            <small>Supported formats: PDF, DOC, DOCX, PPT, PPTX, JPG, PNG, MP4, MP3</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="resourceDescription">Description</label>
+                            <textarea id="resourceDescription" class="form-control" placeholder="Enter resource description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resourceStatus">Status</label>
+                            <select id="resourceStatus" class="form-control">
+                                <option value="approved">Approved</option>
+                                <option value="pending">Pending Review</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resourceVisibility">Visibility</label>
+                            <select id="resourceVisibility" class="form-control">
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                                <option value="restricted">Restricted</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelUploadResourceBtn">Cancel</button>
+                        <button type="submit" class="btn">Upload Resource</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle form submission
+    document.getElementById('uploadResourceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        uploadResource();
+    });
+    
+    // Handle cancel button
+    document.getElementById('cancelUploadResourceBtn').addEventListener('click', function() {
+        closeCustomModal();
+    });
+}
+
+// Upload Resource
+function uploadResource() {
+    const form = document.getElementById('uploadResourceForm');
+    const formData = new FormData();
+    
+    // Get form values
+    formData.append('name', document.getElementById('resourceName').value);
+    formData.append('type', document.getElementById('resourceType').value);
+    formData.append('category', document.getElementById('resourceCategory').value);
+    formData.append('owner', document.getElementById('resourceOwner').value);
+    formData.append('description', document.getElementById('resourceDescription').value);
+    formData.append('status', document.getElementById('resourceStatus').value);
+    formData.append('visibility', document.getElementById('resourceVisibility').value);
+    formData.append('file', document.getElementById('resourceFile').files[0]);
+    
+    // In a real implementation, you would send this data to your backend
+    console.log('Uploading resource:', Object.fromEntries(formData));
+    
+    // Simulate API call
+    setTimeout(() => {
+        closeCustomModal();
+        showSuccessMessage('Resource has been successfully uploaded!');
+        refreshResources();
+    }, 1000);
+}
+
+// View Resource Details
+function viewResource(resourceId) {
+    // Get resource data from the table row
+    const row = document.querySelector(`#resourcesTable tr[data-id="${resourceId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for viewing resource details
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Resource Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Resource Name</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Uploaded By</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date Uploaded</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>File Size</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-view-modal">Close</button>
+                    <button type="button" class="btn btn-success download-resource-details-btn" data-id="${resourceId}">Download</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle download button in modal
+    const downloadBtn = modal.querySelector('.download-resource-details-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            const resourceId = this.getAttribute('data-id');
+            const resourceName = cells[0].textContent;
+            downloadResource(resourceId, resourceName);
+        });
+    }
+}
+
+// Download Resource
+function downloadResource(resourceId, resourceName) {
+    // In a real implementation, you would fetch the file from the server
+    console.log(`Downloading resource: ${resourceId} - ${resourceName}`);
+    
+    // Simulate download
+    showSuccessMessage(`Downloading ${resourceName}...`);
+    
+    // In a real implementation, you would use:
+    // window.location.href = `/api/resources/${resourceId}/download`;
+}
+
+// Approve Resource
+function approveResource(resourceId, resourceName) {
+    if (confirm(`Are you sure you want to approve ${resourceName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Approving resource: ${resourceId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#resourcesTable tr[data-id="${resourceId}"]`);
+            if (row) {
+                row.cells[5].innerHTML = '<span class="status-badge status-approved">Approved</span>';
+                // Update action buttons
+                const actionButtons = row.cells[7].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                `;
+            }
+            
+            showSuccessMessage(`${resourceName} has been approved!`);
+        }, 1000);
+    }
+}
+
+// Delete Resource
+function deleteResource(resourceId, resourceName) {
+    if (confirm(`Are you sure you want to delete ${resourceName}? This action cannot be undone.`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Deleting resource: ${resourceId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Remove the table row
+            const row = document.querySelector(`#resourcesTable tr[data-id="${resourceId}"]`);
+            if (row) {
+                row.remove();
+            }
+            
+            showSuccessMessage(`${resourceName} has been deleted!`);
+        }, 1000);
+    }
+}
+
+// Filter Resources
+function filterResources() {
+    const searchTerm = document.getElementById('searchResources').value.toLowerCase();
+    const typeFilter = document.getElementById('filterResourceType').value;
+    const categoryFilter = document.getElementById('filterResourceCategory').value;
+    const statusFilter = document.getElementById('filterResourceStatus').value;
+    
+    const rows = document.querySelectorAll('#resourcesTable tr');
+    
+    rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const type = row.cells[1].textContent.toLowerCase();
+        const category = row.cells[2].textContent.toLowerCase();
+        const status = row.cells[5].textContent.toLowerCase();
+        
+        const matchesSearch = name.includes(searchTerm) || 
+                             row.cells[3].textContent.toLowerCase().includes(searchTerm);
+        const matchesType = !typeFilter || type === typeFilter;
+        const matchesCategory = !categoryFilter || category === categoryFilter.toLowerCase();
+        const matchesStatus = !statusFilter || status === statusFilter;
+        
+        if (matchesSearch && matchesType && matchesCategory && matchesStatus) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Clear Resource Filters
+function clearResourceFilters() {
+    document.getElementById('searchResources').value = '';
+    document.getElementById('filterResourceType').value = '';
+    document.getElementById('filterResourceCategory').value = '';
+    document.getElementById('filterResourceStatus').value = '';
+    
+    filterResources();
+}
+
+// Refresh Resources
+function refreshResources() {
+    // In a real implementation, you would fetch updated data from the server
+    console.log('Refreshing resources...');
+    
+    // For now, we'll just reload the page to see the changes
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+// Populate Resources Grid
+function populateResourcesGrid() {
+    const resourcesGrid = document.getElementById('resourcesGridView');
+    const rows = document.querySelectorAll('#resourcesTable tr');
+    
+    // Clear existing grid content
+    resourcesGrid.innerHTML = '';
+    
+    // Populate grid with resource cards
+    rows.forEach(row => {
+        if (row.style.display !== 'none') {
+            const resourceId = row.getAttribute('data-id');
+            const cells = row.cells;
+            
+            const resourceCard = document.createElement('div');
+            resourceCard.className = 'resource-card';
+            resourceCard.setAttribute('data-id', resourceId);
+            
+            // Determine icon based on resource type
+            let iconClass = 'fas fa-file-alt'; // Default icon
+            const resourceType = cells[1].textContent.toLowerCase();
+            
+            if (resourceType.includes('receipt')) {
+                iconClass = 'fas fa-receipt';
+            } else if (resourceType.includes('presentation')) {
+                iconClass = 'fas fa-file-powerpoint';
+            } else if (resourceType.includes('video')) {
+                iconClass = 'fas fa-file-video';
+            } else if (resourceType.includes('image')) {
+                iconClass = 'fas fa-file-image';
+            }
+            
+            resourceCard.innerHTML = `
+                <div class="resource-icon">
+                    <i class="${iconClass}"></i>
+                </div>
+                <h4>${cells[0].textContent}</h4>
+                <p>Type: ${cells[1].textContent}</p>
+                <p>Category: ${cells[2].textContent}</p>
+                <p>Uploaded By: ${cells[3].textContent}</p>
+                <p>Date: ${cells[4].textContent}</p>
+                <p>Status: ${cells[5].innerHTML}</p>
+                <p>Size: ${cells[6].textContent}</p>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-resource-btn">View</button>
+                    <button class="btn btn-success btn-sm download-resource-btn">Download</button>
+                    ${cells[5].textContent.includes('Pending') ? 
+                      '<button class="btn btn-warning btn-sm approve-resource-btn">Approve</button>' : ''}
+                    <button class="btn btn-danger btn-sm delete-resource-btn">Delete</button>
+                </div>
+            `;
+            
+            resourcesGrid.appendChild(resourceCard);
+        }
+    });
+    
+    // Add event listeners to grid buttons
+    resourcesGrid.addEventListener('click', function(e) {
+        const resourceCard = e.target.closest('.resource-card');
+        if (!resourceCard) return;
+        
+        const resourceId = resourceCard.getAttribute('data-id');
+        const resourceName = resourceCard.querySelector('h4').textContent;
+        
+        if (e.target.closest('.view-resource-btn')) {
+            viewResource(resourceId);
+        } else if (e.target.closest('.download-resource-btn')) {
+            downloadResource(resourceId, resourceName);
+        } else if (e.target.closest('.approve-resource-btn')) {
+            approveResource(resourceId, resourceName);
+        } else if (e.target.closest('.delete-resource-btn')) {
+            deleteResource(resourceId, resourceName);
+        }
+    });
+}
+
+
+
+
+
+    // Booth Management Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Add Booth button
+    const addBoothBtn = document.getElementById('addBoothBtn');
+    const addBoothModal = document.getElementById('addBoothModal');
+    const cancelAddBoothBtn = document.getElementById('cancelAddBoothBtn');
+    const addBoothForm = document.getElementById('addBoothForm');
+    const boothStatusSelect = document.getElementById('boothStatus');
+    const exhibitorInfoSection = document.getElementById('exhibitorInfoSection');
+    
+    // Open Add Booth modal
+    if (addBoothBtn) {
+        addBoothBtn.addEventListener('click', function() {
+            addBoothModal.style.display = 'flex';
+            // Reset form when opening
+            addBoothForm.reset();
+            exhibitorInfoSection.style.display = 'none';
+        });
+    }
+    
+    // Show/hide exhibitor info based on booth status
+    if (boothStatusSelect) {
+        boothStatusSelect.addEventListener('change', function() {
+            if (this.value === 'reserved' || this.value === 'sold') {
+                exhibitorInfoSection.style.display = 'block';
+            } else {
+                exhibitorInfoSection.style.display = 'none';
+            }
+        });
+    }
+    
+    // Close modal when clicking cancel
+    if (cancelAddBoothBtn) {
+        cancelAddBoothBtn.addEventListener('click', function() {
+            addBoothModal.style.display = 'none';
+        });
+    }
+    
+    // Handle form submission
+    if (addBoothForm) {
+        addBoothForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                id: document.getElementById('boothId').value,
+                location: document.getElementById('boothLocation').value,
+                price: document.getElementById('boothPrice').value,
+                size: document.getElementById('boothSize').value,
+                status: document.getElementById('boothStatus').value,
+                features: Array.from(document.getElementById('boothFeatures').selectedOptions).map(option => option.value),
+                exhibitorName: document.getElementById('exhibitorName').value,
+                exhibitorCompany: document.getElementById('exhibitorCompany').value,
+                exhibitorEmail: document.getElementById('exhibitorEmail').value,
+                exhibitorPhone: document.getElementById('exhibitorPhone').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                paymentDate: document.getElementById('paymentDate').value,
+                remarks: document.getElementById('boothRemarks').value
+            };
+            
+            // Submit booth data
+            submitBoothData(formData);
+        });
+    }
+    
+    // Booth table functionality
+    const boothsTable = document.getElementById('boothsTable');
+    
+    if (boothsTable) {
+        boothsTable.addEventListener('click', function(e) {
+            // View Booth functionality
+            if (e.target.closest('.view-booth-btn')) {
+                const row = e.target.closest('tr');
+                const boothId = row.getAttribute('data-id');
+                viewBooth(boothId);
+            }
+            
+            // Edit Booth functionality
+            if (e.target.closest('.edit-booth-btn')) {
+                const row = e.target.closest('tr');
+                const boothId = row.getAttribute('data-id');
+                editBooth(boothId);
+            }
+            
+            // Assign Booth functionality
+            if (e.target.closest('.assign-booth-btn')) {
+                const row = e.target.closest('tr');
+                const boothId = row.getAttribute('data-id');
+                assignBooth(boothId);
+            }
+        });
+    }
+    
+    // Assign Booth Modal functionality
+    const cancelAssignBoothBtn = document.getElementById('cancelAssignBoothBtn');
+    const assignBoothForm = document.getElementById('assignBoothForm');
+    
+    if (cancelAssignBoothBtn) {
+        cancelAssignBoothBtn.addEventListener('click', function() {
+            document.getElementById('assignBoothModal').style.display = 'none';
+        });
+    }
+    
+    if (assignBoothForm) {
+        assignBoothForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const boothId = document.getElementById('assignBoothId').value;
+            const formData = {
+                exhibitorName: document.getElementById('assignExhibitorName').value,
+                exhibitorCompany: document.getElementById('assignExhibitorCompany').value,
+                exhibitorEmail: document.getElementById('assignExhibitorEmail').value,
+                exhibitorPhone: document.getElementById('assignExhibitorPhone').value,
+                paymentStatus: document.getElementById('assignPaymentStatus').value,
+                paymentDate: document.getElementById('assignPaymentDate').value,
+                remarks: document.getElementById('assignBoothRemarks').value
+            };
+            
+            updateBoothAssignment(boothId, formData);
+        });
+    }
+});
+
+// Function to submit booth data to backend
+async function submitBoothData(formData) {
+    try {
+        // BACKEND INTEGRATION: Replace with actual API call
+        console.log('Booth data submitted:', formData);
+        
+        // Show success message
+        showSuccessMessage('Booth has been successfully added!');
+        
+        // Close modal
+        document.getElementById('addBoothModal').style.display = 'none';
+        
+        // Refresh booths table
+        refreshBoothsTable();
+        
+    } catch (error) {
+        console.error('Error submitting booth data:', error);
+        alert('Error adding booth. Please try again.');
+    }
+}
+
+// View Booth Details
+function viewBooth(boothId) {
+    // Get booth data from the table row
+    const row = document.querySelector(`#boothsTable tr[data-id="${boothId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Populate view modal with booth data
+    document.getElementById('viewBoothId').textContent = cells[0].textContent;
+    document.getElementById('viewBoothLocation').textContent = cells[1].textContent;
+    document.getElementById('viewBoothPrice').textContent = cells[2].textContent;
+    document.getElementById('viewBoothStatus').textContent = cells[3].textContent;
+    
+    // Get additional data from row dataset if available
+    const boothData = row.dataset;
+    document.getElementById('viewBoothSize').textContent = boothData.size || 'Not specified';
+    document.getElementById('viewBoothFeatures').textContent = boothData.features || 'None';
+    
+    // Show exhibitor info if booth is assigned
+    const exhibitorInfoSection = document.getElementById('viewExhibitorInfoSection');
+    if (cells[3].textContent.includes('Sold') || cells[3].textContent.includes('Reserved')) {
+        exhibitorInfoSection.style.display = 'block';
+        document.getElementById('viewExhibitorName').textContent = cells[4].textContent;
+        document.getElementById('viewExhibitorCompany').textContent = cells[5].textContent;
+        document.getElementById('viewExhibitorEmail').textContent = boothData.email || 'Not specified';
+        document.getElementById('viewExhibitorPhone').textContent = boothData.phone || 'Not specified';
+        document.getElementById('viewPaymentStatus').textContent = boothData.paymentStatus || 'Not specified';
+        document.getElementById('viewPaymentDate').textContent = boothData.paymentDate || 'Not specified';
+        document.getElementById('viewBoothRemarks').textContent = boothData.remarks || 'None';
+    } else {
+        exhibitorInfoSection.style.display = 'none';
+    }
+    
+    // Show the view modal
+    document.getElementById('viewBoothModal').style.display = 'flex';
+}
+
+// Edit Booth
+function editBooth(boothId) {
+    // Get booth data from the table row
+    const row = document.querySelector(`#boothsTable tr[data-id="${boothId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    const boothData = row.dataset;
+    
+    // Create modal content for editing booth
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Edit Booth</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editBoothForm">
+                    <input type="hidden" id="editBoothId" value="${boothId}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editBoothIdDisplay">Booth ID</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBoothLocation">Location *</label>
+                            <select id="editBoothLocation" class="form-control" required>
+                                <option value="main-hall" ${cells[1].textContent.includes('Main Hall') ? 'selected' : ''}>Main Hall</option>
+                                <option value="exhibition-area" ${cells[1].textContent.includes('Exhibition Area') ? 'selected' : ''}>Exhibition Area</option>
+                                <option value="networking-zone" ${cells[1].textContent.includes('Networking Zone') ? 'selected' : ''}>Networking Zone</option>
+                                <option value="premium-area" ${cells[1].textContent.includes('Premium Area') ? 'selected' : ''}>Premium Area</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editBoothPrice">Price (₦) *</label>
+                            <input type="number" id="editBoothPrice" class="form-control" value="${parseInt(cells[2].textContent.replace(/,/g, '')) || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBoothSize">Booth Size *</label>
+                            <select id="editBoothSize" class="form-control" required>
+                                <option value="small" ${boothData.size === 'small' ? 'selected' : ''}>Small (3x3m)</option>
+                                <option value="medium" ${boothData.size === 'medium' ? 'selected' : ''}>Medium (3x6m)</option>
+                                <option value="large" ${boothData.size === 'large' ? 'selected' : ''}>Large (6x6m)</option>
+                                <option value="premium" ${boothData.size === 'premium' ? 'selected' : ''}>Premium (6x9m)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editBoothStatus">Status *</label>
+                            <select id="editBoothStatus" class="form-control" required>
+                                <option value="available" ${cells[3].textContent.includes('Available') ? 'selected' : ''}>Available</option>
+                                <option value="reserved" ${cells[3].textContent.includes('Reserved') ? 'selected' : ''}>Reserved</option>
+                                <option value="sold" ${cells[3].textContent.includes('Sold') ? 'selected' : ''}>Sold Out</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBoothFeatures">Features</label>
+                            <select id="editBoothFeatures" class="form-control" multiple>
+                                <option value="electricity" ${boothData.features && boothData.features.includes('electricity') ? 'selected' : ''}>Electricity</option>
+                                <option value="wifi" ${boothData.features && boothData.features.includes('wifi') ? 'selected' : ''}>WiFi</option>
+                                <option value="furniture" ${boothData.features && boothData.features.includes('furniture') ? 'selected' : ''}>Furniture</option>
+                                <option value="lighting" ${boothData.features && boothData.features.includes('lighting') ? 'selected' : ''}>Special Lighting</option>
+                                <option value="display" ${boothData.features && boothData.features.includes('display') ? 'selected' : ''}>Display Screen</option>
+                            </select>
+                            <small>Hold Ctrl/Cmd to select multiple features</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Exhibitor Information (shown only if status is reserved or sold) -->
+                    <div id="editExhibitorInfoSection" style="${cells[3].textContent.includes('Sold') || cells[3].textContent.includes('Reserved') ? 'display: block;' : 'display: none;'}">
+                        <h3>Exhibitor Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editExhibitorName">Exhibitor Name</label>
+                                <input type="text" id="editExhibitorName" class="form-control" value="${cells[4].textContent !== '-' ? cells[4].textContent : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editExhibitorCompany">Company</label>
+                                <input type="text" id="editExhibitorCompany" class="form-control" value="${cells[5].textContent !== '-' ? cells[5].textContent : ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editExhibitorEmail">Email</label>
+                                <input type="email" id="editExhibitorEmail" class="form-control" value="${boothData.email || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editExhibitorPhone">Phone</label>
+                                <input type="tel" id="editExhibitorPhone" class="form-control" value="${boothData.phone || ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editPaymentStatus">Payment Status</label>
+                                <select id="editPaymentStatus" class="form-control">
+                                    <option value="pending" ${boothData.paymentStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="paid" ${boothData.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
+                                    <option value="overdue" ${boothData.paymentStatus === 'overdue' ? 'selected' : ''}>Overdue</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPaymentDate">Payment Date</label>
+                                <input type="date" id="editPaymentDate" class="form-control" value="${boothData.paymentDate || ''}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="editBoothRemarks">Remarks</label>
+                                <textarea id="editBoothRemarks" class="form-control" placeholder="Any additional remarks" rows="3">${boothData.remarks || ''}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEditBoothBtn">Cancel</button>
+                        <button type="submit" class="btn">Update Booth</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle form submission
+    document.getElementById('editBoothForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateBooth(boothId);
+    });
+    
+    // Handle cancel button
+    document.getElementById('cancelEditBoothBtn').addEventListener('click', function() {
+        closeCustomModal();
+    });
+    
+    // Show/hide exhibitor info based on booth status
+    const editBoothStatus = document.getElementById('editBoothStatus');
+    const editExhibitorInfoSection = document.getElementById('editExhibitorInfoSection');
+    
+    if (editBoothStatus && editExhibitorInfoSection) {
+        editBoothStatus.addEventListener('change', function() {
+            if (this.value === 'reserved' || this.value === 'sold') {
+                editExhibitorInfoSection.style.display = 'block';
+            } else {
+                editExhibitorInfoSection.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Update Booth
+function updateBooth(boothId) {
+    const form = document.getElementById('editBoothForm');
+    const formData = {
+        id: boothId,
+        location: document.getElementById('editBoothLocation').value,
+        price: document.getElementById('editBoothPrice').value,
+        size: document.getElementById('editBoothSize').value,
+        status: document.getElementById('editBoothStatus').value,
+        features: Array.from(document.getElementById('editBoothFeatures').selectedOptions).map(option => option.value),
+        exhibitorName: document.getElementById('editExhibitorName')?.value || '',
+        exhibitorCompany: document.getElementById('editExhibitorCompany')?.value || '',
+        exhibitorEmail: document.getElementById('editExhibitorEmail')?.value || '',
+        exhibitorPhone: document.getElementById('editExhibitorPhone')?.value || '',
+        paymentStatus: document.getElementById('editPaymentStatus')?.value || '',
+        paymentDate: document.getElementById('editPaymentDate')?.value || '',
+        remarks: document.getElementById('editBoothRemarks')?.value || ''
+    };
+    
+    // In a real implementation, you would send this data to your backend
+    console.log('Updating booth:', formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the table row with new data
+        const row = document.querySelector(`#boothsTable tr[data-id="${boothId}"]`);
+        if (row) {
+            // Update row dataset
+            row.dataset.size = formData.size;
+            row.dataset.features = formData.features.join(', ');
+            row.dataset.email = formData.exhibitorEmail;
+            row.dataset.phone = formData.exhibitorPhone;
+            row.dataset.paymentStatus = formData.paymentStatus;
+            row.dataset.paymentDate = formData.paymentDate;
+            row.dataset.remarks = formData.remarks;
+            
+            // Update visible cells
+            row.cells[1].textContent = formData.location === 'main-hall' ? 'Main Hall' : 
+                                      formData.location === 'exhibition-area' ? 'Exhibition Area' : 
+                                      formData.location === 'networking-zone' ? 'Networking Zone' : 'Premium Area';
+            
+            row.cells[2].textContent = formData.price ? '₦' + parseInt(formData.price).toLocaleString() : '-';
+            
+            // Update status
+            let statusClass, statusText;
+            if (formData.status === 'available') {
+                statusClass = 'status-approved';
+                statusText = 'Available';
+            } else if (formData.status === 'reserved') {
+                statusClass = 'status-pending';
+                statusText = 'Reserved';
+            } else {
+                statusClass = 'status-rejected';
+                statusText = 'Sold Out';
+            }
+            row.cells[3].innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+            
+            // Update exhibitor information
+            if (formData.status === 'available') {
+                row.cells[4].textContent = '-';
+                row.cells[5].textContent = '-';
+            } else {
+                row.cells[4].textContent = formData.exhibitorName || '-';
+                row.cells[5].textContent = formData.exhibitorCompany || '-';
+            }
+            
+            // Update action buttons based on status
+            const actionButtons = row.cells[6].querySelector('.action-buttons');
+            if (formData.status === 'available') {
+                actionButtons.innerHTML = `
+                    <button class="btn btn-success btn-sm assign-booth-btn">Assign</button>
+                    <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                `;
+            } else {
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-booth-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                `;
+            }
+        }
+        
+        closeCustomModal();
+        showSuccessMessage('Booth has been successfully updated!');
+    }, 1000);
+}
+
+// Assign Booth
+function assignBooth(boothId) {
+    // Get booth data from the table row
+    const row = document.querySelector(`#boothsTable tr[data-id="${boothId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Populate assign modal with booth data
+    document.getElementById('assignBoothId').value = boothId;
+    document.getElementById('assignBoothIdDisplay').textContent = cells[0].textContent;
+    document.getElementById('assignBoothLocation').textContent = cells[1].textContent;
+    
+    // Show the assign modal
+    document.getElementById('assignBoothModal').style.display = 'flex';
+}
+
+// Update Booth Assignment
+function updateBoothAssignment(boothId, formData) {
+    // In a real implementation, you would send this data to your backend
+    console.log('Assigning booth:', boothId, formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the table row with new data
+        const row = document.querySelector(`#boothsTable tr[data-id="${boothId}"]`);
+        if (row) {
+            // Update row dataset
+            row.dataset.email = formData.exhibitorEmail;
+            row.dataset.phone = formData.exhibitorPhone;
+            row.dataset.paymentStatus = formData.paymentStatus;
+            row.dataset.paymentDate = formData.paymentDate;
+            row.dataset.remarks = formData.remarks;
+            
+            // Update status to reserved
+            row.cells[3].innerHTML = '<span class="status-badge status-pending">Reserved</span>';
+            
+            // Update exhibitor information
+            row.cells[4].textContent = formData.exhibitorName;
+            row.cells[5].textContent = formData.exhibitorCompany;
+            
+            // Update action buttons
+            const actionButtons = row.cells[6].querySelector('.action-buttons');
+            actionButtons.innerHTML = `
+                <button class="btn btn-info btn-sm view-booth-btn">View</button>
+                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+            `;
+        }
+        
+        // Close modal
+        document.getElementById('assignBoothModal').style.display = 'none';
+        showSuccessMessage('Booth has been successfully assigned!');
+    }, 1000);
+}
+
+// Function to refresh booths table
+function refreshBoothsTable() {
+    // Implement logic to refresh the booths table
+    console.log('Refreshing booths table...');
+    
+    // For now, we'll just reload the page to see the changes
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+}
+
+// Helper function to show custom modal
+function showCustomModal(content) {
+    // Remove any existing custom modal
+    const existingModal = document.getElementById('customModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create new modal
+    const modal = document.createElement('div');
+    modal.id = 'customModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = content;
+    
+    document.body.appendChild(modal);
+    
+    // Add close functionality
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal || e.target.classList.contains('close-modal')) {
+            closeCustomModal();
+        }
+    });
+    
+    return modal;
+}
+
+// Helper function to close custom modal
+function closeCustomModal() {
+    const modal = document.getElementById('customModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Helper function to show success message
+function showSuccessMessage(message) {
+    // Create a toast notification
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    // Remove toast after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+    }
+});
+
+// Close modals when clicking close button
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('close-modal') || e.target.classList.contains('close-view-booth-modal')) {
+        e.target.closest('.modal').style.display = 'none';
+    }
+});
+
+
+    // Add Exhibitor functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Add Exhibitor button
+    const addExhibitorBtn = document.getElementById('addExhibitorBtn');
+    const addExhibitorModal = document.getElementById('addExhibitorModal');
+    const cancelAddExhibitorBtn = document.getElementById('cancelAddExhibitorBtn');
+    const addExhibitorForm = document.getElementById('addExhibitorForm');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+
+    // Open Add Exhibitor modal
+    if (addExhibitorBtn) {
+        addExhibitorBtn.addEventListener('click', function() {
+            addExhibitorModal.style.display = 'flex';
+            // Reset form when opening
+            addExhibitorForm.reset();
+        });
+    }
+
+    // Close modal when clicking cancel
+    if (cancelAddExhibitorBtn) {
+        cancelAddExhibitorBtn.addEventListener('click', function() {
+            addExhibitorModal.style.display = 'none';
+        });
+    }
+
+    // Close modal when clicking X button
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    });
+
+    // Handle form submission
+    if (addExhibitorForm) {
+        addExhibitorForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('exhibitorName').value,
+                company: document.getElementById('exhibitorCompany').value,
+                email: document.getElementById('exhibitorEmail').value,
+                phone: document.getElementById('exhibitorPhone').value,
+                title: document.getElementById('exhibitionTitle').value,
+                description: document.getElementById('exhibitionDescription').value,
+                booth: document.getElementById('exhibitorBooth').value,
+                day: document.getElementById('exhibitionDay').value,
+                budget: document.getElementById('exhibitionBudget').value,
+                status: document.getElementById('exhibitorStatus').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                remarks: document.getElementById('exhibitorRemarks').value
+            };
+
+            // Submit exhibitor data (you'll need to implement the API call)
+            submitExhibitorData(formData);
+        });
+    }
+});
+
+// Function to submit exhibitor data to backend
+async function submitExhibitorData(formData) {
+    try {
+        // BACKEND INTEGRATION: Replace with actual API call
+        // const response = await fetch('/api/exhibitors', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(formData)
+        // });
+        
+        // For now, we'll simulate a successful submission
+        console.log('Exhibitor data submitted:', formData);
+        
+        // Show success message
+        showSuccessMessage('Exhibitor has been successfully added!');
+        
+        // Close modal
+        document.getElementById('addExhibitorModal').style.display = 'none';
+        
+        // Refresh exhibitors table
+        refreshExhibitorsTable();
+        
+    } catch (error) {
+        console.error('Error submitting exhibitor data:', error);
+        alert('Error adding exhibitor. Please try again.');
+    }
+}
+
+// Function to show success message
+function showSuccessMessage(message) {
+    const successModal = document.getElementById('successModal');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (successModal && successMessage) {
+        successMessage.textContent = message;
+        successModal.style.display = 'flex';
+    }
+}
+
+// Function to refresh exhibitors table (you'll need to implement this based on your table structure)
+function refreshExhibitorsTable() {
+    // Implement logic to refresh the exhibitors table
+    console.log('Refreshing exhibitors table...');
+    
+    // For now, we'll just reload the page to see the changes
+    // In a real implementation, you would fetch new data and update the table
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+}
+
+// Add Speaker functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Add Speaker button
+    const addSpeakerBtn = document.getElementById('addSpeakerBtn');
+    const addSpeakerModal = document.getElementById('addSpeakerModal');
+    const cancelAddSpeakerBtn = document.getElementById('cancelAddSpeakerBtn');
+    const addSpeakerForm = document.getElementById('addSpeakerForm');
+
+    // Open Add Speaker modal
+    if (addSpeakerBtn) {
+        addSpeakerBtn.addEventListener('click', function() {
+            addSpeakerModal.style.display = 'flex';
+            // Reset form when opening
+            addSpeakerForm.reset();
+        });
+    }
+
+    // Close modal when clicking cancel
+    if (cancelAddSpeakerBtn) {
+        cancelAddSpeakerBtn.addEventListener('click', function() {
+            addSpeakerModal.style.display = 'none';
+        });
+    }
+
+    // Handle form submission
+    if (addSpeakerForm) {
+        addSpeakerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                event: document.getElementById('speakerEvent').value,
+                name: document.getElementById('speakerName').value,
+                email: document.getElementById('speakerEmail').value,
+                topic: document.getElementById('speakerTopic').value,
+                description: document.getElementById('speakerDescription').value,
+                intro: document.getElementById('speakerIntro').value,
+                affiliation: document.getElementById('speakerAffiliation').value,
+                package: document.getElementById('speakerPackage').value,
+                status: document.getElementById('speakerStatus').value,
+                paymentStatus: document.getElementById('speakerPayment').value,
+                links: document.getElementById('speakerLinks').value,
+                file: document.getElementById('speakerFile').files[0]
+            };
+
+            // Submit speaker data
+            submitSpeakerData(formData);
+        });
+    }
+});
+
+// Speaker Management Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const speakersTable = document.getElementById('speakersTable');
+    
+    // View Speaker functionality
+    speakersTable.addEventListener('click', function(e) {
+        if (e.target.closest('.view-speaker-btn')) {
+            const row = e.target.closest('tr');
+            const speakerId = row.getAttribute('data-id');
+            viewSpeaker(speakerId);
+        }
+        
+        // Edit Speaker functionality
+        if (e.target.closest('.edit-speaker-btn')) {
+            const row = e.target.closest('tr');
+            const speakerId = row.getAttribute('data-id');
+            editSpeaker(speakerId);
+        }
+        
+        // Approve Speaker functionality
+        if (e.target.closest('.approve-speaker-btn')) {
+            const row = e.target.closest('tr');
+            const speakerId = row.getAttribute('data-id');
+            const speakerName = row.cells[0].textContent;
+            approveSpeaker(speakerId, speakerName);
+        }
+        
+        // Reject Speaker functionality
+        if (e.target.closest('.reject-speaker-btn')) {
+            const row = e.target.closest('tr');
+            const speakerId = row.getAttribute('data-id');
+            const speakerName = row.cells[0].textContent;
+            rejectSpeaker(speakerId, speakerName);
+        }
+    });
+});
+
+// View Speaker Details
+function viewSpeaker(speakerId) {
+    // Get speaker data from the table row
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for viewing speaker details
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Speaker Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Topic</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Affiliation</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Package</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Day</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Session</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[7].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-view-modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    showCustomModal(modalContent);
+}
+
+// Edit Speaker
+function editSpeaker(speakerId) {
+    // Get speaker data from the table row
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for editing speaker
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Edit Speaker</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editSpeakerForm">
+                    <input type="hidden" id="editSpeakerId" value="${speakerId}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSpeakerName">Name *</label>
+                            <input type="text" id="editSpeakerName" class="form-control" value="${cells[0].textContent}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSpeakerTopic">Topic *</label>
+                            <input type="text" id="editSpeakerTopic" class="form-control" value="${cells[1].textContent}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSpeakerAffiliation">Affiliation *</label>
+                            <input type="text" id="editSpeakerAffiliation" class="form-control" value="${cells[2].textContent}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSpeakerPackage">Package *</label>
+                            <select id="editSpeakerPackage" class="form-control" required>
+                                <option value="diamond" ${cells[3].textContent.includes('Diamond') ? 'selected' : ''}>Diamond</option>
+                                <option value="gold" ${cells[3].textContent.includes('Gold') ? 'selected' : ''}>Gold</option>
+                                <option value="silver" ${cells[3].textContent.includes('Silver') ? 'selected' : ''}>Silver</option>
+                                <option value="bronze" ${cells[3].textContent.includes('Bronze') ? 'selected' : ''}>Bronze</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSpeakerDay">Day *</label>
+                            <select id="editSpeakerDay" class="form-control" required>
+                                <option value="wednesday" ${cells[4].textContent.includes('Wednesday') ? 'selected' : ''}>Wednesday</option>
+                                <option value="thursday" ${cells[4].textContent.includes('Thursday') ? 'selected' : ''}>Thursday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSpeakerSession">Session *</label>
+                            <input type="text" id="editSpeakerSession" class="form-control" value="${cells[5].textContent}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSpeakerStatus">Status</label>
+                            <select id="editSpeakerStatus" class="form-control">
+                                <option value="confirmed" ${cells[6].textContent.includes('Confirmed') ? 'selected' : ''}>Confirmed</option>
+                                <option value="pending" ${cells[6].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="rejected" ${cells[6].textContent.includes('Rejected') ? 'selected' : ''}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSpeakerPayment">Payment Status</label>
+                            <select id="editSpeakerPayment" class="form-control">
+                                <option value="paid" ${cells[7].textContent.includes('Paid') ? 'selected' : ''}>Paid</option>
+                                <option value="pending" ${cells[7].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="overdue" ${cells[7].textContent.includes('Overdue') ? 'selected' : ''}>Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEditSpeakerBtn">Cancel</button>
+                        <button type="submit" class="btn">Update Speaker</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle form submission
+    document.getElementById('editSpeakerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateSpeaker(speakerId);
+    });
+    
+    // Handle cancel button
+    document.getElementById('cancelEditSpeakerBtn').addEventListener('click', function() {
+        closeCustomModal();
+    });
+}
+
+// Update Speaker
+function updateSpeaker(speakerId) {
+    const form = document.getElementById('editSpeakerForm');
+    const formData = {
+        id: speakerId,
+        name: document.getElementById('editSpeakerName').value,
+        topic: document.getElementById('editSpeakerTopic').value,
+        affiliation: document.getElementById('editSpeakerAffiliation').value,
+        package: document.getElementById('editSpeakerPackage').value,
+        day: document.getElementById('editSpeakerDay').value,
+        session: document.getElementById('editSpeakerSession').value,
+        status: document.getElementById('editSpeakerStatus').value,
+        paymentStatus: document.getElementById('editSpeakerPayment').value
+    };
+    
+    // In a real implementation, you would send this data to your backend
+    console.log('Updating speaker:', formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the table row with new data
+        const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+        if (row) {
+            row.cells[0].textContent = formData.name;
+            row.cells[1].textContent = formData.topic;
+            row.cells[2].textContent = formData.affiliation;
+            row.cells[3].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${formData.package.charAt(0).toUpperCase() + formData.package.slice(1)}</span>`;
+            row.cells[4].textContent = formData.day.charAt(0).toUpperCase() + formData.day.slice(1);
+            row.cells[5].textContent = formData.session;
+            row.cells[6].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}</span>`;
+            row.cells[7].innerHTML = `<span class="status-badge status-${formData.paymentStatus === 'paid' ? 'approved' : formData.paymentStatus === 'pending' ? 'pending' : 'rejected'}">${formData.paymentStatus.charAt(0).toUpperCase() + formData.paymentStatus.slice(1)}</span>`;
+        }
+        
+        closeCustomModal();
+        showSuccessMessage('Speaker has been successfully updated!');
+    }, 1000);
+}
+
+// Approve Speaker
+function approveSpeaker(speakerId, speakerName) {
+    if (confirm(`Are you sure you want to approve ${speakerName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Approving speaker: ${speakerId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+            if (row) {
+                row.cells[6].innerHTML = '<span class="status-badge status-approved">Confirmed</span>';
+                // Update action buttons
+                const actionButtons = row.cells[8].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-speaker-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
+                    <button class="btn btn-danger btn-sm reject-speaker-btn">Reject</button>
+                `;
+            }
+            
+            showSuccessMessage(`${speakerName} has been approved!`);
+        }, 1000);
+    }
+}
+
+// Reject Speaker
+function rejectSpeaker(speakerId, speakerName) {
+    if (confirm(`Are you sure you want to reject ${speakerName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Rejecting speaker: ${speakerId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+            if (row) {
+                row.cells[6].innerHTML = '<span class="status-badge status-rejected">Rejected</span>';
+                // Update action buttons
+                const actionButtons = row.cells[8].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-speaker-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
+                    <button class="btn btn-success btn-sm approve-speaker-btn">Approve</button>
+                `;
+            }
+            
+            showSuccessMessage(`${speakerName} has been rejected!`);
+        }, 1000);
+    }
+}
+
+// Helper function to show custom modal
+function showCustomModal(content) {
+    // Remove any existing custom modal
+    const existingModal = document.getElementById('customModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create new modal
+    const modal = document.createElement('div');
+    modal.id = 'customModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = content;
+    
+    document.body.appendChild(modal);
+    
+    // Add close functionality
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal || e.target.classList.contains('close-modal') || e.target.classList.contains('close-view-modal')) {
+            closeCustomModal();
+        }
+    });
+    
+    return modal;
+}
+
+// Helper function to close custom modal
+function closeCustomModal() {
+    const modal = document.getElementById('customModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Helper function to show success message
+function showSuccessMessage(message) {
+    const successModal = document.getElementById('successModal');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (successModal && successMessage) {
+        successMessage.textContent = message;
+        successModal.style.display = 'flex';
+        
+        // Set up close functionality
+        const closeBtn = successModal.querySelector('.close-modal');
+        const addAnotherBtn = document.getElementById('addAnotherBtn');
+        const viewAllBtn = successModal.querySelector('a[data-tab="attendees"]');
+        
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                successModal.style.display = 'none';
+            };
+        }
+        
+        if (addAnotherBtn) {
+            addAnotherBtn.onclick = function() {
+                successModal.style.display = 'none';
+            };
+        }
+        
+        if (viewAllBtn) {
+            viewAllBtn.onclick = function() {
+                successModal.style.display = 'none';
+                // Switch to attendees tab
+                const attendeesTab = document.querySelector('a[data-tab="attendees"]');
+                if (attendeesTab) {
+                    attendeesTab.click();
+                }
+            };
+        }
+        
+        // Close when clicking outside
+        window.onclick = function(event) {
+            if (event.target === successModal) {
+                successModal.style.display = 'none';
+            }
+        };
+    }
+}
+// Exhibitor Management Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const exhibitorsTable = document.getElementById('exhibitorsTable');
+    
+    // View Exhibitor functionality
+    exhibitorsTable.addEventListener('click', function(e) {
+        if (e.target.closest('.view-exhibitor-btn')) {
+            const row = e.target.closest('tr');
+            const exhibitorId = row.getAttribute('data-id');
+            viewExhibitor(exhibitorId);
+        }
+        
+        // Edit Exhibitor functionality
+        if (e.target.closest('.edit-exhibitor-btn')) {
+            const row = e.target.closest('tr');
+            const exhibitorId = row.getAttribute('data-id');
+            editExhibitor(exhibitorId);
+        }
+        
+        // Approve Exhibitor functionality
+        if (e.target.closest('.approve-exhibitor-btn')) {
+            const row = e.target.closest('tr');
+            const exhibitorId = row.getAttribute('data-id');
+            const exhibitorName = row.cells[0].textContent;
+            approveExhibitor(exhibitorId, exhibitorName);
+        }
+        
+        // Reject Exhibitor functionality
+        if (e.target.closest('.reject-exhibitor-btn')) {
+            const row = e.target.closest('tr');
+            const exhibitorId = row.getAttribute('data-id');
+            const exhibitorName = row.cells[0].textContent;
+            rejectExhibitor(exhibitorId, exhibitorName);
+        }
+    });
+});
+
+// View Exhibitor Details
+function viewExhibitor(exhibitorId) {
+    // Get exhibitor data from the table row
+    const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for viewing exhibitor details
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Exhibitor Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Booth</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Day</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Budget</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-view-modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    showCustomModal(modalContent);
+}
+
+// Edit Exhibitor
+function editExhibitor(exhibitorId) {
+    // Get exhibitor data from the table row
+    const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for editing exhibitor
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Edit Exhibitor</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editExhibitorForm">
+                    <input type="hidden" id="editExhibitorId" value="${exhibitorId}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editExhibitorName">Name *</label>
+                            <input type="text" id="editExhibitorName" class="form-control" value="${cells[0].textContent}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExhibitorCompany">Company *</label>
+                            <input type="text" id="editExhibitorCompany" class="form-control" value="${cells[1].textContent}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editExhibitorBooth">Booth *</label>
+                            <select id="editExhibitorBooth" class="form-control" required>
+                                <option value="B001" ${cells[2].textContent.includes('B001') ? 'selected' : ''}>B001 - Main Hall A1</option>
+                                <option value="B002" ${cells[2].textContent.includes('B002') ? 'selected' : ''}>B002 - Main Hall A2</option>
+                                <option value="B003" ${cells[2].textContent.includes('B003') ? 'selected' : ''}>B003 - Exhibition Area B1</option>
+                                <option value="B004" ${cells[2].textContent.includes('B004') ? 'selected' : ''}>B004 - Exhibition Area B2</option>
+                                <option value="B005" ${cells[2].textContent.includes('B005') ? 'selected' : ''}>B005 - Networking Zone C1</option>
+                                <option value="B006" ${cells[2].textContent.includes('B006') ? 'selected' : ''}>B006 - Networking Zone C2</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExhibitorDay">Day *</label>
+                            <select id="editExhibitorDay" class="form-control" required>
+                                <option value="wednesday" ${cells[3].textContent.includes('Wednesday') ? 'selected' : ''}>Wednesday</option>
+                                <option value="thursday" ${cells[3].textContent.includes('Thursday') ? 'selected' : ''}>Thursday</option>
+                                <option value="both" ${cells[3].textContent.includes('Both') ? 'selected' : ''}>Both Days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editExhibitorBudget">Budget (₦)</label>
+                            <input type="number" id="editExhibitorBudget" class="form-control" value="${parseInt(cells[4].textContent.replace(/,/g, '')) || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="editExhibitorStatus">Status</label>
+                            <select id="editExhibitorStatus" class="form-control">
+                                <option value="confirmed" ${cells[5].textContent.includes('Confirmed') ? 'selected' : ''}>Confirmed</option>
+                                <option value="pending" ${cells[5].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="rejected" ${cells[5].textContent.includes('Rejected') ? 'selected' : ''}>Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editExhibitorPayment">Payment Status</label>
+                            <select id="editExhibitorPayment" class="form-control">
+                                <option value="paid" ${cells[6].textContent.includes('Paid') ? 'selected' : ''}>Paid</option>
+                                <option value="pending" ${cells[6].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                <option value="overdue" ${cells[6].textContent.includes('Overdue') ? 'selected' : ''}>Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEditExhibitorBtn">Cancel</button>
+                        <button type="submit" class="btn">Update Exhibitor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle form submission
+    document.getElementById('editExhibitorForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateExhibitor(exhibitorId);
+    });
+    
+    // Handle cancel button
+    document.getElementById('cancelEditExhibitorBtn').addEventListener('click', function() {
+        closeCustomModal();
+    });
+}
+
+// Update Exhibitor
+function updateExhibitor(exhibitorId) {
+    const form = document.getElementById('editExhibitorForm');
+    const formData = {
+        id: exhibitorId,
+        name: document.getElementById('editExhibitorName').value,
+        company: document.getElementById('editExhibitorCompany').value,
+        booth: document.getElementById('editExhibitorBooth').value,
+        day: document.getElementById('editExhibitorDay').value,
+        budget: document.getElementById('editExhibitorBudget').value,
+        status: document.getElementById('editExhibitorStatus').value,
+        paymentStatus: document.getElementById('editExhibitorPayment').value
+    };
+    
+    // In a real implementation, you would send this data to your backend
+    console.log('Updating exhibitor:', formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the table row with new data
+        const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
+        if (row) {
+            row.cells[0].textContent = formData.name;
+            row.cells[1].textContent = formData.company;
+            row.cells[2].textContent = formData.booth;
+            row.cells[3].textContent = formData.day.charAt(0).toUpperCase() + formData.day.slice(1);
+            row.cells[4].textContent = formData.budget ? '₦' + parseInt(formData.budget).toLocaleString() : '-';
+            row.cells[5].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}</span>`;
+            row.cells[6].innerHTML = `<span class="status-badge status-${formData.paymentStatus === 'paid' ? 'approved' : formData.paymentStatus === 'pending' ? 'pending' : 'rejected'}">${formData.paymentStatus.charAt(0).toUpperCase() + formData.paymentStatus.slice(1)}</span>`;
+        }
+        
+        closeCustomModal();
+        showSuccessMessage('Exhibitor has been successfully updated!');
+    }, 1000);
+}
+
+// Approve Exhibitor
+function approveExhibitor(exhibitorId, exhibitorName) {
+    if (confirm(`Are you sure you want to approve ${exhibitorName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Approving exhibitor: ${exhibitorId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
+            if (row) {
+                row.cells[5].innerHTML = '<span class="status-badge status-approved">Confirmed</span>';
+                // Update action buttons
+                const actionButtons = row.cells[7].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                    <button class="btn btn-danger btn-sm reject-exhibitor-btn">Reject</button>
+                `;
+            }
+            
+            showSuccessMessage(`${exhibitorName} has been approved!`);
+        }, 1000);
+    }
+}
+
+// Reject Exhibitor
+function rejectExhibitor(exhibitorId, exhibitorName) {
+    if (confirm(`Are you sure you want to reject ${exhibitorName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Rejecting exhibitor: ${exhibitorId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
+            if (row) {
+                row.cells[5].innerHTML = '<span class="status-badge status-rejected">Rejected</span>';
+                // Update action buttons
+                const actionButtons = row.cells[7].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                    <button class="btn btn-success btn-sm approve-exhibitor-btn">Approve</button>
+                `;
+            }
+            
+            showSuccessMessage(`${exhibitorName} has been rejected!`);
+        }, 1000);
+    }
+}
+
+// Helper function to show custom modal
+function showCustomModal(content) {
+    // Remove any existing custom modal
+    const existingModal = document.getElementById('customModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create new modal
+    const modal = document.createElement('div');
+    modal.id = 'customModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = content;
+    
+    document.body.appendChild(modal);
+    
+    // Add close functionality
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal || e.target.classList.contains('close-modal') || e.target.classList.contains('close-view-modal')) {
+            closeCustomModal();
+        }
+    });
+    
+    return modal;
+}
+
+// Helper function to close custom modal
+function closeCustomModal() {
+    const modal = document.getElementById('customModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Helper function to show success message
+function showSuccessMessage(message) {
+    const successModal = document.getElementById('successModal');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (successModal && successMessage) {
+        successMessage.textContent = message;
+        successModal.style.display = 'flex';
+        
+        // Set up close functionality
+        const closeBtn = successModal.querySelector('.close-modal');
+        const addAnotherBtn = document.getElementById('addAnotherBtn');
+        const viewAllBtn = successModal.querySelector('a[data-tab="attendees"]');
+        
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                successModal.style.display = 'none';
+            };
+        }
+        
+        if (addAnotherBtn) {
+            addAnotherBtn.onclick = function() {
+                successModal.style.display = 'none';
+            };
+        }
+        
+        if (viewAllBtn) {
+            viewAllBtn.onclick = function() {
+                successModal.style.display = 'none';
+                // Switch to attendees tab
+                const attendeesTab = document.querySelector('a[data-tab="attendees"]');
+                if (attendeesTab) {
+                    attendeesTab.click();
+                }
+            };
+        }
+        
+        // Close when clicking outside
+        window.onclick = function(event) {
+            if (event.target === successModal) {
+                successModal.style.display = 'none';
+            }
+        };
+    }
+}
+
+
+
+
+
+// Function to submit speaker data to backend
+async function submitSpeakerData(formData) {
+    try {
+        // BACKEND INTEGRATION: Replace with actual API call
+        console.log('Speaker data submitted:', formData);
+        
+        // Show success message
+        showSuccessMessage('Speaker has been successfully added!');
+        
+        // Close modal
+        document.getElementById('addSpeakerModal').style.display = 'none';
+        
+        // Refresh speakers table
+        refreshSpeakersTable();
+        
+    } catch (error) {
+        console.error('Error submitting speaker data:', error);
+        alert('Error adding speaker. Please try again.');
+    }
+}
+
+// Function to refresh speakers table
+function refreshSpeakersTable() {
+    // Implement logic to refresh the speakers table
+    console.log('Refreshing speakers table...');
+    
+    // For now, we'll just reload the page to see the changes
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+}
+
+
+
     </script>
 
     <script src="../../js/protectedRoute.js"></script>
