@@ -407,6 +407,7 @@
             top: 80px;
             left: 0;
             width: 100%;
+            display: none;
             background-color: var(--text-light);
             padding: 20px;
             box-shadow: var(--shadow);
@@ -414,12 +415,16 @@
             opacity: 0;
             transition: var(--transition);
             z-index: 999;
+            overflow-y: auto;
         }
 
         .mobile-menu.active {
             transform: translateY(0);
             opacity: 1;
+            display: block;
             animation: slideDown 0.4s ease-out;
+            
+
         }
 
         .mobile-menu ul {
@@ -1380,7 +1385,8 @@ header#header { z-index: 1000; } /* keep header above normal page elements */
     <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
 
    <script>
-(function () {
+(
+    function () {
   // Defensive helper
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -1395,6 +1401,65 @@ header#header { z-index: 1000; } /* keep header above normal page elements */
   }
 
   onReady(function () {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('active');
+      
+      // Toggle icon between bars and times
+      const icon = this.querySelector('i');
+      if (mobileMenu.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    });
+    
+    // Close mobile menu when clicking on a link
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      });
+    });
+  }
+  
+  // Header scroll effect
+  window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    
+    // Back to top button
+    const backToTop = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) {
+      backToTop.classList.add('active');
+    } else {
+      backToTop.classList.remove('active');
+    }
+  });
+  
+  // Back to top functionality
+  const backToTop = document.querySelector('.back-to-top');
+  if (backToTop) {
+    backToTop.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
     // Grab containers
     const tabsContainer = $('.category-tabs');
     const contents = $$('.category-content');

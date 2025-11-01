@@ -919,7 +919,7 @@
 
                         <div class="form-group">
                             <label class="has-star" for="gradeLevel">Grade Level</label>
-                            <select id="gradeLevel" name="gradeLevel" class="form-control" required>
+                            <select id="gradeLevel" name="gradeLevel" class="form-control">
                                 <option value="">Select Grade Level</option>
                                 <option>Director</option>
                                 <option>Deputy Director</option>
@@ -985,14 +985,14 @@
                         
                         <div class="form-group">
                             <label class="has-star" for="organization">Organization</label>
-                            <input type="text" id="organization" name="organization" class="form-control" required>
+                            <input type="text" id="organization" name="organization" class="form-control">
                             <div class="help-block-error" id="organization-error"></div>
                         </div>
                         
                         <div class="form-group">
                             <label class="has-star" for="workPhone">Work Phone</label>
                             <div class="phone-input-container">
-                                <input type="tel" id="workPhone" name="workPhone" class="form-control" required>
+                                <input type="tel" id="workPhone" name="workPhone" class="form-control">
                             </div>
                             <div class="help-block-error" id="workPhone-error"></div>
                         </div>
@@ -1054,7 +1054,18 @@
                             </div>
                             <div class="help-block-error" id="speakerPhone-error"></div>
                         </div>
-                        
+
+                         <div class="form-group">
+                            <label for="socialMedia">Social Media Handles</label>
+                            <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="e.g., @Name on either instagram, twitter,facebook">
+                        </div>
+
+                          <div class="form-group">
+        <label class="has-star" for="speakerWorkEmail">Work Email</label>
+        <input type="email" id="speakerWorkEmail" name="speakerWorkEmail" class="form-control" required>
+        <div class="help-block-error" id="speakerWorkEmail-error"></div>
+                          </div>
+
                         <div class="form-group">
                             <label class="has-star" for="speakerBio">Brief Introduction/Bio</label>
                             <textarea id="speakerBio" name="speakerBio" class="form-control" rows="4" required placeholder="Please provide a brief introduction about yourself and your expertise"></textarea>
@@ -1066,6 +1077,7 @@
                             <input type="text" id="speakerTopic" name="speakerTopic" class="form-control" placeholder="What topic would you like to speak about?" required  >
                         </div>
                         
+
                         <div class="form-group">
                             <label for="speakerExperience">Previous Speaking Experience</label>
                             <textarea id="speakerExperience" name="speakerExperience" class="form-control" rows="3" placeholder="Please describe any previous speaking experience"></textarea>
@@ -1149,6 +1161,7 @@
                                 <option value="organization">Organization</option>
                                 <option value="institution">Institution</option>
                                 <option value="agency">Agency</option>
+                                <option value="firm">other</option>
                             </select>
                             <div class="help-block-error" id="exhibitorPrefix-error"></div>
                         </div>
@@ -1194,23 +1207,12 @@
                         
                         <div class="form-group">
                             <label for="exhibitorDescription">Company/Organization Description</label>
-                            <textarea id="exhibitorDescription" name="exhibitorDescription" class="form-control" rows="4" placeholder="Please describe your company/organization and its mission"></textarea>
+                            <textarea id="exhibitorDescription" name="exhibitorDescription" class="form-control" rows="4" placeholder="Please describe your company/organization and its mission" required></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label for="exhibitorProducts">Products/Services to Exhibit</label>
                             <textarea id="exhibitorProducts" name="exhibitorProducts" class="form-control" rows="3" placeholder="Please describe the products or services you plan to exhibit"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="exhibitorBooth">Booth Preferences</label>
-                            <select id="exhibitorBooth" name="exhibitorBooth" class="form-control">
-                                <option value="">Select Booth Preference</option>
-                                <option value="standard">Standard Booth (3x3m)</option>
-                                <option value="premium">Premium Booth (3x6m)</option>
-                                <option value="corner">Corner Booth (3x3m)</option>
-                                <option value="island">Island Booth (6x6m)</option>
-                            </select>
                         </div>
                     </div>
                 </form>
@@ -1971,8 +1973,7 @@
             
             // Required fields for attendee
             const requiredFields = [
-                'prefix', 'firstName', 'lastName', 'nin', 'ministry', 'gradeLevel', 
-                'country', 'jobTitle', 'organization', 'workPhone'
+                'firstName', 'lastName', 'nin','country', 'workPhone','jobTitle'
             ];
             
             requiredFields.forEach(field => {
@@ -2007,7 +2008,7 @@
             const requiredFields = [
                 'speakerPrefix', 'speakerFirstName', 'speakerLastName', 
                 'speakerCountry', 'speakerJobTitle', 'speakerOrganization', 
-                'speakerPhone', 'speakerBio'
+                'speakerPhone', 'speakerBio','speakertopic','speakerWorkEmail'
             ];
             
             requiredFields.forEach(field => {
@@ -2019,9 +2020,17 @@
                     hideError(`${field}-error`);
                 }
             });
-            
-            return isValid;
+
+                // Validate work email format
+    const workEmail = document.getElementById('speakerWorkEmail')?.value;
+    if (workEmail && !isValidEmail(workEmail)) {
+        showError('speakerWorkEmail-error', 'Please enter a valid work email address');
+        isValid = false;
+    }
+           
+        return isValid;
         }
+        
         
         function validatePartnerProfile() {
             let isValid = true;

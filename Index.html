@@ -1053,6 +1053,83 @@
     background-color: var(--gray-light);
     padding-left: 10px; /* ADDED: Hover effect */
 }
+/* Mobile Menu Watch on Demand Button Styling */
+.mobile-demand-btn {
+    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+    color: var(--text-light) !important;
+    border-radius: 30px;
+    margin: 10px 0;
+    text-align: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+}
+
+.mobile-demand-btn:hover {
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
+}
+
+/* Mobile Menu Auth Buttons */
+.mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-light);
+}
+
+.mobile-register-btn,
+.mobile-login-btn {
+    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+    color: var(--text-light) !important;
+    border-radius: 30px;
+    padding: 12px 20px;
+    text-align: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+    margin: 5px 0;
+}
+
+.mobile-register-btn:hover,
+.mobile-login-btn:hover {
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
+}
+
+/* Ensure mobile menu is scrollable */
+.mobile-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 80px);
+    background-color: var(--text-light);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 999;
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    display: block;
+    animation: slideDown 0.4s ease-out;
+}
 
         /* Hero Section */
         .hero-slider {
@@ -2093,33 +2170,35 @@
 </div>
     </header>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <ul>
-            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
-
-                <ul>
-                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
-                    <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
-                    <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
-                </ul>
-            <li>
-                <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
-                <ul>
-                    <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
-                    <li><a href="Index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
-                <ul>
-                    <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
-                    <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+   <!-- Mobile Menu -->
+<div class="mobile-menu">
+    <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="#" class="mobile-demand-btn"><i class="fas fa-play-circle"></i> Watch on Demand</a></li>
+        <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+        <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+        <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+        <li>
+            <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
+            <ul>
+                <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                <li><a href="Index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+            <ul>
+                <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+            </ul>
+        </li>
+        <!-- Add Register/Login buttons to mobile menu -->
+        <li class="mobile-auth-buttons">
+            <a href="register.html" class="mobile-register-btn"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="login.html" class="mobile-login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+    </ul>
+</div>
 
     <!-- Hero Section -->
     <section class="hero-slider">
@@ -2174,7 +2253,8 @@
                 
                     </div>
                     <div class="leader-info">
-                        <h3>His Excellency</h3>
+                        <h5>His Excellency</h5>
+                        <h3>Bola Ahmed Tinubu</h3>
                         <h4>President of Nigeria</h4>
                         <p>Chief Patron of the International Civil Service Conference</p>
                     </div>
@@ -2186,7 +2266,8 @@
                 
                     </div>
                     <div class="leader-info">
-                        <h3>His Excellency</h3>
+                        <h5>His Excellency</h5>
+                        <h3>Kashim Shettima<h3>
                         <h4>Vice President of Nigeria</h4>
                         <p>Co-Patron of the International Civil Service Conference</p>
                     </div>
@@ -2449,6 +2530,18 @@
             }
         });
 
+        // Back to Top Button Functionality
+const backToTop = document.querySelector('.back-to-top');
+if (backToTop) {
+    backToTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -2574,6 +2667,30 @@ if (statsSection) {
       portraitImg.src = pics[idx];
     }, 4000);
   }
+
+
+  // Mobile Menu Watch on Demand Button
+document.querySelector('.mobile-demand-btn')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    // Close mobile menu
+    document.querySelector('.mobile-menu').classList.remove('active');
+    // Reset mobile menu icon
+    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+    menuBtnIcon.classList.remove('fa-times');
+    menuBtnIcon.classList.add('fa-bars');
+    
+    // Scroll to on-demand section or trigger your on-demand functionality
+    const onDemandSection = document.querySelector('#on-demand');
+    if (onDemandSection) {
+        window.scrollTo({
+            top: onDemandSection.offsetTop - 80,
+            behavior: 'smooth'
+        });
+    } else {
+        // If no on-demand section exists, you can redirect or show a modal
+        alert('On Demand content will be available soon!');
+    }
+});
 </script>
 
 
