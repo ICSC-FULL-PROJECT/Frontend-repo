@@ -1779,551 +1779,556 @@
     </div>
 
     <script>
-        // All previous JavaScript remains exactly the same
-        // API Configuration
-        const API_CONFIG = {
-            baseUrl: 'https://api.icsc2026.gov.ng',
-            endpoints: {
-                speakerSlots: '/api/speaker-slots',
-                speakerRegistration: '/api/speaker/register',
-                processPayment: '/api/payment/process',
-                userSchedule: '/api/user/schedule'
-            }
-        };
 
-        // Mock data for demonstration
-        const MOCK_SPEAKER_SLOTS = {
-            "wednesday": {
-                "Keynote: The Future of Public Service": {
-                    diamond: { available: 1, total: 4 },
-                    gold: { available: 2, total: 8 },
-                    silver: { available: 5, total: 10 },
-                    bronze: { available: 10, total: 15 }
-                },
-                "Panel: Digital Transformation in Government": {
-                    diamond: { available: 0, total: 4 },
-                    gold: { available: 3, total: 8 },
-                    silver: { available: 7, total: 10 },
-                    bronze: { available: 12, total: 15 }
-                }
-            },
-            "thursday": {
-                "The Civil Service as the Engine of Governance": {
-                    diamond: { available: 2, total: 4 },
-                    gold: { available: 4, total: 8 },
-                    silver: { available: 8, total: 10 },
-                    bronze: { available: 14, total: 15 }
-                }
-            }
-        };
-
-        const MOCK_SPEAKER_PACKAGES = {
-            diamond: { name: "Diamond Partner", cost: 5000, features: ["Keynote speaking opportunity", "Panel speaker", "Roundtable host"] },
-            gold: { name: "Gold Knowledge Partner", cost: 3000, features: ["Panel speaker", "Promoted profile"] },
-            silver: { name: "Silver Roundtable Partner", cost: 2000, features: ["Roundtable host", "Promoted profile"] },
-            bronze: { name: "Bronze Exhibition Partner", cost: 1000, features: ["Exhibition space", "Basic promotion"] }
-        };
-
-        // State management
-        let selectedEvents = [];
-        let currentEvent = null;
-        let currentDay = null;
-        let speakerFormData = {};
-        let selectedPackage = null;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab switching for main navigation
-            const navLinks = document.querySelectorAll('.sidebar-menu a');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tab = this.getAttribute('data-tab');
-                    
-                    // Update active nav link
-                    navLinks.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding tab content
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(tab).classList.add('active');
-                });
-            });
-            
-            // Help FAQ toggle functionality
-            const helpQuestions = document.querySelectorAll('.help-question');
-            helpQuestions.forEach(question => {
-                question.addEventListener('click', function() {
-                    const answer = this.nextElementSibling;
-                    const icon = this.querySelector('i');
-                    
-                    // Toggle answer visibility
-                    answer.classList.toggle('active');
-                    
-                    // Rotate icon
-                    if (answer.classList.contains('active')) {
-                        icon.className = 'fas fa-chevron-up';
-                    } else {
-                        icon.className = 'fas fa-chevron-down';
-                    }
-                });
-            });
-            
-            // All existing functionality for agenda, events, modals, etc. remains the same
-            // Day switching functionality
-            const dayButtons = document.querySelectorAll('.tab-btn[data-day]');
-            const agendaDays = document.querySelectorAll('.agenda-day');
-            
-            dayButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const day = this.getAttribute('data-day');
-                    
-                    // Update active button
-                    dayButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding day
-                    agendaDays.forEach(dayElement => dayElement.classList.remove('active'));
-                    document.getElementById(`${day}-full`).classList.add('active');
-                });
-            });
-            
-            // Tab switching functionality for dashboard tabs
-            const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const tab = this.getAttribute('data-tab');
-                    const parent = this.closest('.main-content');
-                    
-                    // Update active button in this tab group
-                    const siblingButtons = parent.querySelectorAll('.tab-btn[data-tab]');
-                    siblingButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding tab content
-                    const tabContents = parent.querySelectorAll('.tab-content');
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    parent.querySelector(`#${tab}`).classList.add('active');
-                });
-            });
-            
-            // Event attendance functionality
-            const attendButtons = document.querySelectorAll('.attend-btn');
-            const speakButtons = document.querySelectorAll('.speak-btn');
-            const selectedEventsContainer = document.getElementById('selected-events');
-            const notification = document.getElementById('notification');
-            
-            // Handle attend button clicks
-            attendButtons.forEach(button => {
-                // Skip buttons in the "My Sessions" tab
-                if (button.closest('#speaker-sessions')) return;
-                
-                button.addEventListener('click', function() {
-                    const eventItem = this.closest('.event-item');
-                    const eventTitle = eventItem.querySelector('h4').textContent;
-                    const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
-                    const speakButton = eventItem.querySelector('.speak-btn');
-                    
-                    // Check if event is already selected for speaking
-                    const isSpeaking = selectedEvents.find(event => event.title === eventTitle && event.type === 'speak');
-                    
-                    if (isSpeaking) {
-                        showNotification('You cannot attend an event you are speaking at!', 'error');
-                        return;
-                    }
-                    
-                    // Check if event is already selected
-                    const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle && event.type === 'attend');
-                    
-                    if (eventIndex === -1) {
-                        // Add event to selected events
-                        selectedEvents.push({
-                            title: eventTitle,
-                            time: eventTime,
-                            type: 'attend'
-                        });
-                        
-                        this.textContent = 'Added';
-                        this.classList.add('attending');
-                        
-                        showNotification('Event added to your schedule!');
-                    } else {
-                        // Remove event from selected events
-                        selectedEvents.splice(eventIndex, 1);
-                        
-                        this.textContent = 'Attend';
-                        this.classList.remove('attending');
-                        
-                        showNotification('Event removed from your schedule!');
-                    }
-                    
-                    updateSelectedEventsDisplay();
-                });
-            });
-            
-            // Handle speak button clicks
-            speakButtons.forEach(button => {
-                // Skip buttons in the "My Sessions" tab
-                if (button.closest('#speaker-sessions')) return;
-                
-                button.addEventListener('click', function() {
-                    const eventItem = this.closest('.event-item');
-                    const eventTitle = eventItem.querySelector('h4').textContent;
-                    const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
-                    const attendButton = eventItem.querySelector('.attend-btn');
-                    const dayElement = eventItem.closest('.agenda-day');
-                    const dayId = dayElement.id.replace('-agenda', '');
-                    
-                    // Check if event is already selected for attending
-                    const isAttending = selectedEvents.find(event => event.title === eventTitle && event.type === 'attend');
-                    
-                    if (isAttending) {
-                        showNotification('You cannot speak at an event you are attending!', 'error');
-                        return;
-                    }
-                    
-                    // Check if event is already selected for speaking
-                    const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle && event.type === 'speak');
-                    
-                    if (eventIndex === -1) {
-                        // Set current event for registration
-                        currentEvent = eventTitle;
-                        currentDay = dayId;
-                        
-                        // Open speaker registration modal
-                        openSpeakerModal(eventTitle, dayId);
-                    } else {
-                        // Remove event from selected events
-                        selectedEvents.splice(eventIndex, 1);
-                        
-                        this.textContent = 'Speak';
-                        this.classList.remove('speaking');
-                        
-                        showNotification('Speaking engagement removed from this event!');
-                    }
-                    
-                    updateSelectedEventsDisplay();
-                });
-            });
-            
-            function updateSelectedEventsDisplay() {
-                if (selectedEvents.length === 0) {
-                    selectedEventsContainer.innerHTML = '<p>No events selected yet. Click "Attend" or "Speak" on events to add them to your schedule.</p>';
-                    return;
-                }
-                
-                let html = '';
-                selectedEvents.forEach(event => {
-                    const typeBadge = event.type === 'attend' ? 
-                        '<span style="color: #4caf50; font-size: 0.8rem;">(Attending)</span>' : 
-                        '<span style="color: #2196f3; font-size: 0.8rem;">(Speaking)</span>';
-                    
-                    html += `
-                        <div class="info-item">
-                            <div class="info-label">${event.title} ${typeBadge}</div>
-                            <div class="info-value">${event.time}</div>
-                        </div>
-                    `;
-                });
-                
-                html += `<button class="payment-btn" id="submit-schedule">Submit Schedule to Admin</button>`;
-                selectedEventsContainer.innerHTML = html;
-                
-                // Add event listener to the submit button
-                document.getElementById('submit-schedule').addEventListener('click', function() {
-                    submitToAdmin(selectedEvents, 'speaker');
-                });
+    document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching for main navigation - FIXED LOGOUT
+    const navLinks = document.querySelectorAll('.sidebar-menu a');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Check if this is the logout link
+            if (this.getAttribute('href') === 'Index.html') {
+                // Allow the logout link to work normally - don't prevent default
+                return;
             }
             
-            // Modal functionality
-            const speakerModal = document.getElementById('speaker-modal');
-            const paymentModal = document.getElementById('payment-modal');
-            const confirmationModal = document.getElementById('confirmation-modal');
-            const closeModals = document.querySelectorAll('.close-modal');
-            const proceedToPayment = document.getElementById('proceed-to-payment');
-            const processPayment = document.getElementById('process-payment');
-            const closeConfirmation = document.getElementById('close-confirmation');
+            e.preventDefault();
+            const tab = this.getAttribute('data-tab');
             
-            closeModals.forEach(button => {
-                button.addEventListener('click', function() {
-                    speakerModal.style.display = 'none';
-                    paymentModal.style.display = 'none';
-                    confirmationModal.style.display = 'none';
-                });
-            });
+            // Update active nav link
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
             
-            // Close modals when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target === speakerModal) {
-                    speakerModal.style.display = 'none';
-                }
-                if (event.target === paymentModal) {
-                    paymentModal.style.display = 'none';
-                }
-                if (event.target === confirmationModal) {
-                    confirmationModal.style.display = 'none';
-                }
-            });
-            
-            // Proceed to payment button
-            proceedToPayment.addEventListener('click', function() {
-                // Validate form
-                const topic = document.getElementById('speaker-topic').value;
-                const description = document.getElementById('speaker-description').value;
-                const intro = document.getElementById('speaker-intro').value;
-                
-                if (!topic || !description || !intro) {
-                    showNotification('Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                // Save form data
-                speakerFormData = {
-                    topic: topic,
-                    description: description,
-                    intro: intro,
-                    links: document.getElementById('speaker-links').value,
-                    file: document.getElementById('speaker-file').files[0]
-                };
-                
-                // Close speaker modal and open payment modal
-                speakerModal.style.display = 'none';
-                openPaymentModal(currentEvent, currentDay);
-            });
-            
-            // Process payment button
-            processPayment.addEventListener('click', function() {
-                if (!selectedPackage) {
-                    showNotification('Please select a speaker package', 'error');
-                    return;
-                }
-                
-                const paymentMethod = document.getElementById('payment-method').value;
-                if (!paymentMethod) {
-                    showNotification('Please select a payment method', 'error');
-                    return;
-                }
-                
-                // Simulate payment processing
-                processPayment.textContent = 'Processing...';
-                processPayment.disabled = true;
-                
-                setTimeout(() => {
-                    // Simulate successful payment
-                    const transactionId = 'TXN-' + Date.now();
-                    
-                    // Close payment modal and open confirmation
-                    paymentModal.style.display = 'none';
-                    openConfirmationModal(currentEvent, selectedPackage, transactionId);
-                    
-                    // Reset payment button
-                    processPayment.textContent = 'Process Payment';
-                    processPayment.disabled = false;
-                    
-                    // Add event to selected events
-                    const eventTime = document.querySelector(`[data-event="${currentEvent}"]`).querySelector('.fa-clock').parentNode.textContent.trim();
-                    
-                    selectedEvents.push({
-                        title: currentEvent,
-                        time: eventTime,
-                        type: 'speak',
-                        package: selectedPackage,
-                        transactionId: transactionId
-                    });
-                    
-                    updateSelectedEventsDisplay();
-                    
-                    // Update speak button
-                    const speakButton = document.querySelector(`[data-event="${currentEvent}"]`).querySelector('.speak-btn');
-                    speakButton.textContent = 'Speaking';
-                    speakButton.classList.add('speaking');
-                    
-                    showNotification('Speaker registration successful!');
-                }, 2000);
-            });
-            
-            // Close confirmation button
-            closeConfirmation.addEventListener('click', function() {
-                confirmationModal.style.display = 'none';
-            });
-            
-            // File upload functionality
-            const uploadArea = document.getElementById('upload-area');
-            const fileInput = document.getElementById('file-input');
-            const browseBtn = document.getElementById('browse-btn');
-            
-            browseBtn.addEventListener('click', function() {
-                fileInput.click();
-            });
-            
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    const fileName = this.files[0].name;
-                    showNotification(`File "${fileName}" uploaded successfully!`);
-                    
-                    // In a real application, this would upload the file to the server
-                    console.log('File uploaded:', this.files[0]);
-                }
-            });
-            
-            // Topic proposal functionality
-            document.getElementById('propose-topic').addEventListener('click', function() {
-                const topic = prompt('Please enter your proposed topic:');
-                if (topic) {
-                    // In a real application, this would send the topic to the server
-                    console.log('Topic proposed:', topic);
-                    showNotification('Topic proposed successfully!');
-                }
-            });
-            
-            function openSpeakerModal(eventTitle, day) {
-                document.getElementById('event-name').value = eventTitle;
-                document.getElementById('speaker-api-status').textContent = 'Online';
-                document.getElementById('speaker-api-status').className = 'api-status online';
-                
-                // Reset form
-                document.getElementById('speaker-topic').value = '';
-                document.getElementById('speaker-description').value = '';
-                document.getElementById('speaker-intro').value = '';
-                document.getElementById('speaker-links').value = '';
-                document.getElementById('speaker-file').value = '';
-                
-                speakerModal.style.display = 'flex';
-            }
-            
-            async function openPaymentModal(eventTitle, day) {
-                document.getElementById('payment-event').value = eventTitle;
-                document.getElementById('payment-api-status').textContent = 'Online';
-                document.getElementById('payment-api-status').className = 'api-status online';
-                
-                // Load available speaker slots
-                const paymentOptions = document.getElementById('payment-options');
-                paymentOptions.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-                
-                try {
-                    const slots = await getSpeakerSlots(day, eventTitle);
-                    renderPaymentOptions(slots, eventTitle);
-                } catch (error) {
-                    console.error('Error loading speaker slots:', error);
-                    paymentOptions.innerHTML = '<p>Error loading available slots. Please try again.</p>';
-                }
-                
-                paymentModal.style.display = 'flex';
-            }
-            
-            function openConfirmationModal(eventTitle, packageType, transactionId) {
-                document.getElementById('event-confirmation').value = eventTitle;
-                document.getElementById('package-confirmation').value = MOCK_SPEAKER_PACKAGES[packageType].name;
-                document.getElementById('transaction-id').textContent = transactionId;
-                
-                confirmationModal.style.display = 'flex';
-            }
-            
-            async function getSpeakerSlots(day, eventTitle) {
-                // In a real app, this would be: return await apiService.getSpeakerSlots(day, eventTitle);
-                // Simulate API call with delay
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        if (MOCK_SPEAKER_SLOTS[day] && MOCK_SPEAKER_SLOTS[day][eventTitle]) {
-                            resolve(MOCK_SPEAKER_SLOTS[day][eventTitle]);
-                        } else {
-                            resolve({
-                                diamond: { available: 0, total: 4 },
-                                gold: { available: 0, total: 8 },
-                                silver: { available: 0, total: 10 },
-                                bronze: { available: 0, total: 15 }
-                            });
-                        }
-                    }, 1000);
-                });
-            }
-            
-            function renderPaymentOptions(slots, eventTitle) {
-                const paymentOptions = document.getElementById('payment-options');
-                let html = '';
-                
-                for (const [packageType, packageInfo] of Object.entries(MOCK_SPEAKER_PACKAGES)) {
-                    const slotInfo = slots[packageType];
-                    const isAvailable = slotInfo && slotInfo.available > 0;
-                    const isDisabled = !isAvailable;
-                    
-                    html += `
-                        <div class="payment-option ${isDisabled ? 'disabled' : ''}" data-package="${packageType}">
-                            <div class="payment-type">${packageInfo.name}</div>
-                            <div class="payment-cost">$${packageInfo.cost}</div>
-                            <div class="payment-slots">
-                                ${isAvailable ? 
-                                    `${slotInfo.available} of ${slotInfo.total} slots available` : 
-                                    'No slots available'}
-                            </div>
-                            <ul style="text-align: left; margin-top: 10px; font-size: 0.8rem;">
-                                ${packageInfo.features.map(feature => `<li>${feature}</li>`).join('')}
-                            </ul>
-                        </div>
-                    `;
-                }
-                
-                paymentOptions.innerHTML = html;
-                
-                // Add event listeners to payment options
-                const optionElements = document.querySelectorAll('.payment-option:not(.disabled)');
-                optionElements.forEach(option => {
-                    option.addEventListener('click', function() {
-                        // Deselect all options
-                        document.querySelectorAll('.payment-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // Select this option
-                        this.classList.add('selected');
-                        selectedPackage = this.getAttribute('data-package');
-                    });
-                });
-            }
-            
-            function submitToAdmin(events, role) {
-                // In a real application, this would send data to the backend
-                const submissionData = {
-                    role: role,
-                    userId: 'user123', // This would come from authentication
-                    events: events,
-                    timestamp: new Date().toISOString()
-                };
-                
-                console.log('Submitting to admin:', submissionData);
-                
-                // Simulate API call
-                setTimeout(() => {
-                    showNotification('Your schedule has been submitted to the administrator!');
-                }, 1000);
-            }
-            
-            function showNotification(message, type = 'success') {
-                const notification = document.getElementById('notification');
-                const icon = notification.querySelector('i');
-                
-                // Set appropriate icon based on type
-                if (type === 'error') {
-                    icon.className = 'fas fa-exclamation-circle';
-                    notification.style.backgroundColor = '#e53935';
-                } else {
-                    icon.className = 'fas fa-check-circle';
-                    notification.style.backgroundColor = 'var(--primary)';
-                }
-                
-                notification.querySelector('.notification-text').textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Initialize current day
-            currentDay = 'wednesday';
+            // Show corresponding tab content
+            tabContents.forEach(content => content.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
         });
+    });
+
+    // API Configuration
+    const API_CONFIG = {
+        baseUrl: 'https://api.icsc2026.gov.ng',
+        endpoints: {
+            speakerSlots: '/api/speaker-slots',
+            speakerRegistration: '/api/speaker/register',
+            processPayment: '/api/payment/process',
+            userSchedule: '/api/user/schedule'
+        }
+    };
+
+    // Mock data for demonstration
+    const MOCK_SPEAKER_SLOTS = {
+        "wednesday": {
+            "Keynote: The Future of Public Service": {
+                diamond: { available: 1, total: 4 },
+                gold: { available: 2, total: 8 },
+                silver: { available: 5, total: 10 },
+                bronze: { available: 10, total: 15 }
+            },
+            "Panel: Digital Transformation in Government": {
+                diamond: { available: 0, total: 4 },
+                gold: { available: 3, total: 8 },
+                silver: { available: 7, total: 10 },
+                bronze: { available: 12, total: 15 }
+            }
+        },
+        "thursday": {
+            "The Civil Service as the Engine of Governance": {
+                diamond: { available: 2, total: 4 },
+                gold: { available: 4, total: 8 },
+                silver: { available: 8, total: 10 },
+                bronze: { available: 14, total: 15 }
+            }
+        }
+    };
+
+    const MOCK_SPEAKER_PACKAGES = {
+        diamond: { name: "Diamond Partner", cost: 5000, features: ["Keynote speaking opportunity", "Panel speaker", "Roundtable host"] },
+        gold: { name: "Gold Knowledge Partner", cost: 3000, features: ["Panel speaker", "Promoted profile"] },
+        silver: { name: "Silver Roundtable Partner", cost: 2000, features: ["Roundtable host", "Promoted profile"] },
+        bronze: { name: "Bronze Exhibition Partner", cost: 1000, features: ["Exhibition space", "Basic promotion"] }
+    };
+
+    // State management
+    let selectedEvents = [];
+    let currentEvent = null;
+    let currentDay = null;
+    let speakerFormData = {};
+    let selectedPackage = null;
+
+    // Help FAQ toggle functionality
+    const helpQuestions = document.querySelectorAll('.help-question');
+    helpQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            const icon = this.querySelector('i');
+            
+            // Toggle answer visibility
+            answer.classList.toggle('active');
+            
+            // Rotate icon
+            if (answer.classList.contains('active')) {
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                icon.className = 'fas fa-chevron-down';
+            }
+        });
+    });
+    
+    // Day switching functionality
+    const dayButtons = document.querySelectorAll('.tab-btn[data-day]');
+    const agendaDays = document.querySelectorAll('.agenda-day');
+    
+    dayButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const day = this.getAttribute('data-day');
+            
+            // Update active button
+            dayButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding day
+            agendaDays.forEach(dayElement => dayElement.classList.remove('active'));
+            document.getElementById(`${day}-full`).classList.add('active');
+        });
+    });
+    
+    // Tab switching functionality for dashboard tabs
+    const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tab = this.getAttribute('data-tab');
+            const parent = this.closest('.main-content');
+            
+            // Update active button in this tab group
+            const siblingButtons = parent.querySelectorAll('.tab-btn[data-tab]');
+            siblingButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding tab content
+            const tabContents = parent.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            parent.querySelector(`#${tab}`).classList.add('active');
+        });
+    });
+    
+    // Event attendance functionality
+    const attendButtons = document.querySelectorAll('.attend-btn');
+    const speakButtons = document.querySelectorAll('.speak-btn');
+    const selectedEventsContainer = document.getElementById('selected-events');
+    const notification = document.getElementById('notification');
+    
+    // Handle attend button clicks
+    attendButtons.forEach(button => {
+        // Skip buttons in the "My Sessions" tab
+        if (button.closest('#speaker-sessions')) return;
+        
+        button.addEventListener('click', function() {
+            const eventItem = this.closest('.event-item');
+            const eventTitle = eventItem.querySelector('h4').textContent;
+            const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
+            const speakButton = eventItem.querySelector('.speak-btn');
+            
+            // Check if event is already selected for speaking
+            const isSpeaking = selectedEvents.find(event => event.title === eventTitle && event.type === 'speak');
+            
+            if (isSpeaking) {
+                showNotification('You cannot attend an event you are speaking at!', 'error');
+                return;
+            }
+            
+            // Check if event is already selected
+            const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle && event.type === 'attend');
+            
+            if (eventIndex === -1) {
+                // Add event to selected events
+                selectedEvents.push({
+                    title: eventTitle,
+                    time: eventTime,
+                    type: 'attend'
+                });
+                
+                this.textContent = 'Added';
+                this.classList.add('attending');
+                
+                showNotification('Event added to your schedule!');
+            } else {
+                // Remove event from selected events
+                selectedEvents.splice(eventIndex, 1);
+                
+                this.textContent = 'Attend';
+                this.classList.remove('attending');
+                
+                showNotification('Event removed from your schedule!');
+            }
+            
+            updateSelectedEventsDisplay();
+        });
+    });
+    
+    // Handle speak button clicks
+    speakButtons.forEach(button => {
+        // Skip buttons in the "My Sessions" tab
+        if (button.closest('#speaker-sessions')) return;
+        
+        button.addEventListener('click', function() {
+            const eventItem = this.closest('.event-item');
+            const eventTitle = eventItem.querySelector('h4').textContent;
+            const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
+            const attendButton = eventItem.querySelector('.attend-btn');
+            const dayElement = eventItem.closest('.agenda-day');
+            const dayId = dayElement.id.replace('-agenda', '');
+            
+            // Check if event is already selected for attending
+            const isAttending = selectedEvents.find(event => event.title === eventTitle && event.type === 'attend');
+            
+            if (isAttending) {
+                showNotification('You cannot speak at an event you are attending!', 'error');
+                return;
+            }
+            
+            // Check if event is already selected for speaking
+            const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle && event.type === 'speak');
+            
+            if (eventIndex === -1) {
+                // Set current event for registration
+                currentEvent = eventTitle;
+                currentDay = dayId;
+                
+                // Open speaker registration modal
+                openSpeakerModal(eventTitle, dayId);
+            } else {
+                // Remove event from selected events
+                selectedEvents.splice(eventIndex, 1);
+                
+                this.textContent = 'Speak';
+                this.classList.remove('speaking');
+                
+                showNotification('Speaking engagement removed from this event!');
+            }
+            
+            updateSelectedEventsDisplay();
+        });
+    });
+    
+    function updateSelectedEventsDisplay() {
+        if (selectedEvents.length === 0) {
+            selectedEventsContainer.innerHTML = '<p>No events selected yet. Click "Attend" or "Speak" on events to add them to your schedule.</p>';
+            return;
+        }
+        
+        let html = '';
+        selectedEvents.forEach(event => {
+            const typeBadge = event.type === 'attend' ? 
+                '<span style="color: #4caf50; font-size: 0.8rem;">(Attending)</span>' : 
+                '<span style="color: #2196f3; font-size: 0.8rem;">(Speaking)</span>';
+            
+            html += `
+                <div class="info-item">
+                    <div class="info-label">${event.title} ${typeBadge}</div>
+                    <div class="info-value">${event.time}</div>
+                </div>
+            `;
+        });
+        
+        html += `<button class="payment-btn" id="submit-schedule">Submit Schedule to Admin</button>`;
+        selectedEventsContainer.innerHTML = html;
+        
+        // Add event listener to the submit button
+        document.getElementById('submit-schedule').addEventListener('click', function() {
+            submitToAdmin(selectedEvents, 'speaker');
+        });
+    }
+    
+    // Modal functionality
+    const speakerModal = document.getElementById('speaker-modal');
+    const paymentModal = document.getElementById('payment-modal');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const closeModals = document.querySelectorAll('.close-modal');
+    const proceedToPayment = document.getElementById('proceed-to-payment');
+    const processPayment = document.getElementById('process-payment');
+    const closeConfirmation = document.getElementById('close-confirmation');
+    
+    closeModals.forEach(button => {
+        button.addEventListener('click', function() {
+            speakerModal.style.display = 'none';
+            paymentModal.style.display = 'none';
+            confirmationModal.style.display = 'none';
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === speakerModal) {
+            speakerModal.style.display = 'none';
+        }
+        if (event.target === paymentModal) {
+            paymentModal.style.display = 'none';
+        }
+        if (event.target === confirmationModal) {
+            confirmationModal.style.display = 'none';
+        }
+    });
+    
+    // Proceed to payment button
+    proceedToPayment.addEventListener('click', function() {
+        // Validate form
+        const topic = document.getElementById('speaker-topic').value;
+        const description = document.getElementById('speaker-description').value;
+        const intro = document.getElementById('speaker-intro').value;
+        
+        if (!topic || !description || !intro) {
+            showNotification('Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Save form data
+        speakerFormData = {
+            topic: topic,
+            description: description,
+            intro: intro,
+            links: document.getElementById('speaker-links').value,
+            file: document.getElementById('speaker-file').files[0]
+        };
+        
+        // Close speaker modal and open payment modal
+        speakerModal.style.display = 'none';
+        openPaymentModal(currentEvent, currentDay);
+    });
+    
+    // Process payment button
+    processPayment.addEventListener('click', function() {
+        if (!selectedPackage) {
+            showNotification('Please select a speaker package', 'error');
+            return;
+        }
+        
+        const paymentMethod = document.getElementById('payment-method').value;
+        if (!paymentMethod) {
+            showNotification('Please select a payment method', 'error');
+            return;
+        }
+        
+        // Simulate payment processing
+        processPayment.textContent = 'Processing...';
+        processPayment.disabled = true;
+        
+        setTimeout(() => {
+            // Simulate successful payment
+            const transactionId = 'TXN-' + Date.now();
+            
+            // Close payment modal and open confirmation
+            paymentModal.style.display = 'none';
+            openConfirmationModal(currentEvent, selectedPackage, transactionId);
+            
+            // Reset payment button
+            processPayment.textContent = 'Process Payment';
+            processPayment.disabled = false;
+            
+            // Add event to selected events
+            const eventTime = document.querySelector(`[data-event="${currentEvent}"]`).querySelector('.fa-clock').parentNode.textContent.trim();
+            
+            selectedEvents.push({
+                title: currentEvent,
+                time: eventTime,
+                type: 'speak',
+                package: selectedPackage,
+                transactionId: transactionId
+            });
+            
+            updateSelectedEventsDisplay();
+            
+            // Update speak button
+            const speakButton = document.querySelector(`[data-event="${currentEvent}"]`).querySelector('.speak-btn');
+            speakButton.textContent = 'Speaking';
+            speakButton.classList.add('speaking');
+            
+            showNotification('Speaker registration successful!');
+        }, 2000);
+    });
+    
+    // Close confirmation button
+    closeConfirmation.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
+    
+    // File upload functionality
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const browseBtn = document.getElementById('browse-btn');
+    
+    browseBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            showNotification(`File "${fileName}" uploaded successfully!`);
+            
+            // In a real application, this would upload the file to the server
+            console.log('File uploaded:', this.files[0]);
+        }
+    });
+    
+    // Topic proposal functionality
+    document.getElementById('propose-topic').addEventListener('click', function() {
+        const topic = prompt('Please enter your proposed topic:');
+        if (topic) {
+            // In a real application, this would send the topic to the server
+            console.log('Topic proposed:', topic);
+            showNotification('Topic proposed successfully!');
+        }
+    });
+    
+    function openSpeakerModal(eventTitle, day) {
+        document.getElementById('event-name').value = eventTitle;
+        document.getElementById('speaker-api-status').textContent = 'Online';
+        document.getElementById('speaker-api-status').className = 'api-status online';
+        
+        // Reset form
+        document.getElementById('speaker-topic').value = '';
+        document.getElementById('speaker-description').value = '';
+        document.getElementById('speaker-intro').value = '';
+        document.getElementById('speaker-links').value = '';
+        document.getElementById('speaker-file').value = '';
+        
+        speakerModal.style.display = 'flex';
+    }
+    
+    async function openPaymentModal(eventTitle, day) {
+        document.getElementById('payment-event').value = eventTitle;
+        document.getElementById('payment-api-status').textContent = 'Online';
+        document.getElementById('payment-api-status').className = 'api-status online';
+        
+        // Load available speaker slots
+        const paymentOptions = document.getElementById('payment-options');
+        paymentOptions.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+        
+        try {
+            const slots = await getSpeakerSlots(day, eventTitle);
+            renderPaymentOptions(slots, eventTitle);
+        } catch (error) {
+            console.error('Error loading speaker slots:', error);
+            paymentOptions.innerHTML = '<p>Error loading available slots. Please try again.</p>';
+        }
+        
+        paymentModal.style.display = 'flex';
+    }
+    
+    function openConfirmationModal(eventTitle, packageType, transactionId) {
+        document.getElementById('event-confirmation').value = eventTitle;
+        document.getElementById('package-confirmation').value = MOCK_SPEAKER_PACKAGES[packageType].name;
+        document.getElementById('transaction-id').textContent = transactionId;
+        
+        confirmationModal.style.display = 'flex';
+    }
+    
+    async function getSpeakerSlots(day, eventTitle) {
+        // In a real app, this would be: return await apiService.getSpeakerSlots(day, eventTitle);
+        // Simulate API call with delay
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                if (MOCK_SPEAKER_SLOTS[day] && MOCK_SPEAKER_SLOTS[day][eventTitle]) {
+                    resolve(MOCK_SPEAKER_SLOTS[day][eventTitle]);
+                } else {
+                    resolve({
+                        diamond: { available: 0, total: 4 },
+                        gold: { available: 0, total: 8 },
+                        silver: { available: 0, total: 10 },
+                        bronze: { available: 0, total: 15 }
+                    });
+                }
+            }, 1000);
+        });
+    }
+    
+    function renderPaymentOptions(slots, eventTitle) {
+        const paymentOptions = document.getElementById('payment-options');
+        let html = '';
+        
+        for (const [packageType, packageInfo] of Object.entries(MOCK_SPEAKER_PACKAGES)) {
+            const slotInfo = slots[packageType];
+            const isAvailable = slotInfo && slotInfo.available > 0;
+            const isDisabled = !isAvailable;
+            
+            html += `
+                <div class="payment-option ${isDisabled ? 'disabled' : ''}" data-package="${packageType}">
+                    <div class="payment-type">${packageInfo.name}</div>
+                    <div class="payment-cost">$${packageInfo.cost}</div>
+                    <div class="payment-slots">
+                        ${isAvailable ? 
+                            `${slotInfo.available} of ${slotInfo.total} slots available` : 
+                            'No slots available'}
+                    </div>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.8rem;">
+                        ${packageInfo.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        paymentOptions.innerHTML = html;
+        
+        // Add event listeners to payment options
+        const optionElements = document.querySelectorAll('.payment-option:not(.disabled)');
+        optionElements.forEach(option => {
+            option.addEventListener('click', function() {
+                // Deselect all options
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Select this option
+                this.classList.add('selected');
+                selectedPackage = this.getAttribute('data-package');
+            });
+        });
+    }
+    
+    function submitToAdmin(events, role) {
+        // In a real application, this would send data to the backend
+        const submissionData = {
+            role: role,
+            userId: 'user123', // This would come from authentication
+            events: events,
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('Submitting to admin:', submissionData);
+        
+        // Simulate API call
+        setTimeout(() => {
+            showNotification('Your schedule has been submitted to the administrator!');
+        }, 1000);
+    }
+    
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const icon = notification.querySelector('i');
+        
+        // Set appropriate icon based on type
+        if (type === 'error') {
+            icon.className = 'fas fa-exclamation-circle';
+            notification.style.backgroundColor = '#e53935';
+        } else {
+            icon.className = 'fas fa-check-circle';
+            notification.style.backgroundColor = 'var(--primary)';
+        }
+        
+        notification.querySelector('.notification-text').textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+    
+    // Initialize current day
+    currentDay = 'wednesday';
+});
     </script>
 </body>
 </html>

@@ -1244,6 +1244,8 @@
                     }
                 });
             });
+
+            
             
             // Load initial data
             async function loadInitialData() {
@@ -1431,6 +1433,35 @@
                         updateStats();
                     });
                 });
+
+                // Logout functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutLink = document.querySelector('.sidebar-menu a[href="index.html"], .sidebar-menu a[href="Index.html"]');
+
+  if (logoutLink) {
+    logoutLink.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      try {
+        // Clear any stored authentication data
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Optional: remove auth cookies if you set any
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+        alert('You have been logged out successfully.');
+
+        // Redirect safely to homepage/login
+        window.location.href = this.getAttribute('href');
+      } catch (err) {
+        console.error('Logout error:', err);
+        window.location.href = this.getAttribute('href');
+      }
+    });
+  }
+});
+
                 
                 // Live stream buttons
                 const liveStreamButtons = document.querySelectorAll('.live-stream-btn');

@@ -1209,6 +1209,27 @@
                 return { success: false, error: error.message };
             }
         }
+     
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutLink = document.querySelector('.sidebar-menu a[href="Index.html"]');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Clear stored user session or auth data
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Optional feedback
+            alert('You have been logged out successfully.');
+
+            // Redirect to home/login page
+            window.location.href = 'Index.html';
+        });
+    }
+});
+
+
         
         // Submit exhibition to backend
         async function submitExhibition(exhibitionData) {

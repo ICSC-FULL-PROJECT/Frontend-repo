@@ -1073,8 +1073,8 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="speakerTopic">Proposed Topic/Area of Expertise</label>
-                            <input type="text" id="speakerTopic" name="speakerTopic" class="form-control" placeholder="What topic would you like to speak about?" required  >
+                            <label for="speakertopic">Proposed Topic/Area of Expertise</label>
+                            <input type="text" id="speakertopic" name="speakertopic" class="form-control" placeholder="What topic would you like to speak about?" required  >
                         </div>
                         
 
@@ -1621,16 +1621,16 @@
         // PDF viewing functions
         function viewSpeakerPackagePDF() {
             // Replace with the actual path to your speaker package PDF
-            const pdfUrl = 'documents/ICSC_Speaker_Packages.pdf';
+            const pdfUrl = 'ICSC Sponsor Packages.pdf';
             window.open(pdfUrl, '_blank');
         }
 
         function downloadSpeakerPackagePDF() {
             // Replace with the actual path to your speaker package PDF
-            const pdfUrl = 'documents/ICSC_Speaker_Packages.pdf';
+            const pdfUrl = 'ICSC Sponsor Packages.pdf';
             const link = document.createElement('a');
             link.href = pdfUrl;
-            link.download = 'ICSC_Speaker_Packages.pdf';
+            link.download = 'ICSC Sponsor Packages.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1676,56 +1676,69 @@
             }
         }
         
-        function populateCountryDropdowns() {
-            const countrySelectors = [
-                'country', 'speakerCountry'
-            ];
-            
-            countrySelectors.forEach(selector => {
-                const select = document.getElementById(selector);
-                if (select) {
-                    // Clear existing options except the first one
-                    while (select.options.length > 1) {
-                        select.remove(1);
-                    }
-                    
-                    // Add countries to dropdown
-                    countries.forEach(country => {
-                        const option = document.createElement('option');
-                        option.value = country;
-                        option.textContent = country;
-                        select.appendChild(option);
-                    });
-                    
-                    // Set Nigeria as default
-                    select.value = 'Nigeria';
+       function populateCountryDropdowns() {
+    const countrySelectors = [
+        'country', 'speakerCountry','contactCountry', 'exhibitorCountry'
+    ];
+
+    countrySelectors.forEach(selector => {
+        const select = document.getElementById(selector);
+        if (select) {
+            // If first option is a placeholder, keep it and clear others.
+            const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
+            select.innerHTML = placeholder;
+
+            // Add countries to dropdown with explicit values
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
+
+            // Defensive: if any option has empty value, set it to its text
+            Array.from(select.options).forEach(opt => {
+                if (!opt.value || opt.value.trim() === '') {
+                    opt.value = opt.textContent.trim();
                 }
             });
+
+            // Set Nigeria as default (if present)
+            if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
+                select.value = 'Nigeria';
+            } else {
+                select.selectedIndex = 0;
+            }
         }
-        
-        function initializePhoneInputs() {
-            const phoneInputIds = [
-                'attendeePhone', 'workPhone', 'speakerPhone', 'contactPhone', 'exhibitorPhone'
-            ];
-            
-            phoneInputs = [];
-            
-            phoneInputIds.forEach(id => {
-                const input = document.getElementById(id);
-                if (input && window.intlTelInput) {
-                    try {
-                        const iti = window.intlTelInput(input, {
-                            initialCountry: "ng", // Set Nigeria as default
-                            separateDialCode: true,
-                            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-                        });
-                        phoneInputs.push({ id, iti });
-                    } catch (error) {
-                        console.error(`Error initializing phone input ${id}:`, error);
-                    }
-                }
-            });
+    });
+}
+
+      function initializePhoneInputs() {
+    const phoneInputIds = [
+        'attendeePhone', 'workPhone', 'speakerPhone', 'contactPhone', 'exhibitorPhone'
+    ];
+
+    // make sure we’re using the global array
+    phoneInputs = phoneInputs || [];
+
+    phoneInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input && window.intlTelInput) {
+            try {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ng", // Set Nigeria as default
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                });
+                // ✅ push directly into the global array
+                phoneInputs.push({ id, iti });
+            } catch (error) {
+                console.error(`Error initializing phone input ${id}:`, error);
+            }
         }
+    });
+}
+
         
         function setupEventListeners() {
             // Password toggle functionality
@@ -1893,20 +1906,36 @@
         }
         
         function selectRegistrantType(card) {
-            // Remove selection from all cards
-            document.querySelectorAll('.registrant-card').forEach(c => {
-                c.classList.remove('selected');
-            });
-            
-            // Add selection to clicked card
-            card.classList.add('selected');
-            
-            // Store selected type
-            selectedRegistrantType = card.getAttribute('data-type');
-            
-            // Enable continue button
-            document.getElementById('continue-btn').disabled = false;
-        }
+    // Remove selection from all cards
+    document.querySelectorAll('.registrant-card').forEach(c => {
+        c.classList.remove('selected');
+    });
+
+    // Add selection to clicked card
+    card.classList.add('selected');
+
+    // Store selected type
+    selectedRegistrantType = card.getAttribute('data-type') || '';
+
+    // Persist in localStorage (safe, non-blocking) so other scripts can recover it
+    try { localStorage.setItem('icsc_selectedRegistrantType', selectedRegistrantType); } catch (e) { /* ignore storage errors */ }
+
+    // Also ensure there is a hidden input with the current type for forms / server-side if needed
+    let hidden = document.getElementById('selected-registrant-type-hidden');
+    if (!hidden) {
+        hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.id = 'selected-registrant-type-hidden';
+        hidden.name = 'selectedRegistrantType';
+        document.body.appendChild(hidden);
+    }
+    hidden.value = selectedRegistrantType;
+
+    // Enable continue button
+    const btn = document.getElementById('continue-btn');
+    if (btn) btn.disabled = false;
+}
+
         
         function validateRegistrantType() {
             if (!selectedRegistrantType) {
@@ -2229,12 +2258,14 @@
             if (confirmationEmail) confirmationEmail.textContent = email;
             if (confirmationEmailText) confirmationEmailText.textContent = email;
             
-            // Set registrant type
-            const confirmationType = document.getElementById('confirmation-type');
-            if (confirmationType) {
-                confirmationType.textContent = 
-                    selectedRegistrantType.charAt(0).toUpperCase() + selectedRegistrantType.slice(1);
-            }
+           // Set registrant type (safe against null or empty values)
+const confirmationType = document.getElementById('confirmation-type');
+if (confirmationType) {
+    const type = selectedRegistrantType || '';
+    confirmationType.textContent = type
+        ? type.charAt(0).toUpperCase() + type.slice(1)
+        : '';
+}
             
             // Set name based on registrant type
             let firstName = '', lastName = '';
