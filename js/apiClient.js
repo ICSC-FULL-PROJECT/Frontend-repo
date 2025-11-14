@@ -44,4 +44,87 @@
 	);
 
 	global.apiClient = apiClient;
+    
+	// Helper to POST JSON or FormData depending on payload
+	async function postJSON(path, payload) {
+		const res = await apiClient.post(path, payload);
+		return res.data;
+	}
+
+	async function postForm(path, formData) {
+		const res = await apiClient.post(path, formData, {
+			headers: { 'Content-Type': 'multipart/form-data' }
+		});
+		return res.data;
+	}
+
+	// Registration helpers
+	// NOTE: assumptions: backend registration endpoints are named under /auth/ as shown below.
+	// If your backend uses different paths (e.g. /register/attendee), update these functions accordingly.
+	async function registerAttendee(data) {
+		// data: plain object -> JSON
+		return postJSON('/auth/attendee-register', data);
+	}
+
+	async function registerSpeaker(data) {
+		// speakers may include files; detect File objects and use FormData when present
+		const hasFile = Object.values(data).some(v => v instanceof File || v instanceof Blob);
+		if (hasFile) {
+			const fd = new FormData();
+			Object.keys(data).forEach(k => {
+				const v = data[k];
+				if (v === undefined || v === null) return;
+				if (Array.isArray(v)) {
+					v.forEach(item => fd.append(k, item));
+				} else {
+					fd.append(k, v);
+				}
+			});
+			return postForm('/auth/register-speaker', fd);
+		}
+		return postJSON('/auth/register-speaker', data);
+	}
+
+	async function registerExhibitor(data) {
+		const hasFile = Object.values(data).some(v => v instanceof File || v instanceof Blob);
+		if (hasFile) {
+			const fd = new FormData();
+			Object.keys(data).forEach(k => {
+				const v = data[k];
+				if (v === undefined || v === null) return;
+				if (Array.isArray(v)) {
+					v.forEach(item => fd.append(k, item));
+				} else {
+					fd.append(k, v);
+				}
+			});
+			return postForm('/auth/register-exhibitor', fd);
+		}
+		return postJSON('/auth/register-exhibitor', data);
+	}
+
+	async function registerPartner(data) {
+		const hasFile = Object.values(data).some(v => v instanceof File || v instanceof Blob);
+		if (hasFile) {
+			const fd = new FormData();
+			Object.keys(data).forEach(k => {
+				const v = data[k];
+				if (v === undefined || v === null) return;
+				if (Array.isArray(v)) {
+					v.forEach(item => fd.append(k, item));
+				} else {
+					fd.append(k, v);
+				}
+			});
+			return postForm('/auth/register-partner', fd);
+		}
+		return postJSON('/auth/register-partner', data);
+	}
+
+	global.RegisterAPI = {
+		registerAttendee,
+		registerSpeaker,
+		registerExhibitor,
+		registerPartner
+	};
 })(window);
