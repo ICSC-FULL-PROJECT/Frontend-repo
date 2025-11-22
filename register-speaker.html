@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSC 2026 - Speaker Registration</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,400italic,700italic" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <style>
+        /* Include all the same CSS styles from the original file */
+        :root {
+            --primary-color: #28a745;
+            --primary-dark: #218838;
+            --secondary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        } .site-background {
+            background-color: #ffffff !important;
+        }
+        
+        .navbar {
+            background: white;
+            border: none;
+            margin-bottom: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+        }
+        
+        .jumbotron {
+            background-color: #ffffff;
+            margin-bottom: 0;
+            padding: 30px 0;
+        }
+        
+        .logo img {
+            max-height: 60px;
+            width: auto;
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+            position: relative;
+            padding: 0 15px;
+        }
+        
+        /* === Animated Dot Progress Indicator === */
+        .progress-indicator.dots {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Background line */
+        .progress-indicator.dots::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        /* Animated fill line */
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background: #008751;
+            transform: translateY(-50%);
+            border-radius: 2px;
+            width: 0%;
+            z-index: 2;
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* Dots */
+        .progress-indicator.dots .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #ccc;
+            position: relative;
+            z-index: 3;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        /* Active + completed state */
+        .progress-indicator.dots .dot.active {
+            background-color: #008751;
+            transform: scale(1.2);
+        }
+
+        .progress-indicator.dots .dot.completed {
+            background-color: #4caf50;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .registrant-cards {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+            grid-template-columns: 1fr;
+        }
+        
+        .registrant-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .registrant-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .registrant-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .registrant-card h3 {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 1.3rem;
+        }
+        
+        .registrant-card p {
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .registrant-card .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--success-color);
+            margin-top: 10px;
+        }
+        
+        .has-star::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .btn-standard {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 14px 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 8px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-standard:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-outline-standard {
+            background-color: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 14px 25px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-outline-standard:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .social-media-links a {
+            color: var(--primary-color) !important;
+        }
+        
+        .footer-container {
+            background-color: var(--light-gray);
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .help-block-error {
+            color: var(--danger-color);
+            font-size: 0.8em;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .hint-block {
+            font-size: 0.8em;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--danger-color);
+        }
+        
+        .booking-note {
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        
+        .confirmation-details {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .confirmation-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .confirmation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .confirmation-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .confirmation-value {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .auto-login-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .package-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .package-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .package-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .package-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .package-card h4 {
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .package-card .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+            text-align: center;
+            margin: 12px 0;
+        }
+        
+        .package-card ul {
+            padding-left: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .package-card li {
+            margin-bottom: 6px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .package-card .limited {
+            color: var(--danger-color);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .payment-section {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .payment-option input {
+            margin-right: 10px;
+        }
+        
+        .payment-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .payment-form {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .iti {
+            width: 100%;
+        }
+        
+        .phone-input-container {
+            position: relative;
+        }
+        
+        .phone-input-container .form-control {
+            padding-left: 52px;
+        }
+        
+        .pdf-viewer {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin: 18px 0;
+            background: var(--light-gray);
+        }
+        
+        .pdf-viewer h5 {
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+        
+        .pdf-placeholder {
+            background: white;
+            border-radius: 6px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 2px dashed var(--border-color);
+        }
+        
+        .pdf-placeholder i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .sponsor-package-info {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 18px;
+            margin: 18px 0;
+            border-radius: 4px;
+        }
+
+        .sponsor-package-info h5 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .password-toggle:focus {
+            outline: none;
+        }
+
+        /* File upload styles */
+        .file-upload-container {
+            margin-top: 15px;
+        }
+
+        .file-upload-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .file-upload-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+        }
+
+        .file-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Button container for mobile */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Container padding for mobile */
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+            max-width: 100%;
+        }
+
+        /* Fix for button layout issue */
+        .content-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-container {
+            z-index: 2;
+        }
+
+        .form-section {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .jumbotron h1 {
+                font-size: 1.5rem;
+            }
+            
+            .jumbotron .lead {
+                font-size: 0.9rem;
+            }
+            
+            .form-section {
+                padding: 20px 15px;
+            }
+            
+            .registrant-card, .package-card {
+                padding: 15px;
+            }
+            
+            .confirmation-details, .payment-section {
+                padding: 15px;
+            }
+            
+            .pdf-viewer {
+                padding: 15px;
+            }
+            
+            .btn-standard, .btn-outline-standard {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .progress-indicator.dots {
+                max-width: 100%;
+            }
+            
+            .progress-indicator.dots .dot {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .registrant-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .package-card h4 {
+                font-size: 1.1rem;
+            }
+            
+            .success-message {
+                padding: 15px;
+            }
+            
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .registrant-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .package-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .button-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .btn-standard, .btn-outline-standard {
+                width: auto;
+                margin: 0;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .package-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .registrant-cards {
+                grid-template-columns: repeat(2, 2fr);
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) {
+            .registrant-card:hover,
+            .package-card:hover {
+                transform: none;
+                border-color: var(--border-color);
+            }
+            
+            .registrant-card.selected,
+            .package-card.selected {
+                border-color: var(--primary-color);
+                transform: scale(1.02);
+            }
+        }
+
+        /* Focus styles for accessibility */
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-right-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="standard-page">
+    <!-- Navigation -->
+    <div id="nav-wrap">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <div class="d-flex align-items-center">
+                    <div class="logo me-3">
+                        <img src="images/NG.jpeg" alt="ICSC 2026" class="img-fluid">
+                    </div>
+                    <span class="navbar-brand mb-0 h1">ICSC 2026</span>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="login.html">SIGN IN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="agenda.html">AGENDA</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <div id="header-wrap" class="jumbotron site-background">
+        <div class="container">
+            <div class="text-center">
+                <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE (ICSC) 2026</h1>
+                <p class="lead">Building Global Civil Service Excellence</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-section">
+        <div class="container">
+            <!-- Progress Indicator (Dot Style) -->
+            <div class="progress-container">
+                <div class="progress-indicator dots" id="progress-indicator">
+                    <span class="dot active" id="dot-1" title="Account Information"></span>
+                    <span class="dot" id="dot-2" title="Profile Information"></span>
+                    <span class="dot" id="dot-3" title="Package Selection"></span>
+                    <span class="dot" id="dot-4" title="Payment"></span>
+                    <span class="dot" id="dot-5" title="Confirmation"></span>
+                    <div class="progress-line"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
+            </div>
+
+            <!-- Step 1: Account Creation Section -->
+            <div id="account-section" class="form-section">
+                <h2 class="text-center mb-4">Create Your Account</h2>
+                
+                <form id="account-form">
+                    <div class="form-group">
+                        <label class="has-star" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                        <div class="help-block-error" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="password">Choose a Password</label>
+                        <div class="position-relative">
+                            <input type="password" id="password" name="password" class="form-control" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-block-error" id="password-error"></div>
+                        <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="confirmPassword">Repeat Your Password</label>
+                        <div class="position-relative">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-block-error" id="confirmPassword-error"></div>
+                    </div>
+                </form>
+                
+                <div class="button-container">
+                    <a href="register.html" class="btn btn-outline-standard">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back to Registration Types
+                    </a>
+                    <button type="button" class="btn btn-standard" id="continue-to-profile-btn">
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Profile Information Section -->
+            <div id="profile-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Speaker Profile Information</h2>
+                
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label class="has-star" for="speakerPrefix">Prefix</label>
+                        <select id="speakerPrefix" name="speakerPrefix" class="form-control" required>
+                            <option value="">Select Prefix</option>
+                            <option value="mr">Mr</option>
+                            <option value="mrs">Mrs</option>
+                            <option value="miss">Miss</option>
+                            <option value="ms">Ms</option>
+                            <option value="dr">Dr</option>
+                            <option value="prof">Prof</option>
+                        </select>
+                        <div class="help-block-error" id="speakerPrefix-error"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="has-star" for="speakerFirstName">First Name</label>
+                            <input type="text" id="speakerFirstName" name="speakerFirstName" class="form-control" required>
+                            <div class="help-block-error" id="speakerFirstName-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="speakerLastName">Last Name</label>
+                            <input type="text" id="speakerLastName" name="speakerLastName" class="form-control" required>
+                            <div class="help-block-error" id="speakerLastName-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="speakerCountry">Country</label>
+                        <select id="speakerCountry" name="speakerCountry" class="form-control" required>
+                            <option value="" disabled>Select your country</option>
+                        </select>
+                        <div class="help-block-error" id="speakerCountry-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="has-star" for="speakerJobTitle">Job Title</label>
+                        <input type="text" id="speakerJobTitle" name="speakerJobTitle" class="form-control" required>
+                        <div class="help-block-error" id="speakerJobTitle-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="speakerOrganization">Organization</label>
+                        <input type="text" id="speakerOrganization" name="speakerOrganization" class="form-control" required>
+                        <div class="help-block-error" id="speakerOrganization-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="speakerPhone">Work Phone</label>
+                        <div class="phone-input-container">
+                            <input type="tel" id="speakerPhone" name="speakerPhone" class="form-control" required>
+                        </div>
+                        <div class="help-block-error" id="speakerPhone-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="socialMedia">Social Media Handles</label>
+                        <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="e.g., @Name on either instagram, twitter,facebook">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="has-star" for="speakerWorkEmail">Work Email</label>
+                        <input type="email" id="speakerWorkEmail" name="speakerWorkEmail" class="form-control" required>
+                        <div class="help-block-error" id="speakerWorkEmail-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="has-star" for="speakerBio">Brief Introduction/Bio</label>
+                        <textarea id="speakerBio" name="speakerBio" class="form-control" rows="4" required placeholder="Please provide a brief introduction about yourself and your expertise"></textarea>
+                        <div class="help-block-error" id="speakerBio-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="speakertopic">Proposed Topic/Area of Expertise</label>
+                        <input type="text" id="speakertopic" name="speakertopic" class="form-control" placeholder="What topic would you like to speak about?" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="speakerExperience">Previous Speaking Experience</label>
+                        <textarea id="speakerExperience" name="speakerExperience" class="form-control" rows="3" placeholder="Please describe any previous speaking experience"></textarea>
+                    </div>
+                </form>
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-package-btn">
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Package Selection Section -->
+            <div id="package-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Select Your Speaker Package</h2>
+                
+                <!-- PDF Viewer for Speaker -->
+                <div class="sponsor-package-info">
+                    <h5><i class="fas fa-file-pdf me-2"></i>Speaker Package Information</h5>
+                    <p>Please review the speaker package details in the document below before making your selection.</p>
+                    <div class="pdf-viewer">
+                        <h5>ICSC Speaker Packages</h5>
+                        <div class="pdf-placeholder">
+                            <i class="fas fa-file-pdf"></i>
+                            <p>ICSC_Speaker_Packages.pdf</p>
+                            <p class="text-muted">This document contains detailed information about speaker packages and benefits.</p>
+                            <button type="button" class="btn btn-outline-primary mt-2" onclick="viewSpeakerPackagePDF()">
+                                <i class="fas fa-eye me-2"></i>View PDF
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary mt-2" onclick="downloadSpeakerPackagePDF()">
+                                <i class="fas fa-download me-2"></i>Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-center mb-4">Choose the speaker package that best fits your needs</p>
+                
+                <div class="package-cards">
+                    <div class="package-card" data-package="basic-speaker">
+                        <h4>Basic Speaker Package</h4>
+                        <div class="price">N10,000</div>
+                        <ul>
+                            <li>Conference speaking slot (30 minutes)</li>
+                            <li>Access to all conference sessions</li>
+                            <li>Speaker certificate</li>
+                            <li>Conference materials</li>
+                            <li>Networking lunch for 1 day</li>
+                        </ul>
+                        <div class="limited">Limited slots available</div>
+                    </div>
+                    
+                    <div class="package-card" data-package="premium-speaker">
+                        <h4>Premium Speaker Package</h4>
+                        <div class="price">N15,000</div>
+                        <ul>
+                            <li>Conference speaking slot (45 minutes)</li>
+                            <li>Featured speaker listing</li>
+                            <li>Access to all conference sessions</li>
+                            <li>Speaker certificate</li>
+                            <li>Conference materials</li>
+                            <li>Networking lunch for all days</li>
+                            <li>Speaker dinner invitation</li>
+                            <li>Promotion on conference website</li>
+                        </ul>
+                        <div class="limited">Limited slots available</div>
+                    </div>
+                    
+                    <div class="package-card" data-package="keynote-speaker">
+                        <h4>Keynote Speaker Package</h4>
+                        <div class="price">N30,000</div>
+                        <ul>
+                            <li>Keynote speaking slot (60 minutes)</li>
+                            <li>Featured keynote listing</li>
+                            <li>Access to all conference sessions</li>
+                            <li>Speaker certificate</li>
+                            <li>Conference materials</li>
+                            <li>Networking lunch for all days</li>
+                            <li>Speaker dinner invitation</li>
+                            <li>Prominent promotion on conference website</li>
+                            <li>VIP seating at all sessions</li>
+                            <li>Complimentary accommodation for 2 nights</li>
+                        </ul>
+                        <div class="limited">Very limited slots available</div>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Payment Section -->
+            <div id="payment-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Payment Information</h2>
+                
+                <div class="payment-section">
+                    <div class="form-group">
+                        <label class="has-star">Select Payment Method</label>
+                        <div class="payment-option">
+                            <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
+                            <label for="bank-transfer">Bank Transfer</label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="flutterwave" name="payment-method" value="flutterwave">
+                            <label for="flutterwave">Flutterwave (Online Payment)</label>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-form" id="bank-transfer-form">
+                        <h5>Bank Transfer Details</h5>
+                        <p><strong>Bank Name:</strong> First Bank Nigeria</p>
+                        <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
+                        <p><strong>Account Number:</strong> 1234567890</p>
+                        <p><strong>Sort Code:</strong> 123456</p>
+                        <p>Please include your registration ID as the payment reference.</p>
+                        
+                        <!-- Payment Receipt Upload - Only for Bank Transfer -->
+                        <div class="form-group mt-4">
+                            <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
+                            <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                            <div class="help-block-error" id="paymentReceipt-error"></div>
+                            <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-form" id="flutterwave-form">
+                        <h5>Flutterwave Payment</h5>
+                        <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
+                        <p>Accepted payment methods:</p>
+                        <ul>
+                            <li>Visa/Mastercard</li>
+                            <li>Bank Transfer</li>
+                            <li>USSD</li>
+                            <li>Mobile Money</li>
+                        </ul>
+                        <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
+                            <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-package-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="complete-registration-btn" disabled>
+                        Complete Registration
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Confirmation Section -->
+            <div id="confirmation-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Registration Confirmation</h2>
+                
+                <div class="success-message">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h3>Registration Successful!</h3>
+                    <p class="mb-0">Thank you for registering as a Speaker for the International Civil Service Conference 2026.</p>
+                </div>
+                
+                <div class="confirmation-details">
+                    <h4 class="mb-3">Registration Details</h4>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Registration ID</div>
+                        <div class="confirmation-value" id="confirmation-id">ICSC2026-001234</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Registrant Type</div>
+                        <div class="confirmation-value" id="confirmation-type">Speaker</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Name</div>
+                        <div class="confirmation-value" id="confirmation-name">John Doe</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Email</div>
+                        <div class="confirmation-value" id="confirmation-email">john.doe@example.com</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Selected Package</div>
+                        <div class="confirmation-value" id="confirmation-package">Basic Speaker Package</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Payment Status</div>
+                        <div class="confirmation-value" id="confirmation-payment">Pending</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p>A confirmation email has been sent to <strong id="confirmation-email-text">john.doe@example.com</strong> with all the details.</p>
+                    <div class="button-container">
+                        <button type="button" class="btn btn-standard" id="go-to-dashboard-btn">
+                            Go to Dashboard
+                        </button>
+                        <a href="Index.html" class="btn btn-outline-standard">Return to Conference Website</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>INTERNATIONAL CIVIL SERVICE CONFERENCE (ICSC) 2026</h5>
+                    <p>Building Global Civil Service Excellence</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Contact Us</h5>
+                    <p>Email: info@icsc2026.org</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                    <div class="social-media-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2026 International Civil Service Conference. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+    <!-- Mock API Implementation -->
+    <script>
+        // Mock API for speaker registration
+        window.RegisterAPI = {
+            registerSpeaker: async function(payload) {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Generate mock response
+                const mockResponse = {
+                    success: true,
+                    message: "Registration successful",
+                    data: {
+                        id: Math.floor(100000 + Math.random() * 900000),
+                        reference: "ICSC2026-SPEAKER-" + Math.floor(1000 + Math.random() * 9000),
+                        registrationId: "ICSC2026-SPEAKER-" + Date.now(),
+                        status: "pending",
+                        speakerType: payload.selectedPackage,
+                        speakerName: `${payload.speakerFirstName} ${payload.speakerLastName}`,
+                        speakerEmail: payload.speakerWorkEmail,
+                        createdAt: new Date().toISOString()
+                    }
+                };
+                
+                // Simulate 10% chance of error for testing
+                if (Math.random() < 0.1) {
+                    throw new Error("Server error: Unable to process registration at this time");
+                }
+                
+                return mockResponse;
+            },
+            
+            // Mock function to simulate login after registration
+            loginSpeaker: async function(email, password) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const mockResponse = {
+                    success: true,
+                    token: "mock_jwt_token_" + Math.random().toString(36).substr(2, 9),
+                    user: {
+                        id: Math.floor(100000 + Math.random() * 900000),
+                        email: email,
+                        type: "speaker",
+                        name: "Mock Speaker Name"
+                    }
+                };
+                
+                return mockResponse;
+            }
+        };
+
+        // Mock Auth functions
+        window.Auth = {
+            setToken: function(token) {
+                localStorage.setItem('speaker_token', token);
+                localStorage.setItem('speaker_login_time', new Date().toISOString());
+            },
+            
+            getToken: function() {
+                return localStorage.getItem('speaker_token');
+            },
+            
+            isLoggedIn: function() {
+                const token = this.getToken();
+                const loginTime = localStorage.getItem('speaker_login_time');
+                
+                if (!token || !loginTime) return false;
+                
+                // Check if token is expired (mock - 24 hours)
+                const loginDate = new Date(loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+                
+                return hoursDiff < 24;
+            },
+            
+            logout: function() {
+                localStorage.removeItem('speaker_token');
+                localStorage.removeItem('speaker_login_time');
+            }
+        };
+    </script>
+
+    <!-- Main Application Script -->
+    <script>
+        // Global variables for speaker registration
+        let currentStep = 1;
+        const selectedRegistrantType = 'speaker';
+        let selectedPackage = '';
+        let selectedPaymentMethod = '';
+        let phoneInputs = [];
+        let registrationData = {}; // Store registration data for dashboard
+        
+        // Country list for dropdowns
+        const countries = [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+            "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
+            "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+            "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
+            "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
+            "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
+            "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+            "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
+            "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
+            "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
+            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
+            "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", 
+            "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", 
+            "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", 
+            "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", 
+            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
+            "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+            "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
+            "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
+            "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
+            "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+        ];
+        
+        // PDF viewing functions
+        function viewSpeakerPackagePDF() {
+            const pdfUrl = 'ICSC Sponsor Packages.pdf';
+            window.open(pdfUrl, '_blank');
+        }
+
+        function downloadSpeakerPackagePDF() {
+            const pdfUrl = 'ICSC Sponsor Packages.pdf';
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = 'ICSC Sponsor Packages.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+        
+        function initializeApp() {
+            try {
+                populateCountryDropdowns();
+                initializePhoneInputs();
+                setupEventListeners();
+                updateProgressIndicator();
+                setupPackageSelection();
+                setupPaymentSection();
+            } catch (error) {
+                console.error('Error initializing app:', error);
+            }
+        }
+        
+        function populateCountryDropdowns() {
+            const countrySelectors = ['speakerCountry'];
+            
+            countrySelectors.forEach(selector => {
+                const select = document.getElementById(selector);
+                if (select) {
+                    const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
+                    select.innerHTML = placeholder;
+                    
+                    countries.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country;
+                        option.textContent = country;
+                        select.appendChild(option);
+                    });
+                    
+                    Array.from(select.options).forEach(opt => {
+                        if (!opt.value || opt.value.trim() === '') {
+                            opt.value = opt.textContent.trim();
+                        }
+                    });
+                    
+                    if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
+                        select.value = 'Nigeria';
+                    } else {
+                        select.selectedIndex = 0;
+                    }
+                }
+            });
+        }
+        
+        function initializePhoneInputs() {
+            const phoneInputIds = ['speakerPhone'];
+            
+            phoneInputs = phoneInputs || [];
+            
+            phoneInputIds.forEach(id => {
+                const input = document.getElementById(id);
+                if (input && window.intlTelInput) {
+                    try {
+                        const iti = window.intlTelInput(input, {
+                            initialCountry: "ng",
+                            separateDialCode: true,
+                            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                        });
+                        phoneInputs.push({ id, iti });
+                    } catch (error) {
+                        console.error(`Error initializing phone input ${id}:`, error);
+                    }
+                }
+            });
+        }
+        
+        function setupEventListeners() {
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+            
+            if (toggleConfirmPassword && confirmPasswordInput) {
+                toggleConfirmPassword.addEventListener('click', function() {
+                    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    confirmPasswordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+            
+            // Navigation buttons
+            const continueToProfileBtn = document.getElementById('continue-to-profile-btn');
+            if (continueToProfileBtn) {
+                continueToProfileBtn.addEventListener('click', function() {
+                    if (validateAccountForm()) {
+                        showStep(2);
+                    }
+                });
+            }
+            
+            const backToAccountBtn = document.getElementById('back-to-account-btn');
+            if (backToAccountBtn) {
+                backToAccountBtn.addEventListener('click', function() {
+                    showStep(1);
+                });
+            }
+            
+            const continueToPackageBtn = document.getElementById('continue-to-package-btn');
+            if (continueToPackageBtn) {
+                continueToPackageBtn.addEventListener('click', function() {
+                    if (validateProfileForm()) {
+                        showStep(3);
+                    }
+                });
+            }
+            
+            const backToProfileBtn = document.getElementById('back-to-profile-btn');
+            if (backToProfileBtn) {
+                backToProfileBtn.addEventListener('click', function() {
+                    showStep(2);
+                });
+            }
+            
+            const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
+            if (continueToPaymentBtn) {
+                continueToPaymentBtn.addEventListener('click', function() {
+                    if (validatePackageSelection()) {
+                        showStep(4);
+                    }
+                });
+            }
+            
+            const backToPackageBtn = document.getElementById('back-to-package-btn');
+            if (backToPackageBtn) {
+                backToPackageBtn.addEventListener('click', function() {
+                    showStep(3);
+                });
+            }
+            
+            const completeRegistrationBtn = document.getElementById('complete-registration-btn');
+            if (completeRegistrationBtn) {
+                completeRegistrationBtn.addEventListener('click', function() {
+                    if (validatePaymentForm()) {
+                        processRegistration();
+                    }
+                });
+            }
+            
+            // Flutterwave payment button
+            const flutterwaveBtn = document.getElementById('pay-with-flutterwave');
+            if (flutterwaveBtn) {
+                flutterwaveBtn.addEventListener('click', function() {
+                    processFlutterwavePayment();
+                });
+            }
+            
+            // Dashboard button
+            const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
+            if (goToDashboardBtn) {
+                goToDashboardBtn.addEventListener('click', function() {
+                    redirectToDashboard();
+                });
+            }
+        }
+        
+        function setupPackageSelection() {
+            const packageCards = document.querySelectorAll('.package-card');
+            packageCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    packageCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Store selected package
+                    selectedPackage = this.getAttribute('data-package');
+                    
+                    // Enable continue button
+                    const continueBtn = document.getElementById('continue-to-payment-btn');
+                    if (continueBtn) {
+                        continueBtn.disabled = false;
+                    }
+                });
+            });
+        }
+        
+        function setupPaymentSection() {
+            const paymentOptions = document.querySelectorAll('.payment-option input');
+            paymentOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedPaymentMethod = this.value;
+                        // Show/hide payment forms based on selection
+                        const paymentForms = document.querySelectorAll('.payment-form');
+                        paymentForms.forEach(form => form.style.display = 'none');
+                        
+                        if (this.value === 'bank-transfer') {
+                            const bankForm = document.getElementById('bank-transfer-form');
+                            if (bankForm) bankForm.style.display = 'block';
+                        } else if (this.value === 'flutterwave') {
+                            const flutterwaveForm = document.getElementById('flutterwave-form');
+                            if (flutterwaveForm) flutterwaveForm.style.display = 'block';
+                        }
+                        
+                        // Enable complete registration button
+                        const completeBtn = document.getElementById('complete-registration-btn');
+                        if (completeBtn) {
+                            completeBtn.disabled = false;
+                        }
+                    }
+                });
+            });
+        }
+        
+        function validateAccountForm() {
+            let isValid = true;
+            
+            // Email validation
+            const email = document.getElementById('email').value;
+            if (!email || !isValidEmail(email)) {
+                showError('email-error', 'Please enter a valid email address');
+                isValid = false;
+            } else {
+                hideError('email-error');
+            }
+            
+            // Password validation
+            const password = document.getElementById('password').value;
+            if (!password || password.length < 8) {
+                showError('password-error', 'Password must be at least 8 characters long');
+                isValid = false;
+            } else {
+                hideError('password-error');
+            }
+            
+            // Confirm password validation
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (!confirmPassword || password !== confirmPassword) {
+                showError('confirmPassword-error', 'Passwords do not match');
+                isValid = false;
+            } else {
+                hideError('confirmPassword-error');
+            }
+            
+            return isValid;
+        }
+        
+        function validateProfileForm() {
+            return validateSpeakerProfile();
+        }
+        
+        function validateSpeakerProfile() {
+            let isValid = true;
+            
+            const requiredFields = [
+                'speakerPrefix', 'speakerFirstName', 'speakerLastName', 
+                'speakerCountry', 'speakerJobTitle', 'speakerOrganization', 
+                'speakerPhone', 'speakerBio', 'speakertopic', 'speakerWorkEmail'
+            ];
+            
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (!element || !element.value) {
+                    showError(`${field}-error`, 'This field is required');
+                    isValid = false;
+                } else {
+                    hideError(`${field}-error`);
+                }
+            });
+
+            const workEmail = document.getElementById('speakerWorkEmail')?.value;
+            if (workEmail && !isValidEmail(workEmail)) {
+                showError('speakerWorkEmail-error', 'Please enter a valid work email address');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function validatePackageSelection() {
+            if (!selectedPackage) {
+                alert('Please select a speaker package');
+                return false;
+            }
+            return true;
+        }
+        
+        function validatePaymentForm() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method');
+                return false;
+            }
+            
+            // Validate bank transfer receipt upload - ONLY for bank transfers
+            if (selectedPaymentMethod === 'bank-transfer') {
+                const paymentReceipt = document.getElementById('paymentReceipt');
+                if (!paymentReceipt || !paymentReceipt.files || paymentReceipt.files.length === 0) {
+                    showError('paymentReceipt-error', 'Please upload your payment receipt');
+                    return false;
+                }
+                
+                // Validate file size (5MB max)
+                const file = paymentReceipt.files[0];
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    showError('paymentReceipt-error', 'File size must be less than 5MB');
+                    return false;
+                }
+                
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    showError('paymentReceipt-error', 'Please upload a valid file type (PDF, JPG, PNG, DOC)');
+                    return false;
+                }
+                
+                hideError('paymentReceipt-error');
+            }
+            
+            return true;
+        }
+        
+        function processFlutterwavePayment() {
+            // Get package price based on selected package
+            const packagePrices = {
+                'basic-speaker': 250,
+                'premium-speaker': 450,
+                'keynote-speaker': 750
+            };
+            
+            const amount = packagePrices[selectedPackage] || 0;
+            const email = document.getElementById('email')?.value || '';
+            const speakerFirstName = document.getElementById('speakerFirstName')?.value || '';
+            const speakerLastName = document.getElementById('speakerLastName')?.value || '';
+            const phone = document.getElementById('speakerPhone')?.value || '';
+            
+            // Flutterwave payment integration
+            FlutterwaveCheckout({
+                public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY",
+                tx_ref: "ICSC2026-" + Date.now(),
+                amount: amount,
+                currency: "USD",
+                payment_options: "card, banktransfer, ussd, mobilemoney",
+                customer: {
+                    email: email,
+                    phone_number: phone,
+                    name: `${speakerFirstName} ${speakerLastName}`
+                },
+                customizations: {
+                    title: "ICSC 2026 Speaker Registration",
+                    description: `Payment for ${selectedPackage.replace('-', ' ')} package`,
+                    logo: "images/NG.jpeg"
+                },
+                callback: function(response) {
+                    // Payment successful
+                    if (response.status === 'successful') {
+                        alert('Payment successful! Completing your registration...');
+                        processRegistration();
+                    } else {
+                        alert('Payment was not successful. Please try again.');
+                    }
+                },
+                onclose: function() {
+                    // Payment modal closed
+                    console.log('Payment modal closed');
+                }
+            });
+        }
+        
+        async function processRegistration() {
+            const completeBtn = document.getElementById('complete-registration-btn');
+            
+            if (completeBtn) {
+                completeBtn.classList.add('btn-loading');
+                completeBtn.disabled = true;
+            }
+            
+            try {
+                // Collect all registration data
+                registrationData = {
+                    speaker_prefix: document.getElementById('speakerPrefix')?.value || '',
+                    speaker_first_name: document.getElementById('speakerFirstName')?.value || '',
+                    speaker_last_name: document.getElementById('speakerLastName')?.value || '',
+                    speaker_country: document.getElementById('speakerCountry')?.value || '',
+                    speaker_job_title: document.getElementById('speakerJobTitle')?.value || '',
+                    speaker_organization: document.getElementById('speakerOrganization')?.value || '',
+                    speaker_phone: document.getElementById('speakerPhone')?.value || '',
+                    speaker_work_email: document.getElementById('speakerWorkEmail')?.value || '',
+                    speaker_bio: document.getElementById('speakerBio')?.value || '',
+                    speaker_topic: document.getElementById('speakertopic')?.value || '',
+                    speaker_experience: document.getElementById('speakerExperience')?.value || '',
+                    social_media: document.getElementById('socialMedia')?.value || '',
+                    speaker_package: selectedPackage,
+                    payment_method: selectedPaymentMethod,
+                    email: document.getElementById('email')?.value || '',
+                    password: document.getElementById('password')?.value || '',
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Call the mock API
+                const response = await window.RegisterAPI.registerSpeaker(registrationData);
+                
+                if (response.success) {
+                    // Store registration data in localStorage for dashboard
+                    localStorage.setItem('speaker_registration_data', JSON.stringify({
+                        ...registrationData,
+                        apiResponse: response.data
+                    }));
+                    
+                    // Auto-login the user after successful registration
+                    const loginResponse = await window.RegisterAPI.loginSpeaker(
+                        registrationData.email, 
+                        registrationData.password
+                    );
+                    
+                    if (loginResponse.success) {
+                        // Store auth token
+                        window.Auth.setToken(loginResponse.token);
+                        
+                        // Update confirmation with response data
+                        updateConfirmationSection(response.data);
+                        showStep(5);
+                    } else {
+                        throw new Error('Auto-login failed after registration');
+                    }
+                } else {
+                    throw new Error(response.message || 'Registration failed');
+                }
+                
+            } catch (err) {
+                console.error('Registration failed', err);
+                const message = err?.message || 'Registration failed. Please try again.';
+                alert(message);
+            } finally {
+                if (completeBtn) {
+                    completeBtn.classList.remove('btn-loading');
+                    completeBtn.disabled = false;
+                }
+            }
+        }
+        
+        function updateConfirmationSection(apiData) {
+            const email = document.getElementById('email')?.value || '';
+            const workEmail = document.getElementById('speakerWorkEmail')?.value || '';
+            const speakerFirstName = document.getElementById('speakerFirstName')?.value || '';
+            const speakerLastName = document.getElementById('speakerLastName')?.value || '';
+            
+            const confirmationEmail = document.getElementById('confirmation-email');
+            const confirmationEmailText = document.getElementById('confirmation-email-text');
+            const confirmationName = document.getElementById('confirmation-name');
+            const confirmationType = document.getElementById('confirmation-type');
+            const confirmationPackage = document.getElementById('confirmation-package');
+            const confirmationPayment = document.getElementById('confirmation-payment');
+            const confirmationId = document.getElementById('confirmation-id');
+            
+            if (confirmationEmail) confirmationEmail.textContent = workEmail || email;
+            if (confirmationEmailText) confirmationEmailText.textContent = workEmail || email;
+            if (confirmationName) confirmationName.textContent = `${speakerFirstName} ${speakerLastName}`;
+            if (confirmationType) confirmationType.textContent = 'Speaker';
+            if (confirmationPackage) {
+                const packageNames = {
+                    'basic-speaker': 'Basic Speaker Package',
+                    'premium-speaker': 'Premium Speaker Package', 
+                    'keynote-speaker': 'Keynote Speaker Package'
+                };
+                confirmationPackage.textContent = packageNames[selectedPackage] || selectedPackage;
+            }
+            if (confirmationPayment) {
+                const paymentMethods = {
+                    'bank-transfer': 'Bank Transfer',
+                    'flutterwave': 'Flutterwave'
+                };
+                confirmationPayment.textContent = paymentMethods[selectedPaymentMethod] || selectedPaymentMethod;
+            }
+            if (confirmationId && apiData) {
+                confirmationId.textContent = apiData.reference || apiData.registrationId || confirmationId.textContent;
+            }
+        }
+        
+        function redirectToDashboard() {
+            window.location.href = 'speakers-dash.html';
+        }
+        
+        function showStep(step) {
+            const sections = ['account-section', 'profile-section', 'package-section', 'payment-section', 'confirmation-section'];
+            
+            sections.forEach(section => {
+                const element = document.getElementById(section);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            let currentSection;
+            if (step === 1) {
+                currentSection = document.getElementById('account-section');
+            } else if (step === 2) {
+                currentSection = document.getElementById('profile-section');
+            } else if (step === 3) {
+                currentSection = document.getElementById('package-section');
+            } else if (step === 4) {
+                currentSection = document.getElementById('payment-section');
+            } else if (step === 5) {
+                currentSection = document.getElementById('confirmation-section');
+            }
+            
+            if (currentSection) {
+                currentSection.style.display = 'block';
+            }
+            
+            currentStep = step;
+            updateProgressIndicator();
+            window.scrollTo(0, 0);
+        }
+        
+        function updateProgressIndicator() {
+            document.querySelectorAll('.dot').forEach(dot => {
+                dot.classList.remove('active', 'completed');
+            });
+            
+            const progressLine = document.querySelector('.progress-line');
+            if (progressLine) {
+                const totalSteps = 5;
+                const widthPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressLine.style.width = `${widthPercentage}%`;
+            }
+            
+            for (let i = 1; i <= 5; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (dot) {
+                    if (i < currentStep) {
+                        dot.classList.add('completed');
+                    } else if (i === currentStep) {
+                        dot.classList.add('active');
+                    }
+                }
+            }
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function showError(errorId, message) {
+            const errorElement = document.getElementById(errorId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                
+                const inputId = errorId.replace('-error', '');
+                const inputElement = document.getElementById(inputId);
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            }
+        }
+        
+        function hideError(errorId) {
+            const errorElement = document.getElementById(errorId);
+            if (errorElement) {
+                errorElement.style.display = 'none';
+                
+                const inputId = errorId.replace('-error', '');
+                const inputElement = document.getElementById(inputId);
+                if (inputElement) {
+                    inputElement.classList.remove('error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
