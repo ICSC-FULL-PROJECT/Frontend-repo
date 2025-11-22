@@ -33,7 +33,9 @@
             color: var(--text-dark);
             margin: 0;
             padding: 0;
-        } .site-background {
+        }
+        
+        .site-background {
             background-color: #ffffff !important;
         }
         
@@ -146,6 +148,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
+            position: relative;
         }
         
         .registrant-card:hover {
@@ -157,6 +160,8 @@
         .registrant-card.selected {
             border-color: var(--primary-color);
             background: #f8fff9;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
         }
         
         .registrant-card h3 {
@@ -177,6 +182,18 @@
             font-weight: bold;
             color: var(--success-color);
             margin-top: 10px;
+        }
+        
+        .registrant-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
         
         .has-star::after {
@@ -737,45 +754,44 @@
                 
                 <div class="registrant-cards">
                     <!-- Attendee Card -->
-                    <a href="register-attendee.html" class="registrant-card-link" style="text-decoration: none;">
-                        <div class="registrant-card">
-                            <h3>Attendee</h3>
-                            <p><strong>International civil servants and those working in the wider public sector are welcome to register for free using the form below.</strong></p>
-                            <p><strong>Group registrations</strong><br>
-                            Once you have completed the details of the registration, you can then process your booking information from your dashboard. All attendees, once registered, will receive their own booking confirmation via email, allowing them to update or amend their booking at a later date on their dashboard.</p>
-                            <div class="price">Free Registration</div>
-                        </div>
-                    </a>
+                    <div class="registrant-card" data-type="attendee">
+                        <h3>Attendee</h3>
+                        <p><strong>International civil servants and those working in the wider public sector are welcome to register for free using the form below.</strong></p>
+                        <p><strong>Group registrations</strong><br>
+                        Once you have completed the details of the registration, you can then process your booking information from your dashboard. All attendees, once registered, will receive their own booking confirmation via email, allowing them to update or amend their booking at a later date on their dashboard.</p>
+                        <div class="price">Free Registration</div>
+                    </div>
                     
                     <!-- Speaker Card -->
-                    <a href="register-speaker.html" class="registrant-card-link" style="text-decoration: none;">
-                        <div class="registrant-card">
-                            <h3>Speaker</h3>
-                            <p><strong>Speaker registration for the International Civil Service Conference.</strong></p>
-                            <p>Speakers will have access to speaker preparation sessions, presentation guidelines, and dedicated speaker support. Please complete your registration to confirm your participation.</p>
-                            <p class="text-primary"><strong>Note: Speaker registration requires package selection and payment.</strong></p>
-                        </div>
-                    </a>
+                    <div class="registrant-card" data-type="speaker">
+                        <h3>Speaker</h3>
+                        <p><strong>Speaker registration for the International Civil Service Conference.</strong></p>
+                        <p>Speakers will have access to speaker preparation sessions, presentation guidelines, and dedicated speaker support. Please complete your registration to confirm your participation.</p>
+                        <p class="text-primary"><strong>Note: Speaker registration requires package selection and payment.</strong></p>
+                    </div>
                     
                     <!-- Partner Card -->
-                    <a href="register-partner.html" class="registrant-card-link" style="text-decoration: none;">
-                        <div class="registrant-card">
-                            <h3>Event Partner</h3>
-                            <p><strong>Event Partner Registration Form</strong></p>
-                            <p>Partners will receive premium visibility and engagement opportunities at the conference. Select from our partnership packages to maximize your impact.</p>
-                            <p class="text-primary"><strong>Note: Partner registration requires package selection and payment.</strong></p>
-                        </div>
-                    </a>
+                    <div class="registrant-card" data-type="partner">
+                        <h3>Event Partner</h3>
+                        <p><strong>Event Partner Registration Form</strong></p>
+                        <p>Partners will receive premium visibility and engagement opportunities at the conference. Select from our partnership packages to maximize your impact.</p>
+                        <p class="text-primary"><strong>Note: Partner registration requires package selection and payment.</strong></p>
+                    </div>
                     
                     <!-- Exhibitor Card -->
-                    <a href="register-exhibitor.html" class="registrant-card-link" style="text-decoration: none;">
-                        <div class="registrant-card">
-                            <h3>Exhibitor</h3>
-                            <p><strong>Exhibitor Registration Form</strong></p>
-                            <p>Exhibitors will have the opportunity to showcase their products and services to an international audience of civil service professionals.</p>
-                            <p>Complete your registration to proceed to payment on your dashboard.</p>
-                        </div>
-                    </a>
+                    <div class="registrant-card" data-type="exhibitor">
+                        <h3>Exhibitor</h3>
+                        <p><strong>Exhibitor Registration Form</strong></p>
+                        <p>Exhibitors will have the opportunity to showcase their products and services to an international audience of civil service professionals.</p>
+                        <p>Complete your registration to proceed to payment on your dashboard.</p>
+                    </div>
+                </div>
+                
+                <!-- Continue Button Container -->
+                <div class="button-container" id="continue-container" style="display: none;">
+                    <button type="button" class="btn btn-standard" id="continue-to-registration-btn">
+                        Continue to Registration <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -792,7 +808,7 @@
                 <div class="col-md-6 text-md-end">
                     <h5>Contact Us</h5>
                     <p>Email: info@icsc2026.org</p>
-                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Phone: +234 (0) 123 456 7890</p>
                     <div class="social-media-links mt-3">
                         <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
@@ -810,5 +826,60 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let selectedRegistrantType = '';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.registrant-card');
+            const continueContainer = document.getElementById('continue-container');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    cards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Get the registrant type
+                    selectedRegistrantType = this.getAttribute('data-type');
+                    
+                    // Show continue button
+                    continueContainer.style.display = 'flex';
+                    
+                    // Scroll to continue button
+                    continueContainer.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            // Continue button functionality
+            const continueBtn = document.getElementById('continue-to-registration-btn');
+            if (continueBtn) {
+                continueBtn.addEventListener('click', function() {
+                    if (selectedRegistrantType) {
+                        window.location.href = `register-${selectedRegistrantType}.html`;
+                    }
+                });
+            }
+            
+            // Add hover effects
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('selected')) {
+                        this.style.transform = 'translateY(-5px)';
+                        this.style.boxShadow = '0 8px 25px rgba(0, 123, 255, 0.15)';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('selected')) {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
