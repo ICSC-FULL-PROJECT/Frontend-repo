@@ -309,6 +309,16 @@
                     
                     <form id="loginForm">
                         <div class="form-group">
+                            <select id="loginAs" name="loginAs" class="form-control" required>
+                                <option value="">Select Who You`re Logging In As</option>
+                                <option value="Attendee">Attendee</option>
+                                <option value="Event Partner">Event Partner</option>
+                                <option value="Exhibitor">Exhibitor</option>
+                                <option value="Speaker">Speaker</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <input type="email" id="loginEmail" class="form-control" placeholder="Email Address" required>
                         </div>
                         
@@ -336,55 +346,119 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        // Image slider functionality
+        // Image slider + login functionality
         $(document).ready(function() {
+            // Slider code
             let currentSlide = 0;
             const slides = $('.slide');
             const totalSlides = slides.length;
-            
+
             function showSlide(index) {
                 slides.removeClass('active');
                 slides.eq(index).addClass('active');
             }
-            
+
             function nextSlide() {
                 currentSlide = (currentSlide + 1) % totalSlides;
                 showSlide(currentSlide);
             }
-            
+
             // Change slide every 5 seconds
             setInterval(nextSlide, 5000);
+
+            // Base backend URL (use the deployed Render URL)
+            const BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
             
-            // Login form submission
+            // Role -> backend endpoint mapping (full URLs)
+            const endpoints = {
+                'Attendee': `${BASE_URL}/auth/attendee-login`,
+                'Event Partner': `${BASE_URL}/auth/event-partner-login`,
+                'Exhibitor': `${BASE_URL}/auth/exhibitor-login`,
+                'Speaker': `${BASE_URL}/auth/speaker-login`
+            };
+
+            // Role -> default redirect (relative files in same directory as login.html)
+            const redirects = {
+                'Attendee': 'attendee-dash.html',
+                'Event Partner': 'partners-dash.html',
+                'Exhibitor': 'exhibitors-dash.html',
+                'Speaker': 'speakers-dash.html'
+            };
+
+            // Login form submission - calls role-specific backend endpoint
             $('#loginForm').on('submit', function(e) {
                 e.preventDefault();
-                
-                const email = $('#loginEmail').val();
+
+                const role = $('#loginAs').val();
+                const email = $('#loginEmail').val().trim();
                 const password = $('#loginPassword').val();
-                
-                // Mock authentication - This would be replaced with backend API call
-                if (email && password) {
-                    // Simulate API call
-                    $('#login-error').hide();
-                    
-                    // Show loading state
-                    $('.btn-login').html('<i class="fas fa-spinner fa-spin me-2"></i> Signing In...');
-                    
-                    // Mock successful login after 2 seconds
-                    setTimeout(function() {
-                        // In a real application, this would redirect to the dashboard
-                        alert('Login successful! In a real application, this would redirect to the dashboard.');
-                        $('.btn-login').html('Sign In');
-                        
-                        // Reset form
-                        $('#loginForm')[0].reset();
-                    }, 2000);
-                } else {
-                    $('#login-error').show();
+
+                if (!role) {
+                    $('#login-error').text('Please select who you are logging in as.').show();
+                    return;
                 }
+                if (!email || !password) {
+                    $('#login-error').text('Please enter both email and password.').show();
+                    return;
+                }
+
+                const url = endpoints[role];
+                if (!url) {
+                    $('#login-error').text('Unsupported role selected.').show();
+                    return;
+                }
+
+                $('#login-error').hide();
+                const $button = $('.btn-login');
+                const originalText = $button.html();
+                $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Signing In...');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ email: email, password: password }),
+                    success: function(response) {
+                        // Normalize response (handle different backend shapes)
+                        let res = response;
+                        try {
+                            if (typeof response === 'string' && response.trim().startsWith('{')) {
+                                res = JSON.parse(response);
+                            }
+                        } catch (err) { /* ignore parse error */ }
+
+                        // Extract token and redirect from possible locations
+                        const token = res && (res.token || (res.data && res.data.token));
+                        const redirectUrl = (res && (res.redirectUrl || (res.data && res.data.redirectUrl)));
+                        const message = (res && (res.message || (res.data && res.data.message))) || 'Invalid email or password. Please try again.';
+
+                        // Determine success by common flags or presence of token/redirect
+                        const ok = res && (res.success === true || res.status === 'success' || !!token || !!redirectUrl);
+
+                        if (ok) {
+                            if (token) {
+                                try { localStorage.setItem('authToken', token); } catch (e) { /* ignore */ }
+                                try { localStorage.setItem('accessToken', token); } catch (e) { /* ignore */ }
+                                try { localStorage.setItem('authUser', JSON.stringify({ token: token, role: role })); } catch (e) { /* ignore */ }
+                            }
+                            const finalRedirect = redirectUrl || redirects[role] || '/dashboard';
+                            // Use a small timeout to ensure UI updates before navigation
+                            setTimeout(function() { window.location.href = finalRedirect; }, 200);
+                        } else {
+                            $('#login-error').text(message).show();
+                            $button.prop('disabled', false).html(originalText);
+                        }
+                    },
+                    error: function(xhr) {
+                        const body = xhr && xhr.responseJSON ? xhr.responseJSON : null;
+                        const msg = (body && (body.message || body.error)) ? (body.message || body.error) : 'Login failed. Please check your credentials and try again.';
+                        $('#login-error').text(msg).show();
+                        $button.prop('disabled', false).html(originalText);
+                    }
+                });
             });
-            
-            // Forgot password functionality
+
+            // Forgot password functionality (keeps existing behavior)
             $('#forgot-password').on('click', function(e) {
                 e.preventDefault();
                 alert('In a real application, this would open a password reset form.');
