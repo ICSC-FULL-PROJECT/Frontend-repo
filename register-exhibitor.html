@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICSC 2026 - Exhibitor Registration</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,400italic,700italic" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <style>
+        /* All CSS styles remain the same as in the original file */
+        :root {
+            --primary-color: #28a745;
+            --primary-dark: #218838;
+            --secondary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-gray: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        } .site-background {
+            background-color: #ffffff !important;
+        }
+        
+        .navbar {
+            background: white;
+            border: none;
+            margin-bottom: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+        }
+        
+        .jumbotron {
+            background-color: #ffffff;
+            margin-bottom: 0;
+            padding: 30px 0;
+        }
+        
+        .logo img {
+            max-height: 60px;
+            width: auto;
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+            position: relative;
+            padding: 0 15px;
+        }
+        
+        /* === Animated Dot Progress Indicator === */
+        .progress-indicator.dots {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Background line */
+        .progress-indicator.dots::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            transform: translateY(-50%);
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        /* Animated fill line */
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background: #008751;
+            transform: translateY(-50%);
+            border-radius: 2px;
+            width: 0%;
+            z-index: 2;
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* Dots */
+        .progress-indicator.dots .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #ccc;
+            position: relative;
+            z-index: 3;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        /* Active + completed state */
+        .progress-indicator.dots .dot.active {
+            background-color: #008751;
+            transform: scale(1.2);
+        }
+
+        .progress-indicator.dots .dot.completed {
+            background-color: #4caf50;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .registrant-cards {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+            grid-template-columns: 1fr;
+        }
+        
+        .registrant-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .registrant-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .registrant-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .registrant-card h3 {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 1.3rem;
+        }
+        
+        .registrant-card p {
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .registrant-card .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--success-color);
+            margin-top: 10px;
+        }
+        
+        .has-star::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .btn-standard {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            padding: 14px 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 8px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-standard:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .btn-outline-standard {
+            background-color: transparent;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            padding: 14px 25px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-outline-standard:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .social-media-links a {
+            color: var(--primary-color) !important;
+        }
+        
+        .footer-container {
+            background-color: var(--light-gray);
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .help-block-error {
+            color: var(--danger-color);
+            font-size: 0.8em;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .hint-block {
+            font-size: 0.8em;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        input.error, select.error, textarea.error {
+            border-color: var(--danger-color);
+        }
+        
+        .booking-note {
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        
+        .confirmation-details {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .confirmation-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .confirmation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .confirmation-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .confirmation-value {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .auto-login-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .package-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .package-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .package-card:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+        }
+        
+        .package-card.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .package-card h4 {
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .package-card .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+            text-align: center;
+            margin: 12px 0;
+        }
+        
+        .package-card ul {
+            padding-left: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .package-card li {
+            margin-bottom: 6px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        .package-card .limited {
+            color: var(--danger-color);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .payment-section {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary-color);
+            background: #f8fff9;
+        }
+        
+        .payment-option input {
+            margin-right: 10px;
+        }
+        
+        .payment-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .payment-form {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .iti {
+            width: 100%;
+        }
+        
+        .phone-input-container {
+            position: relative;
+        }
+        
+        .phone-input-container .form-control {
+            padding-left: 52px;
+        }
+        
+        .pdf-viewer {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin: 18px 0;
+            background: var(--light-gray);
+        }
+        
+        .pdf-viewer h5 {
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+        
+        .pdf-placeholder {
+            background: white;
+            border-radius: 6px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 2px dashed var(--border-color);
+        }
+        
+        .pdf-placeholder i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .sponsor-package-info {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 18px;
+            margin: 18px 0;
+            border-radius: 4px;
+        }
+
+        .sponsor-package-info h5 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .password-toggle:focus {
+            outline: none;
+        }
+
+        /* File upload styles */
+        .file-upload-container {
+            margin-top: 15px;
+        }
+
+        .file-upload-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .file-upload-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+        }
+
+        .file-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Button container for mobile */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Container padding for mobile */
+        .container {
+            padding-left: 15px;
+            padding-right: 15px;
+            max-width: 100%;
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .jumbotron h1 {
+                font-size: 1.5rem;
+            }
+            
+            .jumbotron .lead {
+                font-size: 0.9rem;
+            }
+            
+            .form-section {
+                padding: 20px 15px;
+            }
+            
+            .registrant-card, .package-card {
+                padding: 15px;
+            }
+            
+            .confirmation-details, .payment-section {
+                padding: 15px;
+            }
+            
+            .pdf-viewer {
+                padding: 15px;
+            }
+            
+            .btn-standard, .btn-outline-standard {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .progress-indicator.dots {
+                max-width: 100%;
+            }
+            
+            .progress-indicator.dots .dot {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .registrant-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .package-card h4 {
+                font-size: 1.1rem;
+            }
+            
+            .success-message {
+                padding: 15px;
+            }
+            
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .registrant-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .package-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .button-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .btn-standard, .btn-outline-standard {
+                width: auto;
+                margin: 0;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .package-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .registrant-cards {
+                grid-template-columns: repeat(2, 2fr);
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) {
+            .registrant-card:hover,
+            .package-card:hover {
+                transform: none;
+                border-color: var(--border-color);
+            }
+            
+            .registrant-card.selected,
+            .package-card.selected {
+                border-color: var(--primary-color);
+                transform: scale(1.02);
+            }
+        }
+
+        /* Focus styles for accessibility */
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-right-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="standard-page">
+    <!-- Navigation -->
+    <div id="nav-wrap">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <div class="d-flex align-items-center">
+                    <div class="logo me-3">
+                        <img src="images/NG.jpeg" alt="ICSC 2026" class="img-fluid">
+                    </div>
+                    <span class="navbar-brand mb-0 h1">ICSC 2026</span>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="login.html">SIGN IN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="agenda.html">AGENDA</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <div id="header-wrap" class="jumbotron site-background">
+        <div class="container">
+            <div class="text-center">
+                <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE (ICSC) 2026</h1>
+                <p class="lead">Building Global Civil Service Excellence</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-section">
+        <div class="container">
+            <!-- Progress Indicator (Dot Style) -->
+            <div class="progress-container">
+                <div class="progress-indicator dots" id="progress-indicator">
+                    <span class="dot active" id="dot-1" title="Account Information"></span>
+                    <span class="dot" id="dot-2" title="Profile Information"></span>
+                    <span class="dot" id="dot-3" title="Confirmation"></span>
+                    <div class="progress-line" id="progress-line"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
+            </div>
+
+            <!-- Step 1: Account Creation Section -->
+            <div id="account-section" class="form-section">
+                <h2 class="text-center mb-4">Create Your Account</h2>
+                
+                <form id="account-form">
+                    <div class="form-group">
+                        <label class="has-star" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                        <div class="help-block-error" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="password">Choose a Password</label>
+                        <div class="position-relative">
+                            <input type="password" id="password" name="password" class="form-control" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-block-error" id="password-error"></div>
+                        <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="confirmPassword">Repeat Your Password</label>
+                        <div class="position-relative">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="help-block-error" id="confirmPassword-error"></div>
+                    </div>
+                </form>
+                
+                <div class="button-container">
+                    <a href="register.html" class="btn btn-outline-standard">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back to Registration Types
+                    </a>
+                    <button type="button" class="btn btn-standard" id="continue-to-profile-btn">
+                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Profile Information Section -->
+            <div id="profile-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Exhibitor Profile Information</h2>
+                
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label class="has-star" for="exhibitorPrefix">Prefix</label>
+                        <select id="exhibitorPrefix" name="exhibitorPrefix" class="form-control" required>
+                            <option value="">Select Prefix</option>
+                            <option value="company">Company</option>
+                            <option value="organization">Organization</option>
+                            <option value="institution">Institution</option>
+                            <option value="agency">Agency</option>
+                            <option value="firm">other</option>
+                        </select>
+                        <div class="help-block-error" id="exhibitorPrefix-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="exhibitorName">Company/Organization Name</label>
+                        <input type="text" id="exhibitorName" name="exhibitorName" class="form-control" required>
+                        <div class="help-block-error" id="exhibitorName-error"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="has-star" for="exhibitorFirstName">Contact First Name</label>
+                            <input type="text" id="exhibitorFirstName" name="exhibitorFirstName" class="form-control" required>
+                            <div class="help-block-error" id="exhibitorFirstName-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="exhibitorLastName">Contact Last Name</label>
+                            <input type="text" id="exhibitorLastName" name="exhibitorLastName" class="form-control" required>
+                            <div class="help-block-error" id="exhibitorLastName-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="exhibitorEmail">Contact Email</label>
+                        <input type="email" id="exhibitorEmail" name="exhibitorEmail" class="form-control" required>
+                        <div class="help-block-error" id="exhibitorEmail-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="exhibitorPhone">Contact Phone</label>
+                        <div class="phone-input-container">
+                            <input type="tel" id="exhibitorPhone" name="exhibitorPhone" class="form-control" required>
+                        </div>
+                        <div class="help-block-error" id="exhibitorPhone-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exhibitorWebsite">Website</label>
+                        <input type="url" id="exhibitorWebsite" name="exhibitorWebsite" class="form-control" placeholder="https://">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exhibitorDescription">Company/Organization Description</label>
+                        <textarea id="exhibitorDescription" name="exhibitorDescription" class="form-control" rows="4" placeholder="Please describe your company/organization and its mission" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exhibitorProducts">Products/Services to Exhibit</label>
+                        <textarea id="exhibitorProducts" name="exhibitorProducts" class="form-control" rows="3" placeholder="Please describe the products or services you plan to exhibit"></textarea>
+                    </div>
+                </form>
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-confirmation-btn">
+                        Complete Registration <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirmation Section -->
+            <div id="confirmation-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Registration Confirmation</h2>
+                
+                <div class="success-message">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h3>Registration Successful!</h3>
+                    <p class="mb-0">Thank you for registering as an Exhibitor for the International Civil Service Conference 2026.</p>
+                </div>
+                
+                <div class="confirmation-details">
+                    <h4 class="mb-3">Registration Details</h4>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Registration ID</div>
+                        <div class="confirmation-value" id="confirmation-id">ICSC2026-EXH001234</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Registrant Type</div>
+                        <div class="confirmation-value" id="confirmation-type">Exhibitor</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Company/Organization Name</div>
+                        <div class="confirmation-value" id="confirmation-company">Example Corp</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Contact Name</div>
+                        <div class="confirmation-value" id="confirmation-name">John Doe</div>
+                    </div>
+                    <div class="confirmation-item">
+                        <div class="confirmation-label">Contact Email</div>
+                        <div class="confirmation-value" id="confirmation-email">john.doe@example.com</div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p>A confirmation email has been sent to <strong id="confirmation-email-text">john.doe@example.com</strong> with all the details.</p>
+                    <div class="button-container">
+                        <button type="button" class="btn btn-standard" id="go-to-dashboard-btn">
+                            Go to Exhibitor Dashboard
+                        </button>
+                        <a href="Index.html" class="btn btn-outline-standard">Return to Conference Website</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>INTERNATIONAL CIVIL SERVICE CONFERENCE (ICSC) 2026</h5>
+                    <p>Building Global Civil Service Excellence</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Contact Us</h5>
+                    <p>Email: info@icsc2026.org</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                    <div class="social-media-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2026 International Civil Service Conference. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/apiClient.js"></script>
+    <script src="js/auth.js"></script>
+
+    <!-- Main Application Script -->
+    <script>
+        // Global variables for exhibitor registration
+        let currentStep = 1;
+        const selectedRegistrantType = 'exhibitor';
+        let phoneInputs = [];
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize phone input
+            const phoneInput = document.getElementById('exhibitorPhone');
+            if (phoneInput) {
+                phoneInputs['exhibitorPhone'] = window.intlTelInput(phoneInput, {
+                    initialCountry: 'ng',
+                    separateDialCode: true,
+                    utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+                });
+            }
+            
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPassword = document.getElementById('confirmPassword');
+            
+            if (togglePassword && password) {
+                togglePassword.addEventListener('click', function() {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+            
+            if (toggleConfirmPassword && confirmPassword) {
+                toggleConfirmPassword.addEventListener('click', function() {
+                    const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    confirmPassword.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+            
+            // Step navigation
+            document.getElementById('continue-to-profile-btn').addEventListener('click', function() {
+                if (validateAccountForm()) {
+                    goToStep(2);
+                }
+            });
+            
+            document.getElementById('back-to-account-btn').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            document.getElementById('continue-to-confirmation-btn').addEventListener('click', function() {
+                if (validateProfileForm()) {
+                    goToStep(3);
+                    updateConfirmationDetails();
+                }
+            });
+            
+            document.getElementById('go-to-dashboard-btn').addEventListener('click', function() {
+                // Redirect to exhibitor dashboard
+                window.location.href = 'exhibitors-dash.html';
+            });
+            
+            // Update progress indicator
+            updateProgressIndicator();
+        });
+        
+        // Form validation functions
+        function validateAccountForm() {
+            let isValid = true;
+            
+            // Email validation
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('email-error');
+            if (!email) {
+                emailError.textContent = 'Email is required';
+                emailError.style.display = 'block';
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+            
+            // Password validation
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('password-error');
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else if (password.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters';
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                passwordError.style.display = 'none';
+            }
+            
+            // Confirm password validation
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmPasswordError = document.getElementById('confirmPassword-error');
+            if (!confirmPassword) {
+                confirmPasswordError.textContent = 'Please confirm your password';
+                confirmPasswordError.style.display = 'block';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                confirmPasswordError.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPasswordError.style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        function validateProfileForm() {
+            let isValid = true;
+            
+            // Exhibitor prefix validation
+            const prefix = document.getElementById('exhibitorPrefix').value;
+            const prefixError = document.getElementById('exhibitorPrefix-error');
+            if (!prefix) {
+                prefixError.textContent = 'Please select a prefix';
+                prefixError.style.display = 'block';
+                isValid = false;
+            } else {
+                prefixError.style.display = 'none';
+            }
+            
+            // Company name validation
+            const companyName = document.getElementById('exhibitorName').value;
+            const companyNameError = document.getElementById('exhibitorName-error');
+            if (!companyName) {
+                companyNameError.textContent = 'Company/Organization name is required';
+                companyNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                companyNameError.style.display = 'none';
+            }
+            
+            // First name validation
+            const firstName = document.getElementById('exhibitorFirstName').value;
+            const firstNameError = document.getElementById('exhibitorFirstName-error');
+            if (!firstName) {
+                firstNameError.textContent = 'First name is required';
+                firstNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                firstNameError.style.display = 'none';
+            }
+            
+            // Last name validation
+            const lastName = document.getElementById('exhibitorLastName').value;
+            const lastNameError = document.getElementById('exhibitorLastName-error');
+            if (!lastName) {
+                lastNameError.textContent = 'Last name is required';
+                lastNameError.style.display = 'block';
+                isValid = false;
+            } else {
+                lastNameError.style.display = 'none';
+            }
+            
+            // Email validation
+            const email = document.getElementById('exhibitorEmail').value;
+            const emailError = document.getElementById('exhibitorEmail-error');
+            if (!email) {
+                emailError.textContent = 'Contact email is required';
+                emailError.style.display = 'block';
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+            
+            // Phone validation
+            const phone = document.getElementById('exhibitorPhone').value;
+            const phoneError = document.getElementById('exhibitorPhone-error');
+            if (!phone) {
+                phoneError.textContent = 'Phone number is required';
+                phoneError.style.display = 'block';
+                isValid = false;
+            } else if (phoneInputs['exhibitorPhone'] && !phoneInputs['exhibitorPhone'].isValidNumber()) {
+                phoneError.textContent = 'Please enter a valid phone number';
+                phoneError.style.display = 'block';
+                isValid = false;
+            } else {
+                phoneError.style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Step navigation function
+        function goToStep(step) {
+            // Hide all sections
+            document.getElementById('account-section').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'none';
+            document.getElementById('confirmation-section').style.display = 'none';
+            
+            // Show the current step section
+            if (step === 1) {
+                document.getElementById('account-section').style.display = 'block';
+            } else if (step === 2) {
+                document.getElementById('profile-section').style.display = 'block';
+            } else if (step === 3) {
+                document.getElementById('confirmation-section').style.display = 'block';
+            }
+            
+            currentStep = step;
+            updateProgressIndicator();
+        }
+        
+        // Update progress indicator
+        function updateProgressIndicator() {
+            const dots = document.querySelectorAll('.dot');
+            const progressLine = document.getElementById('progress-line');
+            
+            // Reset all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active', 'completed');
+            });
+            
+            // Update dots based on current step
+            for (let i = 0; i < currentStep; i++) {
+                if (i < currentStep - 1) {
+                    dots[i].classList.add('completed');
+                } else {
+                    dots[i].classList.add('active');
+                }
+            }
+            
+            // Update progress line
+            if (currentStep === 1) {
+                progressLine.style.width = '0%';
+            } else if (currentStep === 2) {
+                progressLine.style.width = '50%';
+            } else if (currentStep === 3) {
+                progressLine.style.width = '100%';
+            }
+        }
+        
+        // Update confirmation details
+        function updateConfirmationDetails() {
+            // Generate a random registration ID
+            const randomId = 'ICSC2026-EXH' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('confirmation-id').textContent = randomId;
+            
+            // Update with form data
+            document.getElementById('confirmation-company').textContent = document.getElementById('exhibitorName').value;
+            document.getElementById('confirmation-name').textContent = 
+                document.getElementById('exhibitorFirstName').value + ' ' + document.getElementById('exhibitorLastName').value;
+            document.getElementById('confirmation-email').textContent = document.getElementById('exhibitorEmail').value;
+            document.getElementById('confirmation-email-text').textContent = document.getElementById('exhibitorEmail').value;
+        }
+    </script>
+</body>
+</html>

@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <style>
+        /* Include all the same CSS styles from the original file */
         :root {
             --primary-color: #28a745;
             --primary-dark: #218838;
@@ -147,6 +148,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
+            position: relative;
         }
         
         .registrant-card:hover {
@@ -158,6 +160,8 @@
         .registrant-card.selected {
             border-color: var(--primary-color);
             background: #f8fff9;
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
         }
         
         .registrant-card h3 {
@@ -178,6 +182,18 @@
             font-weight: bold;
             color: var(--success-color);
             margin-top: 10px;
+        }
+        
+        .registrant-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
         
         .has-star::after {
@@ -768,29 +784,13 @@
     <!-- Main Content -->
     <div class="content-section">
         <div class="container">
-            <!-- Progress Indicator (Dot Style) -->
-            <div class="progress-container">
-                <div class="progress-indicator dots" id="progress-indicator">
-                    <span class="dot active" id="dot-1" title="Registrant Type"></span>
-                    <span class="dot" id="dot-2" title="Account Information"></span>
-                    <span class="dot" id="dot-3" title="Profile Information"></span>
-                    <span class="dot speaker-partner-only" id="dot-4" title="Package Selection"></span>
-                    <span class="dot speaker-partner-only" id="dot-5" title="Payment"></span>
-                    <span class="dot" id="dot-6" title="Confirmation"></span>
-                    <div class="progress-line"></div>
-                </div>
-            </div>
-            
             <div class="text-center mb-4">
                 <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
             </div>
 
-            <!-- Registration Form Sections -->
-            
-            <!-- Step 1: Registrant Type Selection -->
+            <!-- Registration Type Selection -->
             <div id="registrant-type-section" class="form-section">
                 <h1 class="text-center mb-4">Select a registrant type</h1>
-                <div class="error-message" id="registrant-error">Please select a registrant type to continue</div>
                 
                 <div class="registrant-cards">
                     <!-- Attendee Card -->
@@ -827,9 +827,10 @@
                     </div>
                 </div>
                 
-                <div class="text-center mt-4">
-                    <button type="button" id="continue-btn" class="btn btn-standard" disabled>
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                <!-- Continue Button Container -->
+                <div class="button-container" id="continue-container" style="display: none;">
+                    <button type="button" class="btn btn-standard" id="continue-to-registration-btn">
+                        Continue to Registration <i class="fas fa-arrow-circle-right ms-2"></i>
                     </button>
                 </div>
             </div>
@@ -899,10 +900,12 @@
                             <div class="help-block-error" id="prefix-error"></div>
                         </div>
                         
-                        <div class="form-group">
-                            <label class="has-star" for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" class="form-control" required>
-                            <div class="help-block-error" id="fullName-error"></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" class="form-control" required>
+                                <div class="help-block-error" id="fullName-error"></div>
+                            </div>
                         </div>
                         
                         <!-- New Attendee Fields -->
@@ -987,7 +990,10 @@
                         </div>
 
                         <div class="form-row">
-                            
+                            <!-- <div class="form-group">
+                                <label for="attendeeEmail">Official Email</label>
+                                <input type="email" id="attendeeEmail" name="attendeeEmail" class="form-control">
+                            </div> -->
                             <div class="form-group">
                                 <label class="has-star" for="position">Position</label>
                                 <input type="text" id="position" name="position" class="form-control">
@@ -1011,7 +1017,19 @@
                             <div class="help-block-error" id="country-error"></div>
                         </div>
                         
-                       
+                        <!-- <div class="form-group">
+                            <label class="has-star" for="jobTitle">Job Title</label>
+                            <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
+                            <div class="help-block-error" id="jobTitle-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="workPhone">Work Phone</label>
+                            <div class="phone-input-container">
+                                <input type="tel" id="workPhone" name="workPhone" class="form-control">
+                            </div>
+                            <div class="help-block-error" id="workPhone-error"></div>
+                        </div> -->
                         <div class="form-group">
                             <label for="remark">Remark</label>
                             <textarea id="remark" name="remark" class="form-control" rows="4" placeholder="Please provide a brief introduction about yourself"></textarea>
@@ -1080,6 +1098,12 @@
                             <label for="socialMedia">Social Media Handles</label>
                             <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="e.g., @Name on either instagram, twitter,facebook">
                         </div>
+
+                          <div class="form-group">
+                            <label class="has-star" for="speakerWorkEmail">Work Email</label>
+                            <input type="email" id="speakerWorkEmail" name="speakerWorkEmail" class="form-control" required>
+                            <div class="help-block-error" id="speakerWorkEmail-error"></div>
+                          </div>
 
                         <div class="form-group">
                             <label class="has-star" for="speakerBio">Brief Introduction/Bio</label>
@@ -1298,13 +1322,52 @@
                 <div id="speaker-packages" style="display: none;">
                     <p class="text-center mb-4">Choose the speaker package that best fits your needs</p>
                     
-                    <div class="package-cards" id="speaker-package-cards">
-                        <!-- Speaker package cards will be rendered here dynamically by JavaScript -->
-                        <div class="text-center py-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading packages...</span>
-                            </div>
-                            <p class="mt-2">Loading speaker packages...</p>
+                    <div class="package-cards">
+                        <div class="package-card" data-package="basic-speaker">
+                            <h4>Basic Speaker Package</h4>
+                            <div class="price">$250</div>
+                            <ul>
+                                <li>Conference speaking slot (30 minutes)</li>
+                                <li>Access to all conference sessions</li>
+                                <li>Speaker certificate</li>
+                                <li>Conference materials</li>
+                                <li>Networking lunch for 1 day</li>
+                            </ul>
+                            <div class="limited">Limited slots available</div>
+                        </div>
+                        
+                        <div class="package-card" data-package="premium-speaker">
+                            <h4>Premium Speaker Package</h4>
+                            <div class="price">$450</div>
+                            <ul>
+                                <li>Conference speaking slot (45 minutes)</li>
+                                <li>Featured speaker listing</li>
+                                <li>Access to all conference sessions</li>
+                                <li>Speaker certificate</li>
+                                <li>Conference materials</li>
+                                <li>Networking lunch for all days</li>
+                                <li>Speaker dinner invitation</li>
+                                <li>Promotion on conference website</li>
+                            </ul>
+                            <div class="limited">Limited slots available</div>
+                        </div>
+                        
+                        <div class="package-card" data-package="keynote-speaker">
+                            <h4>Keynote Speaker Package</h4>
+                            <div class="price">$750</div>
+                            <ul>
+                                <li>Keynote speaking slot (60 minutes)</li>
+                                <li>Featured keynote listing</li>
+                                <li>Access to all conference sessions</li>
+                                <li>Speaker certificate</li>
+                                <li>Conference materials</li>
+                                <li>Networking lunch for all days</li>
+                                <li>Speaker dinner invitation</li>
+                                <li>Prominent promotion on conference website</li>
+                                <li>VIP seating at all sessions</li>
+                                <li>Complimentary accommodation for 2 nights</li>
+                            </ul>
+                            <div class="limited">Very limited slots available</div>
                         </div>
                     </div>
                 </div>
@@ -1407,17 +1470,41 @@
                     <h4 class="mb-3 mt-4">Select Payment Method</h4>
                     <div class="payment-options">
                         <div class="payment-option">
-                            <input type="radio" id="flutterwave" name="payment-method" value="flutterwave">
-                            <label for="flutterwave">Flutterwave</label>
+                            <input type="radio" id="credit-card" name="payment-method" value="credit-card">
+                            <label for="credit-card">Credit/Debit Card</label>
                         </div>
                         <div class="payment-option">
                             <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
                             <label for="bank-transfer">Bank Transfer</label>
                         </div>
-                        <!-- <div class="payment-option">
+                        <div class="payment-option">
                             <input type="radio" id="paypal" name="payment-method" value="paypal">
                             <label for="paypal">PayPal</label>
-                        </div> -->
+                        </div>
+                    </div>
+                    
+                    <div id="credit-card-form" class="payment-form">
+                        <div class="form-group">
+                            <label class="has-star" for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" class="form-control" placeholder="1234 5678 9012 3456">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="has-star" for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" class="form-control" placeholder="MM/YY">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="has-star" for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="cardName">Name on Card</label>
+                            <input type="text" id="cardName" name="cardName" class="form-control">
+                        </div>
                     </div>
                     
                     <div id="bank-transfer-form" class="payment-form">
@@ -1438,14 +1525,14 @@
                         </div>
                     </div>
                     
-                    <!-- <div id="paypal-form" class="payment-form">
+                    <div id="paypal-form" class="payment-form">
                         <div class="alert alert-info">
                             <h5>PayPal Payment</h5>
                             <p>You will be redirected to PayPal to complete your payment securely.</p>
                             <p>Click the button below to proceed with PayPal payment.</p>
                             <button type="button" class="btn btn-primary mt-2">Pay with PayPal</button>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 
                 <div class="button-container">
@@ -1520,7 +1607,7 @@
                 <div class="col-md-6 text-md-end">
                     <h5>Contact Us</h5>
                     <p>Email: info@icsc2026.org</p>
-                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Phone: +234 (0) 123 456 7890</p>
                     <div class="social-media-links mt-3">
                         <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
@@ -1538,25 +1625,12 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Axios is required by apiClient.js; include it before apiClient -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="js/apiClient.js"></script>
-    <script src="js/auth.js"></script>
-
-    <!-- Main Application Script -->
+    
     <script>
-        // Global variables
-        let currentStep = 1;
         let selectedRegistrantType = '';
         let selectedPackage = '';
         let selectedPaymentMethod = '';
         let phoneInputs = [];
-        // Holds last registration response for speakers (server response object)
-        let speakerRegistrationResponse = null;
-        // Cache for packages fetched from backend
-        let packagesCache = {};
         
         // Country list for dropdowns
         const countries = [
@@ -1642,68 +1716,69 @@
             }
         }
         
-        function populateCountryDropdowns() {
-            const countrySelectors = [
-                'country', 'speakerCountry','contactCountry', 'exhibitorCountry'
-            ];
+       function populateCountryDropdowns() {
+    const countrySelectors = [
+        'country', 'speakerCountry','contactCountry', 'exhibitorCountry'
+    ];
 
-            countrySelectors.forEach(selector => {
-                const select = document.getElementById(selector);
-                if (select) {
-                    // If first option is a placeholder, keep it and clear others.
-                    const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
-                    select.innerHTML = placeholder;
+    countrySelectors.forEach(selector => {
+        const select = document.getElementById(selector);
+        if (select) {
+            // If first option is a placeholder, keep it and clear others.
+            const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
+            select.innerHTML = placeholder;
 
-                    // Add countries to dropdown with explicit values
-                    countries.forEach(country => {
-                        const option = document.createElement('option');
-                        option.value = country;
-                        option.textContent = country;
-                        select.appendChild(option);
-                    });
+            // Add countries to dropdown with explicit values
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
 
-                    // Defensive: if any option has empty value, set it to its text
-                    Array.from(select.options).forEach(opt => {
-                        if (!opt.value || opt.value.trim() === '') {
-                            opt.value = opt.textContent.trim();
-                        }
-                    });
-
-                    // Set Nigeria as default (if present)
-                    if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
-                        select.value = 'Nigeria';
-                    } else {
-                        select.selectedIndex = 0;
-                    }
+            // Defensive: if any option has empty value, set it to its text
+            Array.from(select.options).forEach(opt => {
+                if (!opt.value || opt.value.trim() === '') {
+                    opt.value = opt.textContent.trim();
                 }
             });
+
+            // Set Nigeria as default (if present)
+            if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
+                select.value = 'Nigeria';
+            } else {
+                select.selectedIndex = 0;
+            }
         }
+    });
+}
 
-        function initializePhoneInputs() {
-            const phoneInputIds = [
-                'attendeePhone', 'workPhone', 'speakerPhone', 'contactPhone', 'exhibitorPhone'
-            ];
+      function initializePhoneInputs() {
+    const phoneInputIds = [
+        'attendeePhone', 'workPhone', 'speakerPhone', 'contactPhone', 'exhibitorPhone'
+    ];
 
-            // make sure we're using the global array
-            phoneInputs = phoneInputs || [];
+    // make sure we’re using the global array
+    phoneInputs = phoneInputs || [];
 
-            phoneInputIds.forEach(id => {
-                const input = document.getElementById(id);
-                if (input && window.intlTelInput) {
-                    try {
-                        const iti = window.intlTelInput(input, {
-                            initialCountry: "ng", // Set Nigeria as default
-                            separateDialCode: true,
-                            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-                        });
-                        // ✅ push directly into the global array
-                        phoneInputs.push({ id, iti });
-                    } catch (error) {
-                        console.error(`Error initializing phone input ${id}:`, error);
-                    }
-                }
-            });
+    phoneInputIds.forEach(id => {
+        const input = document.getElementById(id);
+        if (input && window.intlTelInput) {
+            try {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ng", // Set Nigeria as default
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                });
+                // ✅ push directly into the global array
+                phoneInputs.push({ id, iti });
+            } catch (error) {
+                console.error(`Error initializing phone input ${id}:`, error);
+            }
         }
+    });
+}
+
         
         function setupEventListeners() {
             // Password toggle functionality
@@ -1735,12 +1810,12 @@
                 });
             });
             
-            // Continue button from step 1
-            const continueBtn = document.getElementById('continue-btn');
+            // Continue button functionality
+            const continueBtn = document.getElementById('continue-to-registration-btn');
             if (continueBtn) {
                 continueBtn.addEventListener('click', function() {
-                    if (validateRegistrantType()) {
-                        showStep(2);
+                    if (selectedRegistrantType) {
+                        window.location.href = `register-${selectedRegistrantType}.html`;
                     }
                 });
             }
@@ -1801,22 +1876,8 @@
             
             const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
             if (continueToPaymentBtn) {
-                continueToPaymentBtn.addEventListener('click', async function() {
-                    // Validate package selection first
-                    if (!validatePackageSelection()) return;
-
-                    // For speakers: ensure profile is valid and register speaker before showing payment
-                    if (selectedRegistrantType === 'speaker') {
-                        // validate speaker profile again to be safe
-                        if (!validateSpeakerProfile()) return;
-
-                        try {
-                            await registerSpeakerAndShowPayment();
-                        } catch (err) {
-                            console.error('Speaker registration flow failed', err);
-                            alert(err?.message || 'Failed to register as speaker. Please try again.');
-                        }
-                    } else {
+                continueToPaymentBtn.addEventListener('click', function() {
+                    if (validatePackageSelection()) {
                         showStep(5);
                     }
                 });
@@ -1824,111 +1885,10 @@
             
             const continueToConfirmationBtn = document.getElementById('continue-to-confirmation-btn');
             if (continueToConfirmationBtn) {
-                continueToConfirmationBtn.addEventListener('click', async function() {
-                    if (!validatePaymentForm()) return;
-
-                    // If not a speaker, use existing flow
-                    if (selectedRegistrantType !== 'speaker') {
+                continueToConfirmationBtn.addEventListener('click', function() {
+                    if (validatePaymentForm()) {
                         processRegistration();
-                        return;
                     }
-
-                    // For speakers we require authenticated calls to payment endpoints using token
-                    const token = getAuthTokenFromSpeakerResponse();
-                    if (!token) {
-                        alert('Authentication token missing. Please complete registration or sign in again.');
-                        return;
-                    }
-
-                    // Ensure a package is selected
-                    if (!selectedPackage) {
-                        alert('Please select a package before proceeding to payment.');
-                        return;
-                    }
-
-                    const packageDetails = getPackageDetails(selectedPackage) || {};
-                    const email = document.getElementById('email')?.value || '';
-
-                    // Flutterwave flow: call authenticated endpoint and open returned authorization URL
-                    if (selectedPaymentMethod === 'flutterwave') {
-                        try {
-                            const amount = parseAmountForApi(packageDetails.price);
-                            const initPayload = {
-                                email,
-                                speaker_package_id: selectedPackage,
-                                amount: amount,
-                                currency: 'USD',
-                                metadata: {
-                                    registrantType: selectedRegistrantType,
-                                    speakerReference: speakerRegistrationResponse?.reference || speakerRegistrationResponse?.id || null
-                                }
-                            };
-
-                            const resp = await window.apiClient.post('/payments/initialize-speaker-payment', initPayload, { headers: { Authorization: `Bearer ${token}` } });
-                            const data = resp && resp.data.data ? resp.data.data : resp;
-                            const authUrl = resp.data.data.data.link
-
-                            if (authUrl) {
-                                window.open(authUrl);
-                                return;
-                            }
-
-                            alert('Payment initialization failed: no redirect URL returned.');
-                        } catch (err) {
-                            console.error('Failed to initialize Flutterwave payment', err);
-                            const msg = err?.response?.data?.message || err?.message || 'Unable to initiate Flutterwave payment';
-                            alert(msg);
-                        }
-
-                        return;
-                    }
-
-                    // Bank transfer flow: call authenticated bank-transfer initiation endpoint
-                    if (selectedPaymentMethod === 'bank-transfer') {
-                        try {
-                            const amount = parseAmountForApi(packageDetails.price);
-
-                            // Ensure receipt file is present (validatePaymentForm should have checked already)
-                            const receiptInputEl = document.getElementById('receipt-upload');
-                            if (!receiptInputEl || !receiptInputEl.files || !receiptInputEl.files[0]) {
-                                alert('Please upload your payment receipt for bank transfer');
-                                return;
-                            }
-
-                            // Create FormData to include the receipt file
-                            const formData = new FormData();
-                            formData.append('email', email);
-                            formData.append('speaker_package_id', selectedPackage);
-                            if (amount !== null) formData.append('amount', String(amount));
-                            formData.append('currency', 'USD');
-                            const reference = speakerRegistrationResponse?.reference || speakerRegistrationResponse?.id || null;
-                            if (reference) formData.append('reference', reference);
-                            // Attach the receipt file under the key 'receipt'
-                            formData.append('receipt', receiptInputEl.files[0]);
-
-                            // Send multipart/form-data with Authorization header
-                            await window.apiClient.post('/payments/bank-transfer', formData, { 
-                                headers: { 
-                                    Authorization: `Bearer ${token}`,
-                                    'Content-Type': 'multipart/form-data'
-                                } 
-                            });
-
-                            // Proceed to confirmation
-                            showStep(6);
-                            updateConfirmationSection();
-                            return;
-                        } catch (err) {
-                            console.error('Failed to initiate bank transfer', err);
-                            const msg = err?.response?.data?.message || err?.message || 'Unable to initiate bank transfer';
-                            alert(msg);
-                        }
-
-                        return;
-                    }
-
-                    // If user selected neither method
-                    alert('Please select a payment method to continue.');
                 });
             }
             
@@ -1986,39 +1946,36 @@
         }
         
         function selectRegistrantType(card) {
-            // Remove selection from all cards
-            document.querySelectorAll('.registrant-card').forEach(c => {
-                c.classList.remove('selected');
-            });
+    // Remove selection from all cards
+    document.querySelectorAll('.registrant-card').forEach(c => {
+        c.classList.remove('selected');
+    });
 
-            // Add selection to clicked card
-            card.classList.add('selected');
+    // Add selection to clicked card
+    card.classList.add('selected');
 
-            // Store selected type
-            selectedRegistrantType = card.getAttribute('data-type') || '';
+    // Store selected type
+    selectedRegistrantType = card.getAttribute('data-type') || '';
 
-            // Persist in localStorage (safe, non-blocking) so other scripts can recover it
-            try { localStorage.setItem('icsc_selectedRegistrantType', selectedRegistrantType); } catch (e) { /* ignore storage errors */ }
+    // Persist in localStorage (safe, non-blocking) so other scripts can recover it
+    try { localStorage.setItem('icsc_selectedRegistrantType', selectedRegistrantType); } catch (e) { /* ignore storage errors */ }
 
-            // Also ensure there is a hidden input with the current type for forms / server-side if needed
-            let hidden = document.getElementById('selected-registrant-type-hidden');
-            if (!hidden) {
-                hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.id = 'selected-registrant-type-hidden';
-                hidden.name = 'selectedRegistrantType';
-                document.body.appendChild(hidden);
-            }
-            hidden.value = selectedRegistrantType;
+    // Also ensure there is a hidden input with the current type for forms / server-side if needed
+    let hidden = document.getElementById('selected-registrant-type-hidden');
+    if (!hidden) {
+        hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.id = 'selected-registrant-type-hidden';
+        hidden.name = 'selectedRegistrantType';
+        document.body.appendChild(hidden);
+    }
+    hidden.value = selectedRegistrantType;
 
-            // Enable continue button
-            const btn = document.getElementById('continue-btn');
-            if (btn) btn.disabled = false;
-            // If speaker or partner selected, start loading packages early
-            if (['speaker', 'partner'].includes(selectedRegistrantType)) {
-                try { loadPackages(); } catch (e) { console.warn('loadPackages failed on registrant select', e); }
-            }
-        }
+    // Enable continue button
+    const btn = document.getElementById('continue-btn');
+    if (btn) btn.disabled = false;
+}
+
         
         function validateRegistrantType() {
             if (!selectedRegistrantType) {
@@ -2120,7 +2077,7 @@
             const requiredFields = [
                 'speakerPrefix', 'speakerFirstName', 'speakerLastName', 
                 'speakerCountry', 'speakerJobTitle', 'speakerOrganization', 
-                'speakerPhone', 'speakerBio','speakertopic','email'
+                'speakerPhone', 'speakerBio','speakertopic','speakerWorkEmail'
             ];
             
             requiredFields.forEach(field => {
@@ -2132,6 +2089,13 @@
                     hideError(`${field}-error`);
                 }
             });
+
+                // Validate work email format
+    const workEmail = document.getElementById('speakerWorkEmail')?.value;
+    if (workEmail && !isValidEmail(workEmail)) {
+        showError('speakerWorkEmail-error', 'Please enter a valid work email address');
+        isValid = false;
+    }
            
         return isValid;
         }
@@ -2248,237 +2212,20 @@
                 }
             }
             
+            // For credit card, validate card details
+            if (selectedPaymentMethod === 'credit-card') {
+                const cardNumber = document.getElementById('cardNumber')?.value;
+                const expiryDate = document.getElementById('expiryDate')?.value;
+                const cvv = document.getElementById('cvv')?.value;
+                const cardName = document.getElementById('cardName')?.value;
+                
+                if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                    alert('Please complete all credit card details');
+                    return false;
+                }
+            }
+            
             return true;
-        }
-
-        // --- Speaker registration + payment helpers ---
-        async function registerSpeakerAndShowPayment() {
-            if (!window.RegisterAPI) throw new Error('RegisterAPI not available');
-
-            // Build payload and include file fields when present
-            const payload = gatherSpeakerFormData();
-
-            // Show a small loading state on the continue button
-            const continueBtn = document.getElementById('continue-to-payment-btn');
-            if (continueBtn) {
-                continueBtn.classList.add('btn-loading');
-                continueBtn.disabled = true;
-            }
-
-            try {
-                const res = await window.RegisterAPI.registerSpeaker(payload);
-                // normalize nested response
-                const data = res && res.data ? res.data : res || {};
-                speakerRegistrationResponse = data;
-
-                // If server returned a token or user object, persist to localStorage for later use
-                try {
-                    if (data.token || data.accessToken || data.user) {
-                        const authUser = { token: data.token || data.accessToken || (data.user && data.user.token) || null, user: data.user || null };
-                        localStorage.setItem('authUser', JSON.stringify(authUser));
-                    }
-                } catch (e) { /* ignore storage errors */ }
-
-                // Proceed to payment tab
-                showStep(5);
-                updatePaymentSection();
-
-                // If user already selected Flutterwave earlier, kick off initialization
-                if (selectedPaymentMethod === 'flutterwave') {
-                    try {
-                        await initiateFlutterwavePayment();
-                    } catch (e) {
-                        console.warn('Flutterwave initiation failed', e);
-                        alert('Unable to initiate Flutterwave payment. Please try again or choose bank transfer.');
-                    }
-                }
-            } finally {
-                if (continueBtn) {
-                    continueBtn.classList.remove('btn-loading');
-                    continueBtn.disabled = false;
-                }
-            }
-        }
-
-        function gatherSpeakerFormData() {
-            // Collect speaker form values and include any files
-            const payload = {
-                speakerPrefix: document.getElementById('speakerPrefix')?.value || '',
-                speakerFirstName: document.getElementById('speakerFirstName')?.value || '',
-                speakerLastName: document.getElementById('speakerLastName')?.value || '',
-                speakerCountry: document.getElementById('speakerCountry')?.value || '',
-                speakerJobTitle: document.getElementById('speakerJobTitle')?.value || '',
-                speakerOrganization: document.getElementById('speakerOrganization')?.value || '',
-                speakerPhone: document.getElementById('speakerPhone')?.value || '',
-                speakerWorkEmail: document.getElementById('email')?.value || '',
-                speakerBio: document.getElementById('speakerBio')?.value || '',
-                speakertopic: document.getElementById('speakertopic')?.value || '',
-                speakerExperience: document.getElementById('speakerExperience')?.value || '',
-                password: document.getElementById('password')?.value || ''
-            };
-
-            // Attach possible file inputs if they exist
-            const photo = document.getElementById('speakerPhoto');
-            const cv = document.getElementById('speakerCV');
-            if (photo && photo.files && photo.files[0]) payload.speakerPhoto = photo.files[0];
-            if (cv && cv.files && cv.files[0]) payload.speakerCV = cv.files[0];
-
-            return payload;
-        }
-
-        async function initiateFlutterwavePayment() {
-            // Build initialization payload
-            const packageDetails = getPackageDetails(selectedPackage) || {};
-            const email = document.getElementById('email')?.value || document.getElementById('email')?.value || '';
-
-            // Amount should be numeric in kobo if using NGN; backend should accept currency-aware amounts.
-            const initPayload = {
-                email,
-                packageId: selectedPackage,
-                amount: packageDetails.price ? String(packageDetails.price).replace(/[\$,]/g, '') : undefined,
-                metadata: {
-                    registrantType: selectedRegistrantType,
-                    speakerReference: speakerRegistrationResponse?.reference || speakerRegistrationResponse?.id || null
-                }
-            };
-
-            // Call backend flutterwave init endpoint. Update the path below if your backend uses a different route.
-            if (!window.apiClient) throw new Error('apiClient not available');
-            const path = '/payments/flutterwave/initialize';
-            const resp = await window.apiClient.post(path, initPayload).then(r => r.data).catch(err => { throw err?.message || err; });
-
-            // response may contain an authorization_url or data.authorization_url
-            const authUrl = resp?.data?.data?.link || resp?.data?.authorization_url || resp?.authorization_url;
-            if (authUrl) {
-                // Open Flutterwave checkout in a new tab/window
-                window.open(authUrl, '_blank');
-                return true;
-            }
-
-            // If backend returned a transaction reference and expects front-end to call Flutterwave inline,
-            // you can implement Flutterwave inline integration here. For now, throw if no URL provided.
-            throw new Error('Payment initialization did not return a redirect URL');
-        }
-
-        async function uploadBankReceiptAndProceed() {
-            const receiptInput = document.getElementById('receipt-upload');
-            if (!receiptInput || !receiptInput.files || !receiptInput.files[0]) {
-                alert('Please upload your bank transfer receipt');
-                return false;
-            }
-
-            if (!window.apiClient) {
-                alert('Upload is not available right now');
-                return false;
-            }
-
-            const file = receiptInput.files[0];
-            const form = new FormData();
-            form.append('receipt', file);
-
-            // attach reference or speaker id if available so backend can match payment to registration
-            const reference = speakerRegistrationResponse?.reference || speakerRegistrationResponse?.id || document.getElementById('confirmation-id')?.textContent || '';
-            if (reference) form.append('reference', reference);
-            const email = document.getElementById('email')?.value || document.getElementById('email')?.value || '';
-            if (email) form.append('email', email);
-
-            // Show loading on continue button
-            const continueBtn = document.getElementById('continue-to-confirmation-btn');
-            if (continueBtn) { continueBtn.classList.add('btn-loading'); continueBtn.disabled = true; }
-
-            try {
-                const path = '/payments/bank-transfer/receipt';
-                const res = await window.apiClient.post(path, form, { headers: { 'Content-Type': 'multipart/form-data' } });
-                // success -> proceed to confirmation
-                // Optionally update server response data
-                return true;
-            } catch (err) {
-                console.error('Receipt upload failed', err);
-                alert('Failed to upload receipt. Please try again.');
-                return false;
-            } finally {
-                if (continueBtn) { continueBtn.classList.remove('btn-loading'); continueBtn.disabled = false; }
-            }
-        }
-        
-        // Helper to extract auth token saved after speaker registration
-        function getAuthTokenFromSpeakerResponse() {
-            try {
-                if (speakerRegistrationResponse) {
-                    const candidate = speakerRegistrationResponse.token || speakerRegistrationResponse.accessToken || speakerRegistrationResponse.data && (speakerRegistrationResponse.data.token || speakerRegistrationResponse.data.accessToken) || (speakerRegistrationResponse.user && speakerRegistrationResponse.user.token);
-                    if (candidate) return candidate;
-                }
-
-                // Fallback to stored authUser in localStorage
-                const stored = localStorage.getItem('authUser');
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    if (parsed && parsed.token) return parsed.token;
-                    if (parsed && parsed.user && parsed.user.token) return parsed.user.token;
-                }
-            } catch (e) {
-                console.warn('Error reading auth token', e);
-            }
-
-            return null;
-        }
-
-        // Parse package price into numeric amount (USD) expected by backend
-        function parseAmountForApi(price) {
-            if (price === null || price === undefined) return null;
-            if (typeof price === 'number') return price;
-            // Remove currency symbols, commas, spaces
-            const cleaned = String(price).replace(/[^0-9.]/g, '');
-            if (!cleaned) return null;
-            const num = Number(cleaned);
-            return Number.isFinite(num) ? num : null;
-        }
-
-        // Find a redirect/payment URL in various possible response shapes
-        function findRedirectUrl(obj) {
-            if (!obj) return null;
-
-            const candidates = ['authorization_url','authorizationUrl','auth_url','authUrl','url','link','payment_url','paymentUrl','redirect_url','redirectUrl'];
-
-            const isUrl = v => typeof v === 'string' && /^https?:\/\//.test(v);
-
-            const checkObject = o => {
-                if (!o || typeof o !== 'object') return null;
-                for (const key of candidates) {
-                    if (o[key] && isUrl(o[key])) return o[key];
-                }
-                return null;
-            };
-
-            // Check common nesting levels first
-            let url = checkObject(obj);
-            if (url) return url;
-            if (obj.data) {
-                url = checkObject(obj.data);
-                if (url) return url;
-                if (obj.data.data) {
-                    url = checkObject(obj.data.data);
-                    if (url) return url;
-                }
-            }
-
-            // Fall back to a shallow recursive search (limited depth)
-            const seen = new Set();
-            const stack = [{node: obj, depth: 0}];
-            while (stack.length) {
-                const {node, depth} = stack.shift();
-                if (!node || typeof node !== 'object' || seen.has(node) || depth > 4) continue;
-                seen.add(node);
-                for (const k in node) {
-                    try {
-                        const val = node[k];
-                        if (isUrl(val)) return val;
-                        if (typeof val === 'object') stack.push({node: val, depth: depth + 1});
-                    } catch (e) { /* ignore */ }
-                }
-            }
-
-            return null;
         }
         
         function updatePaymentSection() {
@@ -2498,266 +2245,23 @@
                 packageNameElement.textContent = packageDetails.name;
             }
             if (packagePriceElement) {
-                packagePriceElement.textContent = '$'+packageDetails.price;
+                packagePriceElement.textContent = packageDetails.price;
             }
         }
         
         function getPackageDetails(packageId) {
-            // Prefer backend-provided packages when available
-            if (packagesCache && packagesCache[packageId]) {
-                return {
-                    name: packagesCache[packageId].name || packagesCache[packageId].title || 'Unknown Package',
-                    price: packagesCache[packageId].price_display || packagesCache[packageId].price || '$0'
-                };
-            }
-
-            // Fallback to static definitions if backend not available
+            // This would typically come from a database or API
             const packages = {
+                'basic-speaker': { name: 'Basic Speaker Package', price: '$250' },
+                'premium-speaker': { name: 'Premium Speaker Package', price: '$450' },
+                'keynote-speaker': { name: 'Keynote Speaker Package', price: '$750' },
                 'bronze-partner': { name: 'Bronze Partner', price: '$1,000' },
                 'silver-partner': { name: 'Silver Partner', price: '$2,500' },
                 'gold-partner': { name: 'Gold Partner', price: '$5,000' },
                 'platinum-partner': { name: 'Platinum Partner', price: '$10,000' }
             };
-
+            
             return packages[packageId] || { name: 'Unknown Package', price: '$0' };
-        }
-
-        // Load packages from backend and render cards
-        async function loadPackages() {
-            // If we've already loaded packages, skip
-            if (Object.keys(packagesCache).length) return;
-
-            if (!window.RegisterAPI || typeof window.RegisterAPI.getPackages !== 'function') {
-                console.warn('RegisterAPI.getPackages not available; using static packages');
-                return;
-            }
-
-            // Choose endpoint based on selected registrant type
-            let path = '/packages';
-            if (selectedRegistrantType === 'speaker') path = '/packages/speaker-packages';
-            else if (selectedRegistrantType === 'partner') path = '/packages/partner-packages';
-
-            // Try primary path, then fall back to alternative paths if necessary
-            const attempts = [path];
-            // fallback to generic packages endpoint
-            if (!attempts.includes('/packages')) attempts.push('/packages');
-            // fallback to public-render URL (absolute) in case local dev server isn't running
-            attempts.push('https://icsc-backend-api-code.onrender.com/api/v1' + path);
-
-            let lastError = null;
-            let res = null;
-            for (const attempt of attempts) {
-                try {
-                    console.debug('Attempting to load packages from', attempt);
-                    res = await window.RegisterAPI.getPackages(attempt);
-                    // If we got a response, break and process it
-                    if (res) break;
-                } catch (err) {
-                    console.warn('Failed to load packages from', attempt, err && (err.message || err));
-                    lastError = err;
-                }
-            }
-
-            if (!res) {
-                console.error('All package fetch attempts failed', lastError);
-                return;
-            }
-
-            // Normalize response: try common shapes
-            let items = [];
-            if (Array.isArray(res)) items = res;
-            else if (Array.isArray(res.data)) items = res.data;
-            else if (Array.isArray(res.packages)) items = res.packages;
-            else if (Array.isArray(res.results)) items = res.results;
-
-            if (!items.length) {
-                console.warn('Package endpoint returned no items', res);
-                return;
-            }
-
-            // Build cache keyed by id or slug
-            items.forEach(p => {
-                const id = p.id || p.slug || p.code || (p.title || p.name || '').toLowerCase().replace(/\s+/g, '-');
-                if (!id) return;
-                packagesCache[id] = p;
-            });
-
-            // Render into speaker and partner containers
-            renderPackageCards(items);
-        }
-
-        function renderPackageCards(items) {
-            if (!Array.isArray(items) || items.length === 0) return;
-
-            const speakerContainer = document.querySelector('#speaker-packages .package-cards');
-            const partnerContainer = document.querySelector('#partner-packages .package-cards');
-
-            // Clear existing cards (this will also remove hardcoded HTML, fallback remains if API fails)
-            if (speakerContainer) speakerContainer.innerHTML = '';
-            if (partnerContainer) partnerContainer.innerHTML = '';
-
-            items.forEach(p => {
-                const type = (p.type || p.category || '').toLowerCase();
-                let id = p.id || p.slug || p.code || (p.name && p.name.toLowerCase().replace(/\s+/g, '-'));
-                // Ensure id is a string for .includes
-                if (typeof id !== 'string') id = String(id);
-                const title = p.name || p.title || p.name || 'Package';
-                // Normalize price: if numeric, format with currency symbol
-                let price = '';
-                if (typeof p.price === 'number') price = `$${p.price}`;
-                else price = p.price_display || p.price || (p.amount ? `$${p.amount}` : '$0');
-                const features = p.features || p.benefits || p.description || '';
-                const limited = p.limited || p.availability || '';
-
-                const card = document.createElement('div');
-                card.className = 'package-card';
-                card.setAttribute('data-package', id);
-
-                let inner = `<h4>${escapeHtml(title)}</h4>`;
-                inner += `<div class="price">$${escapeHtml(price)}</div>`;
-
-                if (Array.isArray(features)) {
-                    inner += '<ul>' + features.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
-                } else if (typeof features === 'string' && features.trim()) {
-                    // Try to split on newlines for simple strings
-                    const parts = features.split(/\r?\n/).filter(Boolean);
-                    if (parts.length > 1) {
-                        inner += '<ul>' + parts.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
-                    } else {
-                        inner += `<p>${escapeHtml(features)}</p>`;
-                    }
-                }
-
-                if (limited) inner += `<div class="limited">${escapeHtml(limited)}</div>`;
-
-                card.innerHTML = inner;
-
-                // Attach click handler
-                card.addEventListener('click', function() { selectPackage(this); });
-
-                if (type === 'speaker' && speakerContainer) speakerContainer.appendChild(card);
-                else if (type === 'partner' && partnerContainer) partnerContainer.appendChild(card);
-                else {
-                    // If no explicit type, try to infer from id
-                    if (id && id.includes('speaker') && speakerContainer) speakerContainer.appendChild(card);
-                    else if (id && (id.includes('partner') || id.includes('bronze') || id.includes('gold')) && partnerContainer) partnerContainer.appendChild(card);
-                }
-            });
-        }
-
-        // Basic HTML escape to avoid injecting raw backend HTML
-        function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
-            return String(str).replace(/[&"'<>]/g, function (s) {
-                return ({'&':'&amp;','"':'&quot;',"'":'&#39;','<':'&lt;','>':'&gt;'})[s];
-            });
-        }
-        
-        // Function to fetch and render speaker packages
-        async function fetchAndRenderSpeakerPackages() {
-            const speakerContainer = document.getElementById('speaker-package-cards');
-            if (!speakerContainer) return;
-
-            try {
-                // Show loading state
-                speakerContainer.innerHTML = `
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading packages...</span>
-                        </div>
-                        <p class="mt-2">Loading speaker packages...</p>
-                    </div>
-                `;
-
-                // Fetch packages from backend
-                const response = await window.apiClient.get('/packages/speaker-packages');
-                
-                // Extract packages array from response (handle different response structures)
-                let packages = [];
-                if (Array.isArray(response.data)) {
-                    packages = response.data;
-                } else if (Array.isArray(response.data?.data)) {
-                    packages = response.data.data;
-                } else if (Array.isArray(response.data?.packages)) {
-                    packages = response.data.packages;
-                } else if (Array.isArray(response.data?.results)) {
-                    packages = response.data.results;
-                } else if (Array.isArray(response)) {
-                    packages = response;
-                }
-
-                if (!packages.length) {
-                    speakerContainer.innerHTML = `
-                        <div class="text-center py-4 text-muted">
-                            <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
-                            <p>No speaker packages available at the moment.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                // Render packages
-                renderSpeakerPackages(packages, speakerContainer);
-                
-            } catch (error) {
-                console.error('Failed to fetch speaker packages:', error);
-                speakerContainer.innerHTML = `
-                    <div class="text-center py-4 text-danger">
-                        <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                        <p>Failed to load speaker packages. Please try again later.</p>
-                        <button class="btn btn-outline-primary btn-sm mt-2" onclick="fetchAndRenderSpeakerPackages()">
-                            Retry
-                        </button>
-                    </div>
-                `;
-            }
-        }
-
-        // Function to render speaker packages into the container
-        function renderSpeakerPackages(packages, container) {
-            if (!packages.length || !container) return;
-
-            container.innerHTML = packages.map(package => {
-                // Extract package data with fallbacks
-                const packageId = package.id || package.slug || package.code || '';
-                const packageName = package.name || package.title || 'Speaker Package';
-                const packagePrice = package.price_display || package.price || package.amount || '$0';
-                const packageDescription = package.description || '';
-                const packageFeatures = Array.isArray(package.features) ? package.features : 
-                                    Array.isArray(package.benefits) ? package.benefits : [];
-                const isLimited = package.limited_availability || package.is_limited || false;
-                const isPopular = package.is_popular || package.recommended || false;
-
-                // Build features list
-                let featuresHtml = '';
-                if (packageFeatures.length > 0) {
-                    featuresHtml = `
-                        <ul>
-                            ${packageFeatures.map(feature => `<li>${escapeHtml(feature)}</li>`).join('')}
-                        </ul>
-                    `;
-                } else if (packageDescription) {
-                    featuresHtml = `<p class="package-description">${escapeHtml(packageDescription)}</p>`;
-                }
-
-                return `
-                    <div class="package-card ${isPopular ? 'popular' : ''}" data-package="${packageId}">
-                        ${isPopular ? '<div class="popular-badge">Most Popular</div>' : ''}
-                        <h4>${escapeHtml(packageName)}</h4>
-                        <div class="price">$${escapeHtml(packagePrice)}</div>
-                        ${featuresHtml}
-                        ${isLimited ? '<div class="limited">Limited availability</div>' : ''}
-                        ${package.max_attendees ? `<div class="attendees">Max ${package.max_attendees} attendees</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-
-            // Add click event listeners to the new package cards
-            container.querySelectorAll('.package-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    selectPackage(this);
-                });
-            });
         }
         
         async function processRegistration() {
@@ -2807,7 +2311,7 @@
                         speakerJobTitle: document.getElementById('speakerJobTitle')?.value || '',
                         speakerOrganization: document.getElementById('speakerOrganization')?.value || '',
                         speakerPhone: document.getElementById('speakerPhone')?.value || '',
-                        speakerWorkEmail: document.getElementById('email')?.value || '',
+                        speakerWorkEmail: document.getElementById('speakerWorkEmail')?.value || '',
                         speakerBio: document.getElementById('speakerBio')?.value || '',
                         speakertopic: document.getElementById('speakertopic')?.value || '',
                         speakerExperience: document.getElementById('speakerExperience')?.value || '',
@@ -3093,15 +2597,6 @@ if (confirmationType) {
             if (selectedRegistrantType === 'speaker') {
                 packageSection = document.getElementById('speaker-packages');
                 pdfSection = document.getElementById('speaker-pdf-section');
-                
-                // Fetch and render speaker packages
-                if (packageSection) {
-                    packageSection.style.display = 'block';
-                    // Use setTimeout to ensure DOM is ready
-                    setTimeout(() => {
-                        fetchAndRenderSpeakerPackages();
-                    }, 100);
-                }
             } else if (selectedRegistrantType === 'partner') {
                 packageSection = document.getElementById('partner-packages');
                 pdfSection = document.getElementById('partner-pdf-section');
@@ -3113,11 +2608,6 @@ if (confirmationType) {
             if (pdfSection) {
                 pdfSection.style.display = 'block';
             }
-            // Debug: log registrant type and load packages from backend (non-blocking)
-            try {
-                console.debug('showPackageSection for registrant type:', selectedRegistrantType);
-                loadPackages();
-            } catch (e) { /* ignore */ }
         }
         
         function updateProgressIndicator() {
