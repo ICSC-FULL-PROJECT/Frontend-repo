@@ -1021,32 +1021,103 @@
         let currentStep = 1;
         const selectedRegistrantType = 'partner';
         let selectedPackage = '';
+        let selectedPackageId = null;
         let selectedPaymentMethod = '';
         let phoneInputs = [];
+        let uploadedLogoUrl = ''; // holds the uploaded company logo URL returned by /misc/upload-image
+        let lastPartnerRegistrationResponse = null;
+        let availablePackages = [];
         
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
-        
-        function initializeApp() {
+
+        async function initializeApp() {
             try {
+                // Fetch packages from backend and render them
+                await fetchAndRenderPackages();
+
                 // Initialize phone inputs
                 initializePhoneInputs();
-                
+
                 // Set up event listeners
                 setupEventListeners();
-                
+
                 // Update progress indicator
                 updateProgressIndicator();
-                
-                // Setup package selection
+
+                // Setup package selection (after dynamic rendering)
                 setupPackageSelection();
-                
+
                 // Setup payment section
                 setupPaymentSection();
             } catch (error) {
                 console.error('Error initializing app:', error);
+            }
+        }
+
+        // Fetch partner packages from backend and render into the .package-cards container
+        async function fetchAndRenderPackages() {
+            const container = document.querySelector('.package-cards');
+            if (!container) return;
+
+            // Show loading placeholder
+            container.innerHTML = '<div class="package-card"><h4>Loading packages...</h4></div>';
+
+            if (!window.apiClient || !window.apiClient.get) {
+                console.warn('apiClient not available - using existing static packages');
+                return;
+            }
+
+            try {
+                const resp = await window.apiClient.get('/packages/event-partner-packages');
+                const respData = resp && (resp.data || resp);
+                let packages = respData && (respData.data || respData);
+
+                if (!Array.isArray(packages)) {
+                    console.warn('Unexpected packages response shape, expected array:', packages);
+                    packages = [];
+                }
+
+                // Clear container and render fetched packages
+                container.innerHTML = '';
+
+                if (packages.length === 0) {
+                    container.innerHTML = '<div class="package-card"><h4>No packages available at the moment</h4></div>';
+                    return;
+                }
+
+                packages.forEach(pkg => {
+                    const card = document.createElement('div');
+                    card.className = 'package-card';
+                    card.setAttribute('data-package', pkg.slug || pkg.id || 'package-' + (pkg.id || Math.random()));
+                    if (pkg.id) card.setAttribute('data-package-id', String(pkg.id));
+                    availablePackages.push(pkg);
+
+                    // price formatting
+                    const price = typeof pkg.price === 'number' ? pkg.price : Number(pkg.price) || 0;
+                    const priceText = price.toLocaleString();
+
+                    const featuresHtml = Array.isArray(pkg.features) && pkg.features.length > 0
+                        ? '<ul>' + pkg.features.map(f => `<li>${f}</li>`).join('') + '</ul>'
+                        : '';
+
+                    const limitedText = pkg.limitedText ? `<div class="limited">${pkg.limitedText}</div>` : '';
+
+                    card.innerHTML = `
+                        <h4>${pkg.title || pkg.slug}</h4>
+                        <div class="price">N${priceText}</div>
+                        ${featuresHtml}
+                        ${limitedText}
+                    `;
+
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error('Failed to fetch partner packages:', err);
+                container.innerHTML = '<div class="package-card"><h4>Failed to load packages</h4><p>Please try again later.</p></div>';
             }
         }
         
@@ -1130,9 +1201,22 @@
             
             const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
             if (continueToPaymentBtn) {
-                continueToPaymentBtn.addEventListener('click', function() {
-                    if (validatePackageSelection()) {
+                continueToPaymentBtn.addEventListener('click', async function() {
+                    if (!validatePackageSelection()) return;
+
+                    // Attempt to create event partner on continue
+                    try {
+                        // disable button to prevent double submits
+                        continueToPaymentBtn.disabled = true;
+                        await registerEventPartnerOnPackageSelect();
+
+                        // proceed to payment step on success
                         showStep(4);
+                    } catch (err) {
+                        console.error('Failed to register event partner before payment:', err);
+                        alert('Failed to create partner record. Please check your details and try again.');
+                    } finally {
+                        continueToPaymentBtn.disabled = false;
                     }
                 });
             }
@@ -1168,6 +1252,59 @@
                     redirectToDashboard();
                 });
             }
+
+            // Upload company logo immediately when selected
+            const companyLogoInput = document.getElementById('companyLogo');
+            if (companyLogoInput) {
+                companyLogoInput.addEventListener('change', async function (ev) {
+                    const file = this.files && this.files[0];
+                    if (!file) return;
+
+                    // show simple feedback
+                    const errElId = 'companyLogo-error';
+                    hideError(errElId);
+
+                    try {
+                        if (!window.apiClient) throw new Error('API client not available');
+
+                        const fd = new FormData();
+                        // backend expects the uploaded file under the key 'company_logo'
+                        fd.append('company_logo', file);
+
+                        // POST to /misc/upload-image using apiClient base url
+                        const resp = await window.apiClient.post('/misc/upload-image', fd, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+
+                        // extract image url from common response shapes
+                        const data = resp && (resp.data || resp);
+                        const imageUrl = (data && (data.image_url || data.url || data.data?.image_url || data.data?.url)) || null;
+                        if (!imageUrl) {
+                            // sometimes API returns the url directly as string
+                            if (typeof data === 'string') uploadedLogoUrl = data;
+                            else throw new Error('Could not determine uploaded image URL from response');
+                        } else {
+                            uploadedLogoUrl = imageUrl;
+                        }
+
+                        // simple success feedback: show filename in UI (reuse hint-block or error element)
+                        const hintEl = document.createElement('div');
+                        hintEl.className = 'hint-block';
+                        hintEl.id = 'companyLogo-uploaded-hint';
+                        hintEl.textContent = `Uploaded: ${uploadedLogoUrl}`;
+                        // remove existing hint if present
+                        const existing = document.getElementById('companyLogo-uploaded-hint');
+                        if (existing) existing.remove();
+                        companyLogoInput.parentNode.appendChild(hintEl);
+
+                        console.log('Company logo uploaded:', uploadedLogoUrl);
+                    } catch (err) {
+                        console.error('Logo upload failed', err);
+                        showError('companyLogo-error', err?.message || 'Image upload failed');
+                        uploadedLogoUrl = '';
+                    }
+                });
+            }
         }
         
         function setupPackageSelection() {
@@ -1180,8 +1317,10 @@
                     // Add selected class to clicked card
                     this.classList.add('selected');
                     
-                    // Store selected package
+                    // Store selected package (slug) and id
                     selectedPackage = this.getAttribute('data-package');
+                    const pkgIdAttr = this.getAttribute('data-package-id');
+                    selectedPackageId = pkgIdAttr ? Number(pkgIdAttr) : null;
                     
                     // Enable continue button
                     const continueBtn = document.getElementById('continue-to-payment-btn');
@@ -1190,6 +1329,97 @@
                     }
                 });
             });
+        }
+
+        async function registerEventPartnerOnPackageSelect() {
+            try {
+                // Basic validation - ensure required profile fields exist
+                const companyPrefix = document.getElementById('companyPrefix')?.value || '';
+                const companyName = document.getElementById('companyName')?.value || '';
+                const contactFirstName = document.getElementById('contactFirstName')?.value || '';
+                const contactLastName = document.getElementById('contactLastName')?.value || '';
+                const contactEmail = document.getElementById('contactEmail')?.value || '';
+                const contactPhone = document.getElementById('contactPhone')?.value || '';
+                const website = document.getElementById('website')?.value || '';
+                const socialMedia = document.getElementById('socialMedia')?.value || '';
+                const partnerDescription = document.getElementById('partnerDescription')?.value || '';
+                const partnerInterest = document.getElementById('partnerInterest')?.value || '';
+                const password = document.getElementById('password')?.value || '';
+
+                // Ensure logo is uploaded or attempt to upload now if file is present
+                if (!uploadedLogoUrl) {
+                    const logoInput = document.getElementById('companyLogo');
+                    const file = logoInput && logoInput.files && logoInput.files[0];
+                    if (file) {
+                        // try uploading synchronously
+                        const fd = new FormData();
+                        // backend expects the uploaded file under the key 'company_logo'
+                        fd.append('company_logo', file);
+                        if (!window.apiClient) throw new Error('API client not available');
+                        const resp = await window.apiClient.post('/misc/upload-image', fd, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+                        const data = resp && (resp.data || resp);
+                        uploadedLogoUrl = (data && (data.image_url || data.url || data.data?.image_url || data.data?.url)) || uploadedLogoUrl;
+                    }
+                }
+
+                // build payload according to sample
+                const payload = {
+                    companyPrefix: companyPrefix,
+                    companyName: companyName,
+                    companyLogo: uploadedLogoUrl || '',
+                    contactFirstName: contactFirstName,
+                    contactLastName: contactLastName,
+                    contactEmail: contactEmail,
+                    contactPhone: contactPhone,
+                    website: website,
+                    socialMedia: socialMedia,
+                    partnerDescription: partnerDescription,
+                    partnerInterest: partnerInterest,
+                    password: password,
+                    selectedPackage: selectedPackage
+                };
+
+                if (!window.apiClient) throw new Error('API client not available');
+
+                // POST to /auth/event-partner-register
+                const res = await window.apiClient.post('/auth/event-partner-register', payload);
+                const resData = res && (res.data || res);
+                lastPartnerRegistrationResponse = resData;
+
+                // If backend returned an auth token, store it so subsequent authenticated calls work
+                try {
+                    const token = resData?.data?.token || resData?.token || resData?.accessToken || resData?.data?.accessToken;
+                    if (token) {
+                        // prefer storing under authUser as an object (apiClient reads this)
+                        localStorage.setItem('authUser', JSON.stringify({ token }));
+                        // also set legacy key
+                        localStorage.setItem('accessToken', token);
+                    }
+                } catch (e) {
+                    // ignore storage errors
+                }
+
+                // Simple success feedback
+                alert('Partner registration (event) submitted successfully.');
+
+                // optionally update confirmation id if present in response
+                try {
+                    const reference = resData?.reference || resData?.registrationId || resData?.id || resData?.data?.reference;
+                    if (reference) {
+                        const confirmationIdEl = document.getElementById('confirmation-id');
+                        if (confirmationIdEl) confirmationIdEl.textContent = reference;
+                    }
+                } catch (e) { /* ignore */ }
+
+                return resData;
+            } catch (err) {
+                console.error('Error registering event partner:', err);
+                const message = err?.message || err?.response?.data?.message || 'Registration failed';
+                alert('Event partner registration failed: ' + message);
+                throw err;
+            }
         }
         
         function setupPaymentSection() {
@@ -1324,52 +1554,74 @@
             return true;
         }
         
-        function processFlutterwavePayment() {
-            // Get package price based on selected package
-            const packagePrices = {
-                'bronze-partner': 5000,
-                'silver-partner': 10000,
-                'gold-partner': 15000,
-                'platinum-partner': 30000
-            };
-            
-            const amount = packagePrices[selectedPackage] || 0;
-            const email = document.getElementById('email')?.value || '';
-            const contactFirstName = document.getElementById('contactFirstName')?.value || '';
-            const contactLastName = document.getElementById('contactLastName')?.value || '';
-            const phone = document.getElementById('contactPhone')?.value || '';
-            
-            // Flutterwave payment integration
-            FlutterwaveCheckout({
-                public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY",
-                tx_ref: "ICSC2026-" + Date.now(),
-                amount: amount,
-                currency: "NGN",
-                payment_options: "card, banktransfer, ussd, mobilemoney",
-                customer: {
-                    email: email,
-                    phone_number: phone,
-                    name: `${contactFirstName} ${contactLastName}`
-                },
-                customizations: {
-                    title: "ICSC 2026 Partnership Registration",
-                    description: `Payment for ${selectedPackage.replace('-', ' ')} package`,
-                    logo: "images/NG.jpeg"
-                },
-                callback: function(response) {
-                    // Payment successful
-                    if (response.status === 'successful') {
-                        alert('Payment successful! Completing your registration...');
-                        processRegistration();
-                    } else {
-                        alert('Payment was not successful. Please try again.');
-                    }
-                },
-                onclose: function() {
-                    // Payment modal closed
-                    console.log('Payment modal closed');
+        async function processFlutterwavePayment() {
+            try {
+                // Ensure a package is selected
+                if (!selectedPackageId) {
+                    alert('Please select a package before proceeding to payment.');
+                    return;
                 }
-            });
+
+                // Ensure API client is available
+                if (!window.apiClient) throw new Error('API client not available');
+
+                // Ensure auth token is present; try to recover from last partner response if missing
+                try {
+                    const raw = localStorage.getItem('authUser');
+                    const auth = raw ? JSON.parse(raw) : null;
+                    if (!auth || !auth.token) {
+                        const tokenFromResp = lastPartnerRegistrationResponse?.data?.token || lastPartnerRegistrationResponse?.token || lastPartnerRegistrationResponse?.accessToken;
+                        if (tokenFromResp) {
+                            localStorage.setItem('authUser', JSON.stringify({ token: tokenFromResp }));
+                            localStorage.setItem('accessToken', tokenFromResp);
+                        }
+                    }
+                } catch (e) {
+                    // ignore
+                }
+
+                // Determine amount from availablePackages if present
+                let amount = 0;
+                try {
+                    const pkg = availablePackages.find(p => Number(p.id) === Number(selectedPackageId));
+                    if (pkg && (pkg.price || pkg.price === 0)) amount = Number(pkg.price);
+                } catch (e) {}
+
+                // fallback mapping
+                if (!amount) {
+                    const packagePrices = {
+                        'bronze-partner': 5000,
+                        'silver-partner': 10000,
+                        'gold-partner': 15000,
+                        'platinum-partner': 30000
+                    };
+                    amount = packagePrices[selectedPackage] || 0;
+                }
+
+                const payload = {
+                    event_package_id: selectedPackageId,
+                    amount: amount,
+                    currency: 'NGN',
+                    tx_ref: 'ICSC-' + Date.now()
+                };
+
+                // Call initialize endpoint
+                const resp = await window.apiClient.post('/payments/initialize-event-partner-payment', payload);
+                const data = resp && (resp.data || resp);
+
+                // extract hosted link from response
+                const hostedLink = data?.data?.data?.link || data?.data?.link || data?.link;
+                if (!hostedLink) {
+                    throw new Error('Payment link not returned by server');
+                }
+
+                // Redirect the user to the hosted payment link
+                window.location.href = hostedLink;
+            } catch (err) {
+                console.error('Flutterwave payment initialization failed', err);
+                const message = err?.message || err?.response?.data?.message || 'Could not initialize payment';
+                alert(message);
+            }
         }
         
         async function processRegistration() {

@@ -1,5 +1,6 @@
 // Minimal axios instance for reuse across pages; attaches Authorization header if token present.
 (function (global) {
+	// const API_BASE_URL = 'http://localhost:9100/api/v1';
 	const API_BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
 
 	// require axios global (already included in pages)
@@ -51,6 +52,12 @@
 		return res.data;
 	}
 
+	// Helper to GET JSON
+	async function getJSON(path, params) {
+		const res = await apiClient.get(path, { params });
+		return res.data;
+	}
+
 	async function postForm(path, formData) {
 		const res = await apiClient.post(path, formData, {
 			headers: { 'Content-Type': 'multipart/form-data' }
@@ -80,9 +87,9 @@
 					fd.append(k, v);
 				}
 			});
-			return postForm('/auth/register-speaker', fd);
+			return postForm('/auth/speaker-register', fd);
 		}
-		return postJSON('/auth/register-speaker', data);
+		return postJSON('/auth/speaker-register', data);
 	}
 
 	async function registerExhibitor(data) {
@@ -121,10 +128,19 @@
 		return postJSON('/auth/register-partner', data);
 	}
 
+	// Fetch available packages (speaker/partner/exhibitor etc.)
+	// Default backend path: '/packages' — change to match your API.
+	// Fetch packages from a given path (default '/packages').
+	// Example: RegisterAPI.getPackages('/packages/speaker-packages')
+	async function getPackages(path = '/packages') {
+		return getJSON(path);
+	}
+
 	global.RegisterAPI = {
 		registerAttendee,
 		registerSpeaker,
 		registerExhibitor,
 		registerPartner
+		,getPackages
 	};
 })(window);

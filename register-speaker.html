@@ -928,54 +928,7 @@
                 
                 <p class="text-center mb-4">Choose the speaker package that best fits your needs</p>
                 
-                <div class="package-cards">
-                    <div class="package-card" data-package="basic-speaker">
-                        <h4>Basic Speaker Package</h4>
-                        <div class="price">N10,000</div>
-                        <ul>
-                            <li>Conference speaking slot (30 minutes)</li>
-                            <li>Access to all conference sessions</li>
-                            <li>Speaker certificate</li>
-                            <li>Conference materials</li>
-                            <li>Networking lunch for 1 day</li>
-                        </ul>
-                        <div class="limited">Limited slots available</div>
-                    </div>
-                    
-                    <div class="package-card" data-package="premium-speaker">
-                        <h4>Premium Speaker Package</h4>
-                        <div class="price">N15,000</div>
-                        <ul>
-                            <li>Conference speaking slot (45 minutes)</li>
-                            <li>Featured speaker listing</li>
-                            <li>Access to all conference sessions</li>
-                            <li>Speaker certificate</li>
-                            <li>Conference materials</li>
-                            <li>Networking lunch for all days</li>
-                            <li>Speaker dinner invitation</li>
-                            <li>Promotion on conference website</li>
-                        </ul>
-                        <div class="limited">Limited slots available</div>
-                    </div>
-                    
-                    <div class="package-card" data-package="keynote-speaker">
-                        <h4>Keynote Speaker Package</h4>
-                        <div class="price">N30,000</div>
-                        <ul>
-                            <li>Keynote speaking slot (60 minutes)</li>
-                            <li>Featured keynote listing</li>
-                            <li>Access to all conference sessions</li>
-                            <li>Speaker certificate</li>
-                            <li>Conference materials</li>
-                            <li>Networking lunch for all days</li>
-                            <li>Speaker dinner invitation</li>
-                            <li>Prominent promotion on conference website</li>
-                            <li>VIP seating at all sessions</li>
-                            <li>Complimentary accommodation for 2 nights</li>
-                        </ul>
-                        <div class="limited">Very limited slots available</div>
-                    </div>
-                </div>
+                <div class="package-cards" id="package-cards">Loading packages...</div>
                 
                 <div class="button-container">
                     <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
@@ -1130,6 +1083,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/apiClient.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 
     <!-- Mock API Implementation -->
@@ -1223,7 +1177,19 @@
         let selectedPackage = '';
         let selectedPaymentMethod = '';
         let phoneInputs = [];
-        let registrationData = {}; // Store registration data for dashboard
+        let registrationData = {};
+        // Backend endpoint for speaker packages - prefer apiClient baseURL when available
+        const PACKAGES_ENDPOINT = (function(){
+            try {
+                // If apiClient is available, use its configured baseURL
+                const base = window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL;
+                if (base) return base.replace(/\/+$/, '') + '/packages/speaker-packages';
+            } catch (e) {}
+            // Fallback to relative path
+            return '/packages/speaker-packages';
+        })();
+        // Map of packages keyed by id (populated from backend)
+        let fetchedPackages = {};
         
         // Country list for dropdowns
         const countries = [
@@ -1268,17 +1234,18 @@
         }
         
         // Initialize the application when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializeApp();
         });
-        
-        function initializeApp() {
+
+        async function initializeApp() {
             try {
                 populateCountryDropdowns();
                 initializePhoneInputs();
                 setupEventListeners();
                 updateProgressIndicator();
-                setupPackageSelection();
+                // Load packages from backend and wait for rendering so packages are available immediately
+                await fetchSpeakerPackages();
                 setupPaymentSection();
             } catch (error) {
                 console.error('Error initializing app:', error);
@@ -1396,10 +1363,10 @@
             
             const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
             if (continueToPaymentBtn) {
-                continueToPaymentBtn.addEventListener('click', function() {
-                    if (validatePackageSelection()) {
-                        showStep(4);
-                    }
+                continueToPaymentBtn.addEventListener('click', async function() {
+                    if (!validatePackageSelection()) return;
+                    // Register speaker now that a package is selected, then proceed to payment
+                    await attemptSpeakerRegistration();
                 });
             }
             
@@ -1436,8 +1403,109 @@
             }
         }
         
+        // Register speaker helper: posts profile to /auth/speaker-register
+        async function registerSpeakerToBackend(payload) {
+            // Prefer configured apiClient baseURL if available
+            const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
+            const endpoint = (base ? base : '') + '/auth/speaker-register';
+
+            try {
+                const client = window.apiClient || axios;
+                // If using apiClient with baseURL already set, pass relative path
+                if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
+                    return (await client.post('/auth/speaker-register', payload)).data;
+                }
+                return (await client.post(endpoint, payload)).data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // Attempt registration after package selected and before showing payment
+        async function attemptSpeakerRegistration() {
+            const btn = document.getElementById('continue-to-payment-btn');
+            if (btn) { btn.disabled = true; btn.classList.add('btn-loading'); }
+
+            try {
+                const payload = {
+                    speakerPrefix: document.getElementById('speakerPrefix')?.value || '',
+                    speakerFirstName: document.getElementById('speakerFirstName')?.value || '',
+                    speakerLastName: document.getElementById('speakerLastName')?.value || '',
+                    speakerCountry: document.getElementById('speakerCountry')?.value || '',
+                    speakerJobTitle: document.getElementById('speakerJobTitle')?.value || '',
+                    speakerOrganization: document.getElementById('speakerOrganization')?.value || '',
+                    speakerPhone: document.getElementById('speakerPhone')?.value || '',
+                    speakerWorkEmail: document.getElementById('speakerWorkEmail')?.value || '',
+                    speakerBio: document.getElementById('speakerBio')?.value || '',
+                    speakertopic: document.getElementById('speakertopic')?.value || '',
+                    speakerExperience: document.getElementById('speakerExperience')?.value || '',
+                    password: document.getElementById('password')?.value || ''
+                };
+
+                // Call backend
+                const resp = await registerSpeakerToBackend(payload);
+                console.log('Speaker register response:', resp);
+
+                // Heuristic success checks (supporting both mock and real responses)
+                const ok = resp && (resp.success === true || resp.status === 'success' || resp.registered === true || resp.data || resp.id);
+
+                if (ok) {
+                    // Save pre-registration information for later use (used to finalize after payment)
+                    const loginEmail = payload.speakerWorkEmail || document.getElementById('email')?.value || '';
+                    localStorage.setItem('speaker_pre_registration', JSON.stringify({payload, apiResponse: resp, loginEmail}));
+                    // If backend returned an auth token, persist it for authenticated requests (payments)
+                    const token = resp && (resp.token || resp.access_token || resp.accessToken || resp.data && (resp.data.token || resp.data.access_token || resp.data.accessToken));
+                    if (token) {
+                        try {
+                            if (window.Auth && typeof window.Auth.setToken === 'function') {
+                                window.Auth.setToken(token);
+                            } else {
+                                localStorage.setItem('speaker_token', token);
+                            }
+                            console.log('Saved speaker auth token after registration');
+                        } catch (e) {
+                            console.warn('Failed to save token:', e);
+                        }
+                    }
+                    // Proceed to payment step
+                    showStep(4);
+                } else {
+                    const msg = resp && (resp.message || resp.error) ? (resp.message || resp.error) : 'Registration failed';
+                    alert(msg);
+                    localStorage.setItem('speaker_pre_registration', JSON.stringify({payload, apiResponse: resp}));
+                    const token = resp && (resp.token || resp.access_token || resp.accessToken || resp.data && (resp.data.token || resp.data.access_token || resp.data.accessToken));
+                    if (token) {
+                        try {
+                            if (window.Auth && typeof window.Auth.setToken === 'function') {
+                                window.Auth.setToken(token);
+                            } else {
+                                localStorage.setItem('speaker_token', token);
+                            }
+                            console.log('Saved speaker auth token after registration');
+                        } catch (e) {
+                            console.warn('Failed to save token:', e);
+                        }
+                    }
+                    // Proceed to payment step
+                    showStep(4);
+                }
+            } catch (err) {
+                console.error('Registration request failed:', err);
+                const message = err?.response?.data?.message || err?.message || 'Registration request failed';
+                alert(message);
+            } finally {
+                if (btn) { btn.disabled = false; btn.classList.remove('btn-loading'); }
+            }
+        }
+
         function setupPackageSelection() {
             const packageCards = document.querySelectorAll('.package-card');
+            
+            if (packageCards.length === 0) {
+                console.warn('No package cards found to set up selection');
+                return;
+            }
+            
             packageCards.forEach(card => {
                 card.addEventListener('click', function() {
                     // Remove selected class from all cards
@@ -1449,6 +1517,8 @@
                     // Store selected package
                     selectedPackage = this.getAttribute('data-package');
                     
+                    console.log('Selected package:', selectedPackage);
+                    
                     // Enable continue button
                     const continueBtn = document.getElementById('continue-to-payment-btn');
                     if (continueBtn) {
@@ -1456,6 +1526,11 @@
                     }
                 });
             });
+            
+            // If there's only one package, auto-select it
+            if (packageCards.length === 1) {
+                packageCards[0].click();
+            }
         }
         
         function setupPaymentSection() {
@@ -1484,6 +1559,93 @@
                     }
                 });
             });
+        }
+
+        // Fetch speaker packages from backend and render into #package-cards
+        async function fetchSpeakerPackages() {
+            const container = document.getElementById('package-cards');
+
+            if (container) container.innerHTML = 'Loading packages...';
+
+            try {
+                const resp = await axios.get(PACKAGES_ENDPOINT);
+                console.log('Packages API Response:', resp.data);
+                
+                let packages = [];
+
+                // Handle different response structures
+                if (Array.isArray(resp.data)) {
+                    packages = resp.data;
+                } else if (resp.data && Array.isArray(resp.data.packages)) {
+                    packages = resp.data.packages;
+                } else if (resp.data && Array.isArray(resp.data.data)) {
+                    packages = resp.data.data;
+                } else {
+                    console.error('Unexpected packages response structure:', resp.data);
+                    throw new Error('Invalid response format from packages endpoint');
+                }
+
+                if (!packages || packages.length === 0) {
+                    throw new Error('No packages available from the server');
+                }
+
+                renderPackages(packages, container);
+            } catch (err) {
+                console.error('Failed to load packages from backend:', err);
+                const container = document.getElementById('package-cards');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="alert alert-danger">
+                            <h5>Unable to Load Packages</h5>
+                            <p>Failed to load speaker packages. Please try again later or contact support.</p>
+                            <p><small>Error: ${err.message}</small></p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Helper function to render packages
+        function renderPackages(packages, container) {
+            fetchedPackages = {};
+            const html = packages.map(p => {
+                // Extract package data with fallbacks
+                const id = p.slug || p.id || (p.name || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                const price = Number(p.price || p.amount || p.price_usd || 0);
+                const priceLabel = p.priceLabel || p.displayPrice || (p.currency === 'USD' ? `$${price}` : `N${price}`) || `N${price}`;
+                const benefits = p.features || p.benefits || p.items || [];
+                const limitedText = p.limitedText || p.limited || p.note || '';
+
+                // Store in fetchedPackages for later use
+                // Keep the API's numeric id (if present) as `apiId` so we can send it to the backend
+                fetchedPackages[id] = {
+                    id,
+                    apiId: p.id || (p.packageId || null),
+                    name: p.title || p.name || id,
+                    price,
+                    currency: p.currency || 'USD',
+                    priceLabel,
+                    benefits,
+                    limited: limitedText
+                };
+
+                // Create benefits HTML
+                const benefitsHtml = benefits.map(b => `<li>${b}</li>`).join('');
+
+                return `
+                    <div class="package-card" data-package="${id}" data-price="${price}">
+                        <h4>${fetchedPackages[id].name}</h4>
+                        <div class="price">${fetchedPackages[id].priceLabel}</div>
+                        <ul>${benefitsHtml}</ul>
+                        <div class="limited">${fetchedPackages[id].limited || ''}</div>
+                    </div>
+                `;
+            }).join('');
+
+            if (container) container.innerHTML = html;
+
+            // Wire up selection handlers after rendering
+            setupPackageSelection();
         }
         
         function validateAccountForm() {
@@ -1595,49 +1757,96 @@
         }
         
         function processFlutterwavePayment() {
-            // Get package price based on selected package
-            const packagePrices = {
-                'basic-speaker': 250,
-                'premium-speaker': 450,
-                'keynote-speaker': 750
-            };
-            
-            const amount = packagePrices[selectedPackage] || 0;
+            // Determine amount from fetchedPackages (backend) or from card attribute
+            let amount = 0;
+            let packageName = selectedPackage;
+            if (fetchedPackages && fetchedPackages[selectedPackage]) {
+                amount = Number(fetchedPackages[selectedPackage].price) || 0;
+                packageName = fetchedPackages[selectedPackage].name || selectedPackage;
+            } else {
+                const card = document.querySelector(`.package-card[data-package="${selectedPackage}"]`);
+                if (card) amount = Number(card.getAttribute('data-price')) || 0;
+            }
             const email = document.getElementById('email')?.value || '';
             const speakerFirstName = document.getElementById('speakerFirstName')?.value || '';
             const speakerLastName = document.getElementById('speakerLastName')?.value || '';
             const phone = document.getElementById('speakerPhone')?.value || '';
             
             // Flutterwave payment integration
-            FlutterwaveCheckout({
-                public_key: "YOUR_FLUTTERWAVE_PUBLIC_KEY",
-                tx_ref: "ICSC2026-" + Date.now(),
+            // Build payment payload per provided structure
+            const selectedPkg = (fetchedPackages && fetchedPackages[selectedPackage]) ? fetchedPackages[selectedPackage] : null;
+            // Prefer the numeric API id when available (apiId), fall back to the package key
+            let pkgId = selectedPkg ? (selectedPkg.apiId || selectedPkg.id) : selectedPackage;
+            // Try to coerce numeric id when possible
+            const numericPkgId = parseInt(pkgId, 10);
+            const txRef = 'ICSC2026-' + Date.now();
+            const paymentPayload = {
+                speaker_package_id: Number.isFinite(numericPkgId) ? numericPkgId : pkgId,
                 amount: amount,
-                currency: "USD",
-                payment_options: "card, banktransfer, ussd, mobilemoney",
-                customer: {
-                    email: email,
-                    phone_number: phone,
-                    name: `${speakerFirstName} ${speakerLastName}`
-                },
-                customizations: {
-                    title: "ICSC 2026 Speaker Registration",
-                    description: `Payment for ${selectedPackage.replace('-', ' ')} package`,
-                    logo: "images/NG.jpeg"
-                },
-                callback: function(response) {
-                    // Payment successful
-                    if (response.status === 'successful') {
-                        alert('Payment successful! Completing your registration...');
-                        processRegistration();
-                    } else {
-                        alert('Payment was not successful. Please try again.');
+                currency: 'NGN',
+                tx_ref: txRef
+            };
+
+            // Save payload locally for backend reconciliation if needed
+            localStorage.setItem('flutterwave_payment_payload', JSON.stringify(paymentPayload));
+
+            // Initialize payment on the backend before launching checkout
+            async function initializePayment(payload) {
+                const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
+                const endpoint = (base ? base : '') + '/payments/initialize-speaker-payment';
+                try {
+                    const client = window.apiClient || axios;
+                    // Obtain auth token if available
+                    const token = localStorage.getItem('speaker_token') || (window.Auth && typeof window.Auth.getToken === 'function' ? window.Auth.getToken() : null);
+                    alert(token);
+                    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+                    if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
+                        return (await client.post('/payments/initialize-speaker-payment', payload, { headers })).data;
                     }
-                },
-                onclose: function() {
-                    // Payment modal closed
-                    console.log('Payment modal closed');
+                    return (await client.post(endpoint, payload, { headers })).data;
+                } catch (err) {
+                    throw err;
                 }
+            }
+
+            // Terminate payment session: clear saved payment payload and return user to package step
+            function terminatePaymentSession(reason) {
+                try {
+                    localStorage.removeItem('flutterwave_payment_payload');
+                } catch (e) {
+                    console.warn('Failed to clear flutterwave payload:', e);
+                }
+
+                console.warn('Payment session terminated:', reason);
+
+                // Inform user and send them back to package selection to reconfirm
+                alert('Payment initialization failed: ' + (reason || 'Invalid payment configuration') + '. Please reconfirm your data.');
+                showStep(3);
+            }
+
+            // Call initialize endpoint and then open Flutterwave with returned data (if any)
+            initializePayment(paymentPayload).then(initResp => {
+                console.log('Payment initialize response:', initResp);
+                // Prefer values returned by initialize endpoint when available
+                const initData = (initResp && (initResp.data || initResp)) || {};
+                // If backend returned a redirect/checkout URL, redirect the browser there immediately
+                const redirectUrl = initData.redirect_url || initData.redirectUrl || initData.checkout_url || initData.checkoutUrl || initData.authorization_url || initData.authorizationUrl || initData.payment_url || initData.paymentUrl || initData.link || initData.data?.redirect_url || initData.data?.checkout_url || initData.data?.payment_url || initData.data?.link;
+                if (redirectUrl && typeof redirectUrl === 'string') {
+                    // Clear saved payload before redirecting
+                    try { localStorage.removeItem('flutterwave_payment_payload'); } catch (e) {}
+                    window.location.href = redirectUrl;
+                    return;
+                }
+            }).catch(err => {
+                console.error('Failed to initialize payment:', err);
+                const message = err?.response?.data?.message || err?.message || 'Failed to initialize payment';
+                // If backend indicates missing PBFPubKey, terminate and ask user to reconfirm
+                if (/(PBFPubKey|Invalid parameter)/i.test(String(message))) {
+                    terminatePaymentSession(message);
+                    return;
+                }
+                alert(message);
             });
         }
         
@@ -1650,6 +1859,35 @@
             }
             
             try {
+                // If we already saved a pre-registration when moving to payment, use that
+                const saved = localStorage.getItem('speaker_pre_registration');
+                if (saved) {
+                    const { payload, apiResponse, loginEmail } = JSON.parse(saved);
+                    // Store registration data for dashboard if not already stored
+                    if (!localStorage.getItem('speaker_registration_data')) {
+                        localStorage.setItem('speaker_registration_data', JSON.stringify({ ...payload, apiResponse }));
+                    }
+
+                    // Attempt auto-login using saved loginEmail and password from payload
+                    const emailToLogin = loginEmail || payload.speakerWorkEmail || payload.email || document.getElementById('email')?.value || '';
+                    const passwordToLogin = payload.password || document.getElementById('password')?.value || '';
+
+                    try {
+                        const loginResponse = await window.RegisterAPI.loginSpeaker(emailToLogin, passwordToLogin);
+                        if (loginResponse && loginResponse.success) {
+                            window.Auth.setToken(loginResponse.token);
+                        }
+                    } catch (loginErr) {
+                        console.warn('Auto-login failed (will still show confirmation):', loginErr);
+                    }
+
+                    // Update confirmation and show final step
+                    updateConfirmationSection(apiResponse);
+                    showStep(5);
+                    return;
+                }
+
+                // Fallback: if no saved pre-registration, perform full registration now
                 // Collect all registration data
                 registrationData = {
                     speaker_prefix: document.getElementById('speakerPrefix')?.value || '',
@@ -1665,32 +1903,33 @@
                     speaker_experience: document.getElementById('speakerExperience')?.value || '',
                     social_media: document.getElementById('socialMedia')?.value || '',
                     speaker_package: selectedPackage,
+                    speaker_package_price: (fetchedPackages && fetchedPackages[selectedPackage] && Number(fetchedPackages[selectedPackage].price)) || Number(document.querySelector(`.package-card[data-package="${selectedPackage}"]`)?.getAttribute('data-price')) || 0,
                     payment_method: selectedPaymentMethod,
                     email: document.getElementById('email')?.value || '',
                     password: document.getElementById('password')?.value || '',
                     timestamp: new Date().toISOString()
                 };
-                
+
                 // Call the mock API
                 const response = await window.RegisterAPI.registerSpeaker(registrationData);
-                
+
                 if (response.success) {
                     // Store registration data in localStorage for dashboard
                     localStorage.setItem('speaker_registration_data', JSON.stringify({
                         ...registrationData,
                         apiResponse: response.data
                     }));
-                    
+
                     // Auto-login the user after successful registration
                     const loginResponse = await window.RegisterAPI.loginSpeaker(
-                        registrationData.email, 
+                        registrationData.email,
                         registrationData.password
                     );
-                    
+
                     if (loginResponse.success) {
                         // Store auth token
                         window.Auth.setToken(loginResponse.token);
-                        
+
                         // Update confirmation with response data
                         updateConfirmationSection(response.data);
                         showStep(5);
@@ -1700,7 +1939,6 @@
                 } else {
                     throw new Error(response.message || 'Registration failed');
                 }
-                
             } catch (err) {
                 console.error('Registration failed', err);
                 const message = err?.message || 'Registration failed. Please try again.';
@@ -1732,12 +1970,7 @@
             if (confirmationName) confirmationName.textContent = `${speakerFirstName} ${speakerLastName}`;
             if (confirmationType) confirmationType.textContent = 'Speaker';
             if (confirmationPackage) {
-                const packageNames = {
-                    'basic-speaker': 'Basic Speaker Package',
-                    'premium-speaker': 'Premium Speaker Package', 
-                    'keynote-speaker': 'Keynote Speaker Package'
-                };
-                confirmationPackage.textContent = packageNames[selectedPackage] || selectedPackage;
+                confirmationPackage.textContent = fetchedPackages[selectedPackage]?.name || selectedPackage;
             }
             if (confirmationPayment) {
                 const paymentMethods = {
