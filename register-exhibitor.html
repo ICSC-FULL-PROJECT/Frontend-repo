@@ -853,6 +853,7 @@
                         <textarea id="exhibitorProducts" name="exhibitorProducts" class="form-control" rows="3" placeholder="Please describe the products or services you plan to exhibit"></textarea>
                     </div>
                 </form>
+                <div id="profile-server-error" class="error-message" style="display:none;"></div>
                 
                 <div class="button-container">
                     <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
@@ -999,10 +1000,8 @@
             });
             
             document.getElementById('continue-to-confirmation-btn').addEventListener('click', function() {
-                if (validateProfileForm()) {
-                    goToStep(3);
-                    updateConfirmationDetails();
-                }
+                // On click, validate then submit to backend. If successful, show confirmation step.
+                submitExhibitorRegistration();
             });
             
             document.getElementById('go-to-dashboard-btn').addEventListener('click', function() {
@@ -1212,6 +1211,75 @@
                 document.getElementById('exhibitorFirstName').value + ' ' + document.getElementById('exhibitorLastName').value;
             document.getElementById('confirmation-email').textContent = document.getElementById('exhibitorEmail').value;
             document.getElementById('confirmation-email-text').textContent = document.getElementById('exhibitorEmail').value;
+        }
+
+        // Build payload and submit to backend
+        async function submitExhibitorRegistration() {
+            // clear server error
+            const serverErrorEl = document.getElementById('profile-server-error');
+            serverErrorEl.style.display = 'none';
+            serverErrorEl.textContent = '';
+
+            // run client-side validations first
+            const accountValid = validateAccountForm();
+            const profileValid = validateProfileForm();
+            if (!accountValid || !profileValid) return;
+
+            // gather values
+            const payload = {
+                exhibitorPrefix: document.getElementById('exhibitorPrefix').value,
+                exhibitorName: document.getElementById('exhibitorName').value,
+                exhibitorFirstName: document.getElementById('exhibitorFirstName').value,
+                exhibitorLastName: document.getElementById('exhibitorLastName').value,
+                exhibitorEmail: document.getElementById('exhibitorEmail').value,
+                exhibitorPhone: (window.intlTelInput && phoneInputs['exhibitorPhone'] && phoneInputs['exhibitorPhone'].getNumber()) ? phoneInputs['exhibitorPhone'].getNumber() : document.getElementById('exhibitorPhone').value,
+                exhibitorWebsite: document.getElementById('exhibitorWebsite').value || null,
+                exhibitorDescription: document.getElementById('exhibitorDescription').value,
+                exhibitorProducts: document.getElementById('exhibitorProducts').value || null,
+                password: document.getElementById('password').value
+            };
+
+            // set loading state on button
+            const btn = document.getElementById('continue-to-confirmation-btn');
+            const originalBtnHtml = btn.innerHTML;
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+
+            try {
+                // prefer the API path the user provided; fall back to RegisterAPI if needed
+                let resData = null;
+                if (typeof apiClient !== 'undefined' && apiClient) {
+                    const resp = await apiClient.post('/auth/exhibitor-register', payload);
+                    resData = resp.data || resp;
+                } else if (typeof RegisterAPI !== 'undefined' && RegisterAPI && RegisterAPI.registerExhibitor) {
+                    resData = await RegisterAPI.registerExhibitor(payload);
+                } else {
+                    throw new Error('API client not available. Ensure `js/apiClient.js` is included.');
+                }
+
+                // success: update confirmation details with server returned values when available
+                // attempt to map server response -> confirmation fields
+                // update fields from our form (this generates a client-side id if backend didn't return one)
+                updateConfirmationDetails();
+
+                // If backend returns an id, override the generated one
+                if (resData) {
+                    if (resData.id) document.getElementById('confirmation-id').textContent = resData.id;
+                    if (resData.registrationId) document.getElementById('confirmation-id').textContent = resData.registrationId;
+                }
+
+                goToStep(3);
+
+            } catch (err) {
+                console.error('Registration error', err);
+                const msg = err?.message || (err?.message) || 'Registration failed. Please try again.';
+                serverErrorEl.textContent = msg;
+                serverErrorEl.style.display = 'block';
+            } finally {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+            }
         }
     </script>
 </body>

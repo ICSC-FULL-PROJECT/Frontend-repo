@@ -1972,8 +1972,18 @@
     hidden.value = selectedRegistrantType;
 
     // Enable continue button
-    const btn = document.getElementById('continue-btn');
-    if (btn) btn.disabled = false;
+    // Show the continue container (in case it was hidden) and enable the actual continue button
+    const continueContainer = document.getElementById('continue-container');
+    if (continueContainer) continueContainer.style.display = 'block';
+
+    // Support both possible button ids for robustness
+    const btnIds = ['continue-to-registration-btn', 'continue-btn'];
+    btnIds.forEach(id => {
+        const b = document.getElementById(id);
+        if (b) {
+            b.disabled = false;
+        }
+    });
 }
 
         
