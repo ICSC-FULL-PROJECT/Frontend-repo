@@ -1,4 +1,6 @@
 // DOM Elements
+const deleteMinistryModal = document.getElementById('deleteMinistryModal');
+const successMessageEl = document.getElementById('successMessage');
 const viewAttendeeModal = document.getElementById('viewAttendeeModal');
 const addAttendeeForm = document.getElementById('addAttendeeForm');
 const editAttendeeForm = document.getElementById('editAttendeeForm');
@@ -41,6 +43,8 @@ const tabLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
 const pageTitle = document.getElementById('pageTitle');
 
 let ministries = [];
+let attendees = []; // <-- prevent ReferenceError, used across the file
+
 
 // Current attendee/ministry being edited or deleted
 let currentAttendeeId = null;
@@ -113,147 +117,329 @@ function getTabTitle(tabId) {
 
 // Event Listeners
 function initializeEventListeners() {
-    // Form submissions
-    addAttendeeForm.addEventListener('submit', handleAddAttendee);
-    editAttendeeForm.addEventListener('submit', handleEditAttendee);
-    addMinistryForm.addEventListener('submit', handleAddMinistry);
-    editMinistryForm.addEventListener('submit', handleEditMinistry);
+    // Safely add form submit handlers only if elements exist
+    if (addAttendeeForm) addAttendeeForm.addEventListener('submit', handleAddAttendee);
+    if (editAttendeeForm) editAttendeeForm.addEventListener('submit', handleEditAttendee);
+    if (addMinistryForm) addMinistryForm.addEventListener('submit', handleAddMinistry);
+    if (editMinistryForm) editMinistryForm.addEventListener('submit', handleEditMinistry);
     
-    // Modal controls
-    closeModalBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            successModal.classList.remove('active');
-            editAttendeeModal.classList.remove('active');
-            deleteModal.classList.remove('active');
-            deleteMinistryModal.classList.remove('active');
-            addMinistryModal.classList.remove('active');
-            viewMinistryModal.classList.remove('active');
-            editMinistryModal.classList.remove('active');
-            viewAttendeeModal.classList.remove('active');
+    // Modal controls (safe)
+    if (closeModalBtns && closeModalBtns.length) {
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (successModal) successModal.classList.remove('active');
+                if (editAttendeeModal) editAttendeeModal.classList.remove('active');
+                if (deleteModal) deleteModal.classList.remove('active');
+                if (deleteMinistryModal) deleteMinistryModal.classList.remove('active');
+                if (addMinistryModal) addMinistryModal.classList.remove('active');
+                if (viewMinistryModal) viewMinistryModal.classList.remove('active');
+                if (editMinistryModal) editMinistryModal.classList.remove('active');
+                if (viewAttendeeModal) viewAttendeeModal.classList.remove('active');
+            });
         });
+    }
+    
+    if (addAnotherBtn) addAnotherBtn.addEventListener('click', function() {
+        if (successModal) successModal.classList.remove('active');
     });
     
-    addAnotherBtn.addEventListener('click', function() {
-        successModal.classList.remove('active');
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', function() {
+        if (editAttendeeModal) editAttendeeModal.classList.remove('active');
     });
     
-    cancelEditBtn.addEventListener('click', function() {
-        editAttendeeModal.classList.remove('active');
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', function() {
+        if (deleteModal) deleteModal.classList.remove('active');
+    });
+    if (cancelDeleteMinistryBtn) cancelDeleteMinistryBtn.addEventListener('click', function() {
+        if (deleteMinistryModal) deleteMinistryModal.classList.remove('active');
+    });
+    if (document.querySelector('.close-view-modal')) {
+        document.querySelector('.close-view-modal').addEventListener('click', function() {
+            if (viewAttendeeModal) viewAttendeeModal.classList.remove('active');
+        });
+    }
+    
+    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
+    if (confirmDeleteMinistryBtn) confirmDeleteMinistryBtn.addEventListener('click', handleDeleteMinistry);
+    
+    if (cancelAddMinistryBtn) cancelAddMinistryBtn.addEventListener('click', function() {
+        if (addMinistryModal) addMinistryModal.classList.remove('active');
     });
     
-    cancelDeleteBtn.addEventListener('click', function() {
-        deleteModal.classList.remove('active');
-    });
-    cancelDeleteMinistryBtn.addEventListener('click', function() {
-        deleteMinistryModal.classList.remove('active');
-    });
-    document.querySelector('.close-view-modal').addEventListener('click', function() {
-        viewAttendeeModal.classList.remove('active');
+    if (closeViewMinistryBtn) closeViewMinistryBtn.addEventListener('click', function() {
+        if (viewMinistryModal) viewMinistryModal.classList.remove('active');
     });
     
-    confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
-
-    confirmDeleteMinistryBtn.addEventListener('click', handleDeleteMinistry);
-    
-    cancelAddMinistryBtn.addEventListener('click', function() {
-        addMinistryModal.classList.remove('active');
+    if (cancelEditMinistryBtn) cancelEditMinistryBtn.addEventListener('click', function() {
+        if (editMinistryModal) editMinistryModal.classList.remove('active');
     });
     
-    closeViewMinistryBtn.addEventListener('click', function() {
-        viewMinistryModal.classList.remove('active');
-    });
+    if (generateNewPasswordBtn) generateNewPasswordBtn.addEventListener('click', generateNewPassword);
     
-    cancelEditMinistryBtn.addEventListener('click', function() {
-        editMinistryModal.classList.remove('active');
-    });
-    
-    generateNewPasswordBtn.addEventListener('click', generateNewPassword);
-    
-    // Search and filter
-    searchAttendees.addEventListener('input', filterAttendees);
-    filterMinistry.addEventListener('change', filterAttendees);
-    filterStatus.addEventListener('change', filterAttendees);
-    filterDepartment.addEventListener('change', filterAttendees);
-    clearFiltersBtn.addEventListener('click', clearFilters);
+    // Search and filter — guard existence
+    if (searchAttendees) searchAttendees.addEventListener('input', filterAttendees);
+    if (filterMinistry) filterMinistry.addEventListener('change', filterAttendees);
+    if (filterStatus) filterStatus.addEventListener('change', filterAttendees);
+    if (filterDepartment) filterDepartment.addEventListener('change', filterAttendees);
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
     
     // Add Ministry button
-    addMinistryBtn.addEventListener('click', function() {
-        document.getElementById('ministryName').value = '';
-        document.getElementById('ministryCode').value = '';
-        document.getElementById('contactPerson').value = 'Permanent Secretary';
-        document.getElementById('contactPersonEmail').value = '';
-        
-        // Generate credentials
-        generateMinistryCredentials();
-        addMinistryModal.classList.add('active');
-    });
-    
-    // Edit and delete buttons
+    if (addMinistryBtn) {
+        addMinistryBtn.addEventListener('click', function() {
+            const mn = document.getElementById('ministryName');
+            const mc = document.getElementById('ministryCode');
+            const cp = document.getElementById('contactPerson');
+            const cpe = document.getElementById('contactPersonEmail');
+
+            if (mn) mn.value = '';
+            if (mc) mc.value = '';
+            if (cp) cp.value = 'Permanent Secretary';
+            if (cpe) cpe.value = '';
+
+            // Generate credentials
+            generateMinistryCredentials();
+            if (addMinistryModal) addMinistryModal.classList.add('active');
+        });
+    }
+
+
+
+    // Partner form submission
+    const addPartnerForm = document.getElementById('addPartnerForm');
+    if (addPartnerForm) {
+        addPartnerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Add Partner form submitted');
+        });
+    }
+
+    // Global document click handlers for edit/view/delete — keep but guard row lookup
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('edit-btn')) {
-            const row = e.target.closest('tr');
-            const attendeeId = parseInt(row.getAttribute('data-id'));
-            openEditModal(attendeeId);
+        const closestRow = e.target.closest && e.target.closest('tr');
+        if (e.target.classList.contains('edit-btn') && closestRow) {
+            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(attendeeId)) openEditModal(attendeeId);
         }
-        if (e.target.classList.contains('view-btn')) {
-            const row = e.target.closest('tr');
-            const attendeeId = parseInt(row.getAttribute('data-id'));
-            openViewModal(attendeeId);
+        if (e.target.classList.contains('view-btn') && closestRow) {
+            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(attendeeId)) openViewModal(attendeeId);
         }
-        
-        if (e.target.classList.contains('delete-btn')) {
-            const row = e.target.closest('tr');
-            const attendeeId = parseInt(row.getAttribute('data-id'));
-            const attendeeName = row.cells[0].textContent;
-            openDeleteModal(attendeeId, attendeeName);
+        if (e.target.classList.contains('delete-btn') && closestRow) {
+            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+            const attendeeName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
+            if (!Number.isNaN(attendeeId)) openDeleteModal(attendeeId, attendeeName);
         }
 
-        if (e.target.classList.contains('delete-ministry-btn')) {
-            const row = e.target.closest('tr');
-            const ministryId = parseInt(row.getAttribute('data-id'));
-            const ministryName = row.cells[0].textContent;
-            openDeleteMinistryModal(ministryId, ministryName);
+        if (e.target.classList.contains('delete-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            const ministryName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
+            if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
         }
 
-        if (e.target.classList.contains('approve-btn')) {
-            const row = e.target.closest('tr');
-            const attendeeId = parseInt(row.getAttribute('data-id'));
-            approveAttendee(attendeeId);
+        if (e.target.classList.contains('approve-btn') && closestRow) {
+            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(attendeeId)) approveAttendee(attendeeId);
         }
-        
-        if (e.target.classList.contains('reject-btn')) {
-            const row = e.target.closest('tr');
-            const attendeeId = parseInt(row.getAttribute('data-id'));
-            rejectAttendee(attendeeId);
+        if (e.target.classList.contains('reject-btn') && closestRow) {
+            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(attendeeId)) rejectAttendee(attendeeId);
         }
-        
-        if (e.target.classList.contains('view-ministry-btn')) {
-            const row = e.target.closest('tr');
-            const ministryId = parseInt(row.getAttribute('data-id'));
-            openViewMinistryModal(ministryId);
+
+        if (e.target.classList.contains('view-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
         }
-        
-        if (e.target.classList.contains('edit-ministry-btn')) {
-            const row = e.target.closest('tr');
-            const ministryId = parseInt(row.getAttribute('data-id'));
-            openEditMinistryModal(ministryId);
+        if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
         }
     });
-    
-    // Refresh buttons
-    document.getElementById('refreshActivityBtn').addEventListener('click', function() {
-        alert('Refreshing recent activity...');
-    });
-    
-    document.getElementById('refreshPendingBtn').addEventListener('click', function() {
-        alert('Refreshing pending attendees...');
-    });
-    
-    // Export button
-    document.getElementById('exportAttendeesBtn').addEventListener('click', function() {
-        alert('Exporting attendees data...');
-    });
+
+    // Refresh & export buttons (guarded)
+    const refreshActivityBtn = document.getElementById('refreshActivityBtn');
+    const refreshPendingBtn = document.getElementById('refreshPendingBtn');
+    const exportAttendeesBtn = document.getElementById('exportAttendeesBtn');
+
+    if (refreshActivityBtn) refreshActivityBtn.addEventListener('click', function () { alert('Refreshing recent activity...'); });
+    if (refreshPendingBtn) refreshPendingBtn.addEventListener('click', function () { alert('Refreshing pending attendees...'); });
+    if (exportAttendeesBtn) exportAttendeesBtn.addEventListener('click', function () { alert('Exporting attendees data...'); });
 }
+
+// === CONSOLIDATED MODAL MANAGER (single source of truth) ===
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const modalConfigs = [
+        {
+            btn: "addExhibitorBtn",
+            modal: "addExhibitorModal",
+            cancel: "cancelAddExhibitorBtn",
+            form: "addExhibitorForm",
+        },
+        {
+            btn: "addSpeakerBtn",
+            modal: "addSpeakerModal",
+            cancel: "cancelAddSpeakerBtn",
+            form: "addSpeakerForm",
+        },
+        {
+            btn: "addPartnerBtn",
+            modal: "addPartnerModal",
+            cancel: "cancelAddPartnerBtn",
+            form: "addPartnerForm",
+        }
+    ];
+
+    function openModal(modalEl, formEl) {
+        if (formEl) formEl.reset();
+        modalEl.classList.add("active");
+    }
+
+    function closeModal(modalEl) {
+        modalEl.classList.remove("active");
+    }
+
+    // Initialize modal logic
+    modalConfigs.forEach(cfg => {
+        const btn = document.getElementById(cfg.btn);
+        const modal = document.getElementById(cfg.modal);
+        const cancel = document.getElementById(cfg.cancel);
+        const form = document.getElementById(cfg.form);
+
+        if (!modal) {
+            console.warn(`Modal not found: ${cfg.modal}`);
+            return;
+        }
+
+        // Ensure we do not double-bind
+        if (!modal.dataset.bound) modal.dataset.bound = "false";
+        if (modal.dataset.bound === "true") return;
+
+        // Open modal
+        if (btn) {
+            btn.addEventListener("click", () => openModal(modal, form));
+        }
+
+        // Cancel inside modal
+        if (cancel) {
+            cancel.addEventListener("click", () => closeModal(modal));
+        }
+
+        // Submit (dummy backend)
+        if (form) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                
+                console.log(`Submitted → ${cfg.form}`);
+
+                alert("Data submitted successfully (dummy backend)");
+                closeModal(modal);
+            });
+        }
+
+        modal.dataset.bound = "true";
+    });
+
+    // Close when clicking X button
+    document.querySelectorAll(".close-modal").forEach(x => {
+        x.addEventListener("click", () => {
+            const modal = x.closest(".modal");
+            if (modal) closeModal(modal);
+        });
+    });
+
+    // Close when clicking outside modal-content
+    window.addEventListener("click", (e) => {
+        if (e.target.classList.contains("modal")) {
+            e.target.classList.remove("active");
+        }
+    });
+
+});
+/* 
+===========================================================
+ UNIFIED MODAL MANAGER (OPTION A - USING .active CLASS)
+===========================================================
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const modalConfigs = [
+        {
+            btn: "addExhibitorBtn",
+            modal: "addExhibitorModal",
+            cancel: "cancelAddExhibitorBtn",
+            form: "addExhibitorForm",
+            name: "Exhibitor"
+        },
+        {
+            btn: "addSpeakerBtn",
+            modal: "addSpeakerModal",
+            cancel: "cancelAddSpeakerBtn",
+            form: "addSpeakerForm",
+            name: "Speaker"
+        },
+        {
+            btn: "addPartnerBtn",
+            modal: "addPartnerModal",
+            cancel: "cancelAddPartnerBtn",
+            form: "addPartnerForm",
+            name: "Partner"
+        }
+    ];
+
+    function openModal(modalEl, formEl) {
+        if (formEl) formEl.reset();
+        modalEl.classList.add("active");
+    }
+
+    function closeModal(modalEl) {
+        modalEl.classList.remove("active");
+    }
+
+    modalConfigs.forEach(cfg => {
+
+        const btn = document.getElementById(cfg.btn);
+        const modal = document.getElementById(cfg.modal);
+        const cancel = document.getElementById(cfg.cancel);
+        const form = document.getElementById(cfg.form);
+
+        if (!modal) return;
+
+        // Avoid double-binding
+        if (modal.dataset.bound === "true") return;
+
+        if (btn) btn.addEventListener("click", () => openModal(modal, form));
+
+        if (cancel) cancel.addEventListener("click", () => closeModal(modal));
+
+        if (form) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                alert(cfg.name + " data submitted (dummy backend).");
+                closeModal(modal);
+            });
+        }
+
+        modal.dataset.bound = "true";
+    });
+
+    // Close using X buttons
+    document.querySelectorAll(".close-modal").forEach(x => {
+        x.addEventListener("click", () => {
+            const modal = x.closest(".modal");
+            if (modal) closeModal(modal);
+        });
+    });
+
+    // Close by clicking outside modal-content
+    window.addEventListener("click", e => {
+        if (e.target.classList.contains("modal")) {
+            e.target.classList.remove("active");
+        }
+    });
+});
+
 
 // Form Handlers
 async function handleAddAttendee(e) {
@@ -261,39 +447,50 @@ async function handleAddAttendee(e) {
     
     // Collect values
     const values = {
-        name: document.getElementById('attendeeName').value.trim(),
+        prefix: document.getElementById('attendeePrefix').value.trim(),
+        firstName: document.getElementById('attendeeFirstName').value.trim(),
+        lastName: document.getElementById('attendeeLastName').value.trim(),
         email: document.getElementById('attendeeEmail').value.trim(),
+        password: document.getElementById('attendeePassword').value.trim(),
+        jobTitle: document.getElementById('attendeeJobTitle').value.trim(),
+        organization: document.getElementById('attendeeOrganization').value.trim(),
+        workPhone: document.getElementById('attendeeWorkPhone').value.trim(),
         phone: document.getElementById('attendeePhone').value.trim(),
         nin: document.getElementById('attendeeNIN').value.trim(),
         position: document.getElementById('attendeePosition').value.trim(),
         gradeLevel: document.getElementById('attendeeGradeLevel').value,
-        ministry: document.getElementById('attendeeMinistry').value,
-        department: document.getElementById('attendeeDepartment').value.trim(),
-        agency: document.getElementById('attendeeAgency').value.trim(),
-        staffId: document.getElementById('attendeeStaffId').value.trim(),
-        office: document.getElementById('attendeeOffice').value.trim(),
-        status: document.getElementById('attendeeStatus').value,
-        remarks: document.getElementById('attendeeRemarks').value.trim()
+        ministry: document.getElementById('attendeeMinistry')?.value || '',
+        department: document.getElementById('attendeeDepartment')?.value.trim() || '',
+        agency: document.getElementById('attendeeAgency')?.value.trim() || '',
+        staffId: document.getElementById('attendeeStaffId')?.value.trim() || '',
+        office: document.getElementById('attendeeOffice')?.value.trim() || '',
+        status: document.getElementById('attendeeStatus')?.value || 'Pending',
+        remarks: document.getElementById('attendeeRemarks')?.value.trim() || ''
     };
 
+    // Build full name from prefix, first name, and last name
+    const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
+
     // Basic client-side validation
-    const required = ['name','email','phone','nin','position','gradeLevel','ministry','department','agency'];
-    for (const k of required) {
-        if (!values[k]) {
-            alert('Please fill all required fields.');
-            return;
-        }
+   const required = ['prefix', 'firstName', 'lastName', 'email', 'password', 'jobTitle', 'organization', 'workPhone', 'phone', 'nin', 'position', 'gradeLevel'];
+for (const field of required) {
+    if (!values[field]) {
+        alert(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+        return;
+    }
     }
 
     // Build backend payload (adjust keys if your API expects different names)
     const payload = {
-        fullname: values.name,
+        fullname: values.fullName,
         email: values.email,
+        password: values.password,
         phone_number: values.phone,
         nin: values.nin,
         position: values.position,
+        jobTitle: values.jobTitle,
         grade: values.gradeLevel,
-        organization: values.ministry,
+        organization: values.organization,
         department: values.department,
         department_agency: values.agency,
         staff_id: values.staffId,
@@ -383,40 +580,98 @@ async function handleAddAttendee(e) {
     }
 }
 
-function handleEditAttendee(e) {
+async function handleEditAttendee(e) {
     e.preventDefault();
     
-    // Update attendee data
-    const attendeeIndex = attendees.findIndex(a => a.id === currentAttendeeId);
-    if (attendeeIndex !== -1) {
-        attendees[attendeeIndex] = {
-            ...attendees[attendeeIndex],
-            name: document.getElementById('editAttendeeName').value,
-            email: document.getElementById('editAttendeeEmail').value,
-            phone: document.getElementById('editAttendeePhone').value,
-            nin: document.getElementById('editAttendeeNIN').value,
-            position: document.getElementById('editAttendeePosition').value,
-            gradeLevel: document.getElementById('editAttendeeGradeLevel').value,
-            ministry: document.getElementById('editAttendeeMinistry').value,
-            department: document.getElementById('editAttendeeDepartment').value,
-            agency: document.getElementById('editAttendeeAgency').value,
-            staffId: document.getElementById('editAttendeeStaffId').value,
-            office: document.getElementById('editAttendeeOffice').value,
-            status: document.getElementById('editAttendeeStatus').value,
-            remarks: document.getElementById('editAttendeeRemarks').value
-        };
-        
-        // Update UI
-        updateAttendeesTable();
-        updatePendingTable();
-        updateStats();
-        
-        // Show success message
-        document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
-        successModal.classList.add('active');
-        
-        // Close modal
-        editAttendeeModal.classList.remove('active');
+    // Collect updated values from edit form
+    const updatedData = {
+        prefix: document.getElementById('editAttendeePrefix').value.trim(),
+        firstName: document.getElementById('editAttendeeFirstName').value.trim(),
+        lastName: document.getElementById('editAttendeeLastName').value.trim(),
+        email: document.getElementById('editAttendeeEmail').value.trim(),
+        password: document.getElementById('editAttendeePassword').value.trim(),
+        jobTitle: document.getElementById('editAttendeeJobTitle').value.trim(),
+        organization: document.getElementById('editAttendeeOrganization').value.trim(),
+        workPhone: document.getElementById('editAttendeeWorkPhone').value.trim(),
+        phone: document.getElementById('editAttendeePhone').value.trim(),
+        nin: document.getElementById('editAttendeeNIN').value.trim(),
+        position: document.getElementById('editAttendeePosition').value.trim(),
+        gradeLevel: document.getElementById('editAttendeeGradeLevel').value
+    };
+
+    // Build full name
+    const fullName = `${updatedData.prefix} ${updatedData.firstName} ${updatedData.lastName}`.trim();
+
+    // Build backend payload
+    const payload = {
+        fullname: fullName,
+        email: updatedData.email,
+        password: updatedData.password,
+        phone_number: updatedData.phone,
+        work_phone: updatedData.workPhone,
+        nin: updatedData.nin,
+        position: updatedData.position,
+        job_title: updatedData.jobTitle,
+        grade: updatedData.gradeLevel,
+        organization: updatedData.organization
+    };
+
+    // Disable submit button
+    const submitBtn = editAttendeeForm.querySelector('button[type="submit"]');
+    const origText = submitBtn ? submitBtn.textContent : null;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Updating...';
+    }
+
+    try {
+        let res;
+        if (window.apiClient) {
+            res = await window.apiClient.put(`/admin/update-attendee?attendee_id=${currentAttendeeId}`, payload);
+        } else {
+            const token = localStorage.getItem('accessToken');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            res = await axios.put(`${API_BASE_URL}/admin/update-attendee?attendee_id=${currentAttendeeId}`, payload, { headers });
+        }
+
+        if (res && (res.status === 200 || res.status === 201)) {
+            // Update local attendee data
+            const attendeeIndex = attendees.findIndex(a => a.id === currentAttendeeId);
+            if (attendeeIndex !== -1) {
+                attendees[attendeeIndex] = {
+                    ...attendees[attendeeIndex],
+                    name: fullName,
+                    email: updatedData.email,
+                    phone: updatedData.phone,
+                    nin: updatedData.nin,
+                    position: updatedData.position,
+                    gradeLevel: updatedData.gradeLevel,
+                    ministry: updatedData.organization
+                };
+                
+                // Update UI
+                renderAttendeesTable(attendees);
+                updatePendingTable();
+                updateStats();
+                
+                // Show success message
+                document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
+                successModal.classList.add('active');
+                editAttendeeModal.classList.remove('active');
+            }
+        } else {
+            throw new Error(res?.data?.message || 'Failed to update attendee');
+        }
+    } catch (err) {
+        const msg = err?.response?.data?.message || err.message || 'Update failed';
+        alert(msg);
+        console.error('Edit attendee error:', err);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = origText || 'Update Attendee';
+        }
     }
 }
 
@@ -562,89 +817,6 @@ async function handleDeleteMinistry() {
         if (typeof hideLoading === 'function') hideLoading();
     }
 }
-
-// ✅ Database Integration for Ministry Creation (Corrected to match backend)
-// async function handleAddMinistry(e) {
-// e.preventDefault();
-
-// // Collect form data from input fields
-// const organization = document.getElementById('ministryName').value;
-// const organization_short_code = document.getElementById('ministryCode').value;
-// const contact_person = document.getElementById('contactPerson').value;
-// const contact_person_email = document.getElementById('contactPersonEmail').value;
-// const username = document.getElementById('generatedUsername').textContent;
-// const password = document.getElementById('generatedPassword').textContent;
-
-// // ✅ Prepare correct payload for backend
-// const ministryData = {
-// organization,
-// organization_short_code,
-// username,
-// contact_person,
-// contact_person_email,
-// password
-// };
-
-// console.log("Sending to API:", ministryData);
-
-// try {
-// // Show loading state
-// const submitBtn = addMinistryForm.querySelector('button[type="submit"]');
-// const originalText = submitBtn.textContent;
-// submitBtn.textContent = 'Creating...';
-// submitBtn.disabled = true;
-
-// // ✅ Get stored Super Admin token
-// const token = localStorage.getItem('accessToken');
-// if (!token) {
-// alert('Session expired. Please log in again.');
-// window.location.href = '../index.html';
-// return;
-// }
-
-// // ✅ Make authenticated API call
-// const response = await axios.post(
-// `${API_BASE_URL}/admin/create-user`,
-// ministryData,
-// {
-// headers: {
-// 'Content-Type': 'application/json',
-// 'Authorization': `Bearer ${token}`
-// }
-// }
-// );
-
-// // Restore button state
-// submitBtn.textContent = originalText;
-// submitBtn.disabled = false;
-
-// console.log("API Response:", response.data);
-
-// if (response.data && (response.data.success || response.status === 200)) {
-// document.getElementById('successMessage').textContent =
-// 'Ministry has been successfully created!';
-// successModal.classList.add('active');
-
-// // Optional: reset form + close modal
-// addMinistryForm.reset();
-// addMinistryModal.classList.remove('active');
-// } else {
-// throw new Error(response.data.message || 'Failed to create ministry');
-// }
-
-// } catch (error) {
-// console.error('Error creating user:', error.response?.data || error.message);
-
-// // Reset button
-// const submitBtn = addMinistryForm.querySelector('button[type="submit"]');
-// submitBtn.textContent = 'Add Ministry';
-// submitBtn.disabled = false;
-
-// // Show error message
-// alert(`Error creating user: ${error.response?.data?.message || error.message}`);
-// }
-// }
-
 
 // ✅ Replace handleAddMinistry to call backend and update UI
 async function handleAddMinistry(e) {
@@ -923,20 +1095,37 @@ function openEditModal(attendeeId) {
     if (attendee) {
         currentAttendeeId = attendeeId;
         
+        // Parse full name into components
+        const nameParts = attendee.name.split(' ');
+        let prefix = 'Mr';
+        let firstName = '';
+        let lastName = '';
+        
+        if (nameParts.length > 0) {
+            const possiblePrefixes = ['Mr', 'Mrs', 'Miss', 'Dr', 'Prof'];
+            if (possiblePrefixes.includes(nameParts[0])) {
+                prefix = nameParts[0];
+                firstName = nameParts[1] || '';
+                lastName = nameParts.slice(2).join(' ') || '';
+            } else {
+                firstName = nameParts[0] || '';
+                lastName = nameParts.slice(1).join(' ') || '';
+            }
+        }
+        
         // Populate form with attendee data
-        document.getElementById('editAttendeeName').value = attendee.name;
+        document.getElementById('editAttendeePrefix').value = prefix;
+        document.getElementById('editAttendeeFirstName').value = firstName;
+        document.getElementById('editAttendeeLastName').value = lastName;
         document.getElementById('editAttendeeEmail').value = attendee.email;
+        document.getElementById('editAttendeePassword').value = ''; // Leave password blank for security
+        document.getElementById('editAttendeeJobTitle').value = attendee.position;
+        document.getElementById('editAttendeeOrganization').value = attendee.ministry;
+        document.getElementById('editAttendeeWorkPhone').value = attendee.phone;
         document.getElementById('editAttendeePhone').value = attendee.phone;
         document.getElementById('editAttendeeNIN').value = attendee.nin;
         document.getElementById('editAttendeePosition').value = attendee.position;
         document.getElementById('editAttendeeGradeLevel').value = attendee.gradeLevel;
-        document.getElementById('editAttendeeMinistry').value = attendee.ministry;
-        document.getElementById('editAttendeeDepartment').value = attendee.department;
-        document.getElementById('editAttendeeAgency').value = attendee.agency;
-        document.getElementById('editAttendeeStaffId').value = attendee.staffId;
-        document.getElementById('editAttendeeOffice').value = attendee.office;
-        document.getElementById('editAttendeeStatus').value = attendee.status;
-        document.getElementById('editAttendeeRemarks').value = attendee.remarks;
         
         // Show modal
         editAttendeeModal.classList.add('active');
@@ -962,16 +1151,13 @@ function openViewModal(attendeeId) {
         document.getElementById('viewName').textContent = attendee.name;
         document.getElementById('viewEmail').textContent = attendee.email;
         document.getElementById('viewPhone').textContent = attendee.phone;
+        document.getElementById('viewWorkPhone').textContent = attendee.phone;
         document.getElementById('viewNIN').textContent = attendee.nin;
         document.getElementById('viewPosition').textContent = attendee.position;
+        document.getElementById('viewJobTitle').textContent = attendee.position;
         document.getElementById('viewGradeLevel').textContent = attendee.gradeLevel;
-        document.getElementById('viewMinistry').textContent = attendee.ministry;
-        document.getElementById('viewDepartment').textContent = attendee.department;
-        document.getElementById('viewAgency').textContent = attendee.agency;
-        document.getElementById('viewStaffId').textContent = attendee.staffId || 'N/A';
-        document.getElementById('viewOffice').textContent = attendee.office || 'N/A';
+        document.getElementById('viewOrganization').textContent = attendee.ministry;
         document.getElementById('viewStatus').textContent = attendee.status;
-        document.getElementById('viewRemarks').textContent = attendee.remarks || 'No remarks';
         
         // Show modal
         viewAttendeeModal.classList.add('active');
@@ -989,22 +1175,6 @@ function openViewMinistryModal(ministryId) {
         document.getElementById('viewContactPerson').textContent = ministry.contactPerson || '';
         document.getElementById('viewContactPersonEmail').textContent = ministry.contactPersonEmail || '';
         document.getElementById('viewUsername').textContent = ministry.username || '';
-
-        // DO NOT render the real password directly.
-        // Store it in data-password on the masked element and show a masked value.
-        // const pwMaskEl = document.getElementById('viewPasswordMask');
-        // if (pwMaskEl) {
-        //     pwMaskEl.dataset.password = ministry.password || '';
-        //     pwMaskEl.textContent = '••••••••';
-        //     pwMaskEl.setAttribute('aria-hidden', 'true');
-        // }
-
-        // // Ensure toggle button reflects "Show"
-        // const toggleBtn = document.getElementById('toggleViewPasswordBtn');
-        // if (toggleBtn) {
-        //     toggleBtn.textContent = 'Show';
-        //     toggleBtn.dataset.shown = 'false';
-        // }
 
         // Show modal
         viewMinistryModal.classList.add('active');
@@ -1224,36 +1394,24 @@ renderAttendeesTable(attendees);
 updatePendingTable();
 
 // Add event listener for ministry code to generate credentials
-document.getElementById('ministryCode').addEventListener('input', generateMinistryCredentials);
+const ministryCodeEl = document.getElementById('ministryCode');
+if (ministryCodeEl) {
+    ministryCodeEl.addEventListener('input', generateMinistryCredentials);
+}
 
-document.getElementById('superAdminLogoutBtn').addEventListener('click', function (e) {
-    e.preventDefault(); // prevent default link behavior
-    localStorage.clear(); // clear stored login info
-    sessionStorage.clear(); // clear session too, if used
-
-    // Redirect back to your login page
-    window.location.href = '../index.html';
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const superAdminLogoutBtn = document.getElementById("superAdminLogoutBtn");
-
-    if (superAdminLogoutBtn) {
-        superAdminLogoutBtn.addEventListener("click", function (event) {
-            event.preventDefault(); // Stop the normal redirect
-
-            const confirmLogout = confirm("Are you sure you want to log out?");
-            if (confirmLogout) {
-                // Optional: Clear any session storage if you're using it
-                sessionStorage.clear();
-                localStorage.removeItem("superAdminLoggedIn");
-
-                // Redirect to login page
-                window.location.href = '../index.html';
-            }
-        });
-    }
-});
+const superAdminLogoutBtn = document.getElementById('superAdminLogoutBtn');
+if (superAdminLogoutBtn) {
+    superAdminLogoutBtn.addEventListener('click', function (e) {
+        e.preventDefault(); // prevent default link behavior
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+            localStorage.clear(); // clear stored login info
+            sessionStorage.clear(); // clear session too, if used
+            // Redirect back to your login page
+            window.location.href = '../index.html';
+        }
+    });
+}
 
 // Dashboard script (handles Add Attendee submission + UI updates)
 // - Posts form data to POST /attendees (adjust endpoint if different).
@@ -1261,17 +1419,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 (function () {
 	// ...existing code...
-
 	// Add Attendee form integration
 	const addForm = document.getElementById('addAttendeeForm');
-	// const successModal = document.getElementById('successModal'); // already defined above in file
-	// const successMessageEl = document.getElementById('successMessage'); // already defined above in file
-	// const allAttendeesTable = document.getElementById('allAttendeesTable'); // already defined above in file
-
-	if (!addForm) return;
-
 	// NOTE: The main add-attendee submit handler is attached via initializeEventListeners()
 	// and implemented in handleAddAttendee above. Avoid adding a second submit listener here.
-	// (previously: addForm.addEventListener('submit', async function (e) { ... }); )
 	// ...existing code continues...
 })();

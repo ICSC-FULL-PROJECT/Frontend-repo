@@ -30,6 +30,8 @@
                 <li><a href="#" data-tab="booths"><i class="fas fa-th-large"></i> Booths</a></li>
                 <li><a href="#" data-tab="speakers"><i class="fas fa-microphone"></i> Speakers</a></li>
                 <li><a href="#" data-tab="exhibitors"><i class="fas fa-store"></i> Exhibitors</a></li>
+                <li><a href="#" data-tab="partners"><i class="fas fa-handshake"></i> Partners</a></li>
+                <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                 <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
                 <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
                 <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
@@ -278,15 +280,60 @@
                     
                     <form id="addAttendeeForm">
                         <div class="form-row">
-                            <div class="form-group">
-                                <label for="attendeeName">Full Name *</label>
-                                <input type="text" id="attendeeName" class="form-control" placeholder="Enter full name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="attendeeEmail">Email Address *</label>
-                                <input type="email" id="attendeeEmail" class="form-control" placeholder="Enter email address" required>
-                            </div>
-                        </div>
+    <div class="form-group">
+        <label for="attendeePrefix">Prefix *</label>
+        <select id="attendeePrefix" class="form-control" required>
+            <option value="">Select prefix</option>
+            <option>Mr</option>
+            <option>Mrs</option>
+            <option>Miss</option>
+            <option>Dr</option>
+            <option>Prof</option>
+        </select>
+    </div>
+    
+     <div class="form-group">
+        <label for="attendeeFirstName">First Name *</label>
+        <input type="text" id="attendeeFirstName" class="form-control" placeholder="Enter first name" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="attendeeLastName">Last Name *</label>
+        <input type="text" id="attendeeLastName" class="form-control" placeholder="Enter last name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="attendeeEmail">Email Address (Login) *</label>
+        <input type="email" id="attendeeEmail" class="form-control" placeholder="Enter email address" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="attendeePassword">Password *</label>
+        <input type="password" id="attendeePassword" class="form-control" placeholder="Enter password" required>
+    </div>
+
+    <div class="form-group">
+        <label for="attendeeJobTitle">Job Title *</label>
+        <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="attendeeOrganization">Organization *</label>
+        <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization" required>
+    </div>
+
+    <div class="form-group">
+        <label for="attendeeWorkPhone">Work Phone *</label>
+        <input type="tel" id="attendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
+    </div>
+</div>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="attendeePhone">Phone Number *</label>
@@ -498,7 +545,7 @@
                 </div>
             </div>
             <!-- View Attendee Modal -->
-        <div id="viewAttendeeModal" class="modal">
+        <div id="viewAttendeeModal" class="modal" style="display: none;">
             <div class="modal-content modal-lg">
                 <div class="modal-header">
                     <h2>Attendee Details</h2>
@@ -1056,6 +1103,365 @@
     </div>
 </div>
 
+<!-- Partners Tab -->
+<div id="partners" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Partners Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshPartnersBtn">Refresh</button>
+                <button class="btn" id="addPartnerBtn">Add Partner</button>
+            </div>
+        </div>
+
+        <!-- Partner Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalPartners">25</h3>
+                    <p>Total Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="diamondPartners">5</h3>
+                    <p>Diamond Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="goldPartners">8</h3>
+                    <p>Gold Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ministries">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="silverPartners">12</h3>
+                    <p>Silver Partners</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchPartners" class="form-control" placeholder="Search by company, contact, or package...">
+            </div>
+            <div class="filter-group">
+                <select id="filterPartnerType" class="form-control filter-select">
+                    <option value="">All Types</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="bronze">Bronze</option>
+                </select>
+                <select id="filterPartnerStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <button class="btn btn-secondary" id="clearPartnerFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="partnersTable">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Contact Person</th>
+                        <th>Email</th>
+                        <th>Package</th>
+                        <th>Investment (₦)</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-id="P001">
+                        <td>Tech Solutions Ltd</td>
+                        <td>John Smith</td>
+                        <td>john@techsolutions.com</td>
+                        <td><span class="status-badge status-approved">Diamond</span></td>
+                        <td>5,000,000</td>
+                        <td><span class="status-badge status-approved">Active</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>2026-01-15</td>
+                        <td>2026-12-31</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="P002">
+                        <td>Innovate Africa</td>
+                        <td>Sarah Johnson</td>
+                        <td>sarah@innovateafrica.com</td>
+                        <td><span class="status-badge status-pending">Gold</span></td>
+                        <td>3,000,000</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>2026-02-01</td>
+                        <td>2026-12-31</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
+                                <button class="btn btn-success btn-sm approve-partner-btn">Approve</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-id="P003">
+                        <td>Global Finance Inc</td>
+                        <td>Michael Brown</td>
+                        <td>michael@globalfinance.com</td>
+                        <td><span class="status-badge status-approved">Silver</span></td>
+                        <td>1,500,000</td>
+                        <td><span class="status-badge status-approved">Active</span></td>
+                        <td><span class="status-badge status-approved">Paid</span></td>
+                        <td>2026-01-20</td>
+                        <td>2026-12-31</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
+                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Agenda Tab -->
+<div id="agenda" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Conference Agenda Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshAgendaBtn">Refresh</button>
+                <button class="btn" id="addAgendaBtn">Add Agenda Item</button>
+            </div>
+        </div>
+
+        <!-- Agenda Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalAgendaItems">42</h3>
+                    <p>Total Sessions</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="day1Sessions">18</h3>
+                    <p>Day 1 Sessions</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="day2Sessions">24</h3>
+                    <p>Day 2 Sessions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day Toggle -->
+        <div class="day-toggle-container">
+            <div class="day-toggle">
+                <button class="day-btn active" data-day="all">All Days</button>
+                <button class="day-btn" data-day="wednesday">Wednesday, June 25</button>
+                <button class="day-btn" data-day="thursday">Thursday, June 26</button>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchAgenda" class="form-control" placeholder="Search by session title, speaker, or track...">
+            </div>
+            <div class="filter-group">
+                <select id="filterAgendaTrack" class="form-control filter-select">
+                    <option value="">All Tracks</option>
+                    <option value="keynote">Keynote</option>
+                    <option value="panel">Panel Discussion</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="networking">Networking</option>
+                    <option value="breakout">Breakout Session</option>
+                </select>
+                <select id="filterAgendaVenue" class="form-control filter-select">
+                    <option value="">All Venues</option>
+                    <option value="main-hall">Main Hall</option>
+                    <option value="conference-room-a">Conference Room A</option>
+                    <option value="conference-room-b">Conference Room B</option>
+                    <option value="exhibition-hall">Exhibition Hall</option>
+                </select>
+                <button class="btn btn-secondary" id="clearAgendaFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <!-- Agenda Timeline View -->
+        <div class="agenda-timeline">
+            <!-- Day 1 - Wednesday -->
+            <div class="agenda-day" id="day-wednesday">
+                <h3 class="day-header">Wednesday, June 25, 2026</h3>
+                
+                <div class="timeline-session" data-id="A001">
+                    <div class="session-time">
+                        <span class="time">08:00 - 09:00</span>
+                    </div>
+                    <div class="session-details">
+                        <h4 class="session-title">Registration & Welcome Coffee</h4>
+                        <p class="session-track">Registration</p>
+                        <p class="session-venue">Main Lobby</p>
+                        <p class="session-speakers">All Attendees</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+                    </div>
+                </div>
+
+                <div class="timeline-session" data-id="A002">
+                    <div class="session-time">
+                        <span class="time">09:00 - 10:30</span>
+                    </div>
+                    <div class="session-details">
+                        <h4 class="session-title">Opening Ceremony & Keynote Address</h4>
+                        <p class="session-track">Keynote</p>
+                        <p class="session-venue">Main Hall</p>
+                        <p class="session-speakers">Dr. Elizabeth Williams, Prof. James Anderson</p>
+                        <p class="session-description">Official opening of ICSC 2026 with keynote addresses on the future of public service.</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+                    </div>
+                </div>
+
+                <div class="timeline-session" data-id="A003">
+                    <div class="session-time">
+                        <span class="time">10:30 - 11:00</span>
+                    </div>
+                    <div class="session-details">
+                        <h4 class="session-title">Coffee Break & Networking</h4>
+                        <p class="session-track">Networking</p>
+                        <p class="session-venue">Networking Zone</p>
+                        <p class="session-speakers">All Attendees</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 - Thursday -->
+            <div class="agenda-day" id="day-thursday">
+                <h3 class="day-header">Thursday, June 26, 2026</h3>
+                
+                <div class="timeline-session" data-id="A004">
+                    <div class="session-time">
+                        <span class="time">08:30 - 10:00</span>
+                    </div>
+                    <div class="session-details">
+                        <h4 class="session-title">Digital Transformation in Public Service</h4>
+                        <p class="session-track">Panel Discussion</p>
+                        <p class="session-venue">Conference Room A</p>
+                        <p class="session-speakers">Sarah Johnson, Michael Chen, David Wilson</p>
+                        <p class="session-description">Exploring the role of technology in modernizing public service delivery.</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+                    </div>
+                </div>
+
+                <div class="timeline-session" data-id="A005">
+                    <div class="session-time">
+                        <span class="time">10:00 - 11:30</span>
+                    </div>
+                    <div class="session-details">
+                        <h4 class="session-title">Leadership Workshop</h4>
+                        <p class="session-track">Workshop</p>
+                        <p class="session-venue">Conference Room B</p>
+                        <p class="session-speakers">Dr. Elizabeth Williams</p>
+                        <p class="session-description">Interactive workshop on developing leadership skills in public service.</p>
+                    </div>
+                    <div class="session-actions">
+                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View Toggle -->
+        <div class="view-toggle" style="text-align: right; margin: 15px 0;">
+            <button id="toggleAgendaViewBtn" class="btn btn-secondary btn-sm">
+                <i class="fas fa-list"></i> Switch to Table View
+            </button>
+        </div>
+
+        <!-- Agenda Table View (Hidden by default) -->
+        <div class="table-responsive" id="agendaTableView" style="display: none;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Session Title</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Track</th>
+                        <th>Venue</th>
+                        <th>Speakers</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="agendaTableBody">
+                    <!-- Will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <!-- Resources Tab -->
 <div id="resources" class="tab-content">
@@ -1745,7 +2151,7 @@
 </div>
 
 <!-- Assign Booth Modal -->
-<div id="assignBoothModal" class="modal">
+<div id="assignBoothModal" class="modal" style="display: none;">
     <div class="modal-content modal-lg">
         <div class="modal-header">
             <h2>Assign Booth to Exhibitor</h2>
@@ -1829,14 +2235,11 @@
             <button class="close-modal">&times;</button>
         </div>
         
-        <div class="api-indicator">
-            <strong>API Status:</strong> <span id="speaker-api-status">Checking...</span>
-        </div>
         
         <div class="modal-body">
             <form id="addSpeakerForm">
                 <div class="form-group">
-                    <label for="speakerEvent">Event *</label>
+                    <label for="speakerEvent">Event</label>
                     <select id="speakerEvent" class="form-control" required>
                         <option value="">Select Event</option>
                         <option value="Keynote: The Future of Public Service">Keynote: The Future of Public Service</option>
@@ -1844,39 +2247,79 @@
                         <option value="The Civil Service as the Engine of Governance">The Civil Service as the Engine of Governance</option>
                     </select>
                 </div>
+                <div class="form-row">
+    <div class="form-group">
+        <label for="speakerPrefix">Prefix</label>
+        <select id="speakerPrefix" class="form-control" required>
+            <option value="">Select prefix</option>
+            <option>Mr</option>
+            <option>Mrs</option>
+            <option>Miss</option>
+            <option>Dr</option>
+            <option>Prof</option>
+        </select>
+    </div>
                 
                 <div class="form-group">
-                    <label for="speakerName">Full Name *</label>
-                    <input type="text" id="speakerName" class="form-control" placeholder="Enter speaker's full name" required>
+        <label for="speakerFirstName">First Name</label>
+        <input type="text" id="speakerFirstName" class="form-control" placeholder="Enter first name">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="speakerLastName">Last Name</label>
+        <input type="text" id="speakerLastName" class="form-control" placeholder="Enter last name">
+    </div>
+
+    <div class="form-group">
+        <label for="speakerEmail">Work Email (Login)</label>
+        <input type="email" id="speakerEmail" class="form-control" placeholder="Enter work email" >
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="speakerPassword">Password</label>
+        <input type="password" id="speakerPassword" class="form-control" placeholder="Enter password">
+    </div>
+
+    <div class="form-group">
+        <label for="speakerWorkPhone">Work Phone</label>
+        <input type="tel" id="speakerWorkPhone" class="form-control" placeholder="Enter work phone">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="speakerExperience">Previous Speaking Experience</label>
+        <textarea id="speakerExperience" class="form-control" placeholder="Enter previous speaking experience"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="speakerCountry">Country *</label>
+        <input type="text" id="speakerCountry" class="form-control" placeholder="Enter country">
+    </div>
+</div>          
+          <div class="form-group">
+                    <label for="speakerDescription">Brief Introduction</label>
+                    <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief intrduction"></textarea>
                 </div>
+
+                <div class="form-row">
+    <div class="form-group">
+        <label for="speakerTopic">Topic</label>
+        <input type="text" id="speakerTopic" class="form-control" placeholder="Enter topic">
+    </div>
+
                 
                 <div class="form-group">
-                    <label for="speakerEmail">Email Address *</label>
-                    <input type="email" id="speakerEmail" class="form-control" placeholder="Enter email address" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerTopic">Topic Title *</label>
-                    <input type="text" id="speakerTopic" class="form-control" placeholder="Enter speaking topic" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerDescription">Brief Description *</label>
-                    <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief description of the talk" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerIntro">Speaker Introduction *</label>
-                    <textarea id="speakerIntro" class="form-control" placeholder="Brief introduction about the speaker" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerAffiliation">Affiliation/Organization *</label>
+                    <label for="speakerAffiliation">Affiliation/Organization</label>
                     <input type="text" id="speakerAffiliation" class="form-control" placeholder="Enter organization">
                 </div>
                 
                 <div class="form-group">
-                    <label for="speakerPackage">Speaker Package *</label>
+                    <label for="speakerPackage">Speaker Package </label>
                     <select id="speakerPackage" class="form-control" required>
                         <option value="">Select Package</option>
                         <option value="diamond">Diamond Partner</option>
@@ -1925,46 +2368,57 @@
 
 
     <!-- Add Exhibitor Modal -->
-<div id="addExhibitorModal" class="modal">
+<div id="addExhibitorModal" class="modal" style="display: none;">
     <div class="modal-content modal-lg">
         <div class="modal-header">
             <h2>Add New Exhibitor</h2>
             <button class="close-modal">&times;</button>
         </div>
         
-        <!-- BACKEND INTEGRATION: Booth selection and payment -->
-        <div class="api-indicator" style="margin: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3;">
-            <strong>BACKEND INTEGRATION:</strong> Exhibitor data will be saved via API endpoints
-        </div>
-        
         <div class="modal-body">
             <form id="addExhibitorForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="exhibitorName">Exhibitor Name *</label>
-                        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter exhibitor name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="exhibitorCompany">Company *</label>
-                        <input type="text" id="exhibitorCompany" class="form-control" placeholder="Enter company name">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="exhibitorEmail">Email Address *</label>
-                        <input type="email" id="exhibitorEmail" class="form-control" placeholder="Enter email address" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="exhibitorPhone">Phone Number *</label>
-                        <input type="tel" id="exhibitorPhone" class="form-control" placeholder="Enter phone number" required>
-                    </div>
-                </div>
+               <div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorPrefix">Category *</label>
+        <select id="exhibitorPrefix" class="form-control" required>
+            <option value="">Select Type</option>
+            <option>Company</option>
+            <option>Organization</option>
+            <option>Institution</option>
+            <option>Agency</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exhibitorName">Company / Organisation Name *</label>
+        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter name" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorContactName">Contact Person Name *</label>
+        <input type="text" id="exhibitorContactName" class="form-control" placeholder="Enter contact name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="exhibitorContactEmail">Contact Email *</label>
+        <input type="email" id="exhibitorContactEmail" class="form-control" placeholder="Enter contact email" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorContactPhone">Contact Phone Number *</label>
+        <input type="tel" id="exhibitorContactPhone" class="form-control" placeholder="Enter contact phone" >
+    </div>
+
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="exhibitionTitle">Exhibition Title *</label>
-                        <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title" required>
+                        <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title">
                     </div>
                     <div class="form-group">
                         <label for="exhibitionDescription">Description</label>
@@ -1974,8 +2428,8 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="exhibitorBooth">Booth Assignment *</label>
-                        <select id="exhibitorBooth" class="form-control" required>
+                        <label for="exhibitorBooth">Booth Assignment </label>
+                        <select id="exhibitorBooth" class="form-control">
                             <option value="">Select Booth</option>
                             <option value="B001">B001 - Main Hall A1</option>
                             <option value="B002">B002 - Main Hall A2</option>
@@ -1988,7 +2442,7 @@
                     </div>
                     <div class="form-group">
                         <label for="exhibitionDay">Exhibition Day *</label>
-                        <select id="exhibitionDay" class="form-control" required>
+                        <select id="exhibitionDay" class="form-control">
                             <option value="">Select Day</option>
                             <option value="wednesday">Wednesday 25 June 2026</option>
                             <option value="thursday">Thursday 26 June 2026</option>
@@ -1998,10 +2452,6 @@
                 </div>
                 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="exhibitionBudget">Budget (₦)</label>
-                        <input type="number" id="exhibitionBudget" class="form-control" placeholder="Enter budget in Naira">
-                    </div>
                     <div class="form-group">
                         <label for="exhibitorStatus">Status</label>
                         <select id="exhibitorStatus" class="form-control">
@@ -2035,6 +2485,64 @@
         </div>
     </div>
 </div>
+<!-- View Exhibitor Modal -->
+<div id="viewExhibitorModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal close-view-exhibitor">&times;</span>
+        <h2>Exhibitor Details</h2>
+
+        <div id="viewExhibitorDetails"></div>
+
+        <div class="modal-actions">
+            <button class="btn-secondary close-view-exhibitor">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Exhibitor Modal -->
+<div id="editExhibitorModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal close-edit-exhibitor">&times;</span>
+        <h2>Edit Exhibitor</h2>
+
+        <form id="editExhibitorForm">
+
+            <input type="hidden" id="editExhibitorId">
+
+            <div class="form-group">
+                <label>Name</label>
+                <input id="editExhibitorName" type="text">
+            </div>
+
+            <div class="form-group">
+                <label>Company</label>
+                <input id="editExhibitorCompany" type="text">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input id="editExhibitorEmail" type="email">
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input id="editExhibitorPhone" type="text">
+            </div>
+
+            <div class="form-group">
+                <label>Booth</label>
+                <input id="editExhibitorBooth" type="text">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary close-edit-exhibitor">Cancel</button>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
 
     <!-- Edit Ministry Modal -->
     <div id="editMinistryModal" class="modal">
@@ -2087,6 +2595,169 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Partner Modal -->
+<div id="addPartnerModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Add New Partner</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addPartnerForm">
+                <!-- Account Information -->
+                <div class="form-section">
+                    <h3>Account Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerEmail" class="has-star">Email Address</label>
+                            <input type="email" id="partnerEmail" class="form-control" placeholder="Enter email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerPassword" class="has-star">Password</label>
+                            <div class="position-relative">
+                                <input type="password" id="partnerPassword" class="form-control" placeholder="Enter password" required>
+                                <button type="button" class="password-toggle" id="togglePartnerPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="form-section">
+                    <h3>Company Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerCompanyPrefix" class="has-star">Company Type</label>
+                            <select id="partnerCompanyPrefix" class="form-control" required>
+                                <option value="">Select Type</option>
+                                <option value="company">Company</option>
+                                <option value="organization">Organization</option>
+                                <option value="institution">Institution</option>
+                                <option value="agency">Agency</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerCompanyName" class="has-star">Company/Organization Name</label>
+                            <input type="text" id="partnerCompanyName" class="form-control" placeholder="Enter company name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="partnerCompanyLogo" class="has-star">Company Logo</label>
+                        <input type="file" id="partnerCompanyLogo" class="form-control" accept="image/*" required>
+                        <div class="hint-block">Accepted formats: JPG, PNG, GIF (Max size: 5MB)</div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h3>Contact Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerContactFirstName" class="has-star">First Name</label>
+                            <input type="text" id="partnerContactFirstName" class="form-control" placeholder="Enter first name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerContactLastName" class="has-star">Last Name</label>
+                            <input type="text" id="partnerContactLastName" class="form-control" placeholder="Enter last name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerContactEmail" class="has-star">Contact Email</label>
+                            <input type="email" id="partnerContactEmail" class="form-control" placeholder="Enter contact email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerContactPhone" class="has-star">Contact Phone</label>
+                            <input type="tel" id="partnerContactPhone" class="form-control" placeholder="Enter phone number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerWebsite">Website</label>
+                            <input type="url" id="partnerWebsite" class="form-control" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerSocialMedia">Social Media</label>
+                            <input type="text" id="partnerSocialMedia" class="form-control" placeholder="@companyname">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partner Details -->
+                <div class="form-section">
+                    <h3>Partner Details</h3>
+                    <div class="form-group">
+                        <label for="partnerDescription">Company Description</label>
+                        <textarea id="partnerDescription" class="form-control" placeholder="Describe your company/organization" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="partnerInterest">Partnership Interest</label>
+                        <textarea id="partnerInterest" class="form-control" placeholder="Why are you interested in partnering with ICSC 2026?" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerPackage" class="has-star">Partnership Package</label>
+                            <select id="partnerPackage" class="form-control" required>
+                                <option value="">Select Package</option>
+                                <option value="bronze">Bronze Partner</option>
+                                <option value="silver">Silver Partner</option>
+                                <option value="gold">Gold Partner</option>
+                                <option value="platinum">Platinum Partner</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerInvestment">Investment (₦)</label>
+                            <input type="number" id="partnerInvestment" class="form-control" placeholder="Enter investment amount">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerStatus" class="has-star">Status</label>
+                            <select id="partnerStatus" class="form-control" required>
+                                <option value="pending">Pending</option>
+                                <option value="active" selected>Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerPaymentStatus" class="has-star">Payment Status</label>
+                            <select id="partnerPaymentStatus" class="form-control" required>
+                                <option value="pending">Pending</option>
+                                <option value="paid" selected>Paid</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerStartDate">Partnership Start Date</label>
+                            <input type="date" id="partnerStartDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerEndDate">Partnership End Date</label>
+                            <input type="date" id="partnerEndDate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAddPartnerBtn">Cancel</button>
+                    <button type="submit" class="btn">Add Partner</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     <!-- Script: generate username/password from ministry code -->
     <script>
@@ -2809,7 +3480,7 @@ async function submitBoothData(formData) {
         showSuccessMessage('Booth has been successfully added!');
         
         // Close modal
-        document.getElementById('addBoothModal').style.display = 'none';
+        document.getElementById('addBoothModal').classList.remove('active');
         
         // Refresh booths table
         refreshBoothsTable();
@@ -2851,7 +3522,7 @@ function viewBooth(boothId) {
         document.getElementById('viewPaymentDate').textContent = boothData.paymentDate || 'Not specified';
         document.getElementById('viewBoothRemarks').textContent = boothData.remarks || 'None';
     } else {
-        exhibitorInfoSection.style.display = 'none';
+        exhibitorInfoSection.classList.remove('active');
     }
     
     // Show the view modal
@@ -3011,7 +3682,7 @@ function editBooth(boothId) {
             if (this.value === 'reserved' || this.value === 'sold') {
                 editExhibitorInfoSection.style.display = 'block';
             } else {
-                editExhibitorInfoSection.style.display = 'none';
+                editExhibitorInfoSection.classList.remove('active');
             }
         });
     }
@@ -3234,74 +3905,7 @@ document.addEventListener('click', function(e) {
 });
 
 
-    // Add Exhibitor functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the Add Exhibitor button
-    const addExhibitorBtn = document.getElementById('addExhibitorBtn');
-    const addExhibitorModal = document.getElementById('addExhibitorModal');
-    const cancelAddExhibitorBtn = document.getElementById('cancelAddExhibitorBtn');
-    const addExhibitorForm = document.getElementById('addExhibitorForm');
-    const closeModalButtons = document.querySelectorAll('.close-modal');
-
-    // Open Add Exhibitor modal
-    if (addExhibitorBtn) {
-        addExhibitorBtn.addEventListener('click', function() {
-            addExhibitorModal.style.display = 'flex';
-            // Reset form when opening
-            addExhibitorForm.reset();
-        });
-    }
-
-    // Close modal when clicking cancel
-    if (cancelAddExhibitorBtn) {
-        cancelAddExhibitorBtn.addEventListener('click', function() {
-            addExhibitorModal.style.display = 'none';
-        });
-    }
-
-    // Close modal when clicking X button
-    closeModalButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const modal = this.closest('.modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
-        }
-    });
-
-    // Handle form submission
-    if (addExhibitorForm) {
-        addExhibitorForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = {
-                name: document.getElementById('exhibitorName').value,
-                company: document.getElementById('exhibitorCompany').value,
-                email: document.getElementById('exhibitorEmail').value,
-                phone: document.getElementById('exhibitorPhone').value,
-                title: document.getElementById('exhibitionTitle').value,
-                description: document.getElementById('exhibitionDescription').value,
-                booth: document.getElementById('exhibitorBooth').value,
-                day: document.getElementById('exhibitionDay').value,
-                budget: document.getElementById('exhibitionBudget').value,
-                status: document.getElementById('exhibitorStatus').value,
-                paymentStatus: document.getElementById('paymentStatus').value,
-                remarks: document.getElementById('exhibitorRemarks').value
-            };
-
-            // Submit exhibitor data (you'll need to implement the API call)
-            submitExhibitorData(formData);
-        });
-    }
-});
+   
 
 // Function to submit exhibitor data to backend
 async function submitExhibitorData(formData) {
@@ -3356,56 +3960,6 @@ function refreshExhibitorsTable() {
     }, 2000);
 }
 
-// Add Speaker functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the Add Speaker button
-    const addSpeakerBtn = document.getElementById('addSpeakerBtn');
-    const addSpeakerModal = document.getElementById('addSpeakerModal');
-    const cancelAddSpeakerBtn = document.getElementById('cancelAddSpeakerBtn');
-    const addSpeakerForm = document.getElementById('addSpeakerForm');
-
-    // Open Add Speaker modal
-    if (addSpeakerBtn) {
-        addSpeakerBtn.addEventListener('click', function() {
-            addSpeakerModal.style.display = 'flex';
-            // Reset form when opening
-            addSpeakerForm.reset();
-        });
-    }
-
-    // Close modal when clicking cancel
-    if (cancelAddSpeakerBtn) {
-        cancelAddSpeakerBtn.addEventListener('click', function() {
-            addSpeakerModal.style.display = 'none';
-        });
-    }
-
-    // Handle form submission
-    if (addSpeakerForm) {
-        addSpeakerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = {
-                event: document.getElementById('speakerEvent').value,
-                name: document.getElementById('speakerName').value,
-                email: document.getElementById('speakerEmail').value,
-                topic: document.getElementById('speakerTopic').value,
-                description: document.getElementById('speakerDescription').value,
-                intro: document.getElementById('speakerIntro').value,
-                affiliation: document.getElementById('speakerAffiliation').value,
-                package: document.getElementById('speakerPackage').value,
-                status: document.getElementById('speakerStatus').value,
-                paymentStatus: document.getElementById('speakerPayment').value,
-                links: document.getElementById('speakerLinks').value,
-                file: document.getElementById('speakerFile').files[0]
-            };
-
-            // Submit speaker data
-            submitSpeakerData(formData);
-        });
-    }
-});
 
 // Speaker Management Functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -4181,6 +4735,544 @@ function refreshSpeakersTable() {
     }, 2000);
 }
 
+
+    // Close modal when clicking cancel
+    if (cancelAddPartnerBtn) {
+        cancelAddPartnerBtn.addEventListener('click', function() {
+            addPartnerModal.style.display = 'none';
+        });
+    }
+
+    // Refresh partners
+    if (refreshPartnersBtn) {
+        refreshPartnersBtn.addEventListener('click', function() {
+            refreshPartnersTable();
+        });
+    }
+
+    // Password toggle functionality
+    const togglePartnerPassword = document.getElementById('togglePartnerPassword');
+    const partnerPasswordInput = document.getElementById('partnerPassword');
+    
+    if (togglePartnerPassword && partnerPasswordInput) {
+        togglePartnerPassword.addEventListener('click', function() {
+            const type = partnerPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            partnerPasswordInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+    }
+
+    // Handle form submission
+    if (addPartnerForm) {
+        addPartnerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            addNewPartner();
+        });
+    }
+
+    // Partners table functionality
+    const partnersTable = document.getElementById('partnersTable');
+    
+    if (partnersTable) {
+        partnersTable.addEventListener('click', function(e) {
+            // View Partner functionality
+            if (e.target.closest('.view-partner-btn')) {
+                const row = e.target.closest('tr');
+                const partnerId = row.getAttribute('data-id');
+                viewPartner(partnerId);
+            }
+            
+            // Edit Partner functionality
+            if (e.target.closest('.edit-partner-btn')) {
+                const row = e.target.closest('tr');
+                const partnerId = row.getAttribute('data-id');
+                editPartner(partnerId);
+            }
+            
+            // Delete Partner functionality
+            if (e.target.closest('.delete-partner-btn')) {
+                const row = e.target.closest('tr');
+                const partnerId = row.getAttribute('data-id');
+                const partnerName = row.cells[0].textContent;
+                deletePartner(partnerId, partnerName);
+            }
+            
+            // Approve Partner functionality
+            if (e.target.closest('.approve-partner-btn')) {
+                const row = e.target.closest('tr');
+                const partnerId = row.getAttribute('data-id');
+                const partnerName = row.cells[0].textContent;
+                approvePartner(partnerId, partnerName);
+            }
+        });
+    }
+
+    // Search and filter functionality for partners
+    const searchPartnersInput = document.getElementById('searchPartners');
+    const filterPartnerType = document.getElementById('filterPartnerType');
+    const filterPartnerStatus = document.getElementById('filterPartnerStatus');
+    const clearPartnerFiltersBtn = document.getElementById('clearPartnerFiltersBtn');
+    
+    if (searchPartnersInput) {
+        searchPartnersInput.addEventListener('input', function() {
+            filterPartners();
+        });
+    }
+    
+    if (filterPartnerType) {
+        filterPartnerType.addEventListener('change', function() {
+            filterPartners();
+        });
+    }
+    
+    if (filterPartnerStatus) {
+        filterPartnerStatus.addEventListener('change', function() {
+            filterPartners();
+        });
+    }
+    
+    if (clearPartnerFiltersBtn) {
+        clearPartnerFiltersBtn.addEventListener('click', function() {
+            clearPartnerFilters();
+        });
+    }
+    
+
+// Add New Partner
+async function addNewPartner() {
+    const form = document.getElementById('addPartnerForm');
+    const formData = new FormData();
+    
+    // Get form values
+    const partnerData = {
+        email: document.getElementById('partnerEmail').value,
+        password: document.getElementById('partnerPassword').value,
+        companyPrefix: document.getElementById('partnerCompanyPrefix').value,
+        companyName: document.getElementById('partnerCompanyName').value,
+        contactFirstName: document.getElementById('partnerContactFirstName').value,
+        contactLastName: document.getElementById('partnerContactLastName').value,
+        contactEmail: document.getElementById('partnerContactEmail').value,
+        contactPhone: document.getElementById('partnerContactPhone').value,
+        website: document.getElementById('partnerWebsite').value,
+        socialMedia: document.getElementById('partnerSocialMedia').value,
+        description: document.getElementById('partnerDescription').value,
+        interest: document.getElementById('partnerInterest').value,
+        package: document.getElementById('partnerPackage').value,
+        investment: document.getElementById('partnerInvestment').value,
+        status: document.getElementById('partnerStatus').value,
+        paymentStatus: document.getElementById('partnerPaymentStatus').value,
+        startDate: document.getElementById('partnerStartDate').value,
+        endDate: document.getElementById('partnerEndDate').value
+    };
+    
+    // Add company logo file if selected
+    const companyLogoInput = document.getElementById('partnerCompanyLogo');
+    if (companyLogoInput && companyLogoInput.files && companyLogoInput.files[0]) {
+        formData.append('company_logo', companyLogoInput.files[0]);
+    }
+    
+    // Add all other form data
+    Object.keys(partnerData).forEach(key => {
+        formData.append(key, partnerData[key]);
+    });
+    
+    try {
+        // BACKEND INTEGRATION: Replace with actual API call
+        console.log('Adding new partner:', Object.fromEntries(formData));
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Close modal
+            document.getElementById('addPartnerModal').style.display = 'none';
+            
+            // Show success message
+            showSuccessMessage('Partner has been successfully added!');
+            
+            // Refresh partners table
+            refreshPartnersTable();
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error adding partner:', error);
+        alert('Error adding partner. Please try again.');
+    }
+}
+
+// View Partner Details
+function viewPartner(partnerId) {
+    // Get partner data from the table row
+    const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Create modal content for viewing partner details
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Partner Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <h3>Company Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Package</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[3].innerHTML}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Contact Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contact Person</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Partnership Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Investment</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[5].innerHTML}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Payment Status</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[6].innerHTML}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[7].textContent}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <p class="form-control" style="background: #f8f9fa;">${cells[8].textContent}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-view-modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    showCustomModal(modalContent);
+}
+
+// Edit Partner
+function editPartner(partnerId) {
+    // Get partner data from the table row
+    const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    const partnerData = row.dataset;
+    
+    // Create modal content for editing partner
+    const modalContent = `
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2>Edit Partner</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editPartnerForm">
+                    <input type="hidden" id="editPartnerId" value="${partnerId}">
+                    
+                    <!-- Company Information -->
+                    <div class="form-section">
+                        <h3>Company Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editCompanyName" class="has-star">Company Name</label>
+                                <input type="text" id="editCompanyName" class="form-control" value="${cells[0].textContent}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPartnerPackage" class="has-star">Package</label>
+                                <select id="editPartnerPackage" class="form-control" required>
+                                    <option value="bronze" ${cells[3].textContent.includes('Bronze') ? 'selected' : ''}>Bronze Partner</option>
+                                    <option value="silver" ${cells[3].textContent.includes('Silver') ? 'selected' : ''}>Silver Partner</option>
+                                    <option value="gold" ${cells[3].textContent.includes('Gold') ? 'selected' : ''}>Gold Partner</option>
+                                    <option value="platinum" ${cells[3].textContent.includes('Platinum') ? 'selected' : ''}>Platinum Partner</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h3>Contact Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editContactPerson" class="has-star">Contact Person</label>
+                                <input type="text" id="editContactPerson" class="form-control" value="${cells[1].textContent}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editContactEmail" class="has-star">Email</label>
+                                <input type="email" id="editContactEmail" class="form-control" value="${cells[2].textContent}" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Partnership Details -->
+                    <div class="form-section">
+                        <h3>Partnership Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editInvestment">Investment (₦)</label>
+                                <input type="number" id="editInvestment" class="form-control" value="${parseInt(cells[4].textContent.replace(/,/g, '')) || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editPartnerStatus" class="has-star">Status</label>
+                                <select id="editPartnerStatus" class="form-control" required>
+                                    <option value="active" ${cells[5].textContent.includes('Active') ? 'selected' : ''}>Active</option>
+                                    <option value="pending" ${cells[5].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                    <option value="inactive" ${cells[5].textContent.includes('Inactive') ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editPaymentStatus" class="has-star">Payment Status</label>
+                                <select id="editPaymentStatus" class="form-control" required>
+                                    <option value="paid" ${cells[6].textContent.includes('Paid') ? 'selected' : ''}>Paid</option>
+                                    <option value="pending" ${cells[6].textContent.includes('Pending') ? 'selected' : ''}>Pending</option>
+                                    <option value="overdue" ${cells[6].textContent.includes('Overdue') ? 'selected' : ''}>Overdue</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editStartDate">Start Date</label>
+                                <input type="date" id="editStartDate" class="form-control" value="${cells[7].textContent}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editEndDate">End Date</label>
+                                <input type="date" id="editEndDate" class="form-control" value="${cells[8].textContent}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelEditPartnerBtn">Cancel</button>
+                        <button type="submit" class="btn">Update Partner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    // Create and show modal
+    const modal = showCustomModal(modalContent);
+    
+    // Handle form submission
+    document.getElementById('editPartnerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updatePartner(partnerId);
+    });
+    
+    // Handle cancel button
+    document.getElementById('cancelEditPartnerBtn').addEventListener('click', function() {
+        closeCustomModal();
+    });
+}
+
+// Update Partner
+function updatePartner(partnerId) {
+    const form = document.getElementById('editPartnerForm');
+    const formData = {
+        id: partnerId,
+        companyName: document.getElementById('editCompanyName').value,
+        package: document.getElementById('editPartnerPackage').value,
+        contactPerson: document.getElementById('editContactPerson').value,
+        contactEmail: document.getElementById('editContactEmail').value,
+        investment: document.getElementById('editInvestment').value,
+        status: document.getElementById('editPartnerStatus').value,
+        paymentStatus: document.getElementById('editPaymentStatus').value,
+        startDate: document.getElementById('editStartDate').value,
+        endDate: document.getElementById('editEndDate').value
+    };
+    
+    // In a real implementation, you would send this data to your backend
+    console.log('Updating partner:', formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Update the table row with new data
+        const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
+        if (row) {
+            row.cells[0].textContent = formData.companyName;
+            row.cells[1].textContent = formData.contactPerson;
+            row.cells[2].textContent = formData.contactEmail;
+            
+            // Update package
+            const packageNames = {
+                'bronze': 'Bronze Partner',
+                'silver': 'Silver Partner',
+                'gold': 'Gold Partner',
+                'platinum': 'Platinum Partner'
+            };
+            row.cells[3].innerHTML = `<span class="status-badge status-approved">${packageNames[formData.package]}</span>`;
+            
+            // Update investment
+            row.cells[4].textContent = formData.investment ? formData.investment.toLocaleString() : '-';
+            
+            // Update status
+            let statusClass, statusText;
+            if (formData.status === 'active') {
+                statusClass = 'status-approved';
+                statusText = 'Active';
+            } else if (formData.status === 'pending') {
+                statusClass = 'status-pending';
+                statusText = 'Pending';
+            } else {
+                statusClass = 'status-rejected';
+                statusText = 'Inactive';
+            }
+            row.cells[5].innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+            
+            // Update payment status
+            let paymentClass, paymentText;
+            if (formData.paymentStatus === 'paid') {
+                paymentClass = 'status-approved';
+                paymentText = 'Paid';
+            } else if (formData.paymentStatus === 'pending') {
+                paymentClass = 'status-pending';
+                paymentText = 'Pending';
+            } else {
+                paymentClass = 'status-rejected';
+                paymentText = 'Overdue';
+            }
+            row.cells[6].innerHTML = `<span class="status-badge ${paymentClass}">${paymentText}</span>`;
+            
+            // Update dates
+            row.cells[7].textContent = formData.startDate;
+            row.cells[8].textContent = formData.endDate;
+        }
+        
+        closeCustomModal();
+        showSuccessMessage('Partner has been successfully updated!');
+    }, 1000);
+}
+
+// Delete Partner
+function deletePartner(partnerId, partnerName) {
+    if (confirm(`Are you sure you want to delete ${partnerName}? This action cannot be undone.`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Deleting partner: ${partnerId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Remove the table row
+            const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
+            if (row) {
+                row.remove();
+            }
+            
+            showSuccessMessage(`${partnerName} has been deleted!`);
+        }, 1000);
+    }
+}
+
+// Approve Partner
+function approvePartner(partnerId, partnerName) {
+    if (confirm(`Are you sure you want to approve ${partnerName}?`)) {
+        // In a real implementation, you would send this to your backend
+        console.log(`Approving partner: ${partnerId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            // Update the table row
+            const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
+            if (row) {
+                row.cells[5].innerHTML = '<span class="status-badge status-approved">Active</span>';
+                // Update action buttons
+                const actionButtons = row.cells[9].querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <button class="btn btn-info btn-sm view-partner-btn">View</button>
+                    <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
+                `;
+            }
+            
+            showSuccessMessage(`${partnerName} has been approved!`);
+        }, 1000);
+    }
+}
+
+// Filter Partners
+function filterPartners() {
+    const searchTerm = document.getElementById('searchPartners').value.toLowerCase();
+    const typeFilter = document.getElementById('filterPartnerType').value;
+    const statusFilter = document.getElementById('filterPartnerStatus').value;
+    
+    const rows = document.querySelectorAll('#partnersTable tr');
+    
+    rows.forEach(row => {
+        const company = row.cells[0].textContent.toLowerCase();
+        const contact = row.cells[1].textContent.toLowerCase();
+        const email = row.cells[2].textContent.toLowerCase();
+        const packageType = row.cells[3].textContent.toLowerCase();
+        const status = row.cells[5].textContent.toLowerCase();
+        
+        const matchesSearch = company.includes(searchTerm) || 
+                             contact.includes(searchTerm) || 
+                             email.includes(searchTerm) ||
+                             packageType.includes(searchTerm);
+        const matchesType = !typeFilter || packageType.includes(typeFilter);
+        const matchesStatus = !statusFilter || status.includes(statusFilter);
+        
+        if (matchesSearch && matchesType && matchesStatus) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Clear Partner Filters
+function clearPartnerFilters() {
+    document.getElementById('searchPartners').value = '';
+    document.getElementById('filterPartnerType').value = '';
+    document.getElementById('filterPartnerStatus').value = '';
+    
+    filterPartners();
+}
+
+// Refresh Partners Table
+function refreshPartnersTable() {
+    // In a real implementation, you would fetch updated data from the server
+    console.log('Refreshing partners table...');
+    
+    // For now, we'll just reload the page to see the changes
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
 
 
     </script>

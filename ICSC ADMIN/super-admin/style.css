@@ -746,3 +746,156 @@ flex-wrap: wrap;
     font-size: 0.8rem;
     padding: 5px 8px;
 }
+/* Ensure modal display consistency */
+.modal {
+    display: none;
+    position: fixed;
+    /* ... your existing modal styles ... */
+}
+
+.modal.active {
+    display: flex;
+}
+/* Partners Tab Styles */
+.partner-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    background: #fff;
+}
+
+/* Agenda Tab Styles */
+.day-toggle-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.day-toggle {
+    display: inline-flex;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.day-btn {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.agenda-timeline {
+    margin-top: 20px;
+}
+
+.agenda-day {
+    margin-bottom: 30px;
+}
+
+.day-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.timeline-session {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.timeline-session:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.session-time {
+    flex: 0 0 120px;
+    text-align: center;
+    padding-right: 15px;
+    border-right: 2px solid #f0f0f0;
+}
+
+.session-time .time {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.session-details {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.session-title {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.session-track {
+    display: inline-block;
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-right: 8px;
+}
+
+.session-venue {
+    display: inline-block;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.session-speakers {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+.session-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 5px 0 0 0;
+}
+
+.session-actions {
+    flex: 0 0 150px;
+    text-align: right;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+/* If your modals use display: flex instead of the .active class */
+.modal[style*="display: flex"] {
+    display: flex !important;
+}
