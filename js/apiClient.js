@@ -1,7 +1,7 @@
 // Minimal axios instance for reuse across pages; attaches Authorization header if token present.
 (function (global) {
-	// const API_BASE_URL = 'http://localhost:9100/api/v1';
-	const API_BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
+	const API_BASE_URL = 'http://localhost:9100/api/v1';
+	// const API_BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
 
 	// require axios global (already included in pages)
 	if (typeof axios === 'undefined') {

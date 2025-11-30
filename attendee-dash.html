@@ -900,8 +900,8 @@
                     <div class="tab-content active" id="dashboard">
                         <div class="content-header">
                             <h2>Conference Agenda</h2>
-                            <button class="export-btn" id="export-schedule">
-                                <i class="fas fa-download"></i> Export Schedule
+
+                
                             </button>
                         </div>
                         
@@ -1137,61 +1137,10 @@
         <div class="notification-text">Event added to your schedule!</div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/apiClient.js"></script>
+
     <script>
-        // Sample data
-        const SAMPLE_AGENDA_DATA = {
-            "wednesday": [
-                {
-                    "id": "wed-1",
-                    "time": "08:30-09:00",
-                    "title": "Registration and Welcome Coffee",
-                    "location": "Main Hall",
-                    "description": "",
-                    "hasLiveStream": false
-                },
-                {
-                    "id": "wed-2",
-                    "time": "09:00-09:30",
-                    "title": "Opening Ceremony",
-                    "location": "Main Stage",
-                    "description": "Official opening of the International Civil Service Conference 2026",
-                    "hasLiveStream": true
-                },
-                {
-                    "id": "wed-3",
-                    "time": "09:30-10:30",
-                    "title": "Keynote: The Future of Public Service",
-                    "location": "Transform Stage",
-                    "description": "Exploring the evolving role of civil servants in a rapidly changing world",
-                    "hasLiveStream": true
-                }
-            ],
-            "thursday": [
-                {
-                    "id": "thu-1",
-                    "time": "09:00-09:10",
-                    "title": "Opening Welcome",
-                    "location": "Main Stage",
-                    "description": "",
-                    "hasLiveStream": true
-                },
-                {
-                    "id": "thu-2",
-                    "time": "09:10-10:00",
-                    "title": "The Civil Service as the Engine of Governance",
-                    "location": "Transform Stage",
-                    "description": "Measuring and monitoring performance in public service",
-                    "hasLiveStream": true
-                }
-            ]
-        };
-
-        const SAMPLE_AGENDA_STATS = {
-            keynoteSpeakers: 24,
-            sessions: 48,
-            totalSpeakers: 120
-        };
-
         // Initialize state
         let selectedDays = [];
         let agendaData = {};
@@ -1212,7 +1161,7 @@
                 sidebarOverlay.classList.remove('active');
             });
             
-            // Load initial data
+            // Load initial data (fetch from backend)
             loadInitialData();
             
             // Tab switching functionality
@@ -1249,17 +1198,91 @@
             
             // Load initial data
             async function loadInitialData() {
-                // Load agenda data
-                agendaData = SAMPLE_AGENDA_DATA;
-                renderDashboardAgenda(agendaData);
-                renderFullAgenda(agendaData);
-                
-                // Load agenda stats
-                const statsData = SAMPLE_AGENDA_STATS;
-                renderAgendaStats(statsData);
-                
-                // Load live stream
+                // Attempt to fetch agenda from backend
+                try {
+                    const grouped = await fetchAgenda();
+                    agendaData = grouped;
+                    renderDashboardAgenda(agendaData);
+                    renderFullAgenda(agendaData);
+                    const statsData = computeAgendaStats(agendaData);
+                    renderAgendaStats(statsData);
+                } catch (err) {
+                    console.error('Failed to load agenda from API', err);
+                    // Fallback: show empty agenda (UI will display no items)
+                    agendaData = {};
+                    renderDashboardAgenda(agendaData);
+                    renderFullAgenda(agendaData);
+                    renderAgendaStats({ keynoteSpeakers: 0, sessions: 0, totalSpeakers: 0 });
+                }
+
+                // Load live stream placeholder
                 renderLiveStream();
+            }
+
+            // Fetch agenda from backend and group by weekday (lowercase e.g. 'wednesday')
+            async function fetchAgenda() {
+                if (!window.apiClient) {
+                    throw new Error('apiClient not available. Ensure js/apiClient.js is loaded and axios is present.');
+                }
+
+                const resp = await window.apiClient.get('/misc/agenda/event-agendas');
+                // Backend sample wraps events in { message, data: [...] }
+                const events = resp?.data?.data || resp?.data || [];
+
+                const grouped = {};
+                events.forEach(ev => {
+                    const eventDate = ev.event_date || ev.eventDate || ev.date;
+                    // Ensure parsing with a time so Date treats it as local/UTC consistently
+                    const d = eventDate ? new Date(eventDate + 'T00:00:00') : new Date();
+                    const weekday = d.toLocaleDateString(undefined, { weekday: 'long' }).toLowerCase();
+
+                    if (!grouped[weekday]) grouped[weekday] = [];
+
+                    grouped[weekday].push({
+                        id: ev.id || ev.slug || (ev.title && ev.title.replace(/\s+/g,'-').toLowerCase()),
+                        time: `${ev.start_time || ''}${ev.start_time && ev.end_time ? '-' : ''}${ev.end_time || ''}`,
+                        title: ev.title || ev.name || '',
+                        location: ev.location || '',
+                        description: ev.description || '',
+                        hasLiveStream: !!ev.hasLiveStream,
+                        liveStreamUrl: ev.liveStreamUrl || null,
+                        isKeynote: !!ev.isKeynote,
+                        speakers: ev.speakers || null,
+                        rawDate: eventDate
+                    });
+                });
+
+                return grouped;
+            }
+
+            function computeAgendaStats(groupedAgenda) {
+                let keynoteSpeakers = 0;
+                let sessions = 0;
+                let totalSpeakers = 0;
+
+                for (const events of Object.values(groupedAgenda)) {
+                    sessions += events.length;
+                    events.forEach(ev => {
+                        if (ev.isKeynote) keynoteSpeakers += 1;
+                        if (Array.isArray(ev.speakers)) totalSpeakers += ev.speakers.length;
+                    });
+                }
+
+                return { keynoteSpeakers, sessions, totalSpeakers };
+            }
+
+            function formatDayTitle(dateString) {
+                try {
+                    const d = new Date(dateString + 'T00:00:00');
+                    return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                } catch (e) {
+                    return dateString || '';
+                }
+            }
+
+            function capitalize(word) {
+                if (!word) return '';
+                return word.charAt(0).toUpperCase() + word.slice(1);
             }
             
             // Render agenda for dashboard
@@ -1268,7 +1291,7 @@
                 let html = '';
                 
                 for (const [day, events] of Object.entries(agendaData)) {
-                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    const dayTitle = (events[0] && events[0].rawDate) ? formatDayTitle(events[0].rawDate) : capitalize(day);
                     const dayId = day;
                     
                     // Check if day is already selected
@@ -1348,7 +1371,7 @@
                 let html = '';
                 
                 for (const [day, events] of Object.entries(agendaData)) {
-                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    const dayTitle = (events[0] && events[0].rawDate) ? formatDayTitle(events[0].rawDate) : capitalize(day);
                     
                     html += `
                         <div class="agenda-day">

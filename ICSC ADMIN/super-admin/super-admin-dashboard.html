@@ -1,3 +1,109 @@
+<!-- Fetch exhibitors and update stats from backend -->
+<script>
+(function () {
+    const exhibitorsBody = document.getElementById('exhibitorsTableBody');
+    const totalEl = document.getElementById('totalExhibitors');
+    const confirmedEl = document.getElementById('confirmedExhibitors');
+    const pendingEl = document.getElementById('pendingExhibitors');
+    const refreshBtn = document.getElementById('refreshExhibitorsBtn');
+
+    function safeText(v) {
+        return (v === null || v === undefined || v === '') ? '-' : String(v);
+    }
+
+    function formatBudget(v) {
+        if (v === null || v === undefined || v === '') return '-';
+        // Try to coerce to number, otherwise return as-is
+        const n = Number(String(v).replace(/[^0-9.-]+/g, ''));
+        if (Number.isFinite(n)) return n.toLocaleString();
+        return String(v);
+    }
+
+    function statusClassFrom(status) {
+        if (!status) return 'status-pending';
+        const s = String(status).toLowerCase();
+        if (s === 'confirmed' || s === 'approved' || s === 'paid') return 'status-approved';
+        if (s === 'pending' || s === 'reserved') return 'status-pending';
+        return 'status-rejected';
+    }
+
+    function renderExhibitors(list) {
+        if (!exhibitorsBody) return;
+        exhibitorsBody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            exhibitorsBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No exhibitors found.</td></tr>';
+            return;
+        }
+        list.forEach(ex => {
+            const tr = document.createElement('tr');
+            if (ex.id !== undefined) tr.setAttribute('data-id', ex.id);
+            const name = safeText(ex.contact_person || ex.company_name || ex.name || '-');
+            const company = safeText(ex.company_name || ex.company || '-');
+            // Fields that may not exist in response
+            const booth = safeText(ex.booth || '-');
+            const day = safeText(ex.day || ex.exhibition_day || '-');
+            const budget = formatBudget(ex.budget || ex.estimated_budget || ex.budget_naira || '-');
+            const status = safeText(ex.status || '-');
+            const payment = safeText(ex.payment_status || ex.payment || '-');
+
+            const statusClass = statusClassFrom(status);
+            const paymentClass = statusClassFrom(payment);
+
+            tr.innerHTML = `
+                <td>${name}</td>
+                <td>${company}</td>
+                <td>${booth}</td>
+                <td>${day}</td>
+                <td>${budget}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td><span class="status-badge ${paymentClass}">${payment}</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                    </div>
+                </td>
+            `;
+            exhibitorsBody.appendChild(tr);
+        });
+    }
+
+    function updateStats(list) {
+        const arr = Array.isArray(list) ? list : [];
+        if (totalEl) totalEl.textContent = arr.length;
+        if (confirmedEl) confirmedEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'confirmed').length;
+        if (pendingEl) pendingEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'pending').length;
+    }
+
+    async function fetchExhibitors() {
+        try {
+            const res = await axios.get('/admin/exhibitors');
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            renderExhibitors(list);
+            updateStats(list);
+        } catch (err) {
+            console.error('Error fetching exhibitors:', err);
+            if (exhibitorsBody) exhibitorsBody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#c00;">Failed to load exhibitors.</td></tr>';
+        }
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetchExhibitors();
+        });
+    }
+
+    // Fetch once DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchExhibitors);
+    } else {
+        fetchExhibitors();
+    }
+})();
+</script>
+
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -728,49 +834,8 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr data-id="B001">
-                        <td>B001</td>
-                        <td>Main Hall A1</td>
-                        <td>500,000</td>
-                        <td><span class="status-badge status-approved">Available</span></td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-success btn-sm assign-booth-btn">Assign</button>
-                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="B002">
-                        <td>B002</td>
-                        <td>Main Hall A2</td>
-                        <td>500,000</td>
-                        <td><span class="status-badge status-rejected">Sold Out</span></td>
-                        <td>Michael Chen</td>
-                        <td>Tech Innovations Ltd</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-booth-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="B003">
-                        <td>B003</td>
-                        <td>Exhibition Area B1</td>
-                        <td>300,000</td>
-                        <td><span class="status-badge status-pending">Reserved</span></td>
-                        <td>Sarah Johnson</td>
-                        <td>Global Solutions Inc</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-booth-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="exhibitorsTableBody">
+                    <!-- Exhibitors will be populated here from /admin/exhibitors -->
                 </tbody>
             </table>
         </div>
@@ -3624,79 +3689,124 @@ function updateSpeaker(speakerId) {
         paymentStatus: document.getElementById('editSpeakerPayment').value
     };
     
-    // In a real implementation, you would send this data to your backend
-    console.log('Updating speaker:', formData);
-    
-    // Simulate API call
-    setTimeout(() => {
-        // Update the table row with new data
+    // Send update to backend if available, otherwise fallback to UI update
+    const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
+    const client = window.apiClient || axios;
+
+    // Prepare payload according to backend expectations
+    const payload = {
+        first_name: formData.name, // backend may parse name differently; adapt as needed
+        topic: formData.topic,
+        organization: formData.affiliation,
+        package: formData.package,
+        day: formData.day,
+        session: formData.session,
+        status: formData.status,
+        paymentStatus: formData.paymentStatus
+    };
+
+    // Optimistic UI: disable submit button
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) { submitBtn.disabled = true; }
+
+    const endpoint = (base ? base : '') + `/admin/speakers/${encodeURIComponent(speakerId)}`;
+
+    client.patch(endpoint, payload).then(response => {
+        // Use response data to update UI when available
+        const updated = (response && response.data) ? (response.data.data || response.data) : null;
+
         const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
         if (row) {
-            row.cells[0].textContent = formData.name;
-            row.cells[1].textContent = formData.topic;
-            row.cells[2].textContent = formData.affiliation;
-            row.cells[3].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${formData.package.charAt(0).toUpperCase() + formData.package.slice(1)}</span>`;
-            row.cells[4].textContent = formData.day.charAt(0).toUpperCase() + formData.day.slice(1);
-            row.cells[5].textContent = formData.session;
+            const name = updated && (updated.fullname || `${updated.first_name || ''} ${updated.last_name || ''}`) ? (updated.fullname || `${updated.first_name || ''} ${updated.last_name || ''}`) : formData.name;
+            row.cells[0].textContent = name;
+            row.cells[1].textContent = updated && updated.topic ? updated.topic : formData.topic;
+            row.cells[2].textContent = updated && (updated.organization || updated.affiliation) ? (updated.organization || updated.affiliation) : formData.affiliation;
+            const pkgLabel = formData.package ? (formData.package.charAt(0).toUpperCase() + formData.package.slice(1)) : '-';
+            row.cells[3].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${pkgLabel}</span>`;
+            row.cells[4].textContent = formData.day ? (formData.day.charAt(0).toUpperCase() + formData.day.slice(1)) : '-';
+            row.cells[5].textContent = formData.session || '-';
             row.cells[6].innerHTML = `<span class="status-badge status-${formData.status === 'confirmed' ? 'approved' : formData.status === 'pending' ? 'pending' : 'rejected'}">${formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}</span>`;
             row.cells[7].innerHTML = `<span class="status-badge status-${formData.paymentStatus === 'paid' ? 'approved' : formData.paymentStatus === 'pending' ? 'pending' : 'rejected'}">${formData.paymentStatus.charAt(0).toUpperCase() + formData.paymentStatus.slice(1)}</span>`;
         }
-        
+
         closeCustomModal();
         showSuccessMessage('Speaker has been successfully updated!');
-    }, 1000);
+        // Update counters
+        refreshSpeakersTable();
+    }).catch(err => {
+        console.error('Failed to update speaker:', err);
+        alert('Failed to update speaker. Please try again.');
+    }).finally(() => {
+        if (submitBtn) { submitBtn.disabled = false; }
+    });
 }
 
 // Approve Speaker
 function approveSpeaker(speakerId, speakerName) {
-    if (confirm(`Are you sure you want to approve ${speakerName}?`)) {
-        // In a real implementation, you would send this to your backend
-        console.log(`Approving speaker: ${speakerId}`);
-        
-        // Simulate API call
-        setTimeout(() => {
-            // Update the table row
-            const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
-            if (row) {
-                row.cells[6].innerHTML = '<span class="status-badge status-approved">Confirmed</span>';
-                // Update action buttons
-                const actionButtons = row.cells[8].querySelector('.action-buttons');
+    if (!confirm(`Are you sure you want to approve ${speakerName}?`)) return;
+
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (row) {
+        // optimistic UI
+        row.cells[6].innerHTML = '<span class="status-badge status-pending">Updating...</span>';
+    }
+
+    approveSpeakerAPI(speakerId).then(() => {
+        const updatedRow = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+        if (updatedRow) {
+            updatedRow.cells[6].innerHTML = '<span class="status-badge status-approved">Confirmed</span>';
+            const actionButtons = updatedRow.cells[8].querySelector('.action-buttons');
+            if (actionButtons) {
                 actionButtons.innerHTML = `
                     <button class="btn btn-info btn-sm view-speaker-btn">View</button>
                     <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
                     <button class="btn btn-danger btn-sm reject-speaker-btn">Reject</button>
                 `;
             }
-            
-            showSuccessMessage(`${speakerName} has been approved!`);
-        }, 1000);
-    }
+        }
+        showSuccessMessage(`${speakerName} has been approved!`);
+        refreshSpeakersTable();
+    }).catch(err => {
+        console.error('Approve speaker failed', err);
+        alert('Failed to approve speaker. Please try again.');
+        // revert row status if possible
+        if (row) {
+            row.cells[6].innerHTML = '<span class="status-badge status-pending">Pending</span>';
+        }
+    });
 }
 
 // Reject Speaker
 function rejectSpeaker(speakerId, speakerName) {
-    if (confirm(`Are you sure you want to reject ${speakerName}?`)) {
-        // In a real implementation, you would send this to your backend
-        console.log(`Rejecting speaker: ${speakerId}`);
-        
-        // Simulate API call
-        setTimeout(() => {
-            // Update the table row
-            const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
-            if (row) {
-                row.cells[6].innerHTML = '<span class="status-badge status-rejected">Rejected</span>';
-                // Update action buttons
-                const actionButtons = row.cells[8].querySelector('.action-buttons');
+    if (!confirm(`Are you sure you want to reject ${speakerName}?`)) return;
+
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (row) {
+        row.cells[6].innerHTML = '<span class="status-badge status-pending">Updating...</span>';
+    }
+
+    rejectSpeakerAPI(speakerId).then(() => {
+        const updatedRow = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+        if (updatedRow) {
+            updatedRow.cells[6].innerHTML = '<span class="status-badge status-rejected">Rejected</span>';
+            const actionButtons = updatedRow.cells[8].querySelector('.action-buttons');
+            if (actionButtons) {
                 actionButtons.innerHTML = `
                     <button class="btn btn-info btn-sm view-speaker-btn">View</button>
                     <button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>
                     <button class="btn btn-success btn-sm approve-speaker-btn">Approve</button>
                 `;
             }
-            
-            showSuccessMessage(`${speakerName} has been rejected!`);
-        }, 1000);
-    }
+        }
+        showSuccessMessage(`${speakerName} has been rejected!`);
+        refreshSpeakersTable();
+    }).catch(err => {
+        console.error('Reject speaker failed', err);
+        alert('Failed to reject speaker. Please try again.');
+        if (row) {
+            row.cells[6].innerHTML = '<span class="status-badge status-pending">Pending</span>';
+        }
+    });
 }
 
 // Helper function to show custom modal
@@ -4172,14 +4282,196 @@ async function submitSpeakerData(formData) {
 
 // Function to refresh speakers table
 function refreshSpeakersTable() {
-    // Implement logic to refresh the speakers table
-    console.log('Refreshing speakers table...');
-    
-    // For now, we'll just reload the page to see the changes
-    setTimeout(() => {
-        location.reload();
-    }, 2000);
+    // Fetch speakers from backend and render into the speakers table
+    console.log('Refreshing speakers table from backend...');
+
+    const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
+    const endpoint = (base ? base : '') + '/admin/speakers';
+    const client = window.apiClient || axios;
+
+    const tbody = document.querySelector('#speakersTable tbody');
+    if (!tbody) return;
+
+    // Show loading row
+    tbody.innerHTML = `<tr><td colspan="9">Loading speakers...</td></tr>`;
+
+    client.get(endpoint).then(resp => {
+        const data = resp && (resp.data && Array.isArray(resp.data.data) ? resp.data.data : (Array.isArray(resp.data) ? resp.data : []));
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9">No speakers found.</td></tr>`;
+            // update counters
+            const totalEl = document.getElementById('totalSpeakers');
+            const confirmedEl = document.getElementById('confirmedSpeakers');
+            const pendingEl = document.getElementById('pendingSpeakers');
+            if (totalEl) totalEl.textContent = 0;
+            if (confirmedEl) confirmedEl.textContent = 0;
+            if (pendingEl) pendingEl.textContent = 0;
+            return;
+        }
+
+        const rowsHtml = data.map(s => {
+            const id = s.id || s._id || '';
+            const name = s.fullname || `${s.first_name || ''} ${s.last_name || ''}`.trim() || 'N/A';
+            const topic = s.topic || s.speaking_topic || '-';
+            const affiliation = s.organization || s.affiliation || '-';
+            const pkg = s.package || s.package_level || '-';
+            const day = s.day || '-';
+            const session = s.session || '-';
+            const statusRaw = (s.status || '').toString().toLowerCase();
+            const statusLabel = statusRaw ? (statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1)) : 'Pending';
+            const statusClass = statusRaw.includes('confirm') || statusRaw === 'confirmed' ? 'status-approved' : (statusRaw.includes('pend') ? 'status-pending' : 'status-rejected');
+            // Payment status not provided in this endpoint sample; default to Pending
+            const paymentStatus = (s.paymentStatus || s.payment || '').toString().toLowerCase();
+            const paymentLabel = paymentStatus ? (paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)) : 'Pending';
+            const paymentClass = paymentStatus.includes('paid') ? 'status-approved' : (paymentStatus.includes('pend') ? 'status-pending' : 'status-rejected');
+
+            // Actions: show Approve or Reject depending on current status
+            let actions = `<div class="action-buttons">`;
+            actions += `<button class="btn btn-info btn-sm view-speaker-btn">View</button>`;
+            actions += `<button class="btn btn-warning btn-sm edit-speaker-btn">Edit</button>`;
+            if (statusRaw === 'confirmed' || statusRaw === 'approved') {
+                actions += `<button class="btn btn-danger btn-sm reject-speaker-btn">Reject</button>`;
+            } else {
+                actions += `<button class="btn btn-success btn-sm approve-speaker-btn">Approve</button>`;
+            }
+            actions += `</div>`;
+
+            return `
+                <tr data-id="${id}">
+                    <td>${escapeHtml(name)}</td>
+                    <td>${escapeHtml(topic)}</td>
+                    <td>${escapeHtml(affiliation)}</td>
+                    <td><span class="status-badge ${statusClass}">${escapeHtml(pkg ? pkg : '-')}</span></td>
+                    <td>${escapeHtml(day)}</td>
+                    <td>${escapeHtml(session)}</td>
+                    <td><span class="status-badge ${statusClass}">${escapeHtml(statusLabel)}</span></td>
+                    <td><span class="status-badge ${paymentClass}">${escapeHtml(paymentLabel)}</span></td>
+                    <td>${actions}</td>
+                </tr>
+            `;
+        }).join('');
+
+        tbody.innerHTML = rowsHtml;
+        // Compute stats from backend data (source of truth)
+        try {
+            const total = data.length;
+            const confirmed = data.filter(s => {
+                const raw = (s.status || '').toString().toLowerCase();
+                return raw.includes('confirm') || raw.includes('approved') || raw === 'confirmed' || raw.includes('approve');
+            }).length;
+            const pending = data.filter(s => {
+                const raw = (s.status || '').toString().toLowerCase();
+                return raw.includes('pend') || raw === 'pending';
+            }).length;
+
+            const totalEl = document.getElementById('totalSpeakers');
+            const confirmedEl = document.getElementById('confirmedSpeakers');
+            const pendingEl = document.getElementById('pendingSpeakers');
+            if (totalEl) totalEl.textContent = total;
+            if (confirmedEl) confirmedEl.textContent = confirmed;
+            if (pendingEl) pendingEl.textContent = pending;
+        } catch (e) { console.error('Stats update failed', e); }
+    }).catch(err => {
+        console.error('Failed to load speakers:', err);
+        tbody.innerHTML = `<tr><td colspan="9">Failed to load speakers. Please try again later.</td></tr>`;
+        // reset counters on failure
+        const totalEl = document.getElementById('totalSpeakers');
+        const confirmedEl = document.getElementById('confirmedSpeakers');
+        const pendingEl = document.getElementById('pendingSpeakers');
+        if (totalEl) totalEl.textContent = 0;
+        if (confirmedEl) confirmedEl.textContent = 0;
+        if (pendingEl) pendingEl.textContent = 0;
+    });
 }
+
+// Escape HTML utility to avoid injection when rendering server-provided strings
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+        return ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#47;',
+            '`': '&#96;',
+            '=': '&#61;'
+        })[s];
+    });
+}
+
+// Client-side filtering (does NOT overwrite DB-sourced stats)
+function filterSpeakers() {
+    const search = (document.getElementById('searchSpeakers') && document.getElementById('searchSpeakers').value || '').toLowerCase().trim();
+    const status = (document.getElementById('filterSpeakerStatus') && document.getElementById('filterSpeakerStatus').value) || '';
+    const day = (document.getElementById('filterSpeakerDay') && document.getElementById('filterSpeakerDay').value) || '';
+    const level = (document.getElementById('filterSpeakerLevel') && document.getElementById('filterSpeakerLevel').value) || '';
+
+    const tbody = document.querySelector('#speakersTable tbody');
+    if (!tbody) return;
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.forEach(row => {
+        const cells = row.children;
+        const name = (cells[0] && cells[0].textContent || '').toLowerCase();
+        const topic = (cells[1] && cells[1].textContent || '').toLowerCase();
+        const affiliation = (cells[2] && cells[2].textContent || '').toLowerCase();
+        const pkg = (cells[3] && cells[3].textContent || '').toLowerCase();
+        const rowDay = (cells[4] && cells[4].textContent || '').toLowerCase();
+        const statusText = (cells[6] && cells[6].textContent || '').toLowerCase();
+
+        let visible = true;
+        if (search) {
+            visible = name.includes(search) || topic.includes(search) || affiliation.includes(search);
+        }
+        if (visible && status) {
+            visible = statusText.includes(status.toLowerCase());
+        }
+        if (visible && day) {
+            visible = rowDay.includes(day.toLowerCase());
+        }
+        if (visible && level) {
+            visible = pkg.includes(level.toLowerCase());
+        }
+
+        row.style.display = visible ? '' : 'none';
+    });
+}
+
+// Wire up initial load + controls
+document.addEventListener('DOMContentLoaded', function() {
+    try { refreshSpeakersTable(); } catch (e) { console.error(e); }
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refreshSpeakersBtn');
+    if (refreshBtn) refreshBtn.addEventListener('click', (e) => { e.preventDefault(); refreshSpeakersTable(); });
+
+    // Search and filter controls
+    const searchInput = document.getElementById('searchSpeakers');
+    const statusSelect = document.getElementById('filterSpeakerStatus');
+    const daySelect = document.getElementById('filterSpeakerDay');
+    const levelSelect = document.getElementById('filterSpeakerLevel');
+    const clearFilters = document.getElementById('clearSpeakerFiltersBtn');
+
+    const applyFilters = () => { try { filterSpeakers(); } catch (e) { console.error(e); } };
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (statusSelect) statusSelect.addEventListener('change', applyFilters);
+    if (daySelect) daySelect.addEventListener('change', applyFilters);
+    if (levelSelect) levelSelect.addEventListener('change', applyFilters);
+    if (clearFilters) {
+        clearFilters.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (searchInput) searchInput.value = '';
+            if (statusSelect) statusSelect.value = '';
+            if (daySelect) daySelect.value = '';
+            if (levelSelect) levelSelect.value = '';
+            applyFilters();
+        });
+    }
+});
 
 
 

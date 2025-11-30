@@ -1052,8 +1052,47 @@
 
                 // Setup payment section
                 setupPaymentSection();
+
+                // If the user was redirected back from a payment gateway with query params,
+                // handle them (e.g., status=successful, tx_ref, transaction_id) and show confirmation.
+                handleUrlPaymentRedirect();
             } catch (error) {
                 console.error('Error initializing app:', error);
+            }
+        }
+
+        // If URL contains payment redirect parameters, load the confirmation step.
+        function handleUrlPaymentRedirect() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const status = params.get('status') || params.get('payment_status');
+                const txRef = params.get('tx_ref') || params.get('txref') || params.get('txref_id');
+                const transactionId = params.get('transaction_id') || params.get('transactionId') || params.get('transaction');
+
+                // Only proceed when the payment was successful and we have at least tx_ref and transaction_id
+                if (status && status.toLowerCase() === 'successful' && (txRef || transactionId)) {
+                    // mark payment method as Flutterwave (common for redirect flows)
+                    selectedPaymentMethod = 'flutterwave';
+
+                    // populate confirmation id if present in DOM
+                    const confirmationIdEl = document.getElementById('confirmation-id');
+                    if (confirmationIdEl) confirmationIdEl.textContent = transactionId || txRef;
+
+                    // update other confirmation fields that we can (payment method)
+                    const confirmationPayment = document.getElementById('confirmation-payment');
+                    if (confirmationPayment) confirmationPayment.textContent = 'Flutterwave';
+
+                    // If email/name available in local form inputs, ensure confirmation shows them
+                    updateConfirmationSection();
+
+                    // Show the final confirmation step
+                    showStep(5);
+
+                    // Optionally scroll to top for visibility
+                    window.scrollTo(0, 0);
+                }
+            } catch (e) {
+                console.warn('Failed to handle payment redirect params:', e);
             }
         }
 

@@ -1236,6 +1236,14 @@
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', async function() {
             await initializeApp();
+            // After initialization, check URL for payment redirect params
+            try {
+                if (typeof handleUrlPaymentRedirect === 'function') {
+                    handleUrlPaymentRedirect();
+                }
+            } catch (e) {
+                console.error('Error running URL payment redirect handler', e);
+            }
         });
 
         async function initializeApp() {
@@ -1249,6 +1257,47 @@
                 setupPaymentSection();
             } catch (error) {
                 console.error('Error initializing app:', error);
+            }
+        }
+
+        // Handle payment redirects that include status, tx_ref and transaction_id
+        function handleUrlPaymentRedirect() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const status = params.get('status');
+                const txRef = params.get('tx_ref') || params.get('txref') || params.get('txref_id');
+                const transactionId = params.get('transaction_id') || params.get('transactionId') || params.get('transactionid');
+
+                // Require a successful status and both txRef and transaction id
+                if (status && String(status).toLowerCase() === 'successful' && txRef && transactionId) {
+                    // Mark payment method as Flutterwave (common case)
+                    selectedPaymentMethod = 'flutterwave';
+
+                    // If a package is provided in query params, set it so confirmation shows correct package name
+                    const pkg = params.get('package') || params.get('package_id') || params.get('pkg');
+                    if (pkg) selectedPackage = pkg;
+
+                    // Update confirmation section with values we have from the URL and form
+                    const apiData = {
+                        reference: txRef,
+                        transactionId: transactionId
+                    };
+
+                    // Update UI and show final step
+                    updateConfirmationSection(apiData);
+                    showStep(5);
+
+                    // Clean up query string to avoid repeated handling on refresh/navigation
+                    try {
+                        const url = new URL(window.location.href);
+                        url.search = '';
+                        window.history.replaceState({}, document.title, url.toString());
+                    } catch (err) {
+                        // not critical
+                    }
+                }
+            } catch (err) {
+                console.error('Error handling payment redirect params', err);
             }
         }
         
