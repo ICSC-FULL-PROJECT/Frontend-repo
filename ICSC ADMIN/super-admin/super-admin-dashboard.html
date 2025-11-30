@@ -67,7 +67,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="pendingCount">12</h3>
+                                <h3 id="pendingCount"></h3>
                                 <p>Pending Verification</p>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="approvedCount">245</h3>
+                                <h3 id="approvedCount"></h3>
                                 <p>Approved Attendees</p>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="totalCount">257</h3>
+                                <h3 id="totalCount"></h3>
                                 <p>Total Attendees</p>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                                 <i class="fas fa-building"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="ministriesCount">18</h3>
+                                <h3 id="ministriesCount"></h3>
                                 <p>Participating Ministries</p>
                             </div>
                         </div>
@@ -281,7 +281,7 @@
                     <form id="addAttendeeForm">
                         <div class="form-row">
     <div class="form-group">
-        <label for="attendeePrefix">Prefix *</label>
+        <label for="attendeePrefix">Prefix</label>
         <select id="attendeePrefix" class="form-control" required>
             <option value="">Select prefix</option>
             <option>Mr</option>
@@ -293,64 +293,64 @@
     </div>
     
      <div class="form-group">
-        <label for="attendeeFirstName">First Name *</label>
+        <label for="attendeeFirstName">First Name</label>
         <input type="text" id="attendeeFirstName" class="form-control" placeholder="Enter first name" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
-        <label for="attendeeLastName">Last Name *</label>
+        <label for="attendeeLastName">Last Name</label>
         <input type="text" id="attendeeLastName" class="form-control" placeholder="Enter last name" required>
     </div>
 
     <div class="form-group">
-        <label for="attendeeEmail">Email Address (Login) *</label>
+        <label for="attendeeEmail">Email Address (Login)</label>
         <input type="email" id="attendeeEmail" class="form-control" placeholder="Enter email address" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
-        <label for="attendeePassword">Password *</label>
+        <label for="attendeePassword">Password</label>
         <input type="password" id="attendeePassword" class="form-control" placeholder="Enter password" required>
     </div>
 
     <div class="form-group">
-        <label for="attendeeJobTitle">Job Title *</label>
+        <label for="attendeeJobTitle">Job Title</label>
         <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
-        <label for="attendeeOrganization">Organization *</label>
+        <label for="attendeeOrganization">Organization</label>
         <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization" required>
     </div>
 
     <div class="form-group">
-        <label for="attendeeWorkPhone">Work Phone *</label>
+        <label for="attendeeWorkPhone">Work Phone</label>
         <input type="tel" id="attendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
     </div>
 </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="attendeePhone">Phone Number *</label>
+                                <label for="attendeePhone">Phone Number</label>
                                 <input type="tel" id="attendeePhone" class="form-control" placeholder="Enter phone number" required>
                             </div>
                             <div class="form-group">
-                                <label for="attendeeNIN">National ID Number (NIN) *</label>
+                                <label for="attendeeNIN">National ID Number (NIN)</label>
                                 <input type="text" id="attendeeNIN" class="form-control" placeholder="Enter NIN" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="attendeePosition">Position *</label>
+                                <label for="attendeePosition">Position</label>
                                 <input type="text" id="attendeePosition" class="form-control" placeholder="Enter position" required>
                             </div>
                             <div class="form-group">
-                                <label for="attendeeGradeLevel">Grade Level *</label>
+                                <label for="attendeeGradeLevel">Grade Level</label>
                                 <select id="attendeeGradeLevel" class="form-control" required>
                                     <option value="">Select grade level</option>
                                     <option value="Director">Director</option>
@@ -364,7 +364,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="attendeeMinistry">Ministry *</label>
+                                <label for="attendeeMinistry">Ministry</label>
                                 <select id="attendeeMinistry" class="form-control" required>
                                     <option value="">Select Ministry</option>
     <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
@@ -401,13 +401,13 @@
 </select>
                             </div>
                             <div class="form-group">
-                                <label for="attendeeDepartment">Department *</label>
+                                <label for="attendeeDepartment">Department</label>
                                 <input type="text" id="attendeeDepartment" class="form-control" placeholder="Enter department" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="attendeeAgency">Department Agency *</label>
+                                <label for="attendeeAgency">Department Agency</label>
                                 <input type="text" id="attendeeAgency" class="form-control" placeholder="Enter department agency" required>
                             </div>
                             <div class="form-group">
@@ -545,7 +545,7 @@
                 </div>
             </div>
             <!-- View Attendee Modal -->
-        <div id="viewAttendeeModal" class="modal" style="display: none;">
+        <div id="viewAttendeeModal" class="modal">
             <div class="modal-content modal-lg">
                 <div class="modal-header">
                     <h2>Attendee Details</h2>
@@ -715,7 +715,7 @@
                     <i class="fas fa-th-large"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalBooths">200</h3>
+                    <h3 id="totalBooths">0</h3>
                     <p>Total Booths</p>
                 </div>
             </div>
@@ -724,7 +724,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="availableBooths">150</h3>
+                    <h3 id="availableBooths">0</h3>
                     <p>Available</p>
                 </div>
             </div>
@@ -733,7 +733,7 @@
                     <i class="fas fa-times-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="soldOutBooths">50</h3>
+                    <h3 id="soldOutBooths">0</h3>
                     <p>Sold Out</p>
                 </div>
             </div>
@@ -843,7 +843,7 @@
                     <i class="fas fa-microphone"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalSpeakers">45</h3>
+                    <h3 id="totalSpeakers">0</h3>
                     <p>Total Speakers</p>
                 </div>
             </div>
@@ -852,7 +852,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="confirmedSpeakers">32</h3>
+                    <h3 id="confirmedSpeakers">0</h3>
                     <p>Confirmed</p>
                 </div>
             </div>
@@ -861,7 +861,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="pendingSpeakers">13</h3>
+                    <h3 id="pendingSpeakers">0</h3>
                     <p>Pending</p>
                 </div>
             </div>
@@ -988,7 +988,7 @@
                     <i class="fas fa-store"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalExhibitors">50</h3>
+                    <h3 id="totalExhibitors">0</h3>
                     <p>Total Exhibitors</p>
                 </div>
             </div>
@@ -997,7 +997,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="confirmedExhibitors">35</h3>
+                    <h3 id="confirmedExhibitors">0</h3>
                     <p>Confirmed</p>
                 </div>
             </div>
@@ -1006,7 +1006,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="pendingExhibitors">15</h3>
+                    <h3 id="pendingExhibitors">0</h3>
                     <p>Pending</p>
                 </div>
             </div>
@@ -1121,16 +1121,16 @@
                     <i class="fas fa-handshake"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalPartners">25</h3>
+                    <h3 id="totalPartners">0</h3>
                     <p>Total Partners</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon approved">
-                    <i class="fas fa-gem"></i>
+                    <i class="fas fa-gem">0</i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="diamondPartners">5</h3>
+                    <h3 id="diamondPartners">0</h3>
                     <p>Diamond Partners</p>
                 </div>
             </div>
@@ -1139,7 +1139,7 @@
                     <i class="fas fa-medal"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="goldPartners">8</h3>
+                    <h3 id="goldPartners">0</h3>
                     <p>Gold Partners</p>
                 </div>
             </div>
@@ -1148,7 +1148,7 @@
                     <i class="fas fa-award"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="silverPartners">12</h3>
+                    <h3 id="silverPartners">0</h3>
                     <p>Silver Partners</p>
                 </div>
             </div>
@@ -2235,6 +2235,9 @@
             <button class="close-modal">&times;</button>
         </div>
         
+        <div class="api-indicator">
+            <strong>API Status:</strong> <span id="speaker-api-status">Checking...</span>
+        </div>
         
         <div class="modal-body">
             <form id="addSpeakerForm">
@@ -2368,11 +2371,16 @@
 
 
     <!-- Add Exhibitor Modal -->
-<div id="addExhibitorModal" class="modal" style="display: none;">
+<div id="addExhibitorModal" class="modal">
     <div class="modal-content modal-lg">
         <div class="modal-header">
             <h2>Add New Exhibitor</h2>
             <button class="close-modal">&times;</button>
+        </div>
+        
+        <!-- BACKEND INTEGRATION: Booth selection and payment -->
+        <div class="api-indicator" style="margin: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3;">
+            <strong>BACKEND INTEGRATION:</strong> Exhibitor data will be saved via API endpoints
         </div>
         
         <div class="modal-body">
@@ -2391,26 +2399,26 @@
     </div>
 
     <div class="form-group">
-        <label for="exhibitorName">Company / Organisation Name *</label>
+        <label for="exhibitorName">Company / Organisation Name</label>
         <input type="text" id="exhibitorName" class="form-control" placeholder="Enter name" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
-        <label for="exhibitorContactName">Contact Person Name *</label>
+        <label for="exhibitorContactName">Contact Person Name </label>
         <input type="text" id="exhibitorContactName" class="form-control" placeholder="Enter contact name" required>
     </div>
 
     <div class="form-group">
-        <label for="exhibitorContactEmail">Contact Email *</label>
+        <label for="exhibitorContactEmail">Contact Email</label>
         <input type="email" id="exhibitorContactEmail" class="form-control" placeholder="Enter contact email" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
-        <label for="exhibitorContactPhone">Contact Phone Number *</label>
+        <label for="exhibitorContactPhone">Contact Phone Number</label>
         <input type="tel" id="exhibitorContactPhone" class="form-control" placeholder="Enter contact phone" >
     </div>
 
@@ -3480,7 +3488,7 @@ async function submitBoothData(formData) {
         showSuccessMessage('Booth has been successfully added!');
         
         // Close modal
-        document.getElementById('addBoothModal').classList.remove('active');
+        document.getElementById('addBoothModal').style.display = 'none';
         
         // Refresh booths table
         refreshBoothsTable();
@@ -3522,7 +3530,7 @@ function viewBooth(boothId) {
         document.getElementById('viewPaymentDate').textContent = boothData.paymentDate || 'Not specified';
         document.getElementById('viewBoothRemarks').textContent = boothData.remarks || 'None';
     } else {
-        exhibitorInfoSection.classList.remove('active');
+        exhibitorInfoSection.style.display = 'none';
     }
     
     // Show the view modal
@@ -3682,7 +3690,7 @@ function editBooth(boothId) {
             if (this.value === 'reserved' || this.value === 'sold') {
                 editExhibitorInfoSection.style.display = 'block';
             } else {
-                editExhibitorInfoSection.classList.remove('active');
+                editExhibitorInfoSection.style.display = 'none';
             }
         });
     }
@@ -3960,6 +3968,56 @@ function refreshExhibitorsTable() {
     }, 2000);
 }
 
+// Add Speaker functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the Add Speaker button
+    const addSpeakerBtn = document.getElementById('addSpeakerBtn');
+    const addSpeakerModal = document.getElementById('addSpeakerModal');
+    const cancelAddSpeakerBtn = document.getElementById('cancelAddSpeakerBtn');
+    const addSpeakerForm = document.getElementById('addSpeakerForm');
+
+    // Open Add Speaker modal
+    if (addSpeakerBtn) {
+        addSpeakerBtn.addEventListener('click', function() {
+            addSpeakerModal.style.display = 'flex';
+            // Reset form when opening
+            addSpeakerForm.reset();
+        });
+    }
+
+    // Close modal when clicking cancel
+    if (cancelAddSpeakerBtn) {
+        cancelAddSpeakerBtn.addEventListener('click', function() {
+            addSpeakerModal.style.display = 'none';
+        });
+    }
+
+    // Handle form submission
+    if (addSpeakerForm) {
+        addSpeakerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                event: document.getElementById('speakerEvent').value,
+                name: document.getElementById('speakerName').value,
+                email: document.getElementById('speakerEmail').value,
+                topic: document.getElementById('speakerTopic').value,
+                description: document.getElementById('speakerDescription').value,
+                intro: document.getElementById('speakerIntro').value,
+                affiliation: document.getElementById('speakerAffiliation').value,
+                package: document.getElementById('speakerPackage').value,
+                status: document.getElementById('speakerStatus').value,
+                paymentStatus: document.getElementById('speakerPayment').value,
+                links: document.getElementById('speakerLinks').value,
+                file: document.getElementById('speakerFile').files[0]
+            };
+
+            // Submit speaker data
+            submitSpeakerData(formData);
+        });
+    }
+});
 
 // Speaker Management Functionality
 document.addEventListener('DOMContentLoaded', function() {
