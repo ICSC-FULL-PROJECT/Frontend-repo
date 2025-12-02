@@ -787,7 +787,7 @@
         }
 
         .logo img {
-            height: 60px;
+            height: 80px;
             width: auto;
             transition: var(--transition);
         }
@@ -1271,6 +1271,246 @@
         .scroll-arrow {
             font-size: 1.8rem;
         }
+
+        /* Popup Modal Styles */
+.countdown-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.countdown-popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.countdown-popup {
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 135, 81, 0.3);
+    transform: translateY(20px);
+    transition: transform 0.5s ease;
+    position: relative;
+    border: 2px solid var(--primary-color);
+}
+
+.countdown-popup-overlay.active .countdown-popup {
+    transform: translateY(0);
+}
+
+.popup-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.popup-close-btn:hover {
+    background: rgba(0, 135, 81, 0.1);
+    transform: rotate(90deg);
+}
+
+.popup-header h3 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.popup-header p {
+    color: var(--text-medium);
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.popup-countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.popup-countdown-item {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    border-radius: 12px;
+    padding: 20px 10px;
+    min-width: 70px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 135, 81, 0.3);
+}
+
+.popup-countdown-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    margin-bottom: 5px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.popup-countdown-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.popup-auto-close {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-top: 20px;
+    opacity: 0.8;
+}
+
+/* Fixed Floating Timer */
+.fixed-countdown-timer {
+    position: fixed;
+    top: 150px;
+    right: 20px;
+    width: 120px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0, 135, 81, 0.3);
+    z-index: 1000;
+    transform: translateX(150px);
+    transition: transform 0.5s ease;
+    border: 2px solid white;
+    text-align: center;
+    display: none;
+}
+
+.fixed-countdown-timer.active {
+    transform: translateX(0);
+    display: block;
+}
+
+.fixed-timer-header {
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fixed-timer-display {
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+}
+
+.fixed-timer-days {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 5px;
+    color: #f8d64e;
+}
+
+.fixed-timer-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.fixed-timer-time {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .countdown-popup {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+    
+    .popup-countdown {
+        gap: 10px;
+    }
+    
+    .popup-countdown-item {
+        min-width: 60px;
+        padding: 15px 5px;
+    }
+    
+    .popup-countdown-number {
+        font-size: 1.8rem;
+    }
+    
+    .popup-header h3 {
+        font-size: 1.5rem;
+    }
+    
+    .fixed-countdown-timer {
+        width: 100px;
+        right: 10px;
+        top: 120px;
+        padding: 12px;
+    }
+    
+    .fixed-timer-days {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .popup-countdown {
+        gap: 8px;
+    }
+    
+    .popup-countdown-item {
+        min-width: 50px;
+        padding: 12px 3px;
+    }
+    
+    .popup-countdown-number {
+        font-size: 1.5rem;
+    }
+    
+    .popup-countdown-label {
+        font-size: 0.7rem;
+    }
+    
+    .fixed-countdown-timer {
+        width: 90px;
+        padding: 10px;
+    }
+    
+    .fixed-timer-days {
+        font-size: 1.3rem;
+    }
+}
         /* Compact Leaders Section */
 .leaders-section {
     padding: 40px 0;
@@ -1747,13 +1987,13 @@
                 background-image: url('./images/iya-pod.jpg');
             }
             19.99%, 26.64% { 
-                background-image: url('./images/iya tt.jpg');
+                background-image: url('./images/iya-tt.jpg');
             }
             26.65%, 33.3% { 
                 background-image: url('./images/iya-rite.jpg');
             }
             33.31%, 39.96% { 
-                background-image: url('./images/iya pode.jpg');
+                background-image: url('./images/iya-pode.jpg');
             }
             39.97%, 46.62% { 
                 background-image: url('./images/pres.jpg');
@@ -1765,10 +2005,10 @@
                 background-image: url('./images/happy.jpg');
             }
             59.95%, 66.6% { 
-                background-image: url('./images/crowd 3.jpg');
+                background-image: url('./images/crowd-3.jpg');
             }
             66.61%, 73.26% { 
-                background-image: url('./images/iya pot.jpg');
+                background-image: url('./images/iya-pot.jpg');
             }
             73.27%, 79.92% { 
                 background-image: url('./images/rite.jpg');
@@ -1777,7 +2017,7 @@
                 background-image: url('./images/grrrrr.jpg');
             }
             86.59%, 93.24% { 
-                background-image: url('./images/crowd 1.jpg');
+                background-image: url('./images/crowd-1.jpg');
             }
             93.25%, 100% { 
                 background-image: url('./images/table.jpg');
@@ -2111,18 +2351,18 @@
 </head>
 <body>
 
-    <audio id="anthemAudio" src="anthem.mp3" autoplay muted></audio>
+    <audio id="anthemAudio" src="images/anthem.mp3" autoplay muted></audio>
     
     <!-- Fixed Header -->
     <header id="header">
         <div class="header-container">
             <div class="logo">
-                <a href="#">
-                    <img src="images/NG.jpeg" alt="International Civil Service Conference">
+                <a href="Index.html">
+                    <img src="icsc-logos.png" alt="International Civil Service Conference">
                 </a>
                 <div class="logo-text">
-                    <h1>ICSC 2026</h1>
-                    <p>Rejuvenate, Innovate & Accelerate!</p>
+                    <h1></h1>
+                    <p></p>
                 </div>
             </div>
             
@@ -2339,6 +2579,60 @@
         </div>
     </div>
 </section>
+
+<!-- Countdown Popup Modal -->
+<div class="countdown-popup-overlay" id="countdownPopup">
+    <div class="countdown-popup">
+        <button class="popup-close-btn" id="closePopupBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="popup-header">
+            <img src="icsc-logos.png" alt="logo">
+            <h3><i class="fas fa-calendar-alt"></i></h3>
+            <p>International Civil Service Conference 2026</p>
+        </div>
+        
+        <div class="popup-countdown" id="popupCountdown">
+            <div class="popup-countdown-item">
+                <span class="popup-countdown-number" id="popupDays">00</span>
+                <span class="popup-countdown-label">Days</span>
+            </div>
+            <div class="popup-countdown-item">
+                <span class="popup-countdown-number" id="popupHours">00</span>
+                <span class="popup-countdown-label">Hours</span>
+            </div>
+            <div class="popup-countdown-item">
+                <span class="popup-countdown-number" id="popupMinutes">00</span>
+                <span class="popup-countdown-label">Minutes</span>
+            </div>
+            <div class="popup-countdown-item">
+                <span class="popup-countdown-number" id="popupSeconds">00</span>
+                <span class="popup-countdown-label">Seconds</span>
+            </div>
+        </div>
+        
+        <p class="popup-auto-close" id="autoCloseMessage">
+            This popup will auto-close in <span id="closeTimer">5</span> seconds
+        </p>
+        
+        <button class="btn" id="registerFromPopup" style="margin-top: 20px;">
+            <i class="fas fa-user-plus"></i> Register Now
+        </button>
+    </div>
+</div>
+
+<!-- Fixed Floating Timer -->
+<div class="fixed-countdown-timer" id="fixedCountdown">
+    <div class="fixed-timer-header">
+        <i class="fas fa-clock"></i> ICSC 2026
+    </div>
+    <div class="fixed-timer-display">
+        <div class="fixed-timer-days" id="fixedDays">00</div>
+        <div class="fixed-timer-label">Days To Go</div>
+        <div class="fixed-timer-time" id="fixedTime">00:00:00</div>
+    </div>
+</div>
         
     <!-- Hosted By Section -->
     <section class="hosted-section">
@@ -2499,17 +2793,37 @@
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-bars');
             }
+            
+            // Hide fixed timer when mobile menu is open on small screens
+            if (window.innerWidth < 992) {
+                const fixedTimer = document.getElementById('fixedCountdown');
+                if (fixedTimer) {
+                    if (document.querySelector('.mobile-menu').classList.contains('active')) {
+                        fixedTimer.style.opacity = '0';
+                    } else {
+                        fixedTimer.style.opacity = '1';
+                    }
+                }
+            }
         });
 
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             const backToTop = document.querySelector('.back-to-top');
+            const fixedTimer = document.getElementById('fixedCountdown');
             
             if (window.scrollY > 50) {
                 header.classList.add('scrolled');
+                // Move timer down a bit when header is scrolled
+                if (fixedTimer) {
+                    fixedTimer.style.top = '100px';
+                }
             } else {
                 header.classList.remove('scrolled');
+                if (fixedTimer) {
+                    fixedTimer.style.top = '150px';
+                }
             }
             
             if (window.scrollY > 300) {
@@ -2520,16 +2834,31 @@
         });
 
         // Back to Top Button Functionality
-const backToTop = document.querySelector('.back-to-top');
-if (backToTop) {
-    backToTop.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
+        const backToTop = document.querySelector('.back-to-top');
+        if (backToTop) {
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Ensure fixed timer doesn't overlap with back-to-top button
+            backToTop.addEventListener('mouseenter', function() {
+                const fixedTimer = document.getElementById('fixedCountdown');
+                if (fixedTimer) {
+                    fixedTimer.style.opacity = '0.5';
+                }
+            });
+            
+            backToTop.addEventListener('mouseleave', function() {
+                const fixedTimer = document.getElementById('fixedCountdown');
+                if (fixedTimer) {
+                    fixedTimer.style.opacity = '1';
+                }
+            });
+        }
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -2575,111 +2904,345 @@ if (backToTop) {
         document.querySelectorAll('.theme-card, .hosted-item, .partner-item').forEach(el => {
             observer.observe(el);
         });
+        
         // Enhanced Count Animation with Staggered Effect
-function animateCountersEnhanced() {
-    const counters = document.querySelectorAll('.count');
-    const speed = 100; // The lower the slower
-    
-    counters.forEach((counter, index) => {
-        // Stagger the animation start
-        setTimeout(() => {
-            const target = +counter.getAttribute('data-target');
-            const count = +counter.innerText;
-            const increment = target / speed;
+        function animateCountersEnhanced() {
+            const counters = document.querySelectorAll('.count');
+            const speed = 100; // The lower the slower
             
-            const updateCount = () => {
-                const currentCount = +counter.innerText;
-                if (currentCount < target) {
-                    counter.innerText = Math.ceil(currentCount + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target + '+';
-                    // Add celebration effect
-                    counter.classList.add('animated');
-                    setTimeout(() => {
-                        counter.classList.remove('animated');
-                    }, 600);
-                }
-            };
-            
-            updateCount();
-        }, index * 300); // 300ms delay between each counter
-    });
-}
-
-// Enhanced Intersection Observer
-const enhancedStatsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateCountersEnhanced();
-            enhancedStatsObserver.unobserve(entry.target);
+            counters.forEach((counter, index) => {
+                // Stagger the animation start
+                setTimeout(() => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const increment = target / speed;
+                    
+                    const updateCount = () => {
+                        const currentCount = +counter.innerText;
+                        if (currentCount < target) {
+                            counter.innerText = Math.ceil(currentCount + increment);
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.innerText = target + '+';
+                            // Add celebration effect
+                            counter.classList.add('animated');
+                            setTimeout(() => {
+                                counter.classList.remove('animated');
+                            }, 600);
+                        }
+                    };
+                    
+                    updateCount();
+                }, index * 300); // 300ms delay between each counter
+            });
         }
-    });
-}, { threshold: 0.3 });
 
-// Observe the about-stats section
-const statsSection = document.querySelector('.about-stats');
-if (statsSection) {
-    enhancedStatsObserver.observe(statsSection);
-}
- // Select the single image inside .portrait-frame
-  const portraitImg = document.querySelector('.portrait-frame > img');
-  if (portraitImg) {
-    // List the images to rotate through (update filenames as needed)
-    const pics = [
-      'images/happy.jpg',
-      'images/iya-alone.jpeg',
-      'images/iya.jpg',
-      'images/iya-rite.jpg',
-      'images/iya-rr.jpg',
-      'images/iya-pres.jpeg',
-      'images/iya-mic.jpg',
-      'images/iya-pot.jpg',
-      'images/smile.jpg',
-      'images/award.jpg',
-      'images/selfie.jpg',
-      'images/award-6.jpg',
-      'images/iya-pod.jpg',
-      'images/iya-speak.jpg'
-    ];
+        // Enhanced Intersection Observer
+        const enhancedStatsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCountersEnhanced();
+                    enhancedStatsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
 
-    // Preload images to avoid flicker
-    pics.forEach(src => { const i = new Image(); i.src = src; });
+        // Observe the about-stats section
+        const statsSection = document.querySelector('.about-stats');
+        if (statsSection) {
+            enhancedStatsObserver.observe(statsSection);
+        }
+        
+        // Select the single image inside .portrait-frame
+        const portraitImg = document.querySelector('.portrait-frame > img');
+        if (portraitImg) {
+            
+            const pics = [
+                'images/happy.jpg',
+                'images/iya-alone.jpeg',
+                'images/iya.jpg',
+                'images/iya-rite.jpg',
+                'images/iya-rr.jpg',
+                'images/iya-pres.jpeg',
+                'images/iya-mic.jpg',
+                'images/iya-pot.jpg',
+                'images/smile.jpg',
+                'images/award.jpg',
+                'images/selfie.jpg',
+                'images/award-6.jpg',
+                'images/iya-pod.jpg',
+                'images/iya-speak.jpg',
+                'images/thumbs.jpg'
+            ];
 
-    // Start from current src if it matches one in the list, otherwise start at 0
-    let idx = Math.max(0, pics.indexOf(portraitImg.getAttribute('src')));
-    if (idx === -1) idx = 0;
+            // Preload images to avoid flicker
+            pics.forEach(src => { const i = new Image(); i.src = src; });
 
-    // Swap image every 4 seconds (4000 ms)
-    setInterval(() => {
-      idx = (idx + 1) % pics.length;
-      portraitImg.src = pics[idx];
-    }, 4000);
-  }
+            // Start from current src if it matches one in the list, otherwise start at 0
+            let idx = Math.max(0, pics.indexOf(portraitImg.getAttribute('src')));
+            if (idx === -1) idx = 0;
 
+            // Swap image every 4 seconds (4000 ms)
+            setInterval(() => {
+                idx = (idx + 1) % pics.length;
+                portraitImg.src = pics[idx];
+            }, 4000);
+        }
 
-  // Mobile Menu Watch on Demand Button
-document.querySelector('.mobile-demand-btn')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    // Close mobile menu
-    document.querySelector('.mobile-menu').classList.remove('active');
-    // Reset mobile menu icon
-    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
-    menuBtnIcon.classList.remove('fa-times');
-    menuBtnIcon.classList.add('fa-bars');
-    
-    // Scroll to on-demand section or trigger your on-demand functionality
-    const onDemandSection = document.querySelector('#on-demand');
-    if (onDemandSection) {
-        window.scrollTo({
-            top: onDemandSection.offsetTop - 80,
-            behavior: 'smooth'
+        // Mobile Menu Watch on Demand Button
+        document.querySelector('.mobile-demand-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Close mobile menu
+            document.querySelector('.mobile-menu').classList.remove('active');
+            // Reset mobile menu icon
+            const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
+            menuBtnIcon.classList.remove('fa-times');
+            menuBtnIcon.classList.add('fa-bars');
+            
+            // Scroll to on-demand section or trigger your on-demand functionality
+            const onDemandSection = document.querySelector('#on-demand');
+            if (onDemandSection) {
+                window.scrollTo({
+                    top: onDemandSection.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            } else {
+                // If no on-demand section exists, you can redirect or show a modal
+                alert('On Demand content will be available soon!');
+            }
         });
+        
+        // ==================== COUNTDOWN TIMER SYSTEM ====================
+        
+        // Initialize the countdown system when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCountdownSystem();
+        });
+        
+        function initializeCountdownSystem() {
+            // Check if user has already seen the popup today
+            const today = new Date().toDateString();
+            const lastPopupDate = localStorage.getItem('icsc_last_popup_date');
+            
+            // Show popup if not shown today OR if it's the first time
+            if (!lastPopupDate || lastPopupDate !== today) {
+                showCountdownPopup();
+            } else {
+                // If popup already shown today, just show the fixed timer
+                showFixedTimer();
+            }
+            
+            // Initialize the countdown timer
+            updateCountdownTimers();
+        }
+        
+        function showCountdownPopup() {
+            const popup = document.getElementById('countdownPopup');
+            const closeBtn = document.getElementById('closePopupBtn');
+            const registerBtn = document.getElementById('registerFromPopup');
+            let autoCloseTimer;
+            let closeCounter = 5;
+            
+            // Mark popup as shown today
+            localStorage.setItem('icsc_last_popup_date', new Date().toDateString());
+            
+            // Show popup with slight delay for better UX
+            setTimeout(() => {
+                if (popup) {
+                    popup.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    
+                    // Start auto-close countdown
+                    const closeTimerElement = document.getElementById('closeTimer');
+                    if (closeTimerElement) {
+                        autoCloseTimer = setInterval(() => {
+                            closeCounter--;
+                            closeTimerElement.textContent = closeCounter;
+                            
+                            if (closeCounter <= 0) {
+                                closePopup();
+                            }
+                        }, 1000);
+                    }
+                }
+            }, 1000);
+            
+            // Close button functionality
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closePopup);
+            }
+            
+            // Close on overlay click (outside popup)
+            if (popup) {
+                popup.addEventListener('click', function(e) {
+                    if (e.target === popup) {
+                        closePopup();
+                    }
+                });
+            }
+            
+            // Register button functionality
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    window.location.href = 'register.html';
+                });
+            }
+            
+            // Close popup function
+            function closePopup() {
+                clearInterval(autoCloseTimer);
+                if (popup) {
+                    popup.classList.remove('active');
+                }
+                document.body.style.overflow = ''; // Re-enable scrolling
+                showFixedTimer();
+            }
+        }
+        
+        function showFixedTimer() {
+            const fixedTimer = document.getElementById('fixedCountdown');
+            if (fixedTimer) {
+                setTimeout(() => {
+                    fixedTimer.classList.add('active');
+                }, 500);
+            }
+        }
+function updateCountdownTimers() {
+    // Prefer the canonical epoch (if saved by admin)
+    let eventEpoch = localStorage.getItem('icsc_event_epoch');
+
+    if (eventEpoch) {
+        eventEpoch = parseInt(eventEpoch);
     } else {
-        // If no on-demand section exists, you can redirect or show a modal
-        alert('On Demand content will be available soon!');
+        // Fallback to timezone-aware ISO date saved by admin
+        let eventDate = localStorage.getItem('icsc_event_date');
+
+        // If no date exists, set default
+        if (!eventDate) {
+            eventDate = '2026-05-25T09:00:00Z';
+            localStorage.setItem('icsc_event_date', eventDate);
+        }
+
+        // Date.parse() correctly handles ISO strings with Z or +01:00
+        eventEpoch = Date.parse(eventDate);
+
+        // Optional: save epoch for future accuracy
+        localStorage.setItem('icsc_event_epoch', String(eventEpoch));
     }
-});
+
+    // eventEpoch is now the universal timestamp the countdown should use
+    const eventTime = eventEpoch;
+
+    function updateAllTimers() {
+        const now = Date.now();
+        const timeRemaining = eventTime - now;
+
+        // If event has already passed
+        if (timeRemaining < 0) {
+            // Update popup if it's open
+            const popup = document.getElementById('countdownPopup');
+            const popupCountdown = document.getElementById('popupCountdown');
+            if (popup && popupCountdown && popup.classList.contains('active')) {
+                popupCountdown.innerHTML = `
+                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: 700;">
+                        <i class="fas fa-check-circle"></i> Conference is Live!
+                    </div>
+                `;
+            }
+            
+            // Update fixed timer
+            const fixedTimer = document.getElementById('fixedCountdown');
+            if (fixedTimer) {
+                fixedTimer.innerHTML = `
+                    <div class="fixed-timer-header" style="color: #f8d64e;">
+                        <i class="fas fa-broadcast-tower"></i> LIVE NOW
+                    </div>
+                    <div class="fixed-timer-display">
+                        <div style="font-size: 1.2rem; color: white; font-weight: 700;">
+                            Join Us!
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return;
+        }
+                
+                // Calculate time units
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                
+                // Update popup timer
+                const popupDays = document.getElementById('popupDays');
+                const popupHours = document.getElementById('popupHours');
+                const popupMinutes = document.getElementById('popupMinutes');
+                const popupSeconds = document.getElementById('popupSeconds');
+                
+                if (popupDays) popupDays.textContent = days.toString().padStart(2, '0');
+                if (popupHours) popupHours.textContent = hours.toString().padStart(2, '0');
+                if (popupMinutes) popupMinutes.textContent = minutes.toString().padStart(2, '0');
+                if (popupSeconds) popupSeconds.textContent = seconds.toString().padStart(2, '0');
+                
+                // Update fixed timer
+                const fixedDays = document.getElementById('fixedDays');
+                const fixedTime = document.getElementById('fixedTime');
+                const fixedTimer = document.getElementById('fixedCountdown');
+                
+                if (fixedDays) fixedDays.textContent = days;
+                if (fixedTime) {
+                    fixedTime.textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                // Update fixed timer style based on days remaining
+                if (fixedTimer) {
+                    if (days < 7) {
+                        // Less than a week - show urgent style
+                        fixedTimer.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%)';
+                        fixedTimer.style.animation = 'pulse 2s infinite';
+                    } else if (days < 30) {
+                        // Less than a month - show warning style
+                        fixedTimer.style.background = 'linear-gradient(135deg, #ffa502 0%, #ff7f00 100%)';
+                    } else {
+                        // Reset to default
+                        fixedTimer.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)';
+                        fixedTimer.style.animation = 'none';
+                    }
+                }
+            }
+            
+            // Initial update
+            updateAllTimers();
+            
+            // Update every second
+            setInterval(updateAllTimers, 1000);
+        }
+        
+        // Add pulse animation to your existing CSS keyframes
+        if (!document.querySelector('style').textContent.includes('@keyframes pulse')) {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: translateX(0) scale(1); }
+                    50% { transform: translateX(0) scale(1.05); }
+                    100% { transform: translateX(0) scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Anthem Audio Playback - ADD THIS NEW CODE
+        const anthem = document.getElementById('anthemAudio');
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                anthem.muted = false;
+                anthem.play().catch(()=>{});
+            }, 1000);
+        });
+        }
+
+
 </script>
 
 

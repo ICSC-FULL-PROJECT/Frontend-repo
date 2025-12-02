@@ -17,8 +17,8 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="../NG.jpeg" alt="ICSC Logo" style="width: 90px; margin-bottom: 10px;">
-                <h2>ICSC 2026</h2>
+                <img src="../icsc-logo.png" alt="ICSC Logo" style="width: 200px; height: auto; margin-bottom: 10px;">
+                <h2></h2>
                 <p>Super Admin Dashboard</p>
             </div>
             <ul class="sidebar-menu">
@@ -1639,18 +1639,298 @@
 </div>
 
             <!-- Settings Tab -->
-            <div id="settings" class="tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h2>System Settings</h2>
+<div id="settings" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>System Settings</h2>
+        </div>
+
+        <!-- Event Countdown Timer Settings -->
+        <div class="settings-section">
+            <div class="section-header">
+                <h3><i class="fas fa-clock"></i> Event Countdown Timer Settings</h3>
+                <p>Control the countdown timer displayed on the homepage</p>
+            </div>
+            
+            <form id="eventTimerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventDateTime" class="has-star">Event Date & Time</label>
+                        <input type="datetime-local" id="eventDateTime" class="form-control" required>
+                        <small>This date controls the countdown timer on the homepage</small>
                     </div>
-                    <div style="padding: 20px;">
-                        <p>System settings and configuration options will be implemented here.</p>
+                    <div class="form-group">
+                        <label for="eventTimezone">Timezone</label>
+                        <select id="eventTimezone" class="form-control">
+                            <option value="Africa/Lagos" selected>West Africa Time (WAT)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="Europe/London">London Time (GMT)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="popupDuration">Popup Auto-Close Duration</label>
+                        <select id="popupDuration" class="form-control">
+                            <option value="3">3 seconds</option>
+                            <option value="5" selected>5 seconds</option>
+                            <option value="10">10 seconds</option>
+                            <option value="0">No auto-close</option>
+                        </select>
+                        <small>How long the countdown popup stays before auto-closing</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="popupFrequency">Popup Display Frequency</label>
+                        <select id="popupFrequency" class="form-control">
+                            <option value="daily" selected>Once per day</option>
+                            <option value="weekly">Once per week</option>
+                            <option value="session">Once per browser session</option>
+                            <option value="always">Always show</option>
+                        </select>
+                        <small>How often visitors see the countdown popup</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Current Timer Setting</label>
+                        <div class="current-setting-box">
+                            <div id="currentTimerSetting">
+                                <p>Loading current timer settings...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="testTimerBtn">
+                        <i class="fas fa-vial"></i> Test Timer (1 min)
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="resetTimerBtn">
+                        <i class="fas fa-undo"></i> Reset to Default
+                    </button>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Save Timer Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Registration Caps Management -->
+        <div class="settings-section">
+            <div class="section-header">
+                <h3><i class="fas fa-users"></i> Registration Caps Management</h3>
+                <p>Set maximum limits for different registration categories</p>
+            </div>
+
+            <!-- Current Registration Stats -->
+            <div class="stats-container" id="registrationStats">
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="currentAttendees">0</h3>
+                        <p>Current Attendees</p>
+                        <small>Out of <span id="maxAttendees">0</span> allowed</small>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon approved">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="currentSpeakers">0</h3>
+                        <p>Current Speakers</p>
+                        <small>Out of <span id="maxSpeakers">0</span> allowed</small>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="currentExhibitors">0</h3>
+                        <p>Current Exhibitors</p>
+                        <small>Out of <span id="maxExhibitors">0</span> allowed</small>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon ministries">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="currentPartners">0</h3>
+                        <p>Current Partners</p>
+                        <small>Out of <span id="maxPartners">0</span> allowed</small>
                     </div>
                 </div>
             </div>
+
+            <form id="registrationCapsForm">
+                <div class="form-section">
+                    <h4>Set Registration Caps</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="attendeeCap">Attendee Maximum</label>
+                            <input type="number" id="attendeeCap" class="form-control" min="0" placeholder="Enter maximum attendees">
+                            <small>Set to 0 for unlimited</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendeeCapAction">When Cap is Reached</label>
+                            <select id="attendeeCapAction" class="form-control">
+                                <option value="hide">Hide registration form</option>
+                                <option value="disable">Disable registration form</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="speakerCap">Speaker Maximum</label>
+                            <input type="number" id="speakerCap" class="form-control" min="0" placeholder="Enter maximum speakers">
+                            <small>Set to 0 for unlimited</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="speakerCapAction">When Cap is Reached</label>
+                            <select id="speakerCapAction" class="form-control">
+                                <option value="hide">Hide speaker application</option>
+                                <option value="disable">Disable speaker application</option>
+                                <option value="show_message">Show "Closed" message</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exhibitorCap">Exhibitor Maximum</label>
+                            <input type="number" id="exhibitorCap" class="form-control" min="0" placeholder="Enter maximum exhibitors">
+                            <small>Set to 0 for unlimited</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exhibitorCapAction">When Cap is Reached</label>
+                            <select id="exhibitorCapAction" class="form-control">
+                                <option value="hide">Hide exhibitor registration</option>
+                                <option value="disable">Disable exhibitor registration</option>
+                                <option value="show_message">Show "Booths Full" message</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partnerCap">Partner Maximum</label>
+                            <input type="number" id="partnerCap" class="form-control" min="0" placeholder="Enter maximum partners">
+                            <small>Set to 0 for unlimited</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerCapAction">When Cap is Reached</label>
+                            <select id="partnerCapAction" class="form-control">
+                                <option value="hide">Hide partnership form</option>
+                                <option value="disable">Disable partnership form</option>
+                                <option value="show_message">Show "Partnerships Full" message</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Global Cap Settings -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="globalRegistrationMessage">Custom Full Message</label>
+                            <textarea id="globalRegistrationMessage" class="form-control" placeholder="Custom message to show when registration is full" rows="2"></textarea>
+                            <small>This message will be displayed when registration caps are reached</small>
+                        </div>
+                    </div>
+
+                    <!-- Enable/Disable All Registration -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="registrationStatus">Registration Status</label>
+                            <select id="registrationStatus" class="form-control">
+                                <option value="open" selected>Open for Registration</option>
+                                <option value="closed">Closed for Registration</option>
+                                <option value="invite_only">Invite Only</option>
+                                <option value="early_bird">Early Bird Registration Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="resetCapsBtn">
+                        <i class="fas fa-undo"></i> Reset All Caps
+                    </button>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Save Registration Caps
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- System Configuration -->
+        <div class="settings-section">
+            <div class="section-header">
+                <h3><i class="fas fa-cogs"></i> System Configuration</h3>
+            </div>
+
+            <form id="systemConfigForm">
+                <div class="form-section">
+                    <h4>Email Settings</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="systemEmail">System Email</label>
+                            <input type="email" id="systemEmail" class="form-control" placeholder="system@icsc2026.gov.ng">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminEmail">Admin Notification Email</label>
+                            <input type="email" id="adminEmail" class="form-control" placeholder="admin@icsc2026.gov.ng">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="emailNotifications">Email Notifications</label>
+                            <select id="emailNotifications" class="form-control">
+                                <option value="all" selected>Send all notifications</option>
+                                <option value="important">Important only</option>
+                                <option value="none">No notifications</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4>Backup & Export</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" id="backupDatabaseBtn">
+                                <i class="fas fa-database"></i> Backup Database
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" id="exportSettingsBtn">
+                                <i class="fas fa-file-export"></i> Export Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Save System Configuration
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Success Modal -->
     <div id="successModal" class="modal">
@@ -2507,102 +2787,122 @@
     </div>
 </div>
 
-<!-- Edit Exhibitor Modal -->
-<div id="editExhibitorModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal close-edit-exhibitor">&times;</span>
-        <h2>Edit Exhibitor</h2>
-
-        <form id="editExhibitorForm">
-
-            <input type="hidden" id="editExhibitorId">
-
-            <div class="form-group">
-                <label>Name</label>
-                <input id="editExhibitorName" type="text">
-            </div>
-
-            <div class="form-group">
-                <label>Company</label>
-                <input id="editExhibitorCompany" type="text">
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input id="editExhibitorEmail" type="email">
-            </div>
-
-            <div class="form-group">
-                <label>Phone</label>
-                <input id="editExhibitorPhone" type="text">
-            </div>
-
-            <div class="form-group">
-                <label>Booth</label>
-                <input id="editExhibitorBooth" type="text">
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary close-edit-exhibitor">Cancel</button>
-                <button type="submit" class="btn-primary">Save Changes</button>
-            </div>
-
-        </form>
-    </div>
-</div>
-
-
-    <!-- Edit Ministry Modal -->
-    <div id="editMinistryModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Ministry</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editMinistryForm">
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="editMinistryName">Ministry Name *</label>
-                            <input type="text" id="editMinistryName" class="form-control" placeholder="Enter ministry name" required>
-                        </div>
+<!-- Edit Exhibitor Modal - UPDATED FOR CONSISTENCY -->
+<div id="editExhibitorModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Edit Exhibitor</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editExhibitorForm">
+                <input type="hidden" id="editExhibitorId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExhibitorPrefix">Category *</label>
+                        <select id="editExhibitorPrefix" class="form-control" required>
+                            <option value="">Select Type</option>
+                            <option value="Company">Company</option>
+                            <option value="Organization">Organization</option>
+                            <option value="Institution">Institution</option>
+                            <option value="Agency">Agency</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryCode">Ministry Code *</label>
-                            <input type="text" id="editMinistryCode" class="form-control" placeholder="Enter ministry code" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editContactPerson">Contact Person *</label>
-                            <input type="text" id="editContactPerson" class="form-control" placeholder="Enter contact person" required>
-                        </div>
-                         <div class="form-group">
-                            <label for="editContactPersonEmail">Contact Person Email *</label>
-                            <input type="email" id="editContactPersonEmail" class="form-control" placeholder="Enter contact person email" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="editExhibitorName">Company / Organisation Name *</label>
+                        <input type="text" id="editExhibitorName" class="form-control" placeholder="Enter name" required>
                     </div>
-                    <div class="credentials-box">
-                        <h3>Login Credentials</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="editUsername">Username *</label>
-                                <input type="text" id="editUsername" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editPassword">Password *</label>
-                                                                                                                             <input type="text" id="editPassword" class="form-control" required>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary btn-sm" id="generateNewPasswordBtn">Generate New Password</button>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExhibitorContactName">Contact Person Name *</label>
+                        <input type="text" id="editExhibitorContactName" class="form-control" placeholder="Enter contact name" required>
                     </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelEditMinistryBtn">Cancel</button>
-                        <button type="submit" class="btn">Update Ministry</button>
+                    <div class="form-group">
+                        <label for="editExhibitorContactEmail">Contact Email *</label>
+                        <input type="email" id="editExhibitorContactEmail" class="form-control" placeholder="Enter contact email" required>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExhibitorContactPhone">Contact Phone Number</label>
+                        <input type="tel" id="editExhibitorContactPhone" class="form-control" placeholder="Enter contact phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="editExhibitionTitle">Exhibition Title</label>
+                        <input type="text" id="editExhibitionTitle" class="form-control" placeholder="Enter exhibition title">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="editExhibitionDescription">Description</label>
+                        <textarea id="editExhibitionDescription" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExhibitorBooth">Booth Assignment</label>
+                        <select id="editExhibitorBooth" class="form-control">
+                            <option value="">Select Booth</option>
+                            <option value="B001">B001 - Main Hall A1</option>
+                            <option value="B002">B002 - Main Hall A2</option>
+                            <option value="B003">B003 - Exhibition Area B1</option>
+                            <option value="B004">B004 - Exhibition Area B2</option>
+                            <option value="B005">B005 - Networking Zone C1</option>
+                            <option value="B006">B006 - Networking Zone C2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editExhibitionDay">Exhibition Day</label>
+                        <select id="editExhibitionDay" class="form-control">
+                            <option value="">Select Day</option>
+                            <option value="wednesday">Wednesday 25 June 2026</option>
+                            <option value="thursday">Thursday 26 June 2026</option>
+                            <option value="both">Both Days</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editExhibitorStatus">Status</label>
+                        <select id="editExhibitorStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPaymentStatus">Payment Status</label>
+                        <select id="editPaymentStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="editExhibitorRemarks">Remarks</label>
+                        <textarea id="editExhibitorRemarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEditExhibitorBtn">Cancel</button>
+                    <button type="submit" class="btn">Update Exhibitor</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Add Partner Modal -->
 <div id="addPartnerModal" class="modal">
