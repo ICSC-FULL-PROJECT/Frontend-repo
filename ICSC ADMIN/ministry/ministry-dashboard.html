@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <!-- Ministry Dashboard -->
@@ -252,88 +253,257 @@
                 </div>
             </div>
 
-            <!-- Add Attendee Tab -->
-            <div id="add-attendee" class="tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h2>Add New Attendee</h2>
-                        <div class="section-actions">
-                            <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
-                        </div>
-                    </div>
-                    
-                    <form id="addMinistryAttendeeForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ministryAttendeeName">Full Name *</label>
-                                <input type="text" id="ministryAttendeeName" class="form-control" placeholder="Enter full name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ministryAttendeeEmail">Email Address *</label>
-                                <input type="email" id="ministryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ministryAttendeePhone">Phone Number *</label>
-                                <input type="tel" id="ministryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ministryAttendeeNIN">National ID Number (NIN) *</label>
-                                <input type="text" id="ministryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ministryAttendeePosition">Position *</label>
-                                <input type="text" id="ministryAttendeePosition" class="form-control" placeholder="Enter position" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ministryAttendeeGradeLevel">Grade Level *</label>
-                                <select id="ministryAttendeeGradeLevel" class="form-control" required>
-                                    <option value="">Select grade level</option>
-                                    <option value="Director">Director</option>
-                                    <option value="Deputy Director">Deputy Director</option>
-                                    <option value="Assistant Director">Assistant Director</option>
-                                    <option value="Chief Officer">Chief Officer</option>
-                                    <option value="Senior Officer">Senior Officer</option>
-                                    <option value="Officer">Officer</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ministryAttendeeDepartment">Department *</label>
-                                <input type="text" id="ministryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ministryAttendeeAgency">Department Agency *</label>
-                                <input type="text" id="ministryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ministryAttendeeStaffId">Staff ID</label>
-                                <input type="text" id="ministryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
-                            </div>
-                            <div class="form-group">
-                                <label for="ministryAttendeeOffice">Office Location</label>
-                                <input type="text" id="ministryAttendeeOffice" class="form-control" placeholder="Enter office location">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group full-width">
-                                <label for="ministryAttendeeRemarks">Remarks</label>
-                                <textarea id="ministryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="reset" class="btn btn-secondary">Reset Form</button>
-                            <button type="submit" class="btn">Add Attendee</button>
-                        </div>
-                    </form>
+<!-- Add Attendee Tab -->
+<div id="add-attendee" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Add New Attendees</h2>
+            <div class="section-actions">
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
+            </div>
+        </div>
+        
+        <!-- Bulk Upload Section for Ministry -->
+        <div class="bulk-upload-section" style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3 style="margin-bottom: 15px; color: var(--primary-color);">
+                <i class="fas fa-file-excel"></i> Bulk Upload via Excel
+            </h3>
+            <p style="margin-bottom: 15px; color: var(--text-medium);">
+                Upload an Excel file with attendee data. All uploaded attendees will require Super Admin approval.
+            </p>
+            
+            <div class="form-row" style="align-items: center;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="ministryExcelFile">Excel File Upload</label>
+                    <input type="file" id="ministryExcelFile" class="form-control" accept=".xlsx,.xls,.csv" 
+                           style="padding: 8px;">
+                    <small>Accepted formats: .xlsx, .xls, .csv (Max: 10MB)</small>
+                </div>
+                
+                <div class="form-group" style="margin-left: 20px; margin-right: 20px;">
+                    <button id="ministryDownloadTemplateBtn" class="btn btn-secondary" style="margin-top: 25px;">
+                        <i class="fas fa-download"></i> Download Template
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <button id="ministryUploadExcelBtn" class="btn" style="margin-top: 25px;">
+                        <i class="fas fa-upload"></i> Upload & Submit for Approval
+                    </button>
                 </div>
             </div>
+            
+            <!-- Excel Upload Status -->
+            <div id="ministryExcelUploadStatus" style="margin-top: 15px; display: none;">
+                <div class="upload-progress" style="margin-bottom: 10px;">
+                    <div class="progress-bar" id="ministryExcelProgressBar" style="height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden;">
+                        <div id="ministryExcelProgressFill" style="height: 100%; background: var(--primary-color); width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span id="ministryExcelProgressText">0%</span>
+                        <span id="ministryExcelRecordCount">0 records processed</span>
+                    </div>
+                </div>
+                
+                <div id="ministryExcelPreview" style="margin-top: 15px; display: none;">
+                    <h4 style="margin-bottom: 10px;">Preview (First 5 Records)</h4>
+                    <div class="table-responsive">
+                        <table class="data-table" id="ministryExcelPreviewTable" style="font-size: 0.9rem;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ministryExcelPreviewBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span id="ministryTotalRecordsCount" style="font-weight: 500;">Total: 0 records</span>
+                            <span id="ministryValidRecordsCount" style="margin-left: 15px; color: #28a745;">Valid: 0</span>
+                            <span id="ministryErrorRecordsCount" style="margin-left: 15px; color: #dc3545;">Errors: 0</span>
+                        </div>
+                        <div>
+                            <button id="ministryCancelUploadBtn" class="btn btn-secondary btn-sm" style="margin-right: 10px;">
+                                Cancel
+                            </button>
+                            <button id="ministryConfirmUploadBtn" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i> Submit for Super Admin Approval
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manual Entry Section -->
+        <div class="manual-entry-section">
+            <h3 style="margin-bottom: 20px; color: var(--primary-color);">
+                <i class="fas fa-user-plus"></i> Manual Entry (Single Attendee)
+            </h3>
+            
+            <form id="addMinistryAttendeeForm">
+                <!-- Row 1: Prefix and First Name -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeePrefix">Prefix *</label>
+                        <select id="ministryAttendeePrefix" class="form-control" required>
+                            <option value="">Select prefix</option>
+                            <option>Mr</option>
+                            <option>Mrs</option>
+                            <option>Miss</option>
+                            <option>Dr</option>
+                            <option>Prof</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeFirstName">First Name *</label>
+                        <input type="text" id="ministryAttendeeFirstName" class="form-control" placeholder="Enter first name" required>
+                    </div>
+                </div>
+
+                <!-- Row 2: Last Name and Email -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeeLastName">Last Name *</label>
+                        <input type="text" id="ministryAttendeeLastName" class="form-control" placeholder="Enter last name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ministryAttendeeEmail">Email Address (Login) *</label>
+                        <input type="email" id="ministryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
+                    </div>
+                </div>
+
+                <!-- Row 3: Password and Job Title -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeePassword">Password *</label>
+                        <div class="password-input-container">
+                            <input type="password" id="ministryAttendeePassword" class="form-control" placeholder="Enter password (min 8 characters)" required>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('ministryAttendeePassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="form-text text-muted">Minimum 8 characters with letters and numbers</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ministryAttendeeJobTitle">Job Title *</label>
+                        <input type="text" id="ministryAttendeeJobTitle" class="form-control" placeholder="Enter job title" required>
+                    </div>
+                </div>
+
+                <!-- Row 4: Organization and Work Phone -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeeOrganization">Organization *</label>
+                        <input type="text" id="ministryAttendeeOrganization" class="form-control" value="Federal Government" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ministryAttendeeWorkPhone">Work Phone *</label>
+                        <input type="tel" id="ministryAttendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
+                    </div>
+                </div>
+
+                <!-- Row 5: Phone Number and NIN -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeePhone">Phone Number *</label>
+                        <input type="tel" id="ministryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeNIN">National ID Number (NIN) *</label>
+                        <input type="text" id="ministryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
+                    </div>
+                </div>
+
+                <!-- Row 6: Position and Grade Level -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeePosition">Position *</label>
+                        <input type="text" id="ministryAttendeePosition" class="form-control" placeholder="Enter position" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeGradeLevel">Grade Level *</label>
+                        <select id="ministryAttendeeGradeLevel" class="form-control" required>
+                            <option value="">Select grade level</option>
+                            <option value="Director">Director</option>
+                            <option value="Deputy Director">Deputy Director</option>
+                            <option value="Assistant Director">Assistant Director</option>
+                            <option value="Chief Officer">Chief Officer</option>
+                            <option value="Senior Officer">Senior Officer</option>
+                            <option value="Officer">Officer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 7: Ministry and Department -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeeMinistry">Ministry *</label>
+                        <input type="text" id="ministryAttendeeMinistry" class="form-control" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeDepartment">Department *</label>
+                        <input type="text" id="ministryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
+                    </div>
+                </div>
+
+                <!-- Row 8: Agency and Staff ID -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeeAgency">Department Agency *</label>
+                        <input type="text" id="ministryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeStaffId">Staff ID</label>
+                        <input type="text" id="ministryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
+                    </div>
+                </div>
+
+                <!-- Row 9: Office Location and Remarks -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryAttendeeOffice">Office Location</label>
+                        <input type="text" id="ministryAttendeeOffice" class="form-control" placeholder="Enter office location">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAttendeeRemarks">Remarks</label>
+                        <textarea id="ministryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Note about approval -->
+                <div class="alert alert-info" style="margin: 20px 0; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3;">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> All attendees added through Ministry Dashboard will be submitted for Super Admin approval. 
+                    They will appear in the "Bulk Approvals" tab of the Super Admin Dashboard.
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary">Reset Form</button>
+                    <button type="submit" class="btn">Add Attendee (Requires Approval)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
             <!-- Reports Tab -->
             <div id="reports" class="tab-content">
@@ -386,86 +556,172 @@
     </div>
 
     <!-- Edit Attendee Modal -->
-    <div id="editMinistryAttendeeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Attendee</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editMinistryAttendeeForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeName">Full Name *</label>
-                            <input type="text" id="editMinistryAttendeeName" class="form-control" placeholder="Enter full name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeEmail">Email Address *</label>
-                            <input type="email" id="editMinistryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
-                        </div>
+<div id="editMinistryAttendeeModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Edit Attendee</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editMinistryAttendeeForm">
+                <!-- Row 1: Prefix and First Name -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeePrefix">Prefix *</label>
+                        <select id="editMinistryAttendeePrefix" class="form-control" required>
+                            <option value="">Select prefix</option>
+                            <option>Mr</option>
+                            <option>Mrs</option>
+                            <option>Miss</option>
+                            <option>Dr</option>
+                            <option>Prof</option>
+                        </select>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryAttendeePhone">Phone Number *</label>
-                            <input type="tel" id="editMinistryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeNIN">National ID Number (NIN) *</label>
-                            <input type="text" id="editMinistryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeFirstName">First Name *</label>
+                        <input type="text" id="editMinistryAttendeeFirstName" class="form-control" placeholder="Enter first name" required>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryAttendeePosition">Position *</label>
-                            <input type="text" id="editMinistryAttendeePosition" class="form-control" placeholder="Enter position" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeGradeLevel">Grade Level *</label>
-                            <select id="editMinistryAttendeeGradeLevel" class="form-control" required>
-                                <option value="">Select grade level</option>
-                                <option value="Director">Director</option>
-                                <option value="Deputy Director">Deputy Director</option>
-                                <option value="Assistant Director">Assistant Director</option>
-                                <option value="Chief Officer">Chief Officer</option>
-                                <option value="Senior Officer">Senior Officer</option>
-                                <option value="Officer">Officer</option>
-                            </select>
-                        </div>
+                </div>
+
+                <!-- Row 2: Last Name and Email -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeLastName">Last Name *</label>
+                        <input type="text" id="editMinistryAttendeeLastName" class="form-control" placeholder="Enter last name" required>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeDepartment">Department *</label>
-                            <input type="text" id="editMinistryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeAgency">Department Agency *</label>
-                            <input type="text" id="editMinistryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
-                        </div>
+
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeEmail">Email Address (Login) *</label>
+                        <input type="email" id="editMinistryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeStaffId">Staff ID</label>
-                            <input type="text" id="editMinistryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
+                </div>
+
+                <!-- Row 3: Password and Job Title -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeePassword">Password *</label>
+                        <div class="password-input-container">
+                            <input type="password" id="editMinistryAttendeePassword" class="form-control" placeholder="Enter password (min 8 characters)" required>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('editMinistryAttendeePassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="editMinistryAttendeeOffice">Office Location</label>
-                            <input type="text" id="editMinistryAttendeeOffice" class="form-control" placeholder="Enter office location">
-                        </div>
+                        <small class="form-text text-muted">Minimum 8 characters with letters and numbers</small>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="editMinistryAttendeeRemarks">Remarks</label>
-                            <textarea id="editMinistryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
-                        </div>
+
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeJobTitle">Job Title *</label>
+                        <input type="text" id="editMinistryAttendeeJobTitle" class="form-control" placeholder="Enter job title" required>
                     </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelMinistryEditBtn">Cancel</button>
-                        <button type="submit" class="btn">Update Attendee</button>
+                </div>
+
+                <!-- Row 4: Organization and Work Phone -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeOrganization">Organization *</label>
+                        <input type="text" id="editMinistryAttendeeOrganization" class="form-control" value="Federal Government" readonly>
                     </div>
-                </form>
-            </div>
+
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeWorkPhone">Work Phone *</label>
+                        <input type="tel" id="editMinistryAttendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
+                    </div>
+                </div>
+
+                <!-- Row 5: Phone Number and NIN -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeePhone">Phone Number *</label>
+                        <input type="tel" id="editMinistryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeNIN">National ID Number (NIN) *</label>
+                        <input type="text" id="editMinistryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
+                    </div>
+                </div>
+
+                <!-- Row 6: Position and Grade Level -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeePosition">Position *</label>
+                        <input type="text" id="editMinistryAttendeePosition" class="form-control" placeholder="Enter position" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeGradeLevel">Grade Level *</label>
+                        <select id="editMinistryAttendeeGradeLevel" class="form-control" required>
+                            <option value="">Select grade level</option>
+                            <option value="Director">Director</option>
+                            <option value="Deputy Director">Deputy Director</option>
+                            <option value="Assistant Director">Assistant Director</option>
+                            <option value="Chief Officer">Chief Officer</option>
+                            <option value="Senior Officer">Senior Officer</option>
+                            <option value="Officer">Officer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 7: Ministry and Department -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeMinistry">Ministry *</label>
+                        <input type="text" id="editMinistryAttendeeMinistry" class="form-control" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeDepartment">Department *</label>
+                        <input type="text" id="editMinistryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
+                    </div>
+                </div>
+
+                <!-- Row 8: Agency and Staff ID -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeAgency">Department Agency *</label>
+                        <input type="text" id="editMinistryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeStaffId">Staff ID</label>
+                        <input type="text" id="editMinistryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
+                    </div>
+                </div>
+
+                <!-- Row 9: Office Location and Remarks -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeOffice">Office Location</label>
+                        <input type="text" id="editMinistryAttendeeOffice" class="form-control" placeholder="Enter office location">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeRemarks">Remarks</label>
+                        <textarea id="editMinistryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Status field -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMinistryAttendeeStatus">Status</label>
+                        <select id="editMinistryAttendeeStatus" class="form-control">
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelMinistryEditBtn">Cancel</button>
+                    <button type="submit" class="btn">Update Attendee</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteMinistryModal" class="modal">

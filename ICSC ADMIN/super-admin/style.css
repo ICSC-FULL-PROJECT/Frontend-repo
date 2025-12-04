@@ -1084,3 +1084,223 @@ flex-wrap: wrap;
         font-size: 1.5rem;
     }
 }
+/* Excel Upload Styles */
+.bulk-upload-section {
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.bulk-upload-section:hover {
+    border-color: var(--primary-color);
+    background: #f0f7ff;
+}
+
+.upload-progress {
+    margin: 15px 0;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+/* Template download button */
+#downloadTemplateBtn:hover {
+    background: var(--secondary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bulk-upload-section .form-row {
+        flex-direction: column;
+    }
+    
+    .bulk-upload-section .form-group {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+/* Bulk Approvals Tab Styles */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-medium);
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.upload-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.preview-info {
+    background: #e7f3ff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid #3498db;
+}
+
+.preview-info h4 {
+    color: #2980b9;
+    margin-bottom: 10px;
+}
+
+.preview-info ul {
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+.preview-info li {
+    margin-bottom: 5px;
+}
+
+/* Status colors for bulk uploads */
+.status-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-processing {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.status-approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Ministry upload status */
+.ministry-upload-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Bulk action buttons */
+.bulk-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.bulk-actions .btn-sm {
+    padding: 3px 8px;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments for bulk approvals */
+@media (max-width: 768px) {
+    .bulk-actions {
+        flex-direction: column;
+    }
+    
+    .bulk-actions .btn-sm {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .search-filter-container .filter-group {
+        flex-wrap: wrap;
+    }
+    
+    .search-filter-container .filter-select {
+        margin-bottom: 10px;
+        min-width: 150px;
+    }
+}
+/* Bulk Approvals Styles */
+.bulk-review-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.info-label {
+    font-weight: 600;
+    min-width: 150px;
+    color: #555;
+}
+
+.info-value {
+    color: #333;
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+}
+
+.bulk-actions .form-group {
+    margin-bottom: 0;
+}
+
+.modal-xl {
+    max-width: 1200px;
+}

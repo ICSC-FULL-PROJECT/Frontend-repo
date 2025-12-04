@@ -12,7 +12,6 @@ const deleteModal = document.getElementById('deleteModal');
 const addMinistryModal = document.getElementById('addMinistryModal');
 const viewMinistryModal = document.getElementById('viewMinistryModal');
 const editMinistryModal = document.getElementById('editMinistryModal');
-const closeModalBtns = document.querySelectorAll('.close-modal');
 const addAnotherBtn = document.getElementById('addAnotherBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
@@ -107,100 +106,150 @@ function getTabTitle(tabId) {
         'attendees': 'All Attendees',
         'ministries': 'Participating Ministries',
         'reports': 'Reports & Analytics',
-        'settings': 'System Settings'
+        'settings': 'System Settings',
+        'booths': 'Booth Management',
+        'speakers': 'Speaker Management',
+        'exhibitors': 'Exhibitor Management',
+        'partners': 'Partner Management',
+        'agenda': 'Agenda Management',
+        'resources': 'Resources Management',
+        'bulk-approvals': 'Bulk Approvals'
     };
     return titles[tabId] || 'Super Admin Dashboard';
 }
 
 // Fixed Modal Manager
 function initializeModalManager() {
-    const modalConfigs = [
-        {
-            btn: "addExhibitorBtn",
-            modal: "addExhibitorModal",
-            cancel: "cancelAddExhibitorBtn",
-            form: "addExhibitorForm",
-            name: "Exhibitor"
-        },
-        {
-            btn: "addPartnerBtn",
-            modal: "addPartnerModal",
-            cancel: "cancelAddPartnerBtn",
-            form: "addPartnerForm",
-            name: "Partner"
-        },
-        {
-            btn: "addSpeakerBtn",
-            modal: "addSpeakerModal",
-            cancel: "cancelAddSpeakerBtn",
-            form: "addSpeakerForm",
-            name: "Speaker"
-        },
-        {
-            btn: "addBoothBtn",
-            modal: "addBoothModal",
-            cancel: "cancelAddBoothBtn",
-            form: "addBoothForm",
-            name: "Booth"
+    console.log("Initializing modal manager...");
+    
+    // Handle all modal buttons with event delegation
+    document.addEventListener('click', function(e) {
+        const target = e.target;
+        
+        // Handle Add buttons - use both ID and closest for nested elements
+        if (target.id === 'addExhibitorBtn' || target.closest('#addExhibitorBtn')) {
+            e.preventDefault();
+            console.log("Opening Add Exhibitor modal");
+            const modal = document.getElementById('addExhibitorModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                // Reset form if exists
+                const form = document.getElementById('addExhibitorForm');
+                if (form) form.reset();
+            } else {
+                console.warn("Add Exhibitor modal not found");
+            }
         }
-    ];
-
-    function openModal(modalEl, formEl) {
-        if (formEl) formEl.reset();
-        modalEl.style.display = 'flex';
-    }
-
-    function closeModal(modalEl) {
-        modalEl.style.display = 'none';
-    }
-
-    modalConfigs.forEach(cfg => {
-        const btn = document.getElementById(cfg.btn);
-        const modal = document.getElementById(cfg.modal);
-        const cancel = document.getElementById(cfg.cancel);
-        const form = document.getElementById(cfg.form);
-
-        if (!modal) {
-            console.warn(`Modal not found: ${cfg.modal}`);
-            return;
+        else if (target.id === 'addPartnerBtn' || target.closest('#addPartnerBtn')) {
+            e.preventDefault();
+            console.log("Opening Add Partner modal");
+            const modal = document.getElementById('addPartnerModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const form = document.getElementById('addPartnerForm');
+                if (form) form.reset();
+            }
         }
-
-        // Open modal
-        if (btn) {
-            btn.addEventListener("click", () => openModal(modal, form));
+        else if (target.id === 'addSpeakerBtn' || target.closest('#addSpeakerBtn')) {
+            e.preventDefault();
+            console.log("Opening Add Speaker modal");
+            const modal = document.getElementById('addSpeakerModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const form = document.getElementById('addSpeakerForm');
+                if (form) form.reset();
+            }
         }
-
-        // Cancel inside modal
-        if (cancel) {
-            cancel.addEventListener("click", () => closeModal(modal));
+        else if (target.id === 'addBoothBtn' || target.closest('#addBoothBtn')) {
+            e.preventDefault();
+            console.log("Opening Add Booth modal");
+            const modal = document.getElementById('addBoothModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const form = document.getElementById('addBoothForm');
+                if (form) form.reset();
+            }
         }
-
-        // Submit form
+        else if (target.id === 'addAgendaBtn' || target.closest('#addAgendaBtn')) {
+            e.preventDefault();
+            console.log("Opening Add Agenda modal");
+            const modal = document.getElementById('addAgendaItemModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                const form = document.getElementById('addAgendaItemForm');
+                if (form) form.reset();
+            }
+        }
+        
+        // Handle Cancel buttons for modals
+        if (target.id === 'cancelAddExhibitorBtn' || target.closest('#cancelAddExhibitorBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('addExhibitorModal');
+            if (modal) modal.style.display = 'none';
+        }
+        else if (target.id === 'cancelAddPartnerBtn' || target.closest('#cancelAddPartnerBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('addPartnerModal');
+            if (modal) modal.style.display = 'none';
+        }
+        else if (target.id === 'cancelAddSpeakerBtn' || target.closest('#cancelAddSpeakerBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('addSpeakerModal');
+            if (modal) modal.style.display = 'none';
+        }
+        else if (target.id === 'cancelAddBoothBtn' || target.closest('#cancelAddBoothBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('addBoothModal');
+            if (modal) modal.style.display = 'none';
+        }
+        else if (target.id === 'cancelAddAgendaBtn' || target.closest('#cancelAddAgendaBtn')) {
+            e.preventDefault();
+            const modal = document.getElementById('addAgendaItemModal');
+            if (modal) modal.style.display = 'none';
+        }
+    });
+    
+    // Add form submission handlers
+    setupFormHandler('addExhibitorForm', 'addExhibitorModal', 'Exhibitor');
+    setupFormHandler('addPartnerForm', 'addPartnerModal', 'Partner');
+    setupFormHandler('addSpeakerForm', 'addSpeakerModal', 'Speaker');
+    setupFormHandler('addBoothForm', 'addBoothModal', 'Booth');
+    setupFormHandler('addAgendaItemForm', 'addAgendaItemModal', 'Agenda item');
+    
+    function setupFormHandler(formId, modalId, itemName) {
+        const form = document.getElementById(formId);
         if (form) {
-            form.addEventListener("submit", (e) => {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                console.log(`Submitted → ${cfg.form}`);
+                console.log(`${itemName} form submitted`);
                 
                 // Show success message
-                document.getElementById('successMessage').textContent = `${cfg.name} has been successfully added!`;
+                document.getElementById('successMessage').textContent = `${itemName} has been successfully added!`;
                 document.getElementById('successModal').style.display = 'flex';
                 
-                closeModal(modal);
+                // Close the modal
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'none';
+                
+                // Reset form
+                this.reset();
             });
         }
-    });
-
-    // Close modals when clicking X button
-    document.querySelectorAll(".close-modal").forEach(x => {
-        x.addEventListener("click", function() {
-            const modal = this.closest(".modal");
-            if (modal) modal.style.display = 'none';
-        });
-    });
-
-    // Close modals when clicking outside
-    window.addEventListener("click", (e) => {
-        if (e.target.classList.contains("modal")) {
+    }
+    
+    // Close modals when clicking X button or outside
+    document.addEventListener('click', function(e) {
+        // Close modals when clicking X
+        if (e.target.classList.contains('close-modal')) {
+            const modal = e.target.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+                e.preventDefault();
+            }
+        }
+        
+        // Close modals when clicking outside
+        if (e.target.classList.contains('modal')) {
             e.target.style.display = 'none';
         }
     });
@@ -214,22 +263,7 @@ function initializeEventListeners() {
     if (addMinistryForm) addMinistryForm.addEventListener('submit', handleAddMinistry);
     if (editMinistryForm) editMinistryForm.addEventListener('submit', handleEditMinistry);
     
-    // Modal controls (safe)
-    if (closeModalBtns && closeModalBtns.length) {
-        closeModalBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (successModal) successModal.style.display = 'none';
-                if (editAttendeeModal) editAttendeeModal.style.display = 'none';
-                if (deleteModal) deleteModal.style.display = 'none';
-                if (deleteMinistryModal) deleteMinistryModal.style.display = 'none';
-                if (addMinistryModal) addMinistryModal.style.display = 'none';
-                if (viewMinistryModal) viewMinistryModal.style.display = 'none';
-                if (editMinistryModal) editMinistryModal.style.display = 'none';
-                if (viewAttendeeModal) viewAttendeeModal.style.display = 'none';
-            });
-        });
-    }
-    
+    // Modal close buttons (simplified)
     if (addAnotherBtn) addAnotherBtn.addEventListener('click', function() {
         if (successModal) successModal.style.display = 'none';
     });
@@ -238,10 +272,12 @@ function initializeEventListeners() {
         if (editAttendeeModal) editAttendeeModal.style.display = 'none';
     });
 
-      if (cancelEditExhibitorBtn) 
+    if (cancelEditExhibitorBtn) {
         cancelEditExhibitorBtn.addEventListener('click', function() {
-            document.getElementById('editExhibitorModal').style.display = 'none';
-      });      
+            const modal = document.getElementById('editExhibitorModal');
+            if (modal) modal.style.display = 'none';
+        });
+    }
     
     if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', function() {
         if (deleteModal) deleteModal.style.display = 'none';
@@ -249,11 +285,6 @@ function initializeEventListeners() {
     if (cancelDeleteMinistryBtn) cancelDeleteMinistryBtn.addEventListener('click', function() {
         if (deleteMinistryModal) deleteMinistryModal.style.display = 'none';
     });
-    if (document.querySelector('.close-view-modal')) {
-        document.querySelector('.close-view-modal').addEventListener('click', function() {
-            if (viewAttendeeModal) viewAttendeeModal.style.display = 'none';
-        });
-    }
     
     if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
     if (confirmDeleteMinistryBtn) confirmDeleteMinistryBtn.addEventListener('click', handleDeleteMinistry);
@@ -278,7 +309,6 @@ function initializeEventListeners() {
     if (filterStatus) filterStatus.addEventListener('change', filterAttendees);
     if (filterDepartment) filterDepartment.addEventListener('change', filterAttendees);
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
-
     
     // Add Ministry button
     if (addMinistryBtn) {
@@ -298,9 +328,11 @@ function initializeEventListeners() {
         });
     }
 
-    // Global document click handlers
+    // Global document click handlers for table actions
     document.addEventListener('click', function(e) {
         const closestRow = e.target.closest && e.target.closest('tr');
+        
+        // Attendee actions
         if (e.target.classList.contains('edit-btn') && closestRow) {
             const attendeeId = parseInt(closestRow.getAttribute('data-id'));
             if (!Number.isNaN(attendeeId)) openEditModal(attendeeId);
@@ -315,12 +347,14 @@ function initializeEventListeners() {
             if (!Number.isNaN(attendeeId)) openDeleteModal(attendeeId, attendeeName);
         }
 
+        // Ministry actions
         if (e.target.classList.contains('delete-ministry-btn') && closestRow) {
             const ministryId = parseInt(closestRow.getAttribute('data-id'));
             const ministryName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
             if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
         }
 
+        // Verification actions
         if (e.target.classList.contains('approve-btn') && closestRow) {
             const attendeeId = parseInt(closestRow.getAttribute('data-id'));
             if (!Number.isNaN(attendeeId)) approveAttendee(attendeeId);
@@ -339,7 +373,7 @@ function initializeEventListeners() {
             if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
         }
 
-        // Exhibitor table functionality
+        // Exhibitor actions
         if (e.target.classList.contains('edit-exhibitor-btn') && closestRow) {
             const exhibitorId = closestRow.getAttribute('data-id');
             editExhibitor(exhibitorId);
@@ -349,7 +383,7 @@ function initializeEventListeners() {
             viewExhibitor(exhibitorId);
         }
 
-        // Partner table functionality
+        // Partner actions
         if (e.target.classList.contains('edit-partner-btn') && closestRow) {
             const partnerId = closestRow.getAttribute('data-id');
             editPartner(partnerId);
@@ -357,6 +391,16 @@ function initializeEventListeners() {
         if (e.target.classList.contains('view-partner-btn') && closestRow) {
             const partnerId = closestRow.getAttribute('data-id');
             viewPartner(partnerId);
+        }
+
+        // Speaker actions
+        if (e.target.classList.contains('edit-speaker-btn') && closestRow) {
+            const speakerId = closestRow.getAttribute('data-id');
+            editSpeaker(speakerId);
+        }
+        if (e.target.classList.contains('view-speaker-btn') && closestRow) {
+            const speakerId = closestRow.getAttribute('data-id');
+            viewSpeaker(speakerId);
         }
     });
 
@@ -407,7 +451,7 @@ async function handleAddAttendee(e) {
     }
 
     const payload = {
-        fullname: values.fullName,
+        fullname: fullName,
         email: values.email,
         password: values.password,
         phone_number: values.phone,
@@ -808,69 +852,68 @@ async function handleAddMinistry(e) {
 }
 
 async function fetchMinistries() {
-	try {
-		let res;
-		const endpoints = ['/admin/users'];
+    try {
+        let res;
+        const endpoints = ['/admin/users'];
 
-		if (window.apiClient) {
-			for (const ep of endpoints) {
-				try {
-					res = await window.apiClient.get(ep);
-					if (res && (res.status === 200 || res.status === 201)) break;
-				} catch (e) {
-					res = null;
-				}
-			}
-		} else {
-			let token = null;
-			try {
-				const raw = localStorage.getItem('authUser');
-				if (raw) {
-					const a = JSON.parse(raw);
-					token = a?.token || token;
-				}
-			} catch (e) { /* ignore */ }
-			if (!token) token = localStorage.getItem('accessToken') || null;
-			const headers = { 'Content-Type': 'application/json' };
-			if (token) headers['Authorization'] = 'Bearer ' + token;
+        if (window.apiClient) {
+            for (const ep of endpoints) {
+                try {
+                    res = await window.apiClient.get(ep);
+                    if (res && (res.status === 200 || res.status === 201)) break;
+                } catch (e) {
+                    res = null;
+                }
+            }
+        } else {
+            let token = null;
+            try {
+                const raw = localStorage.getItem('authUser');
+                if (raw) {
+                    const a = JSON.parse(raw);
+                    token = a?.token || token;
+                }
+            } catch (e) { /* ignore */ }
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
 
-			for (const ep of endpoints) {
-				try {
-					res = await axios.get(`${API_BASE_URL}${ep}`, { headers });
-					if (res && (res.status === 200 || res.status === 201)) break;
-				} catch (e) {
-					res = null;
-				}
-			}
-		}
+            for (const ep of endpoints) {
+                try {
+                    res = await axios.get(`${API_BASE_URL}${ep}`, { headers });
+                    if (res && (res.status === 200 || res.status === 201)) break;
+                } catch (e) {
+                    res = null;
+                }
+            }
+        }
 
-		const list = res?.data?.data || res?.data || [];
-		if (Array.isArray(list)) {
-			ministries = list.map((m, idx) => ({
-				id: m.id || m._id || m.organization_short_code || idx + 1,
-				name: m.organization || m.organization_name || m.name || m.organization || '',
-				code: m.organization_short_code || m.code || m.short_code || '',
-				attendeesCount: m.attendeesCount || m.attendees_count || m.count || 0,
-				pendingCount: m.pendingCount || m.pending_count || 0,
-				approvedCount: m.approvedCount || m.approved_count || 0,
-				contactPerson: m.contact_person || m.contactPerson || m.contact || '',
-				contactPersonEmail: m.contact_person_email || m.contactPersonEmail || m.contact_email || '',
-				username: m.username || '',
-				password: m.password || ''
-			}));
+        const list = res?.data?.data || res?.data || [];
+        if (Array.isArray(list)) {
+            ministries = list.map((m, idx) => ({
+                id: m.id || m._id || m.organization_short_code || idx + 1,
+                name: m.organization || m.organization_name || m.name || m.organization || '',
+                code: m.organization_short_code || m.code || m.short_code || '',
+                attendeesCount: m.attendeesCount || m.attendees_count || m.count || 0,
+                pendingCount: m.pendingCount || m.pending_count || 0,
+                approvedCount: m.approvedCount || m.approved_count || 0,
+                contactPerson: m.contact_person || m.contactPerson || m.contact || '',
+                contactPersonEmail: m.contact_person_email || m.contactPersonEmail || m.contact_email || '',
+                username: m.username || '',
+                password: m.password || ''
+            }));
 
-			renderMinistriesTable();
-			updateStats();
-			console.log(`Fetched ${ministries.length} ministries from backend`);
-		} else {
-			console.warn('Unexpected ministries response format', res);
-		}
-	} catch (err) {
-		console.error('Error fetching ministries:', err?.response?.data || err.message || err);
-		renderMinistriesTable();
-		updateStats();
-	} finally {
-	}
+            renderMinistriesTable();
+            updateStats();
+            console.log(`Fetched ${ministries.length} ministries from backend`);
+        } else {
+            console.warn('Unexpected ministries response format', res);
+        }
+    } catch (err) {
+        console.error('Error fetching ministries:', err?.response?.data || err.message || err);
+        renderMinistriesTable();
+        updateStats();
+    }
 }
 
 async function fetchAttendees() {
@@ -1038,18 +1081,96 @@ function openViewMinistryModal(ministryId) {
     }
 }
 
-// Exhibitor and Partner Modal Functions
+// Speaker Modal Functions
+function editSpeaker(speakerId) {
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    // Populate edit form
+    if (document.getElementById('editSpeakerId')) {
+        document.getElementById('editSpeakerId').value = speakerId;
+    }
+    
+    // Show modal
+    const modal = document.getElementById('editSpeakerModal');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function viewSpeaker(speakerId) {
+    const row = document.querySelector(`#speakersTable tr[data-id="${speakerId}"]`);
+    if (!row) return;
+    
+    const cells = row.cells;
+    
+    const modal = document.getElementById('viewSpeakerModal');
+    if (!modal) return;
+    
+    // Populate view details
+    const detailsDiv = document.getElementById('viewSpeakerDetails');
+    if (detailsDiv) {
+        detailsDiv.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Topic</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Affiliation</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Package</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Day</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Session</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Payment Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[7].textContent}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    modal.style.display = 'flex';
+}
+
+// Exhibitor Modal Functions
 function editExhibitor(exhibitorId) {
     const row = document.querySelector(`#exhibitorsTable tr[data-id="${exhibitorId}"]`);
     if (!row) return;
     
     const cells = row.cells;
     
-    document.getElementById('editExhibitorId').value = exhibitorId;
-    document.getElementById('editExhibitorName').value = cells[1].textContent;
-    document.getElementById('editExhibitorCompany').value = cells[0].textContent;
-    
-    document.getElementById('editExhibitorModal').style.display = 'flex';
+    // Show modal
+    const modal = document.getElementById('editExhibitorModal');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
 }
 
 function viewExhibitor(exhibitorId) {
@@ -1058,60 +1179,65 @@ function viewExhibitor(exhibitorId) {
     
     const cells = row.cells;
     
-    document.getElementById('viewExhibitorDetails').innerHTML = `
-        <div class="form-row">
-            <div class="form-group">
-                <label>Name</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Company</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Booth</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Day</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Budget</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Status</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Payment Status</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
-            </div>
-        </div>
-    `;
+    const modal = document.getElementById('viewExhibitorModal');
+    if (!modal) return;
     
-    document.getElementById('viewExhibitorModal').style.display = 'flex';
+    // Populate view details
+    const detailsDiv = document.getElementById('viewExhibitorDetails');
+    if (detailsDiv) {
+        detailsDiv.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Booth</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Day</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Budget</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Payment Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    modal.style.display = 'flex';
 }
 
+// Partner Modal Functions
 function editPartner(partnerId) {
     const row = document.querySelector(`#partnersTable tr[data-id="${partnerId}"]`);
     if (!row) return;
     
-    const cells = row.cells;
-    
-    document.getElementById('editPartnerId').value = partnerId;
-    document.getElementById('editCompanyName').value = cells[0].textContent;
-    document.getElementById('editContactPerson').value = cells[1].textContent;
-    document.getElementById('editContactEmail').value = cells[2].textContent;
-    
-    document.getElementById('editPartnerModal').style.display = 'flex';
+    // Show modal
+    const modal = document.getElementById('editPartnerModal');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
 }
 
 function viewPartner(partnerId) {
@@ -1120,56 +1246,63 @@ function viewPartner(partnerId) {
     
     const cells = row.cells;
     
-    document.getElementById('viewPartnerDetails').innerHTML = `
-        <div class="form-row">
-            <div class="form-group">
-                <label>Company</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Contact Person</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Email</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Package</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Investment</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Status</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Payment Status</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
-            </div>
-            <div class="form-group">
-                <label>Start Date</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[7].textContent}</p>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label>End Date</label>
-                <p class="form-control" style="background: #f8f9fa;">${cells[8].textContent}</p>
-            </div>
-        </div>
-    `;
+    const modal = document.getElementById('viewPartnerModal');
+    if (!modal) return;
     
-    document.getElementById('viewPartnerModal').style.display = 'flex';
+    // Populate view details
+    const detailsDiv = document.getElementById('viewPartnerDetails');
+    if (detailsDiv) {
+        detailsDiv.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Company</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[0].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Contact Person</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[1].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[2].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Package</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[3].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Investment</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[4].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[5].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Payment Status</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[6].textContent}</p>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[7].textContent}</p>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>End Date</label>
+                    <p class="form-control" style="background: #f8f9fa;">${cells[8].textContent}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    modal.style.display = 'flex';
 }
 
 // Verification Functions
@@ -1350,695 +1483,7 @@ function renderPendingTable(pendingAttendees) {
     pendingAttendeesTable.innerHTML = html;
 }
 
-// Update the partners table rendering to include all fields
-function renderPartnersTable() {
-    const partnersTable = document.getElementById('partnersTable');
-    if (!partnersTable) return;
-    
-    let html = '';
-    
-    // Sample data - replace with your actual data
-    const partners = [
-        {
-            id: 'P001',
-            company: 'Tech Solutions Ltd',
-            contactPerson: 'John Smith',
-            email: 'john@techsolutions.com',
-            package: 'diamond',
-            investment: '5,000,000',
-            status: 'active',
-            paymentStatus: 'paid',
-            startDate: '2026-01-15',
-            endDate: '2026-12-31'
-        }
-        // Add more partners as needed
-    ];
-    
-    partners.forEach(partner => {
-        const packageNames = {
-            'diamond': 'Diamond Partner',
-            'gold': 'Gold Partner', 
-            'silver': 'Silver Partner',
-            'bronze': 'Bronze Partner'
-        };
-        
-        html += `
-            <tr data-id="${partner.id}">
-                <td>${partner.company}</td>
-                <td>${partner.contactPerson}</td>
-                <td>${partner.email}</td>
-                <td><span class="status-badge status-approved">${packageNames[partner.package]}</span></td>
-                <td>${partner.investment}</td>
-                <td><span class="status-badge status-${partner.status === 'active' ? 'approved' : partner.status === 'pending' ? 'pending' : 'rejected'}">${partner.status.charAt(0).toUpperCase() + partner.status.slice(1)}</span></td>
-                <td><span class="status-badge status-${partner.paymentStatus === 'paid' ? 'approved' : partner.paymentStatus === 'pending' ? 'pending' : 'rejected'}">${partner.paymentStatus.charAt(0).toUpperCase() + partner.paymentStatus.slice(1)}</span></td>
-                <td>${partner.startDate}</td>
-                <td>${partner.endDate}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn btn-info btn-sm view-partner-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
-    
-    partnersTable.querySelector('tbody').innerHTML = html;
-}
-
-// Settings Tab Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize settings when settings tab is opened
-    document.querySelector('a[data-tab="settings"]').addEventListener('click', function() {
-        initializeSettingsTab();
-    });
-
-    // Also initialize if settings tab is already active on page load
-    if (document.getElementById('settings').classList.contains('active')) {
-        setTimeout(initializeSettingsTab, 100);
-    }
-});
-
-// Initialize Settings Tab
-function initializeSettingsTab() {
-    loadEventTimerSettings();
-    loadRegistrationCaps();
-    loadCurrentRegistrationStats();
-    loadSystemConfig();
-    setupSettingsEventListeners();
-}
-
-// Load Event Timer Settings
-function loadEventTimerSettings() {
-    // Get saved settings or use defaults
-    const eventDate = localStorage.getItem('icsc_event_date') || '2026-05-25T09:00:00';
-    const timezone = localStorage.getItem('icsc_event_timezone') || 'Africa/Lagos';
-    const popupDuration = localStorage.getItem('icsc_popup_duration') || '5';
-    const popupFrequency = localStorage.getItem('icsc_popup_frequency') || 'daily';
-    
-    // Set form values
-    document.getElementById('eventDateTime').value = eventDate.substring(0, 16);
-    document.getElementById('eventTimezone').value = timezone;
-    document.getElementById('popupDuration').value = popupDuration;
-    document.getElementById('popupFrequency').value = popupFrequency;
-    
-    // Display current setting
-    const date = new Date(
-    new Date(eventDate).toLocaleString("en-US", { timeZone: timezone })
-);
-    const currentTimerSetting = document.getElementById('currentTimerSetting');
-    currentTimerSetting.innerHTML = `
-        <p><strong>Event Date:</strong> ${date.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        })}</p>
-        <p><strong>Timezone:</strong> ${timezone}</p>
-        <p><strong>Popup:</strong> ${popupDuration}s auto-close, ${popupFrequency} display</p>
-    `;
-}
-
-// Load Registration Caps
-function loadRegistrationCaps() {
-    // Get saved caps or use defaults
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps')) || {
-        attendee: { cap: 1000, action: 'disable' },
-        speaker: { cap: 50, action: 'show_message' },
-        exhibitor: { cap: 100, action: 'disable' },
-        partner: { cap: 30, action: 'show_message' },
-        globalMessage: 'Registration for this category is currently full. Please check back later.',
-        status: 'open'
-    };
-    
-    // Set form values
-    document.getElementById('attendeeCap').value = caps.attendee.cap;
-    document.getElementById('attendeeCapAction').value = caps.attendee.action;
-    document.getElementById('speakerCap').value = caps.speaker.cap;
-    document.getElementById('speakerCapAction').value = caps.speaker.action;
-    document.getElementById('exhibitorCap').value = caps.exhibitor.cap;
-    document.getElementById('exhibitorCapAction').value = caps.exhibitor.action;
-    document.getElementById('partnerCap').value = caps.partner.cap;
-    document.getElementById('partnerCapAction').value = caps.partner.action;
-    document.getElementById('globalRegistrationMessage').value = caps.globalMessage || '';
-    document.getElementById('registrationStatus').value = caps.status;
-}
-
-// Load Current Registration Statistics
-function loadCurrentRegistrationStats() {
-    // In a real application, you would fetch this from your database
-    // For now, we'll use localStorage or simulate data
-    const stats = JSON.parse(localStorage.getItem('icsc_registration_stats')) || {
-        attendees: 45,
-        speakers: 10,
-        exhibitors: 15,
-        partners: 8
-    };
-    
-    document.getElementById('currentAttendees').textContent = stats.attendees;
-    document.getElementById('currentSpeakers').textContent = stats.speakers;
-    document.getElementById('currentExhibitors').textContent = stats.exhibitors;
-    document.getElementById('currentPartners').textContent = stats.partners;
-    
-    // Get caps to show max values
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps')) || {
-        attendee: { cap: 1000 },
-        speaker: { cap: 50 },
-        exhibitor: { cap: 100 },
-        partner: { cap: 30 }
-    };
-    
-    document.getElementById('maxAttendees').textContent = caps.attendee.cap || 'Unlimited';
-    document.getElementById('maxSpeakers').textContent = caps.speaker.cap || 'Unlimited';
-    document.getElementById('maxExhibitors').textContent = caps.exhibitor.cap || 'Unlimited';
-    document.getElementById('maxPartners').textContent = caps.partner.cap || 'Unlimited';
-    
-    // Update progress indicators (add color coding if caps are reached)
-    updateRegistrationStatusIndicators();
-}
-
-// Load System Configuration
-function loadSystemConfig() {
-    const config = JSON.parse(localStorage.getItem('icsc_system_config')) || {
-        systemEmail: 'system@icsc2026.gov.ng',
-        adminEmail: 'admin@icsc2026.gov.ng',
-        emailNotifications: 'all'
-    };
-    
-    document.getElementById('systemEmail').value = config.systemEmail;
-    document.getElementById('adminEmail').value = config.adminEmail;
-    document.getElementById('emailNotifications').value = config.emailNotifications;
-}
-
-// Setup Settings Event Listeners
-function setupSettingsEventListeners() {
-    // Event Timer Form
-    document.getElementById('eventTimerForm').addEventListener('submit', saveEventTimerSettings);
-    
-    // Registration Caps Form
-    document.getElementById('registrationCapsForm').addEventListener('submit', saveRegistrationCaps);
-    
-    // System Config Form
-    document.getElementById('systemConfigForm').addEventListener('submit', saveSystemConfig);
-    
-    // Test Timer Button
-    document.getElementById('testTimerBtn').addEventListener('click', testTimerSettings);
-    
-    // Reset Timer Button
-    document.getElementById('resetTimerBtn').addEventListener('click', resetTimerSettings);
-    
-    // Reset Caps Button
-    document.getElementById('resetCapsBtn').addEventListener('click', resetRegistrationCaps);
-    
-    // Backup Database Button
-    document.getElementById('backupDatabaseBtn').addEventListener('click', backupDatabase);
-    
-    // Export Settings Button
-    document.getElementById('exportSettingsBtn').addEventListener('click', exportSettings);
-    
-    // Real-time cap validation
-    setupRealTimeCapValidation();
-}
-
-// Save Event Timer Settings
-function saveEventTimerSettings(e) {
-    e.preventDefault();
-    
-    const eventDateTime = document.getElementById('eventDateTime').value;
-    const timezone = document.getElementById('eventTimezone').value;
-    const popupDuration = document.getElementById('popupDuration').value;
-    const popupFrequency = document.getElementById('popupFrequency').value;
-    
-    if (!eventDateTime) {
-        showToast('Please select an event date and time', 'error');
-        return;
-    }
-
-    // Convert admin’s selected datetime into selected timezone
-    const adminLocal = new Date(eventDateTime);
-
-    // Convert the provided datetime into the actual moment in the selected timezone
-    const eventInTZ = new Date(
-        adminLocal.toLocaleString("en-US", { timeZone: timezone })
-    );
-
-    // Save full ISO string (UTC standardized)
-    const isoWithTZ = eventInTZ.toISOString();
-
-    // Save canonical values
-    localStorage.setItem('icsc_event_date', isoWithTZ);
-    localStorage.setItem('icsc_event_timezone', timezone);
-    localStorage.setItem('icsc_event_epoch', String(eventInTZ.getTime()));
-
-    // Save popup settings
-    localStorage.setItem('icsc_popup_duration', popupDuration);
-    localStorage.setItem('icsc_popup_frequency', popupFrequency);
-
-    // Clear popup history so it re-displays properly under new settings
-    localStorage.removeItem('icsc_last_popup_date');
-
-    // Update admin display panel (uses timezone correctly)
-    loadEventTimerSettings();
-
-    showToast('Event timer settings saved successfully!', 'success');
-
-     // In a real application, you would send this to your backend:
-    // fetch('/api/save-event-settings', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //         eventDate: isoDate,
-    //         timezone: timezone,
-    //         popupDuration: popupDuration,
-    //         popupFrequency: popupFrequency
-    //     })
-    // });
-}
-
-
- // In a real application, you would send this to your backend:
-    // fetch('/api/save-event-settings', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //         eventDate: isoDate,
-    //         timezone: timezone,
-    //         popupDuration: popupDuration,
-    //         popupFrequency: popupFrequency
-    //     })
-    // });
-// Save Registration Caps
-function saveRegistrationCaps(e) {
-    e.preventDefault();
-    
-    const caps = {
-        attendee: {
-            cap: parseInt(document.getElementById('attendeeCap').value) || 0,
-            action: document.getElementById('attendeeCapAction').value
-        },
-        speaker: {
-            cap: parseInt(document.getElementById('speakerCap').value) || 0,
-            action: document.getElementById('speakerCapAction').value
-        },
-        exhibitor: {
-            cap: parseInt(document.getElementById('exhibitorCap').value) || 0,
-            action: document.getElementById('exhibitorCapAction').value
-        },
-        partner: {
-            cap: parseInt(document.getElementById('partnerCap').value) || 0,
-            action: document.getElementById('partnerCapAction').value
-        },
-        globalMessage: document.getElementById('globalRegistrationMessage').value,
-        status: document.getElementById('registrationStatus').value
-    };
-    
-    // Validate caps
-    if (!validateRegistrationCaps(caps)) {
-        return;
-    }
-    
-    // Save to localStorage
-    localStorage.setItem('icsc_registration_caps', JSON.stringify(caps));
-    
-    // Update display
-    loadCurrentRegistrationStats();
-    
-    showToast('Registration caps saved successfully!', 'success');
-    
-    // Apply caps to registration forms
-    applyRegistrationCaps();
-    
-    // In a real application, you would send this to your backend:
-    // fetch('/api/save-registration-caps', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(caps)
-    // });
-}
-
-// Save System Configuration
-function saveSystemConfig(e) {
-    e.preventDefault();
-    
-    const config = {
-        systemEmail: document.getElementById('systemEmail').value,
-        adminEmail: document.getElementById('adminEmail').value,
-        emailNotifications: document.getElementById('emailNotifications').value
-    };
-    
-    // Validate emails
-    if (config.systemEmail && !isValidEmail(config.systemEmail)) {
-        showToast('Please enter a valid system email', 'error');
-        return;
-    }
-    
-    if (config.adminEmail && !isValidEmail(config.adminEmail)) {
-        showToast('Please enter a valid admin email', 'error');
-        return;
-    }
-    
-    // Save to localStorage
-    localStorage.setItem('icsc_system_config', JSON.stringify(config));
-    
-    showToast('System configuration saved successfully!', 'success');
-    
-    // In a real application, you would send this to your backend:
-    // fetch('/api/save-system-config', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(config)
-    // });
-}
-
-// Test Timer Settings
-function testTimerSettings() {
-    // Temporarily set event to 1 minute from now for testing
-    const testDate = new Date(Date.now() + 60000); // 1 minute from now
-    const testIsoDate = testDate.toISOString().split('.')[0];
-    
-    // Save original date
-    const originalDate = localStorage.getItem('icsc_event_date');
-    localStorage.setItem('icsc_event_test_date', originalDate);
-    localStorage.setItem('icsc_event_date', testIsoDate);
-    
-    // Clear popup history
-    localStorage.removeItem('icsc_last_popup_date');
-    
-    showToast('Test mode activated! Countdown set to 1 minute from now. Refresh homepage to see effect.', 'info');
-    
-    // Auto-revert after 5 minutes
-    setTimeout(() => {
-        if (localStorage.getItem('icsc_event_test_date')) {
-            localStorage.setItem('icsc_event_date', localStorage.getItem('icsc_event_test_date'));
-            localStorage.removeItem('icsc_event_test_date');
-            showToast('Test mode ended. Timer restored to original.', 'info');
-            loadEventTimerSettings();
-        }
-    }, 300000); // 5 minutes
-}
-
-// Reset Timer Settings
-function resetTimerSettings() {
-    if (confirm('Reset event timer to default settings?')) {
-        const defaultDate = '2026-05-25T09:00:00';
-        
-        localStorage.setItem('icsc_event_date', defaultDate);
-        localStorage.setItem('icsc_event_timezone', 'Africa/Lagos');
-        localStorage.setItem('icsc_popup_duration', '5');
-        localStorage.setItem('icsc_popup_frequency', 'daily');
-        localStorage.removeItem('icsc_last_popup_date');
-        
-        loadEventTimerSettings();
-        showToast('Timer settings reset to default', 'success');
-    }
-}
-
-// Reset Registration Caps
-function resetRegistrationCaps() {
-    if (confirm('Reset all registration caps to default values?')) {
-        const defaultCaps = {
-            attendee: { cap: 1000, action: 'disable' },
-            speaker: { cap: 50, action: 'show_message' },
-            exhibitor: { cap: 100, action: 'disable' },
-            partner: { cap: 30, action: 'show_message' },
-            globalMessage: 'Registration for this category is currently full. Please check back later.',
-            status: 'open'
-        };
-        
-        localStorage.setItem('icsc_registration_caps', JSON.stringify(defaultCaps));
-        
-        loadRegistrationCaps();
-        loadCurrentRegistrationStats();
-        showToast('Registration caps reset to default', 'success');
-    }
-}
-
-// Backup Database (Simulated)
-function backupDatabase() {
-    showToast('Starting database backup...', 'info');
-    
-    // Simulate backup process
-    setTimeout(() => {
-        // Create backup data
-        const backupData = {
-            timestamp: new Date().toISOString(),
-            eventSettings: {
-                eventDate: localStorage.getItem('icsc_event_date'),
-                timezone: localStorage.getItem('icsc_event_timezone'),
-                popupDuration: localStorage.getItem('icsc_popup_duration'),
-                popupFrequency: localStorage.getItem('icsc_popup_frequency')
-            },
-            registrationCaps: JSON.parse(localStorage.getItem('icsc_registration_caps') || '{}'),
-            systemConfig: JSON.parse(localStorage.getItem('icsc_system_config') || '{}')
-        };
-        
-        // Download as JSON file
-        const dataStr = JSON.stringify(backupData, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = `icsc-backup-${new Date().toISOString().slice(0,10)}.json`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        
-        showToast('Database backup completed successfully!', 'success');
-    }, 1500);
-}
-
-// Export Settings
-function exportSettings() {
-    const settings = {
-        eventTimer: {
-            eventDate: localStorage.getItem('icsc_event_date'),
-            timezone: localStorage.getItem('icsc_event_timezone'),
-            popupDuration: localStorage.getItem('icsc_popup_duration'),
-            popupFrequency: localStorage.getItem('icsc_popup_frequency')
-        },
-        registrationCaps: JSON.parse(localStorage.getItem('icsc_registration_caps') || '{}'),
-        systemConfig: JSON.parse(localStorage.getItem('icsc_system_config') || '{}')
-    };
-    
-    const dataStr = JSON.stringify(settings, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = `icsc-settings-${new Date().toISOString().slice(0,10)}.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-    
-    showToast('Settings exported successfully!', 'success');
-}
-
-// Validate Registration Caps
-function validateRegistrationCaps(caps) {
-    const stats = JSON.parse(localStorage.getItem('icsc_registration_stats')) || {
-        attendees: 0,
-        speakers: 0,
-        exhibitors: 0,
-        partners: 0
-    };
-    
-    // Check if new cap is lower than current registrations
-    if (caps.attendee.cap > 0 && caps.attendee.cap < stats.attendees) {
-        if (!confirm(`Warning: Attendee cap (${caps.attendee.cap}) is lower than current registrations (${stats.attendees}). Continue anyway?`)) {
-            return false;
-        }
-    }
-    
-    if (caps.speaker.cap > 0 && caps.speaker.cap < stats.speakers) {
-        if (!confirm(`Warning: Speaker cap (${caps.speaker.cap}) is lower than current registrations (${stats.speakers}). Continue anyway?`)) {
-            return false;
-        }
-    }
-    
-    if (caps.exhibitor.cap > 0 && caps.exhibitor.cap < stats.exhibitors) {
-        if (!confirm(`Warning: Exhibitor cap (${caps.exhibitor.cap}) is lower than current registrations (${caps.exhibitors}). Continue anyway?`)) {
-            return false;
-        }
-    }
-    
-    if (caps.partner.cap > 0 && caps.partner.cap < stats.partners) {
-        if (!confirm(`Warning: Partner cap (${caps.partner.cap}) is lower than current registrations (${caps.partners}). Continue anyway?`)) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-// Update Registration Status Indicators
-function updateRegistrationStatusIndicators() {
-    const stats = JSON.parse(localStorage.getItem('icsc_registration_stats')) || {
-        attendees: 0,
-        speakers: 0,
-        exhibitors: 0,
-        partners: 0
-    };
-    
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps')) || {
-        attendee: { cap: 0 },
-        speaker: { cap: 0 },
-        exhibitor: { cap: 0 },
-        partner: { cap: 0 }
-    };
-    
-    // Update attendee status
-    const attendeeCard = document.querySelector('#registrationStats .stat-card:first-child');
-    if (caps.attendee.cap > 0 && stats.attendees >= caps.attendee.cap) {
-        attendeeCard.style.borderLeft = '4px solid #dc3545';
-    } else {
-        attendeeCard.style.borderLeft = '';
-    }
-    
-    // Update speaker status
-    const speakerCard = document.querySelector('#registrationStats .stat-card:nth-child(2)');
-    if (caps.speaker.cap > 0 && stats.speakers >= caps.speaker.cap) {
-        speakerCard.style.borderLeft = '4px solid #dc3545';
-    } else {
-        speakerCard.style.borderLeft = '';
-    }
-    
-    // Update exhibitor status
-    const exhibitorCard = document.querySelector('#registrationStats .stat-card:nth-child(3)');
-    if (caps.exhibitor.cap > 0 && stats.exhibitors >= caps.exhibitor.cap) {
-        exhibitorCard.style.borderLeft = '4px solid #dc3545';
-    } else {
-        exhibitorCard.style.borderLeft = '';
-    }
-    
-    // Update partner status
-    const partnerCard = document.querySelector('#registrationStats .stat-card:last-child');
-    if (caps.partner.cap > 0 && stats.partners >= caps.partner.cap) {
-        partnerCard.style.borderLeft = '4px solid #dc3545';
-    } else {
-        partnerCard.style.borderLeft = '';
-    }
-}
-
-// Apply Registration Caps to Forms
-function applyRegistrationCaps() {
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps')) || {};
-    const stats = JSON.parse(localStorage.getItem('icsc_registration_stats')) || {
-        attendees: 0,
-        speakers: 0,
-        exhibitors: 0,
-        partners: 0
-    };
-    
-    // Check each registration type and apply caps
-    const capStatus = {
-        attendees: caps.attendee?.cap > 0 && stats.attendees >= caps.attendee.cap,
-        speakers: caps.speaker?.cap > 0 && stats.speakers >= caps.speaker.cap,
-        exhibitors: caps.exhibitor?.cap > 0 && stats.exhibitors >= caps.exhibitor.cap,
-        partners: caps.partner?.cap > 0 && stats.partners >= caps.partner.cap
-    };
-    
-    // Save cap status to localStorage for frontend to read
-    localStorage.setItem('icsc_cap_status', JSON.stringify(capStatus));
-    
-    // Save global message
-    if (caps.globalMessage) {
-        localStorage.setItem('icsc_registration_full_message', caps.globalMessage);
-    }
-    
-    // Save registration status
-    if (caps.status) {
-        localStorage.setItem('icsc_registration_status', caps.status);
-    }
-}
-
-// Setup Real-time Cap Validation
-function setupRealTimeCapValidation() {
-    const capInputs = ['attendeeCap', 'speakerCap', 'exhibitorCap', 'partnerCap'];
-    
-    capInputs.forEach(inputId => {
-        const input = document.getElementById(inputId);
-        if (input) {
-            input.addEventListener('change', function() {
-                const value = parseInt(this.value) || 0;
-                if (value < 0) {
-                    this.value = 0;
-                    showToast('Cap cannot be negative. Set to 0 for unlimited.', 'error');
-                }
-            });
-        }
-    });
-}
-
-// Helper: Show Toast Notification
-function showToast(message, type = 'info') {
-    // Remove existing toasts
-    const existingToasts = document.querySelectorAll('.toast');
-    existingToasts.forEach(toast => toast.remove());
-    
-    // Create toast
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
-    
-    document.body.appendChild(toast);
-    
-    // Remove after 5 seconds
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.remove();
-        }
-    }, 5000);
-}
-
-// Helper: Validate Email
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// Auto-save registration stats (simulate real-time updates)
-function updateRegistrationStats() {
-    // In a real application, you would fetch this from your database
-    // For simulation, we'll increment randomly occasionally
-    const stats = JSON.parse(localStorage.getItem('icsc_registration_stats')) || {
-        attendees: 45,
-        speakers: 10,
-        exhibitors: 15,
-        partners: 8
-    };
-    
-    // Simulate random new registrations
-    if (Math.random() > 0.7) {
-        stats.attendees += Math.floor(Math.random() * 3);
-        stats.speakers += Math.floor(Math.random() * 2);
-        stats.exhibitors += Math.floor(Math.random() * 2);
-        stats.partners += Math.random() > 0.8 ? 1 : 0;
-        
-        localStorage.setItem('icsc_registration_stats', JSON.stringify(stats));
-        
-        // Update display if settings tab is open
-        if (document.getElementById('settings').classList.contains('active')) {
-            loadCurrentRegistrationStats();
-        }
-    }
-}
-
-// Periodically update stats (simulate real-time updates)
-setInterval(updateRegistrationStats, 30000); // Update every 30 seconds
-
-// Initialize tables
-renderAttendeesTable(attendees);
-updatePendingTable();
-
-// Add event listener for ministry code to generate credentials
-const ministryCodeEl = document.getElementById('ministryCode');
-if (ministryCodeEl) {
-    ministryCodeEl.addEventListener('input', generateMinistryCredentials);
-}
-
+// Logout Functionality
 const superAdminLogoutBtn = document.getElementById('superAdminLogoutBtn');
 if (superAdminLogoutBtn) {
     superAdminLogoutBtn.addEventListener('click', function (e) {
@@ -2052,15 +1497,5 @@ if (superAdminLogoutBtn) {
     });
 }
 
-// Dashboard script (handles Add Attendee submission + UI updates)
-// - Posts form data to POST /attendees (adjust endpoint if different).
-// - Requires apiClient (preferred) or falls back to axios with token from localStorage.
-
-(function () {
-	// ...existing code...
-	// Add Attendee form integration
-	const addForm = document.getElementById('addAttendeeForm');
-	// NOTE: The main add-attendee submit handler is attached via initializeEventListeners()
-	// and implemented in handleAddAttendee above. Avoid adding a second submit listener here.
-	// ...existing code continues...
-})();
+// Initialize the page to show content
+document.body.style.display = 'block';

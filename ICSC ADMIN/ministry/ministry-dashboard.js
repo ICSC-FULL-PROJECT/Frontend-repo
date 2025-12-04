@@ -92,6 +92,9 @@ let ministryAttendees = [
 // Current attendee being edited or deleted
 let currentMinistryAttendeeId = null;
 
+// Excel upload data storage
+let ministryParsedData = [];
+
 // NEW: load attendees from backend and normalize
 async function loadMinistryAttendees() {
     // Prefer global apiClient if available (sets Authorization header)
@@ -199,6 +202,56 @@ document.addEventListener('DOMContentLoaded', function() {
     displayMinistryInfo();
     // load from backend and populate table (overrides sample data)
     loadMinistryAttendees();
+    
+    // Initialize ministry-specific fields
+    const ministryName = document.getElementById('ministryNameDisplay').textContent;
+    document.getElementById('ministryAttendeeMinistry').value = ministryName;
+    document.getElementById('editMinistryAttendeeMinistry').value = ministryName;
+    
+    // Initialize Excel upload event listeners
+    const ministryExcelFileInput = document.getElementById('ministryExcelFile');
+    const ministryUploadExcelBtn = document.getElementById('ministryUploadExcelBtn');
+    const ministryDownloadTemplateBtn = document.getElementById('ministryDownloadTemplateBtn');
+    const ministryCancelUploadBtn = document.getElementById('ministryCancelUploadBtn');
+    const ministryConfirmUploadBtn = document.getElementById('ministryConfirmUploadBtn');
+    
+    // Download Excel Template for Ministry
+    ministryDownloadTemplateBtn.addEventListener('click', function() {
+        downloadMinistryExcelTemplate(ministryName);
+    });
+    
+    // Upload and Parse Excel File for Ministry
+    ministryUploadExcelBtn.addEventListener('click', function() {
+        if (!ministryExcelFileInput.files.length) {
+            alert('Please select an Excel file first.');
+            return;
+        }
+        
+        const file = ministryExcelFileInput.files[0];
+        
+        // Check file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size exceeds 10MB limit.');
+            return;
+        }
+        
+        parseMinistryExcelFile(file, ministryName);
+    });
+    
+    // Cancel Upload
+    ministryCancelUploadBtn.addEventListener('click', function() {
+        resetMinistryExcelUpload();
+    });
+    
+    // Confirm Upload for Super Admin Approval
+    ministryConfirmUploadBtn.addEventListener('click', function() {
+        if (ministryParsedData.length === 0) {
+            alert('No valid data to submit for approval.');
+            return;
+        }
+        
+        submitAttendeesForApproval(ministryParsedData, ministryName);
+    });
 });
 
 // Tab Navigation
@@ -271,6 +324,8 @@ function initializeEventListeners() {
     
     addAnotherBtn.addEventListener('click', function() {
         successModal.classList.remove('active');
+        // Reset form
+        addMinistryAttendeeForm.reset();
     });
     
     cancelMinistryEditBtn.addEventListener('click', function() {
@@ -340,6 +395,229 @@ function initializeEventListeners() {
     });
 }
 
+// Password toggle function
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const toggleBtn = input.parentElement.querySelector('.password-toggle-btn');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        input.type = 'password';
+        toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
+// Function to download ministry-specific Excel template
+function downloadMinistryExcelTemplate(ministryName) {
+    // Create template data specific to ministry
+    const templateData = [
+        {
+            'Prefix': 'Mr',
+            'First Name': 'John',
+            'Last Name': 'Doe',
+            'Email': 'john.doe@ministry.gov.ng',
+            'Password': 'Password123',
+            'Job Title': 'Assistant Director',
+            'Organization': 'Federal Government',
+            'Work Phone': '+2348012345678',
+            'Phone Number': '+2348012345678',
+            'NIN': '12345678901',
+            'Position': 'Assistant Director',
+            'Grade Level': 'Assistant Director',
+            'Ministry': ministryName,
+            'Department': 'Accounts',
+            'Department Agency': ministryName,
+            'Staff ID': ministryName.substring(0, 3).toUpperCase() + '/AD/001',
+            'Office Location': 'Abuja Headquarters',
+            'Remarks': 'Sample entry'
+        }
+    ];
+    
+    // Create worksheet
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Attendees Template');
+    
+    // Create instructions sheet
+    const instructionData = [
+        ['Instructions for Ministry Excel Upload:'],
+        [''],
+        ['1. All attendees will require Super Admin approval'],
+        ['2. Ministry field is pre-filled and cannot be changed'],
+        ['3. Fill in all required fields'],
+        ['4. Email must be unique for each attendee'],
+        ['5. Password must be at least 8 characters'],
+        [''],
+        ['Note: All submissions go to Super Admin for approval']
+    ];
+    
+    const ws2 = XLSX.utils.aoa_to_sheet(instructionData);
+    XLSX.utils.book_append_sheet(wb, ws2, 'Instructions');
+    
+    // Download the file
+    XLSX.writeFile(wb, `${ministryName.replace(/\s+/g, '_')}_Attendee_Template.xlsx`);
+}
+
+// Function to submit attendees for Super Admin approval
+async function submitAttendeesForApproval(attendees, ministryName) {
+    console.log('Submitting attendees for approval:', attendees);
+    
+    if (!attendees || attendees.length === 0) {
+        alert('No valid data to submit for approval.');
+        return;
+    }
+
+    try {
+        // Get ministry information
+        const ministryCode = ministryName.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
+        
+        // Prepare bulk upload data
+        const bulkUploadData = {
+            uploadId: `BULK_${Date.now()}_${ministryCode}`,
+            ministry: ministryName,
+            ministryCode: ministryCode,
+            filename: document.getElementById('ministryExcelFile')?.files[0]?.name || 'Manual Entry',
+            totalRecords: attendees.length,
+            validRecords: attendees.length,
+            errorRecords: 0,
+            submittedBy: currentMinistry.name,
+            submittedByType: 'ministry',
+            submissionDate: new Date().toISOString(),
+            status: 'pending',
+            records: attendees.map(attendee => ({
+                ...attendee,
+                ministry: ministryName,
+                ministryCode: ministryCode,
+                status: 'Pending',
+                source: 'ministry_bulk_upload',
+                uploadId: `BULK_${Date.now()}_${ministryCode}`,
+                submittedBy: currentMinistry.name,
+                submissionDate: new Date().toISOString()
+            }))
+        };
+        
+        console.log('Bulk approval data prepared:', bulkUploadData);
+
+        // Show loading state
+        const confirmBtn = document.getElementById('ministryConfirmUploadBtn');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        }
+
+        // Use apiClient if available
+        let response;
+        if (window.apiClient && typeof window.apiClient.post === 'function') {
+            response = await window.apiClient.post('/bulk-approvals/create', bulkUploadData);
+        } else {
+            // Fallback using fetch
+            const token = getAuthToken();
+            const url = `${API_BASE_URL}/bulk-approvals/create`;
+            
+            const fetchResponse = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(bulkUploadData)
+            });
+            
+            if (!fetchResponse.ok) {
+                throw new Error(`API error: ${fetchResponse.status}`);
+            }
+            response = await fetchResponse.json();
+        }
+
+        console.log('Submission response:', response);
+
+        // Show success message
+        showSuccessMessage(`${attendees.length} attendees submitted for Super Admin approval! They will appear in the Bulk Approvals tab.`);
+        
+        // Reset form
+        resetMinistryExcelUpload();
+        
+        // Clear form fields
+        const form = document.getElementById('addMinistryAttendeeForm');
+        if (form) form.reset();
+        
+        // Switch to attendees tab to see the new pending entries
+        const attendeesTab = document.querySelector('[data-tab="attendees"]');
+        if (attendeesTab) attendeesTab.click();
+        
+    } catch (error) {
+        console.error('Error submitting attendees for approval:', error);
+        alert(`Error submitting attendees: ${error.message || 'Unknown error'}`);
+    } finally {
+        const confirmBtn = document.getElementById('ministryConfirmUploadBtn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Submit for Super Admin Approval';
+        }
+    }
+}
+
+// Helper function to get auth token
+function getAuthToken() {
+    try {
+        // Check if Auth helper exists
+        if (window.Auth && typeof window.Auth.getAuth === 'function') {
+            const auth = window.Auth.getAuth();
+            if (auth && auth.token) return auth.token;
+        }
+        
+        // Check localStorage
+        const authUser = localStorage.getItem('authUser');
+        if (authUser) {
+            const parsed = JSON.parse(authUser);
+            if (parsed && parsed.token) return parsed.token;
+        }
+        
+        // Check other possible storage keys
+        const tokenKeys = ['accessToken', 'token', 'auth_token', 'jwtToken'];
+        for (const key of tokenKeys) {
+            const token = localStorage.getItem(key);
+            if (token) return token;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Error getting auth token:', error);
+        return null;
+    }
+}
+
+// Add this CSS for password toggle button
+const style = document.createElement('style');
+style.textContent = `
+.password-input-container {
+    position: relative;
+}
+.password-toggle-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+`;
+document.head.appendChild(style);
+
 // Form Handlers
 async function handleAddMinistryAttendee(e) {
     e.preventDefault();
@@ -349,21 +627,27 @@ async function handleAddMinistryAttendee(e) {
     if (submitBtn) submitBtn.disabled = true;
 
     // Collect form data
-    const formPayload = {
-        fullname: document.getElementById('ministryAttendeeName').value,
-        email: document.getElementById('ministryAttendeeEmail').value,
-        phone_number: document.getElementById('ministryAttendeePhone').value,
-        nin: document.getElementById('ministryAttendeeNIN').value,
-        position: document.getElementById('ministryAttendeePosition').value,
-        grade: document.getElementById('ministryAttendeeGradeLevel').value,
-        organization: currentMinistry.name,
-        department: document.getElementById('ministryAttendeeDepartment').value,
-        department_agency: document.getElementById('ministryAttendeeAgency').value,
-        staff_id: document.getElementById('ministryAttendeeStaffId').value,
-        office_location: document.getElementById('ministryAttendeeOffice').value,
-        remark: document.getElementById('ministryAttendeeRemarks').value,
-        status: 'Pending'
-    };
+   const formPayload = {
+    prefix: document.getElementById('ministryAttendeePrefix').value,
+    firstName: document.getElementById('ministryAttendeeFirstName').value,
+    lastName: document.getElementById('ministryAttendeeLastName').value,
+    email: document.getElementById('ministryAttendeeEmail').value,
+    password: document.getElementById('ministryAttendeePassword').value,
+    jobTitle: document.getElementById('ministryAttendeeJobTitle').value,
+    organization: document.getElementById('ministryAttendeeOrganization').value,
+    workPhone: document.getElementById('ministryAttendeeWorkPhone').value,
+    phone_number: document.getElementById('ministryAttendeePhone').value,
+    nin: document.getElementById('ministryAttendeeNIN').value,
+    position: document.getElementById('ministryAttendeePosition').value,
+    grade: document.getElementById('ministryAttendeeGradeLevel').value,
+    ministry: document.getElementById('ministryAttendeeMinistry').value,
+    department: document.getElementById('ministryAttendeeDepartment').value,
+    department_agency: document.getElementById('ministryAttendeeAgency').value,
+    staff_id: document.getElementById('ministryAttendeeStaffId').value,
+    office_location: document.getElementById('ministryAttendeeOffice').value,
+    remark: document.getElementById('ministryAttendeeRemarks').value,
+    status: 'Pending'
+};
 
     try {
         let saved = null;
@@ -377,18 +661,7 @@ async function handleAddMinistryAttendee(e) {
         } else {
             // Fallback: use fetch with full URL if apiClient not available
             const FALLBACK_URL = `${API_BASE_URL}/user/create-attendee`;
-            // obtain token from auth helper or legacy storage
-            const authFromHelper = (window.Auth && typeof window.Auth.getAuth === 'function') ? window.Auth.getAuth() : null;
-            let token = authFromHelper?.token || null;
-            if (!token) {
-                try {
-                    const raw = localStorage.getItem('authUser') || localStorage.getItem('user');
-                    const parsed = raw ? JSON.parse(raw) : null;
-                    token = parsed?.token || localStorage.getItem('accessToken') || null;
-                } catch (err) {
-                    token = localStorage.getItem('accessToken') || null;
-                }
-            }
+            const token = getAuthToken();
 
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = 'Bearer ' + token;
@@ -411,19 +684,19 @@ async function handleAddMinistryAttendee(e) {
         const nowDate = new Date().toISOString().split('T')[0];
         const newAttendee = {
             id: saved?.id || saved?._id || (ministryAttendees.length > 0 ? Math.max(...ministryAttendees.map(a => a.id || 0)) + 1 : 1),
-            name: saved?.fullname || formPayload.name || '',
+            name: saved?.fullname || `${formPayload.firstName} ${formPayload.lastName}`,
             email: saved?.email || formPayload.email || '',
-            phone: saved?.phone_number || formPayload.phone || '',
+            phone: saved?.phone_number || formPayload.phone_number || '',
             nin: saved?.nin || formPayload.nin || '',
             position: saved?.position || formPayload.position || '',
-            gradeLevel: saved?.grade || saved?.grade_level || formPayload.gradeLevel || '',
+            gradeLevel: saved?.grade || saved?.grade_level || formPayload.grade || '',
             ministry: saved?.organization || formPayload.ministry || currentMinistry.name,
             department: saved?.department || formPayload.department || '',
-            agency: saved?.department_agency || formPayload.agency || '',
-            staffId: saved?.staff_id || saved?.staff_id || formPayload.staffId || '',
-            office: saved?.office_location || formPayload.office || '',
+            agency: saved?.department_agency || formPayload.department_agency || '',
+            staffId: saved?.staff_id || saved?.staff_id || formPayload.staff_id || '',
+            office: saved?.office_location || formPayload.office_location || '',
             status: saved?.status || 'Pending', // default to Pending
-            remarks: saved?.remark || formPayload.remarks || '',
+            remarks: saved?.remark || formPayload.remark || '',
             addedBy: saved?.addedBy || 'Ministry',
             dateAdded: saved?.dateAdded || saved?.createdAt || nowDate
         };
@@ -433,11 +706,20 @@ async function handleAddMinistryAttendee(e) {
         renderMinistryAttendeesTable(ministryAttendees);
         updateMinistryStats();
 
-        // Optional compatibility: still log/send to Super Admin workflow
-        sendToSuperAdminForApproval(newAttendee);
+        // Also submit to Super Admin approval queue
+        const attendeeForApproval = {
+            ...formPayload,
+            fullName: `${formPayload.prefix} ${formPayload.firstName} ${formPayload.lastName}`.trim(),
+            source: 'ministry_manual_entry',
+            submittedBy: currentMinistry.name,
+            submissionDate: new Date().toISOString()
+        };
+        
+        // Submit for Super Admin approval
+        await submitAttendeesForApproval([attendeeForApproval], formPayload.ministry);
 
         // Show success message
-        document.getElementById('successMessage').textContent = 'Attendee has been successfully added!';
+        document.getElementById('successMessage').textContent = 'Attendee has been successfully added and submitted for approval!';
         successModal.classList.add('active');
 
         // Reset form
@@ -456,9 +738,13 @@ function handleEditMinistryAttendee(e) {
     // Update attendee data
     const attendeeIndex = ministryAttendees.findIndex(a => a.id === currentMinistryAttendeeId);
     if (attendeeIndex !== -1) {
+        const prefix = document.getElementById('editMinistryAttendeePrefix').value;
+        const firstName = document.getElementById('editMinistryAttendeeFirstName').value;
+        const lastName = document.getElementById('editMinistryAttendeeLastName').value;
+        
         ministryAttendees[attendeeIndex] = {
             ...ministryAttendees[attendeeIndex],
-            name: document.getElementById('editMinistryAttendeeName').value,
+            name: `${prefix} ${firstName} ${lastName}`.trim(),
             email: document.getElementById('editMinistryAttendeeEmail').value,
             phone: document.getElementById('editMinistryAttendeePhone').value,
             nin: document.getElementById('editMinistryAttendeeNIN').value,
@@ -468,7 +754,8 @@ function handleEditMinistryAttendee(e) {
             agency: document.getElementById('editMinistryAttendeeAgency').value,
             staffId: document.getElementById('editMinistryAttendeeStaffId').value,
             office: document.getElementById('editMinistryAttendeeOffice').value,
-            remarks: document.getElementById('editMinistryAttendeeRemarks').value
+            remarks: document.getElementById('editMinistryAttendeeRemarks').value,
+            status: document.getElementById('editMinistryAttendeeStatus').value
         };
         
         // Update UI
@@ -502,18 +789,7 @@ async function handleDeleteMinistryAttendee() {
             deleted = (res && (res.status >= 200 && res.status < 300)) || Boolean(res?.data);
         } else {
             // Fallback using fetch
-            // obtain token from auth helper or legacy storage
-            const authFromHelper = (window.Auth && typeof window.Auth.getAuth === 'function') ? window.Auth.getAuth() : null;
-            let token = authFromHelper?.token || null;
-            if (!token) {
-                try {
-                    const raw = localStorage.getItem('authUser') || localStorage.getItem('user');
-                    const parsed = raw ? JSON.parse(raw) : null;
-                    token = parsed?.token || localStorage.getItem('accessToken') || null;
-                } catch (e) {
-                    token = localStorage.getItem('accessToken') || null;
-                }
-            }
+            const token = getAuthToken();
 
             const deleteUrl = `${API_BASE_URL}/user/delete-attendee?attendee_id=${currentMinistryAttendeeId}`;
             let response = await fetch(deleteUrl, {
@@ -576,18 +852,44 @@ function openEditMinistryModal(attendeeId) {
     if (attendee) {
         currentMinistryAttendeeId = attendeeId;
         
+        // Parse name into prefix, first, last if needed
+        const nameParts = attendee.name.split(' ');
+        let firstName = '', lastName = '', prefix = 'Mr';
+        
+        if (nameParts.length >= 2) {
+            // Check if first part is a prefix
+            const possiblePrefixes = ['Mr', 'Mrs', 'Miss', 'Dr', 'Prof'];
+            if (possiblePrefixes.includes(nameParts[0])) {
+                prefix = nameParts[0];
+                firstName = nameParts[1] || '';
+                lastName = nameParts.slice(2).join(' ') || '';
+            } else {
+                firstName = nameParts[0] || '';
+                lastName = nameParts.slice(1).join(' ') || '';
+            }
+        } else {
+            firstName = attendee.name;
+        }
+        
         // Populate form with attendee data
-        document.getElementById('editMinistryAttendeeName').value = attendee.name;
+        document.getElementById('editMinistryAttendeePrefix').value = prefix;
+        document.getElementById('editMinistryAttendeeFirstName').value = firstName;
+        document.getElementById('editMinistryAttendeeLastName').value = lastName;
         document.getElementById('editMinistryAttendeeEmail').value = attendee.email;
-        document.getElementById('editMinistryAttendeePhone').value = attendee.phone;
+        document.getElementById('editMinistryAttendeePassword').value = '********'; // Placeholder
+        document.getElementById('editMinistryAttendeeJobTitle').value = attendee.position || '';
+        document.getElementById('editMinistryAttendeeWorkPhone').value = attendee.phone || '';
+        document.getElementById('editMinistryAttendeePhone').value = attendee.phone || '';
         document.getElementById('editMinistryAttendeeNIN').value = attendee.nin;
         document.getElementById('editMinistryAttendeePosition').value = attendee.position;
         document.getElementById('editMinistryAttendeeGradeLevel').value = attendee.gradeLevel;
+        document.getElementById('editMinistryAttendeeMinistry').value = attendee.ministry;
         document.getElementById('editMinistryAttendeeDepartment').value = attendee.department;
         document.getElementById('editMinistryAttendeeAgency').value = attendee.agency;
         document.getElementById('editMinistryAttendeeStaffId').value = attendee.staffId;
         document.getElementById('editMinistryAttendeeOffice').value = attendee.office;
         document.getElementById('editMinistryAttendeeRemarks').value = attendee.remarks;
+        document.getElementById('editMinistryAttendeeStatus').value = attendee.status;
         
         // Show modal
         editMinistryAttendeeModal.classList.add('active');
@@ -629,17 +931,6 @@ function clearMinistryFilters() {
     renderMinistryAttendeesTable(ministryAttendees);
 }
 
-// Super Admin Integration
-function sendToSuperAdminForApproval(attendeeData) {
-    // In a real application, this would be an API call to the Super Admin system
-    console.log('Sending attendee to Super Admin for approval:', attendeeData);
-    
-    // Simulate API call
-    setTimeout(() => {
-        console.log('Attendee sent to Super Admin successfully. Pending approval.');
-    }, 1000);
-}
-
 // UI Update Functions
 function displayMinistryInfo() {
     document.getElementById('currentMinistryName').textContent = currentMinistry.name;
@@ -668,7 +959,6 @@ function renderMinistryAttendeesTable(attendeesList) {
     
     attendeesList.forEach(attendee => {
         const statusClass = `status-${attendee.status.toLowerCase()}`;
-        // <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
         html += `
             <tr data-id="${attendee.id}">
                 <td>${attendee.name}</td>
@@ -680,7 +970,7 @@ function renderMinistryAttendeesTable(attendeesList) {
                 <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
                 <td>
                     <div class="action-buttons">
-                        
+                        <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
                         <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
                     </div>
                 </td>
@@ -693,3 +983,382 @@ function renderMinistryAttendeesTable(attendeesList) {
 
 // Initialize tables
 renderMinistryAttendeesTable(ministryAttendees);
+
+// Excel Upload Functions
+function parseMinistryExcelFile(file, ministryName) {
+    showMinistryUploadStatus(true);
+    updateMinistryProgress(10, 'Reading file...');
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        updateMinistryProgress(30, 'Parsing data...');
+        
+        try {
+            // Check if XLSX is available
+            if (typeof XLSX === 'undefined') {
+                throw new Error('XLSX library not loaded. Please include the XLSX library.');
+            }
+            
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            // Get first sheet
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convert to JSON
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                header: 1,
+                defval: ''
+            });
+            
+            updateMinistryProgress(50, 'Validating data...');
+            
+            // Process the data
+            processMinistryExcelData(jsonData, ministryName);
+            
+        } catch (error) {
+            console.error('Error parsing Excel file:', error);
+            alert('Error parsing Excel file. Please check the file format and ensure XLSX library is loaded.');
+            resetMinistryExcelUpload();
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('Error reading file. Please try again.');
+        resetMinistryExcelUpload();
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+function processMinistryExcelData(jsonData, ministryName) {
+    if (jsonData.length < 2) {
+        alert('Excel file is empty or has no data.');
+        resetMinistryExcelUpload();
+        return;
+    }
+
+    // Get headers (first row)
+    const headers = jsonData[0].map(h => h ? h.toString().trim() : '');
+    
+    console.log('Excel Headers found:', headers);
+    
+    // Flexible header mapping
+    const headerMapping = {
+        // Flexible matching for common column names
+        'prefix': 'prefix',
+        'first name': 'firstName',
+        'first_name': 'firstName',
+        'firstname': 'firstName',
+        'fname': 'firstName',
+        
+        'last name': 'lastName',
+        'last_name': 'lastName',
+        'lastname': 'lastName',
+        'lname': 'lastName',
+        
+        'email': 'email',
+        'email address': 'email',
+        'email_address': 'email',
+        
+        'password': 'password',
+        'pass': 'password',
+        
+        'job title': 'jobTitle',
+        'job_title': 'jobTitle',
+        'position': 'position',
+        'role': 'position',
+        
+        'organization': 'organization',
+        
+        'work phone': 'workPhone',
+        'work_phone': 'workPhone',
+        
+        'phone': 'phone',
+        'phone number': 'phone',
+        'phone_number': 'phone',
+        'telephone': 'phone',
+        'mobile': 'phone',
+        
+        'nin': 'nin',
+        'national id': 'nin',
+        'national_id': 'nin',
+        'national id number': 'nin',
+        
+        'grade level': 'gradeLevel',
+        'grade_level': 'gradeLevel',
+        'grade': 'gradeLevel',
+        
+        'ministry': 'ministry',
+        
+        'department': 'department',
+        'dept': 'department',
+        
+        'agency': 'agency',
+        'department agency': 'agency',
+        'department_agency': 'agency',
+        
+        'staff id': 'staffId',
+        'staff_id': 'staffId',
+        'employee id': 'staffId',
+        'employee_id': 'staffId',
+        
+        'office': 'office',
+        'office location': 'office',
+        'office_location': 'office',
+        
+        'remarks': 'remarks',
+        'remark': 'remarks'
+    };
+
+    ministryParsedData = [];
+    const validationErrors = [];
+    let validCount = 0;
+    let errorCount = 0;
+
+    // Process each row (skip header row)
+    for (let i = 1; i < jsonData.length; i++) {
+        const row = jsonData[i];
+        
+        // Skip empty rows
+        if (row.every(cell => !cell || cell.toString().trim() === '')) {
+            continue;
+        }
+
+        // Create attendee object
+        const attendee = {
+            ministry: ministryName,
+            organization: 'Federal Government',
+            status: 'Pending',
+            source: 'ministry_excel_upload',
+            submittedBy: currentMinistry.name,
+            submissionDate: new Date().toISOString(),
+            isValid: true
+        };
+        
+        const errors = [];
+
+        // Map headers to attendee fields
+        headers.forEach((header, index) => {
+            if (header && index < row.length) {
+                const headerLower = header.toLowerCase().trim();
+                const value = row[index] ? row[index].toString().trim() : '';
+                
+                // Find matching field
+                let fieldName = null;
+                for (const [key, field] of Object.entries(headerMapping)) {
+                    if (headerLower === key) {
+                        fieldName = field;
+                        break;
+                    }
+                }
+                
+                // If no direct match, try partial matching
+                if (!fieldName) {
+                    Object.entries(headerMapping).forEach(([key, field]) => {
+                        if (headerLower.includes(key) || key.includes(headerLower)) {
+                            fieldName = field;
+                        }
+                    });
+                }
+                
+                // Assign value to field
+                if (fieldName && value) {
+                    attendee[fieldName] = value;
+                }
+            }
+        });
+
+        // Set default prefix if not provided
+        if (!attendee.prefix) {
+            attendee.prefix = 'Mr';
+        }
+        
+        // Combine first and last name for full name
+        if (attendee.firstName && attendee.lastName) {
+            attendee.fullName = `${attendee.prefix} ${attendee.firstName} ${attendee.lastName}`.trim();
+        } else if (attendee.firstName) {
+            attendee.fullName = `${attendee.prefix} ${attendee.firstName}`.trim();
+        }
+
+        // Validation - be more lenient
+        if (!attendee.firstName || attendee.firstName.trim() === '') {
+            errors.push('Missing first name');
+        }
+        
+        if (!attendee.email) {
+            errors.push('Missing email');
+        } else if (!isValidEmail(attendee.email)) {
+            errors.push('Invalid email format');
+        }
+        
+        if (!attendee.position && !attendee.jobTitle) {
+            errors.push('Missing position/job title');
+        }
+
+        // Assign position from jobTitle if needed
+        if (!attendee.position && attendee.jobTitle) {
+            attendee.position = attendee.jobTitle;
+        }
+
+        // Generate a simple password if not provided
+        if (!attendee.password) {
+            const randomNum = Math.floor(100000 + Math.random() * 900000);
+            attendee.password = `TempPass${randomNum}`;
+        }
+
+        if (errors.length === 0) {
+            // Generate ID
+            attendee.id = `excel_${Date.now()}_${i}`;
+            attendee.isValid = true;
+            ministryParsedData.push(attendee);
+            validCount++;
+        } else {
+            attendee.errors = errors;
+            attendee.isValid = false;
+            validationErrors.push({
+                row: i + 1,
+                name: attendee.fullName || 'Unknown',
+                errors: errors
+            });
+            errorCount++;
+        }
+
+        // Update progress
+        const progress = 50 + Math.floor((i / (jsonData.length - 1)) * 40);
+        updateMinistryProgress(progress, `Processing row ${i} of ${jsonData.length - 1}...`);
+    }
+
+    updateMinistryProgress(100, 'Processing complete!');
+    
+    // Log results for debugging
+    console.log(`Parsed ${ministryParsedData.length} valid attendees from Excel`);
+    console.log('Sample valid attendee:', ministryParsedData[0]);
+    
+    // Update counts
+    const totalCount = document.getElementById('ministryTotalRecordsCount');
+    const validCountEl = document.getElementById('ministryValidRecordsCount');
+    const errorCountEl = document.getElementById('ministryErrorRecordsCount');
+    const recordCountEl = document.getElementById('ministryExcelRecordCount');
+    
+    if (totalCount) totalCount.textContent = `Total: ${ministryParsedData.length + validationErrors.length} records`;
+    if (validCountEl) validCountEl.textContent = `Valid: ${validCount}`;
+    if (errorCountEl) errorCountEl.textContent = `Errors: ${errorCount}`;
+    if (recordCountEl) recordCountEl.textContent = `${validCount} valid records ready for import`;
+
+    // Show preview if we have valid data
+    if (ministryParsedData.length > 0) {
+        showMinistryExcelPreview();
+    } else {
+        alert(`No valid attendees found in Excel file. Please check the format.\n\nCommon issues:\n1. Missing required columns (First Name, Email, Position)\n2. Empty rows\n3. Invalid email format\n\nFound headers: ${headers.join(', ')}`);
+        resetMinistryExcelUpload();
+    }
+}
+
+function showMinistryExcelPreview() {
+    const excelPreview = document.getElementById('ministryExcelPreview');
+    const excelPreviewBody = document.getElementById('ministryExcelPreviewBody');
+    
+    if (!excelPreview || !excelPreviewBody) {
+        console.error('Excel preview elements not found');
+        return;
+    }
+    
+    excelPreview.style.display = 'block';
+    excelPreviewBody.innerHTML = '';
+
+    // Show first 5 valid records in preview
+    const previewData = ministryParsedData.slice(0, 5);
+    
+    previewData.forEach((attendee, index) => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${attendee.fullName || `${attendee.prefix} ${attendee.firstName} ${attendee.lastName}`.trim()}</td>
+            <td>${attendee.email}</td>
+            <td>${attendee.department || 'N/A'}</td>
+            <td><span class="status-badge status-approved">Valid</span></td>
+        `;
+        
+        excelPreviewBody.appendChild(row);
+    });
+
+    // Show errors if any
+    if (ministryParsedData.some(item => !item.isValid)) {
+        const errorRow = document.createElement('tr');
+        errorRow.style.backgroundColor = '#fff5f5';
+        errorRow.innerHTML = `
+            <td colspan="6" style="text-align: center; color: #dc3545;">
+                <i class="fas fa-exclamation-triangle"></i>
+                Some records have validation errors. They will be skipped during import.
+            </td>
+        `;
+        excelPreviewBody.appendChild(errorRow);
+    }
+}
+
+function showMinistryUploadStatus(show) {
+    const excelUploadStatus = document.getElementById('ministryExcelUploadStatus');
+    const excelPreview = document.getElementById('ministryExcelPreview');
+    
+    if (excelUploadStatus) {
+        excelUploadStatus.style.display = show ? 'block' : 'none';
+    }
+    
+    if (excelPreview && !show) {
+        excelPreview.style.display = 'none';
+    }
+}
+
+function updateMinistryProgress(percentage, text) {
+    const excelProgressFill = document.getElementById('ministryExcelProgressFill');
+    const excelProgressText = document.getElementById('ministryExcelProgressText');
+    
+    if (excelProgressFill) {
+        excelProgressFill.style.width = `${percentage}%`;
+    }
+    
+    if (excelProgressText) {
+        if (text) {
+            excelProgressText.textContent = `${percentage}% - ${text}`;
+        } else {
+            excelProgressText.textContent = `${percentage}%`;
+        }
+    }
+}
+
+function resetMinistryExcelUpload() {
+    const excelFileInput = document.getElementById('ministryExcelFile');
+    if (excelFileInput) excelFileInput.value = '';
+    
+    ministryParsedData = [];
+    showMinistryUploadStatus(false);
+    updateMinistryProgress(0, '0%');
+}
+
+function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function showSuccessMessage(message) {
+    // You can implement a toast notification or use the existing success modal
+    const successModal = document.getElementById('successModal');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (successModal && successMessage) {
+        successMessage.textContent = message;
+        successModal.style.display = 'flex';
+        
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+            successModal.style.display = 'none';
+        }, 3000);
+    } else {
+        // Fallback to alert if modal not found
+        alert(message);
+    }
+}
