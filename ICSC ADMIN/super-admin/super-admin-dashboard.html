@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="display: none;" data-protected="super_admin">
@@ -787,6 +788,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Booths Tab -->
 <div id="booths" class="tab-content">
     <div class="dashboard-section">
@@ -1728,6 +1730,620 @@
     </div>
 </div>
 
+
+<!-- Reports Tab -->
+<div id="reports" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Reports & Analytics</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshReportsBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Reports
+                </button>
+                <button class="btn" id="generateReportBtn">
+                    <i class="fas fa-file-export"></i> Generate Custom Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats Summary -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalRegistrations">0</h3>
+                    <p>Total Registrations</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalRevenue">₦0</h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="attendanceRate">0%</h3>
+                    <p>Projected Attendance Rate</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ministries">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="topMinistry">-</h3>
+                    <p>Top Ministry by Registration</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Generation Options -->
+        <div class="reports-options">
+            <div class="report-type-selector">
+                <h3><i class="fas fa-filter"></i> Select Report Type</h3>
+                <div class="report-types">
+                    <div class="report-type-card active" data-report="overview">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h4>Overview Dashboard</h4>
+                        <p>Comprehensive system overview</p>
+                    </div>
+                    <div class="report-type-card" data-report="attendees">
+                        <i class="fas fa-users"></i>
+                        <h4>Attendee Reports</h4>
+                        <p>Detailed attendee analytics</p>
+                    </div>
+                    <div class="report-type-card" data-report="financial">
+                        <i class="fas fa-money-bill"></i>
+                        <h4>Financial Reports</h4>
+                        <p>Revenue and payment analysis</p>
+                    </div>
+                    <div class="report-type-card" data-report="ministry">
+                        <i class="fas fa-building"></i>
+                        <h4>Ministry Reports</h4>
+                        <p>Ministry-wise breakdown</p>
+                    </div>
+                    <div class="report-type-card" data-report="participation">
+                        <i class="fas fa-chart-pie"></i>
+                        <h4>Participation Reports</h4>
+                        <p>Speaker & exhibitor stats</p>
+                    </div>
+                    <div class="report-type-card" data-report="custom">
+                        <i class="fas fa-cog"></i>
+                        <h4>Custom Reports</h4>
+                        <p>Build your own report</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="date-range-filter">
+                <h3><i class="fas fa-calendar-alt"></i> Select Date Range</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reportStartDate">From Date</label>
+                        <input type="date" id="reportStartDate" class="form-control" value="2026-01-01">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportEndDate">To Date</label>
+                        <input type="date" id="reportEndDate" class="form-control" value="2026-06-30">
+                    </div>
+                    <div class="form-group">
+                        <label for="quickDateRange">Quick Select</label>
+                        <select id="quickDateRange" class="form-control">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year" selected>This Year</option>
+                            <option value="last_year">Last Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Content Area -->
+        <div class="report-content">
+            <!-- Overview Report (Default) -->
+            <div id="overviewReport" class="report-section active">
+                <h3><i class="fas fa-chart-bar"></i> System Overview Report</h3>
+                
+                <div class="chart-container">
+                    <div class="chart-row">
+                        <div class="chart-box">
+                            <h4>Registration Trend</h4>
+                            <canvas id="registrationTrendChart" height="250"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h4>Attendees by Ministry (Top 10)</h4>
+                            <canvas id="ministryDistributionChart" height="250"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-row">
+                        <div class="chart-box">
+                            <h4>Registration Status Distribution</h4>
+                            <canvas id="statusDistributionChart" height="250"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h4>Revenue by Category</h4>
+                            <canvas id="revenueCategoryChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics Table -->
+                <div class="key-metrics-table">
+                    <h4>Key Performance Indicators</h4>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Change</th>
+                                    <th>Target</th>
+                                    <th>Achievement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Registrations</td>
+                                    <td id="kpiTotalReg">0</td>
+                                    <td><span class="positive-change">+12%</span></td>
+                                    <td>2,500</td>
+                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Approval Rate</td>
+                                    <td id="kpiApprovalRate">0%</td>
+                                    <td><span class="positive-change">+5%</span></td>
+                                    <td>95%</td>
+                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Revenue Generated</td>
+                                    <td id="kpiRevenue">₦0</td>
+                                    <td><span class="positive-change">+18%</span></td>
+                                    <td>₦50,000,000</td>
+                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Ministry Participation</td>
+                                    <td id="kpiMinistryCount">0</td>
+                                    <td><span class="positive-change">+3%</span></td>
+                                    <td>35</td>
+                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendee Reports -->
+            <div id="attendeeReport" class="report-section">
+                <h3><i class="fas fa-user-chart"></i> Attendee Analytics Report</h3>
+                
+                <div class="report-filters">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Filter by Ministry</label>
+                            <select id="attendeeMinistryFilter" class="form-control" multiple>
+                                <option value="all">All Ministries</option>
+                                <!-- Ministry options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Grade Level</label>
+                            <select id="attendeeGradeFilter" class="form-control" multiple>
+                                <option value="all">All Grades</option>
+                                <option value="Director">Director</option>
+                                <option value="Deputy Director">Deputy Director</option>
+                                <option value="Assistant Director">Assistant Director</option>
+                                <option value="Chief Officer">Chief Officer</option>
+                                <option value="Senior Officer">Senior Officer</option>
+                                <option value="Officer">Officer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filter by Status</label>
+                            <select id="attendeeStatusFilter" class="form-control" multiple>
+                                <option value="all">All Statuses</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-box full-width">
+                        <h4>Attendee Distribution by Ministry & Grade</h4>
+                        <canvas id="attendeeDistributionChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Detailed Attendee Statistics -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ministry</th>
+                                <th>Total Attendees</th>
+                                <th>Approved</th>
+                                <th>Pending</th>
+                                <th>Rejected</th>
+                                <th>Directors</th>
+                                <th>Deputy Directors</th>
+                                <th>Assistant Directors</th>
+                                <th>Chief Officers</th>
+                                <th>Senior Officers</th>
+                                <th>Officers</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendeeDetailedStats">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Financial Reports -->
+            <div id="financialReport" class="report-section">
+                <h3><i class="fas fa-chart-line"></i> Financial Analysis Report</h3>
+                
+                <div class="financial-summary">
+                    <div class="financial-card">
+                        <h4>Total Revenue</h4>
+                        <h2 id="financialTotalRevenue">₦0</h2>
+                        <p class="subtext">From all sources</p>
+                    </div>
+                    <div class="financial-card">
+                        <h4>Booth Sales</h4>
+                        <h2 id="financialBoothRevenue">₦0</h2>
+                        <p class="subtext">Exhibition revenue</p>
+                    </div>
+                    <div class="financial-card">
+                        <h4>Partnerships</h4>
+                        <h2 id="financialPartnerRevenue">₦0</h2>
+                        <p class="subtext">Partner contributions</p>
+                    </div>
+                    <div class="financial-card">
+                        <h4>Speakers</h4>
+                        <h2 id="financialSpeakerRevenue">₦0</h2>
+                        <p class="subtext">Speaker packages</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-row">
+                        <div class="chart-box">
+                            <h4>Revenue Trend (Monthly)</h4>
+                            <canvas id="revenueTrendChart" height="250"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h4>Payment Status Distribution</h4>
+                            <canvas id="paymentStatusChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Details Table -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Total Amount</th>
+                                <th>Paid</th>
+                                <th>Pending</th>
+                                <th>Overdue</th>
+                                <th>Collection Rate</th>
+                                <th>Average Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="revenueDetailsTable">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ministry Reports -->
+            <div id="ministryReport" class="report-section">
+                <h3><i class="fas fa-university"></i> Ministry Performance Report</h3>
+                
+                <div class="ministry-ranking">
+                    <h4>Ministry Registration Ranking</h4>
+                    <div class="ranking-list" id="ministryRankingList">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-box full-width">
+                        <h4>Ministry Registration Timeline</h4>
+                        <canvas id="ministryTimelineChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Ministry Performance Metrics -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ministry</th>
+                                <th>Code</th>
+                                <th>Total Registrations</th>
+                                <th>Approval Rate</th>
+                                <th>Completion Rate</th>
+                                <th>Avg. Processing Time</th>
+                                <th>Last Updated</th>
+                                <th>Performance Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ministryPerformanceTable">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Participation Reports -->
+            <div id="participationReport" class="report-section">
+                <h3><i class="fas fa-handshake"></i> Participation Analysis Report</h3>
+                
+                <div class="participation-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalSpeakersCount">0</h3>
+                            <p>Total Speakers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon approved">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalExhibitorsCount">0</h3>
+                            <p>Total Exhibitors</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPartnersCount">0</h3>
+                            <p>Total Partners</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon ministries">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="topSpeakerPackage">-</h3>
+                            <p>Top Speaker Package</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-row">
+                        <div class="chart-box">
+                            <h4>Speaker Package Distribution</h4>
+                            <canvas id="speakerPackageChart" height="250"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h4>Exhibitor Booth Status</h4>
+                            <canvas id="exhibitorStatusChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Participation Details -->
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Confirmed</th>
+                                <th>Pending</th>
+                                <th>Rejected</th>
+                                <th>Paid</th>
+                                <th>Payment Pending</th>
+                                <th>Total Value</th>
+                                <th>Avg. Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participationDetailsTable">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Custom Report Builder -->
+            <div id="customReport" class="report-section">
+                <h3><i class="fas fa-tools"></i> Custom Report Builder</h3>
+                
+                <div class="custom-report-builder">
+                    <div class="builder-sidebar">
+                        <h4>Report Components</h4>
+                        <div class="component-list">
+                            <div class="component-item" draggable="true" data-component="table">
+                                <i class="fas fa-table"></i>
+                                <span>Data Table</span>
+                            </div>
+                            <div class="component-item" draggable="true" data-component="chart">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Chart</span>
+                            </div>
+                            <div class="component-item" draggable="true" data-component="summary">
+                                <i class="fas fa-list-alt"></i>
+                                <span>Summary Card</span>
+                            </div>
+                            <div class="component-item" draggable="true" data-component="metrics">
+                                <i class="fas fa-chart-pie"></i>
+                                <span>Metrics Grid</span>
+                            </div>
+                        </div>
+                        
+                        <div class="data-sources">
+                            <h4>Data Sources</h4>
+                            <select id="customDataSource" class="form-control" multiple>
+                                <option value="attendees">Attendees</option>
+                                <option value="speakers">Speakers</option>
+                                <option value="exhibitors">Exhibitors</option>
+                                <option value="partners">Partners</option>
+                                <option value="ministries">Ministries</option>
+                                <option value="payments">Payments</option>
+                                <option value="agenda">Agenda Items</option>
+                                <option value="resources">Resources</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="builder-canvas" id="reportCanvas">
+                        <div class="canvas-placeholder">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <p>Drag components here to build your report</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="builder-actions">
+                    <button class="btn btn-secondary" id="clearCanvasBtn">
+                        <i class="fas fa-trash"></i> Clear Canvas
+                    </button>
+                    <button class="btn btn-secondary" id="saveTemplateBtn">
+                        <i class="fas fa-save"></i> Save Template
+                    </button>
+                    <button class="btn" id="generateCustomBtn">
+                        <i class="fas fa-play"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Export Options -->
+        <div class="report-export-options">
+            <h3><i class="fas fa-download"></i> Export Options</h3>
+            <div class="export-buttons">
+                <button class="btn btn-secondary" id="exportPDFBtn">
+                    <i class="fas fa-file-pdf"></i> Export as PDF
+                </button>
+                <button class="btn btn-secondary" id="exportExcelBtn">
+                    <i class="fas fa-file-excel"></i> Export as Excel
+                </button>
+                <button class="btn btn-secondary" id="exportCSVBtn">
+                    <i class="fas fa-file-csv"></i> Export as CSV
+                </button>
+                <button class="btn" id="exportChartBtn">
+                    <i class="fas fa-image"></i> Export Charts
+                </button>
+            </div>
+            
+            <div class="export-settings">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exportFileName">File Name</label>
+                        <input type="text" id="exportFileName" class="form-control" placeholder="ICSC2026_Report" value="ICSC2026_Report">
+                    </div>
+                    <div class="form-group">
+                        <label for="exportFormat">Format Options</label>
+                        <select id="exportFormat" class="form-control">
+                            <option value="detailed">Detailed Report</option>
+                            <option value="summary">Executive Summary</option>
+                            <option value="raw">Raw Data</option>
+                            <option value="formatted">Formatted Report</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exportInclude">Include</label>
+                        <select id="exportInclude" class="form-control" multiple>
+                            <option value="charts" selected>Charts & Graphs</option>
+                            <option value="tables" selected>Data Tables</option>
+                            <option value="summary" selected>Summary</option>
+                            <option value="metadata" selected>Metadata</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report History -->
+        <div class="report-history">
+            <h3><i class="fas fa-history"></i> Report History</h3>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Report Name</th>
+                            <th>Type</th>
+                            <th>Generated By</th>
+                            <th>Date Generated</th>
+                            <th>Size</th>
+                            <th>Format</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportHistoryTable">
+                        <tr>
+                            <td>ICSC2026_Q1_Report</td>
+                            <td>Quarterly Summary</td>
+                            <td>Super Admin</td>
+                            <td>2024-03-31 14:30</td>
+                            <td>2.4 MB</td>
+                            <td>PDF</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-info btn-sm view-report-btn">View</button>
+                                    <button class="btn btn-success btn-sm download-report-btn">Download</button>
+                                    <button class="btn btn-danger btn-sm delete-report-btn">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Attendee_Demographics</td>
+                            <td>Attendee Analysis</td>
+                            <td>Super Admin</td>
+                            <td>2024-03-30 11:15</td>
+                            <td>1.8 MB</td>
+                            <td>Excel</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-info btn-sm view-report-btn">View</button>
+                                    <button class="btn btn-success btn-sm download-report-btn">Download</button>
+                                    <button class="btn btn-danger btn-sm delete-report-btn">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bulk Approvals Tab -->
 <div id="bulk-approvals" class="tab-content">
     <div class="dashboard-section">
@@ -2430,6 +3046,7 @@
             </div>
         </div>
     </div>
+
     <!-- Add Booth Modal -->
 <div id="addBoothModal" class="modal">
     <div class="modal-content modal-lg">
@@ -2858,6 +3475,7 @@
         </div>
     </div>
 </div>
+        </div>
 
 
 <!-- View Speaker Modal -->
@@ -2875,6 +3493,7 @@
         </div>
     </div>
 </div>
+        </div>
 
 <!-- Edit Speaker Modal -->
 <div id="editSpeakerModal" class="modal">
@@ -3036,6 +3655,7 @@
         </div>
     </div>
 </div>
+        </div>
 
 <!-- View Partner Modal -->
 <div id="viewPartnerModal" class="modal">
@@ -3313,6 +3933,7 @@
         </div>
     </div>
 </div>
+        </div>
 
 <!-- Add Agenda Item Modal -->
 <div id="addAgendaItemModal" class="modal">
@@ -3447,6 +4068,7 @@
         </div>
     </div>
 </div>
+        </div>
 
     <!-- Add Exhibitor Modal -->
 <div id="addExhibitorModal" class="modal">
@@ -3571,6 +4193,9 @@
         </div>
     </div>
 </div>
+</div>
+
+
 <!-- View Exhibitor Modal -->
 <div id="viewExhibitorModal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -3700,6 +4325,7 @@
             </form>
         </div>
     </div>
+</div>
 </div>
 
     <!-- Add Partner Modal -->
