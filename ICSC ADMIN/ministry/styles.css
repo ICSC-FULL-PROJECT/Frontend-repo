@@ -483,10 +483,6 @@ label {
 }
 
 
-
-
-
-
 /* Tabs */
 .tabs {
     display: flex;
@@ -612,4 +608,41 @@ label {
         min-width: auto;
         margin-bottom: 5px;
     }
+
+@keyframes fadeInScale {
+  from { 
+    opacity: 0; 
+    transform: scale(0.8); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
 }
+
+#packageSuccessModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(3px);
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+#packageSuccessModal > div {
+  background: #fff;
+  padding: 22px 35px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #222;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  animation: fadeInScale 0.25s ease-out;
+  min-width: 260px;
+  text-align: center;
+}}

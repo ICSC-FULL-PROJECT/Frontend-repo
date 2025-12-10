@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Civil Service Conference - Rejuvenate, Innovate & Accelerate!</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>Live Stream - ICSC 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Reset and Base Styles */
+
         :root {
             --primary-color: #008751;
             --primary-light: #00a862;
@@ -26,7 +25,7 @@
             --transition: all 0.3s ease;
             --border-radius: 8px;
         }
-        /* Updated About Section Layout */
+                /* Updated About Section Layout */
 .about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -82,6 +81,19 @@
     object-fit: cover;
     border-radius: 10px;
     display: block;
+}
+
+.live-pulse {
+    animation: pulse 1.5s infinite;
+    color: #ff4757;
+}
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+.live-active {
+    background: linear-gradient(90deg, #ff4757, #ff6b6b) !important;
 }
 
 .portrait-overlay {
@@ -2406,32 +2418,45 @@
   overflow: hidden;
 }
 
+        .stream-container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 20px;
+        }
+        .live-indicator {
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 500px; /* set an actual visible height */
+    margin-bottom: 20px;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: none;
+}
+        .stream-schedule {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Preload hero images -->
-<link rel="preload" as="image" href="./images/bk.jpg">
-<link rel="preload" as="image" href="./images/iya-pres.jpeg">
-<link rel="preload" as="image" href="./images/iya-pod.jpg">
-<link rel="preload" as="image" href="./images/iya-tt.jpg">
-<link rel="preload" as="image" href="./images/iya-rite.jpg">
-<link rel="preload" as="image" href="./images/iya-pode.jpg">
-<link rel="preload" as="image" href="./images/pres.jpg">
-<link rel="preload" as="image" href="./images/crrr.jpg">
-<link rel="preload" as="image" href="./images/happy.jpg">
-<link rel="preload" as="image" href="./images/selfie.jpg">
-<link rel="preload" as="image" href="./images/iya-pot.jpg">
-<link rel="preload" as="image" href="./images/rite.jpg">
-<link rel="preload" as="image" href="./images/grrrrr.jpg">
-<link rel="preload" as="image" href="./images/crowd-1.jpg">
-<link rel="preload" as="image" href="./images/table.jpg">
-
-
-    <audio id="anthemAudio" src="images/anthem.mp3" autoplay muted></audio>
-    
-    <!-- Fixed Header -->
-    <header id="header">
+  <header id="header">
         <div class="header-container">
             <div class="logo">
                 <a href="Index.html">
@@ -2475,7 +2500,7 @@
         <span>Login</span>
     </a>
         <a href="register.html" class="cta-btn">
-        <i class="fa-sign-in-alt"></i>
+        <i class="fas fa-user-plus"></i>
         <span>Register</span>
     </a>
     <button class="mobile-menu-btn">
@@ -2484,7 +2509,7 @@
    </div>
     </header>
 
-   <!-- Mobile Menu -->
+     <!-- Mobile Menu -->
 <div class="mobile-menu">
     <ul>
          <li><a href="live-stream.html" class="mobile-demand-btn" id="mobileLiveStream"><i class="fas fa-broadcast-tower"></i>Live Stream</a></li>
@@ -2494,7 +2519,7 @@
         <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
         
         <li>
-            <a href="#partners"><i class="fas fa-handshake"></i> Partners</a>
+            <a href="partners.html"><i class="fas fa-handshake"></i> Partners</a>
             <ul>
                 <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
                 
@@ -2514,279 +2539,37 @@
         </li>
     </ul>
 </div>
-
-    <!-- Hero Section -->
-    <section class="hero-slider">
-        <div class="slide-overlay"></div>
-        <div class="hero-content">
-            <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE</h1>
-            <h2><em>Rejuvenate, Innovate & Accelerate!</em></h2>
-            
-            
-            
-            <p>
-                Explore key pillars of public service performance with global leaders. 
-                Discover how governments can build capabilities for the future.
-             </p>
-            
-
-            <!-- auth buttons moved INSIDE hero-content -->
-            <div class="auth-buttons">
-                <a href="register.html" class="btn register-btn">Register</a>
-                <a href="login.html" class="btn login-btn">Login</a>
-            </div>
-        </div>
-        <!-- Background video -->
-<video autoplay muted loop playsinline id="heroVideo" class="hero-video">
-  <source src="#g" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-
-        
-    </section>
-        <!-- Leaders Section -->
-    <section id="leaders" class="leaders-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>OUR LEADERS</h2>
-                <p>Meet the distinguished leaders who are driving the vision for civil service transformation</p>
-            </div>
-            <div class="leaders-container">
-                <div class="leader-card">
-                    <div class="leader-image">
-                        <img src="images/tinubu.jpeg" alt="President of Nigeria">
-                
-                    </div>
-                    <div class="leader-info">
     
-                <h3>Bola Ahmed Tinubu (GCFR)</h3>
-                <h4>President, Federal Republic of Nigeria</h4>
-                    </div>
-                </div>
-                
-                <div class="leader-card second">
-                    <div class="leader-card-second">
-                    <div class="leader-image">
-                        <img src="images/Ks.jpeg" alt="Vice President of Nigeria">
-                
-                    </div>
-                    </div>
-                    <div class="leader-info">
-                        <h3>Kashim Shettima (GCON)<h3>
-                        <h4>Vice President of Nigeria</h4>
-
-                    </div>
-                </div>
-            
-                <div class="leader-card third">
-    <div class="leader-image">
-        <img src="images/chief2.jpeg" alt="Third Leader">
-    </div>
-    <div class="leader-info">
-        <h3>Mrs. Didi Esther Walson-Jack (OON, mni)</h3>
-        <h4>Head of the Civil Service of the Federation</h4>
-    </div>
-</div>
-
-            </div>
+    <div class="stream-container">
+        <div class="live-indicator">
+            <i class="fas fa-circle"></i> LIVE NOW
         </div>
-    </section>
-
-   <!-- About Section -->
-<section id="about" class="about-section">
-    <div class="container">
-        <div class="section-header">
-            <h2>ABOUT THE EVENT</h2>
-        </div>
-        <div class="about-content">
-            <div class="about-text">
-                <p>The Nigerian Civil Service International Conference 2026 is a prestigious gathering of policymakers, government officials, and stakeholders aimed at discussing innovations and best practices in public administration.</p>
-                <p>Scheduled to take place in Abuja, Nigeria, the conference will focus on reforms, digital transformation, and capacity building within the civil service. Key speakers from Nigeria and across the globe will share insights on enhancing efficiency and governance.</p>
-                <p>Participants will engage in workshops, panel discussions, and networking sessions to drive impactful policy changes. The event provides a platform for knowledge exchange fostering collaboration between the public and private sectors.</p>
-                <p>Registrations and donations are open to support the success of this transformative initiative.</p>
-              <div class="about-stats">
-    <div class="stat-item">
-        <h3 class="count" data-target="5000">0</h3>
-        <p>Participants</p>
-    </div>
-    <div class="stat-item">
-        <h3 class="count" data-target="200">0</h3>
-        <p>Speakers</p>
-    </div>
-    <div class="stat-item">
-        <h3 class="count no-plus" data-target="2">0</h3>
-        <p>Days</p>
-    </div>
-</div>
-            </div>
-            <div class="about-image">
-                <div class="portrait-frame">
-                    <img src="images/happy.jpg" alt="Conference Speaker">
-                    <div class="portrait-overlay">
-                    </div>
-                </div>
-            </div>
+        <h1>International Civil Service Conference 2026 Live Stream</h1>
+        
+        <!-- Video Player Area -->
+        <div class="video-container">
+            <!-- Embed your streaming platform here -->
+     <iframe 
+        src="https://www.youtube.com/embed/aqz-KE-bpKQ"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+    </iframe>
         </div>
         
-  <!-- Themes Section -->
-        <div class="themes-section">
-            <h3>Conference Themes</h3>
-            <div class="themes-grid">
-                <div class="theme-card">
-                    <i class="fas fa-users"></i>
-                    <h4>Strong Leadership</h4>
-                    <p>Developing mutual respect and alignment between ministers and senior officials for effective governance.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-user-graduate"></i>
-                    <h4>Skilled Workforce</h4>
-                    <p>Building a highly skilled, inclusive and thriving public sector workforce ready for future challenges.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-rocket"></i>
-                    <h4>Agile Culture</h4>
-                    <p>Fostering an agile, digital, and risk-taking culture focused on delivery and innovation.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-sitemap"></i>
-                    <h4>Integrated Structures</h4>
-                    <p>Implementing public service delivery structures that transcend organisational silos and bureaucracy.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-handshake"></i>
-                    <h4>Trusted Government</h4>
-                    <p>Building a government trusted by its users and the public through transparency and accountability.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-chart-line"></i>
-                    <h4>Digital Transformation</h4>
-                    <p>Leveraging technology to enhance service delivery and improve citizen engagement.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Countdown Popup Modal -->
-<div class="countdown-popup-overlay" id="countdownPopup">
-    <div class="countdown-popup">
-        <button class="popup-close-btn" id="closePopupBtn">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="popup-header">
-            <img src="icsc-logos.png" alt="logo">
-            <h3><i class="fas fa-calendar-alt"></i></h3>
-            <p>International Civil Service Conference 2026</p>
+        <!-- Stream info -->
+        <div class="stream-info">
+            <h3>Currently Streaming: Opening Ceremony</h3>
+            <p>Join us live for the opening ceremony featuring keynote addresses from global leaders.</p>
         </div>
         
-        <div class="popup-countdown" id="popupCountdown">
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupDays">00</span>
-                <span class="popup-countdown-label">Days</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupHours">00</span>
-                <span class="popup-countdown-label">Hours</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupMinutes">00</span>
-                <span class="popup-countdown-label">Minutes</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupSeconds">00</span>
-                <span class="popup-countdown-label">Seconds</span>
-            </div>
+        <!-- Schedule -->
+        <div class="stream-schedule">
+            <h3>Today's Schedule</h3>
+            <!-- Add schedule items -->
         </div>
-        
-        <p class="popup-auto-close" id="autoCloseMessage">
-            This popup will auto-close in <span id="closeTimer">5</span> seconds
-        </p>
-        
-        <button class="btn" id="registerFromPopup" style="margin-top: 20px;">
-            <i class="fas fa-user-plus"></i> Register Now
-        </button>
     </div>
-</div>
-
-<!-- Fixed Floating Timer -->
-<div class="fixed-countdown-timer" id="fixedCountdown">
-    <div class="fixed-timer-header">
-        <i class="fas fa-clock"></i> ICSC 2026
-    </div>
-    <div class="fixed-timer-display">
-        <div class="fixed-timer-days" id="fixedDays">00</div>
-        <div class="fixed-timer-label">Days To Go</div>
-        <div class="fixed-timer-time" id="fixedTime">00:00:00</div>
-    </div>
-</div>
-        
-    <!-- Hosted By Section -->
-    <section class="hosted-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Hosted By & In Association With</h2>
-            </div>
-            <div class="hosted-container">
-                <div class="hosted-item">
-                    <h4>Hosted by:</h4>
-                    <img src="images/NG.jpeg" alt="Federal Government of Nigeria">
-                    <p><strong>The Federal Government of Nigeria</strong></p>
-                </div>
-                <div class="hosted-item">
-                    <h4>In association with:</h4>
-                    <img src="images/Global.png" alt="Global Government Forum">
-                    <p><strong>Global Government Forum</strong></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Partners Section -->
-    <section id="partners" class="partners-slider-section">
-    <div class="container">
-        <div class="section-header">
-            <h2>THANK YOU TO OUR 2025 PARTNERS</h2>
-        </div>
-
-        <div class="partners-slider">
-            <div class="slide-track">
-
-                <div class="slide"><img src="images/48331-CORONATION.png" alt=""></div>
-                <div class="slide"><img src="images/NSITE.png" alt=""></div>
-                <div class="slide"><img src="images/PENSIONS.jpg" alt=""></div>
-                <div class="slide"><img src="images/aig.png" alt=""></div>
-                <div class="slide"><img src="images/soft-suite.jpg" alt=""></div>
-                <div class="slide"><img src="images/rc22.jpg" alt=""></div>
-                <div class="slide"><img src="images/nptf.jpg" alt=""></div>
-                <div class="slide"><img src="images/Nitda.jpg" alt=""></div>
-                <div class="slide"><img src="images/FCL.jpg" alt=""></div>
-                <div class="slide"><img src="images/ndic.png" alt=""></div>
-                <div class="slide"><img src="images/Zenith-bronze.jpeg" alt=""></div>
-
-                <!-- Duplicate for infinite loop -->
-                <div class="slide"><img src="images/48331-CORONATION.png" alt=""></div>
-                <div class="slide"><img src="images/NSITE.png" alt=""></div>
-                <div class="slide"><img src="images/PENSIONS.jpg" alt=""></div>
-                <div class="slide"><img src="images/aig.png" alt=""></div>
-                <div class="slide"><img src="images/soft-suite.jpg" alt=""></div>
-                <div class="slide"><img src="images/rc22.jpg" alt=""></div>
-                <div class="slide"><img src="images/nptf.jpg" alt=""></div>
-                <div class="slide"><img src="images/Nitda.jpg" alt=""></div>
-                <div class="slide"><img src="images/FCL.jpg" alt=""></div>
-                <div class="slide"><img src="images/ndic.png" alt=""></div>
-                <div class="slide"><img src="images/Zenith-bronze.jpeg" alt=""></div>
-
-            </div>
-        </div>
-
-    </div>
-</section>
-
-
-    <!-- Footer -->
-    <footer>
+     <footer>
         <div class="container">
             <div class="footer-container">
                 <div class="footer-col">
@@ -2822,488 +2605,70 @@
             </div>
         </div>
     </footer>
-
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
-
     <script>
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
-            document.querySelector('.mobile-menu').classList.toggle('active');
-            // Toggle icon between bars and times
-            const icon = this.querySelector('i');
-            if (icon.classList.contains('fa-bars')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-            
-            // Hide fixed timer when mobile menu is open on small screens
-            if (window.innerWidth < 992) {
-                const fixedTimer = document.getElementById('fixedCountdown');
-                if (fixedTimer) {
-                    if (document.querySelector('.mobile-menu').classList.contains('active')) {
-                        fixedTimer.style.opacity = '0';
-                    } else {
-                        fixedTimer.style.opacity = '1';
-                    }
-                }
-            }
-        });
+// ==============================
+// Mobile Menu Toggle
+// ==============================
+document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+    const mobileMenu = document.querySelector('.mobile-menu');
+    mobileMenu.classList.toggle('active');
 
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            const backToTop = document.querySelector('.back-to-top');
-            const fixedTimer = document.getElementById('fixedCountdown');
-            
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-                // Move timer down a bit when header is scrolled
-                if (fixedTimer) {
-                    fixedTimer.style.top = '100px';
-                }
-            } else {
-                header.classList.remove('scrolled');
-                if (fixedTimer) {
-                    fixedTimer.style.top = '150px';
-                }
-            }
-            
-            if (window.scrollY > 300) {
-                backToTop.classList.add('active');
-            } else {
-                backToTop.classList.remove('active');
-            }
-        });
-
-        // Back to Top Button Functionality
-        const backToTop = document.querySelector('.back-to-top');
-        if (backToTop) {
-            backToTop.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Ensure fixed timer doesn't overlap with back-to-top button
-            backToTop.addEventListener('mouseenter', function() {
-                const fixedTimer = document.getElementById('fixedCountdown');
-                if (fixedTimer) {
-                    fixedTimer.style.opacity = '0.5';
-                }
-            });
-            
-            backToTop.addEventListener('mouseleave', function() {
-                const fixedTimer = document.getElementById('fixedCountdown');
-                if (fixedTimer) {
-                    fixedTimer.style.opacity = '1';
-                }
-            });
-        }
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    document.querySelector('.mobile-menu').classList.remove('active');
-                    // Reset mobile menu icon
-                    const menuBtnIcon = document.querySelector('.mobile-menu-btn i');
-                    menuBtnIcon.classList.remove('fa-times');
-                    menuBtnIcon.classList.add('fa-bars');
-                }
-            });
-        });
-
-        // Animate elements on scroll
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements for animation
-        document.querySelectorAll('.theme-card, .hosted-item, .partner-item').forEach(el => {
-            observer.observe(el);
-        });
-        
-        // Enhanced Count Animation with Staggered Effect
-function animateCountersEnhanced() {
-    const counters = document.querySelectorAll('.count');
-    const speed = 100; // The lower the slower
-    
-    counters.forEach((counter, index) => {
-        setTimeout(() => {
-            const target = +counter.getAttribute('data-target');
-            const increment = target / speed;
-
-            const updateCount = () => {
-                const currentCount = +counter.innerText;
-                if (currentCount < target) {
-                    counter.innerText = Math.ceil(currentCount + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    // If it's NOT the "Days" stat, add the "+"
-                    if (counter.getAttribute("data-target") !== "2") {
-                        counter.innerText = target + '+';
-                    } else {
-                        counter.innerText = target; // No plus for Days
-                    }
-
-                    // Celebration effect
-                    counter.classList.add('animated');
-                    setTimeout(() => {
-                        counter.classList.remove('animated');
-                    }, 600);
-                }
-            };
-            
-            updateCount();
-        }, index * 300);
-    });
-}
-
-
-        // Enhanced Intersection Observer
-        const enhancedStatsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCountersEnhanced();
-                    enhancedStatsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
-
-        // Observe the about-stats section
-        const statsSection = document.querySelector('.about-stats');
-        if (statsSection) {
-            enhancedStatsObserver.observe(statsSection);
-        }
-        
-        // Select the single image inside .portrait-frame
-        const portraitImg = document.querySelector('.portrait-frame > img');
-        if (portraitImg) {
-            
-            const pics = [
-                'images/happy.jpg',
-                'images/iya-alone.jpeg',
-                'images/iya.jpg',
-                'images/iya-rite.jpg',
-                'images/iya-rr.jpg',
-                'images/iya-pres.jpeg',
-                'images/iya-mic.jpg',
-                'images/iya-pot.jpg',
-                'images/smile.jpg',
-                'images/award.jpg',
-                'images/selfie.jpg',
-                'images/award-6.jpg',
-                'images/iya-pod.jpg',
-                'images/iya-speak.jpg',
-                'images/thumbs.jpg'
-            ];
-
-            // Preload images to avoid flicker
-            pics.forEach(src => { const i = new Image(); i.src = src; });
-
-            // Start from current src if it matches one in the list, otherwise start at 0
-            let idx = Math.max(0, pics.indexOf(portraitImg.getAttribute('src')));
-            if (idx === -1) idx = 0;
-
-            // Swap image every 4 seconds (4000 ms)
-            setInterval(() => {
-                idx = (idx + 1) % pics.length;
-                portraitImg.src = pics[idx];
-            }, 4000);
-        }
-
-        // Mobile Menu Watch on Demand Button
-document.querySelector('#mobileLiveStream')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.location.href = 'live-stream.html';
+    // Toggle icon between bars and times
+    const icon = this.querySelector('i');
+    if (icon.classList.contains('fa-bars')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
 });
 
-// Add live status indicator to nav (optional):
-function updateLiveStatus() {
-    const now = new Date();
-    const conferenceStart = new Date('2026-05-25T09:00:00');
-    const conferenceEnd = new Date('2026-05-26T18:00:00');
-    
-    const liveNav = document.getElementById('liveStreamNav');
-    const mobileLive = document.getElementById('mobileLiveStream');
-    
-    if (now >= conferenceStart && now <= conferenceEnd) {
-        // Conference is live
-        if (liveNav) {
-            liveNav.innerHTML = '<i class="fas fa-broadcast-tower"></i> <span class="live-pulse">LIVE NOW</span>';
-            liveNav.style.color = '#ff4757';
-            liveNav.style.fontWeight = 'bold';
-        }
-        if (mobileLive) {
-            mobileLive.innerHTML = '<i class="fas fa-broadcast-tower"></i> <span class="live-pulse">LIVE NOW</span>';
-            mobileLive.classList.add('live-active');
-        }
-    }
-}
-updateLiveStatus();
-        
-        // ==================== COUNTDOWN TIMER SYSTEM ====================
-        
-        // Initialize the countdown system when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeCountdownSystem();
-        });
-        
-        function initializeCountdownSystem() {
-            // Check if user has already seen the popup today
-            const today = new Date().toDateString();
-            const lastPopupDate = localStorage.getItem('icsc_last_popup_date');
-            
-            // Show popup if not shown today OR if it's the first time
-            if (!lastPopupDate || lastPopupDate !== today) {
-                showCountdownPopup();
-            } else {
-                // If popup already shown today, just show the fixed timer
-                showFixedTimer();
-            }
-            
-            // Initialize the countdown timer
-            updateCountdownTimers();
-        }
-        
-        function showCountdownPopup() {
-            const popup = document.getElementById('countdownPopup');
-            const closeBtn = document.getElementById('closePopupBtn');
-            const registerBtn = document.getElementById('registerFromPopup');
-            let autoCloseTimer;
-            let closeCounter = 5;
-            
-            // Mark popup as shown today
-            localStorage.setItem('icsc_last_popup_date', new Date().toDateString());
-            
-            // Show popup with slight delay for better UX
-            setTimeout(() => {
-                if (popup) {
-                    popup.classList.add('active');
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling
-                    
-                    // Start auto-close countdown
-                    const closeTimerElement = document.getElementById('closeTimer');
-                    if (closeTimerElement) {
-                        autoCloseTimer = setInterval(() => {
-                            closeCounter--;
-                            closeTimerElement.textContent = closeCounter;
-                            
-                            if (closeCounter <= 0) {
-                                closePopup();
-                            }
-                        }, 1000);
-                    }
-                }
-            }, 1000);
-            
-            // Close button functionality
-            if (closeBtn) {
-                closeBtn.addEventListener('click', closePopup);
-            }
-            
-            // Close on overlay click (outside popup)
-            if (popup) {
-                popup.addEventListener('click', function(e) {
-                    if (e.target === popup) {
-                        closePopup();
-                    }
-                });
-            }
-            
-            // Register button functionality
-            if (registerBtn) {
-                registerBtn.addEventListener('click', function() {
-                    window.location.href = 'register.html';
-                });
-            }
-            
-            // Close popup function
-            function closePopup() {
-                clearInterval(autoCloseTimer);
-                if (popup) {
-                    popup.classList.remove('active');
-                }
-                document.body.style.overflow = ''; // Re-enable scrolling
-                showFixedTimer();
-            }
-        }
-        
-        function showFixedTimer() {
-            const fixedTimer = document.getElementById('fixedCountdown');
-            if (fixedTimer) {
-                setTimeout(() => {
-                    fixedTimer.classList.add('active');
-                }, 500);
-            }
-        }
-function updateCountdownTimers() {
-    // Prefer the canonical epoch (if saved by admin)
-    let eventEpoch = localStorage.getItem('icsc_event_epoch');
 
-    if (eventEpoch) {
-        eventEpoch = parseInt(eventEpoch);
+// ==============================
+// Header Scroll Effect
+// ==============================
+window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
     } else {
-        // Fallback to timezone-aware ISO date saved by admin
-        let eventDate = localStorage.getItem('icsc_event_date');
-
-        // If no date exists, set default
-        if (!eventDate) {
-            eventDate = '2026-05-25T09:00:00Z';
-            localStorage.setItem('icsc_event_date', eventDate);
-        }
-
-        // Date.parse() correctly handles ISO strings with Z or +01:00
-        eventEpoch = Date.parse(eventDate);
-
-        // Optional: save epoch for future accuracy
-        localStorage.setItem('icsc_event_epoch', String(eventEpoch));
+        header.classList.remove('scrolled');
     }
+});
 
-    // eventEpoch is now the universal timestamp the countdown should use
-    const eventTime = eventEpoch;
 
-    function updateAllTimers() {
-        const now = Date.now();
-        const timeRemaining = eventTime - now;
+// ==============================
+// Smooth Scroll + Close Mobile Menu
+// ==============================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        // Internal links only
+        const targetId = this.getAttribute('href');
+        if (!targetId || targetId === "#") return;
 
-        // If event has already passed
-        if (timeRemaining < 0) {
-            // Update popup if it's open
-            const popup = document.getElementById('countdownPopup');
-            const popupCountdown = document.getElementById('popupCountdown');
-            if (popup && popupCountdown && popup.classList.contains('active')) {
-                popupCountdown.innerHTML = `
-                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: 700;">
-                        <i class="fas fa-check-circle"></i> Conference is Live!
-                    </div>
-                `;
-            }
-            
-            // Update fixed timer
-            const fixedTimer = document.getElementById('fixedCountdown');
-            if (fixedTimer) {
-                fixedTimer.innerHTML = `
-                    <div class="fixed-timer-header" style="color: #f8d64e;">
-                        <i class="fas fa-broadcast-tower"></i> LIVE NOW
-                    </div>
-                    <div class="fixed-timer-display">
-                        <div style="font-size: 1.2rem; color: white; font-weight: 700;">
-                            Join Us!
-                        </div>
-                    </div>
-                `;
-            }
-            
-            return;
-        }
-                
-                // Calculate time units
-                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-                
-                // Update popup timer
-                const popupDays = document.getElementById('popupDays');
-                const popupHours = document.getElementById('popupHours');
-                const popupMinutes = document.getElementById('popupMinutes');
-                const popupSeconds = document.getElementById('popupSeconds');
-                
-                if (popupDays) popupDays.textContent = days.toString().padStart(2, '0');
-                if (popupHours) popupHours.textContent = hours.toString().padStart(2, '0');
-                if (popupMinutes) popupMinutes.textContent = minutes.toString().padStart(2, '0');
-                if (popupSeconds) popupSeconds.textContent = seconds.toString().padStart(2, '0');
-                
-                // Update fixed timer
-                const fixedDays = document.getElementById('fixedDays');
-                const fixedTime = document.getElementById('fixedTime');
-                const fixedTimer = document.getElementById('fixedCountdown');
-                
-                if (fixedDays) fixedDays.textContent = days;
-                if (fixedTime) {
-                    fixedTime.textContent = 
-                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-                
-                // Update fixed timer style based on days remaining
-                if (fixedTimer) {
-                    if (days < 7) {
-                        // Less than a week - show urgent style
-                        fixedTimer.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%)';
-                        fixedTimer.style.animation = 'pulse 2s infinite';
-                    } else if (days < 30) {
-                        // Less than a month - show warning style
-                        fixedTimer.style.background = 'linear-gradient(135deg, #ffa502 0%, #ff7f00 100%)';
-                    } else {
-                        // Reset to default
-                        fixedTimer.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)';
-                        fixedTimer.style.animation = 'none';
-                    }
-                }
-            }
-            
-            // Initial update
-            updateAllTimers();
-            
-            // Update every second
-            setInterval(updateAllTimers, 1000);
-        }
-        
-        // Add pulse animation to your existing CSS keyframes
-        if (!document.querySelector('style').textContent.includes('@keyframes pulse')) {
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: translateX(0) scale(1); }
-                    50% { transform: translateX(0) scale(1.05); }
-                    100% { transform: translateX(0) scale(1); }
-                }
-            `;
-            document.head.appendChild(style);
+        const targetElement = document.querySelector(targetId);
+        if (!targetElement) return;
 
-            // Anthem Audio Playback - ADD THIS NEW CODE
-        const anthem = document.getElementById('anthemAudio');
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                anthem.muted = false;
-                anthem.volume = 0.1; // Set volume between 0.0 (silent) and 1.0 (max)
-                anthem.play().catch(()=>{});
-            }, 1000);
+        e.preventDefault();
+
+        // Smooth scroll
+        window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
         });
-        }
 
+        // Close mobile menu if open
+        const mobileMenu = document.querySelector('.mobile-menu');
+        mobileMenu.classList.remove('active');
 
+        // Reset menu icon
+        const menuIcon = document.querySelector('.mobile-menu-btn i');
+        menuIcon.classList.remove('fa-times');
+        menuIcon.classList.add('fa-bars');
+    });
+});
 </script>
-
-
 </body>
 </html>

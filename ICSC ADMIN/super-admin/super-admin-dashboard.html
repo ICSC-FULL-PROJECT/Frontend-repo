@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="path/to/chart.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="display: none;" data-protected="super_admin">
@@ -51,7 +52,7 @@
                     <div class="user-avatar">SA</div>
                     <div>
                         <div>Super Admin</div>
-                        <div style="font-size: 0.8rem; color: var(--text-medium);">Last login: Today, 09:30 AM</div>
+                        <div style="font-size: 0.8rem; color: var(--text-medium);">Last login:</div>
                     </div>
                 </div>
             </div>
@@ -403,7 +404,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeePassword">Password</label>
-                        <input type="password" id="attendeePassword" class="form-control" placeholder="Enter password" required>
+                        <input type="password" id="attendeePassword" class="form-control" placeholder="Enter password" >
                     </div>
 
                     <div class="form-group">
@@ -417,21 +418,12 @@
                         <label for="attendeeOrganization">Organization</label>
                         <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization" required>
                     </div>
-
-                    <div class="form-group">
-                        <label for="attendeeWorkPhone">Work Phone</label>
-                        <input type="tel" id="attendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
-                    </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeePhone">Phone Number</label>
                         <input type="tel" id="attendeePhone" class="form-control" placeholder="Enter phone number" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="attendeeNIN">National ID Number (NIN)</label>
-                        <input type="text" id="attendeeNIN" class="form-control" placeholder="Enter NIN" required>
                     </div>
                 </div>
                 <div class="form-row">
@@ -657,10 +649,6 @@
                         <div class="form-group">
                             <label>Phone Number</label>
                             <p id="viewPhone" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>National ID Number (NIN)</label>
-                            <p id="viewNIN" class="form-control" style="background: #f8f9fa;"></p>
                         </div>
                     </div>
                     <div class="form-row">
@@ -1944,7 +1932,39 @@
                             <select id="attendeeMinistryFilter" class="form-control" multiple>
                                 <option value="all">All Ministries</option>
                                 <!-- Ministry options will be populated dynamically -->
-                            </select>
+                           <option value="">All Ministries</option>
+    <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
+    <option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
+    <option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
+    <option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
+    <option value="Ministry of Defence">Ministry of Defence</option>
+    <option value="Ministry of Education">Ministry of Education</option>
+    <option value="Ministry of Environment">Ministry of Environment</option>
+    <option value="Ministry of Finance and Coordinating Ministry of the Economy">Ministry of Finance and Coordinating Ministry of the Economy</option>
+    <option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
+    <option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
+    <option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
+    <option value="Ministry of Humanitarian Affairs and Poverty Alleviation">Ministry of Humanitarian Affairs and Poverty Alleviation</option>
+    <option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
+    <option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
+    <option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
+    <option value="Ministry of Interior">Ministry of Interior</option>
+    <option value="Ministry of Justice">Ministry of Justice</option>
+    <option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
+    <option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
+    <option value="Ministry of Niger Delta Development">Ministry of Niger Delta Development</option>
+    <option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
+    <option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
+    <option value="Ministry of Power">Ministry of Power</option>
+    <option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
+    <option value="Ministry of Steel Development">Ministry of Steel Development</option>
+    <option value="Ministry of Tourism">Ministry of Tourism</option>
+    <option value="Ministry of Transportation">Ministry of Transportation</option>
+    <option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
+    <option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
+    <option value="Ministry of Works">Ministry of Works</option>
+    <option value="Ministry of Youth Development">Ministry of Youth Development</option>
+</select>
                         </div>
                         <div class="form-group">
                             <label>Filter by Grade Level</label>
@@ -2401,8 +2421,39 @@
                 </select>
                 <select id="filterBulkMinistry" class="form-control filter-select">
                     <option value="">All Ministries</option>
-                    <!-- Ministry options will be populated dynamically -->
-                </select>
+<option value="">All Ministries</option>
+    <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
+    <option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
+    <option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
+    <option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
+    <option value="Ministry of Defence">Ministry of Defence</option>
+    <option value="Ministry of Education">Ministry of Education</option>
+    <option value="Ministry of Environment">Ministry of Environment</option>
+    <option value="Ministry of Finance and Coordinating Ministry of the Economy">Ministry of Finance and Coordinating Ministry of the Economy</option>
+    <option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
+    <option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
+    <option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
+    <option value="Ministry of Humanitarian Affairs and Poverty Alleviation">Ministry of Humanitarian Affairs and Poverty Alleviation</option>
+    <option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
+    <option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
+    <option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
+    <option value="Ministry of Interior">Ministry of Interior</option>
+    <option value="Ministry of Justice">Ministry of Justice</option>
+    <option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
+    <option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
+    <option value="Ministry of Niger Delta Development">Ministry of Niger Delta Development</option>
+    <option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
+    <option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
+    <option value="Ministry of Power">Ministry of Power</option>
+    <option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
+    <option value="Ministry of Steel Development">Ministry of Steel Development</option>
+    <option value="Ministry of Tourism">Ministry of Tourism</option>
+    <option value="Ministry of Transportation">Ministry of Transportation</option>
+    <option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
+    <option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
+    <option value="Ministry of Works">Ministry of Works</option>
+    <option value="Ministry of Youth Development">Ministry of Youth Development</option>
+</select>
                 <button class="btn btn-secondary" id="clearBulkFiltersBtn">Clear Filters</button>
             </div>
         </div>
@@ -2461,6 +2512,237 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+<!-- Review Bulk Upload Modal -->
+<div id="reviewBulkModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Review & Approve Bulk Upload</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Upload Summary -->
+            <div class="bulk-upload-summary" id="bulkUploadSummary">
+                <div class="summary-row">
+                    <div class="summary-item">
+                        <span class="summary-label">Upload ID:</span>
+                        <span class="summary-value" id="reviewUploadId">BULK001</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Ministry:</span>
+                        <span class="summary-value" id="reviewMinistry">Ministry of Finance</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Filename:</span>
+                        <span class="summary-value" id="reviewFilename">MOF_Attendees_2024.xlsx</span>
+                    </div>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Records:</span>
+                        <span class="summary-value" id="reviewTotalRecords">25</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Valid Records:</span>
+                        <span class="summary-value" id="reviewValidRecords">22</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Errors:</span>
+                        <span class="summary-value" id="reviewErrorRecords">3</span>
+                    </div>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-item">
+                        <span class="summary-label">Submitted By:</span>
+                        <span class="summary-value" id="reviewSubmittedBy">MOF Admin</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Date Submitted:</span>
+                        <span class="summary-value" id="reviewDateSubmitted">2024-01-15 14:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Errors (if any) -->
+            <div class="validation-errors" id="validationErrorsSection" style="display: none;">
+                <h3><i class="fas fa-exclamation-triangle"></i> Validation Errors</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Row #</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Error Type</th>
+                                <th>Error Message</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="validationErrorsTable">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Valid Records Preview -->
+            <div class="valid-records-preview">
+                <h3><i class="fas fa-check-circle"></i> Valid Records (Preview)</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Ministry</th>
+                                <th>Grade Level</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="validRecordsPreviewTable">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bulk Actions -->
+            <div class="bulk-actions">
+                <div class="action-controls">
+                    <div class="form-group">
+                        <label for="bulkStatusSelect">Bulk Status Action:</label>
+                        <select id="bulkStatusSelect" class="form-control">
+                            <option value="approve_all">Approve All Valid Records</option>
+                            <option value="approve_except_errors">Approve All Except Errors</option>
+                            <option value="reject_all">Reject All Records</option>
+                            <option value="custom">Custom Selection</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="customSelectionSection" style="display: none;">
+                        <label>Select Records to Approve:</label>
+                        <div class="record-selection">
+                            <button type="button" class="btn btn-sm btn-secondary" id="selectAllValidBtn">
+                                Select All Valid
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" id="deselectAllBtn">
+                                Deselect All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bulkRemarks">Approval Remarks (Optional):</label>
+                    <textarea id="bulkRemarks" class="form-control" 
+                              placeholder="Add remarks about this approval/rejection..." 
+                              rows="3"></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="closeReviewBtn">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" id="rejectBulkBtn">
+                        <i class="fas fa-times"></i> Reject Entire Upload
+                    </button>
+                    <button type="button" class="btn" id="approveBulkBtn">
+                        <i class="fas fa-check"></i> Approve Selected Records
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Approved Bulk Details Modal -->
+<div id="viewApprovedBulkModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2>Approved Bulk Upload Details</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Upload Summary -->
+            <div class="bulk-upload-summary">
+                <div class="summary-row">
+                    <div class="summary-item">
+                        <span class="summary-label">Upload ID:</span>
+                        <span class="summary-value" id="viewApprovedUploadId">BULK002</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Ministry:</span>
+                        <span class="summary-value" id="viewApprovedMinistry">Ministry of Education</span>
+                    </div>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Approved:</span>
+                        <span class="summary-value" id="viewApprovedCount">18</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Approved By:</span>
+                        <span class="summary-value" id="viewApprovedBy">Super Admin</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Date Approved:</span>
+                        <span class="summary-value" id="viewApprovedDate">2024-01-16 10:15</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approved Records -->
+            <div class="approved-records">
+                <h3><i class="fas fa-check-circle"></i> Approved Attendees</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Ministry</th>
+                                <th>Grade Level</th>
+                                <th>Approval Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvedRecordsTable">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Export Options -->
+            <div class="export-options">
+                <h3><i class="fas fa-download"></i> Export Approved Records</h3>
+                <div class="export-buttons">
+                    <button type="button" class="btn btn-secondary" id="exportApprovedExcelBtn">
+                        <i class="fas fa-file-excel"></i> Export to Excel
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="exportApprovedPDFBtn">
+                        <i class="fas fa-file-pdf"></i> Export to PDF
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="exportApprovedCSVBtn">
+                        <i class="fas fa-file-csv"></i> Export to CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="closeApprovedViewBtn">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -2663,8 +2945,8 @@
                             </select>
                         </div>
                     </div>
-
-                    <!-- Global Cap Settings -->
+                </div>
+                  <!-- Global Cap Settings -->
                     <div class="form-row">
                         <div class="form-group full-width">
                             <label for="globalRegistrationMessage">Custom Full Message</label>
@@ -2695,7 +2977,430 @@
                         <i class="fas fa-save"></i> Save Registration Caps
                     </button>
                 </div>
-            </form>
+
+                    
+<!-- Partnership Package Management Section -->
+<div class="settings-section">
+    <div class="section-header">
+        <h3><i class="fas fa-handshake"></i> Partnership Package Management</h3>
+        <p>Configure Diamond, Gold, Silver, and Bronze partnership packages</p>
+    </div>
+
+    <!-- Package Statistics Overview -->
+    <div class="package-stats-overview">
+        <h4>Current Package Utilization</h4>
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon diamond">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="diamondUtilization">0/0</h3>
+                    <p>Diamond Partners</p>
+                    <small><span id="diamondPercentage">0%</span> utilized</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="goldUtilization">0/0</h3>
+                    <p>Gold Partners</p>
+                    <small><span id="goldPercentage">0%</span> utilized</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon silver">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="silverUtilization">0/0</h3>
+                    <p>Silver Partners</p>
+                    <small><span id="silverPercentage">0%</span> utilized</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bronze">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="bronzeUtilization">0/0</h3>
+                    <p>Bronze Partners</p>
+                    <small><span id="bronzePercentage">0%</span> utilized</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package Configuration Form -->
+    <form id="packageConfigForm">
+        <!-- Package Capacity Settings -->
+        <div class="form-section">
+            <h4>Package Capacity Limits</h4>
+            
+            <div class="package-capacity-container">
+                <!-- Diamond Package -->
+                <div class="package-capacity-card" data-package="diamond">
+                    <div class="package-header">
+                        <i class="fas fa-gem"></i>
+                        <h5>Diamond Partner Package</h5>
+                        <span class="package-status status-available" id="diamondStatus">Available</span>
+                    </div>
+                    
+                    <div class="capacity-controls">
+                        <div class="form-group">
+                            <label for="diamondMaxRegistrants">Maximum Partners</label>
+                            <div class="input-with-actions">
+                                <input type="number" id="diamondMaxRegistrants" class="form-control" min="0" value="10">
+                                <div class="input-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('diamond', -1)">-</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('diamond', 1)">+</button>
+                                </div>
+                            </div>
+                            <small>Set to 0 for unlimited</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="diamondCurrentCount">Current Partners</label>
+                            <input type="text" id="diamondCurrentCount" class="form-control" value="0" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="diamondAction">When Full</label>
+                            <select id="diamondAction" class="form-control">
+                                <option value="hide">Hide from registration</option>
+                                <option value="disable">Disable registration</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Package -->
+                <div class="package-capacity-card" data-package="gold">
+                    <div class="package-header">
+                        <i class="fas fa-medal"></i>
+                        <h5>Gold Knowledge Partner</h5>
+                        <span class="package-status status-available" id="goldStatus">Available</span>
+                    </div>
+                    
+                    <div class="capacity-controls">
+                        <div class="form-group">
+                            <label for="goldMaxRegistrants">Maximum Partners</label>
+                            <div class="input-with-actions">
+                                <input type="number" id="goldMaxRegistrants" class="form-control" min="0" value="20">
+                                <div class="input-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('gold', -1)">-</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('gold', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goldCurrentCount">Current Partners</label>
+                            <input type="text" id="goldCurrentCount" class="form-control" value="0" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goldAction">When Full</label>
+                            <select id="goldAction" class="form-control">
+                                <option value="hide">Hide from registration</option>
+                                <option value="disable">Disable registration</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silver Package -->
+                <div class="package-capacity-card" data-package="silver">
+                    <div class="package-header">
+                        <i class="fas fa-award"></i>
+                        <h5>Silver Roundtable Partner</h5>
+                        <span class="package-status status-available" id="silverStatus">Available</span>
+                    </div>
+                    
+                    <div class="capacity-controls">
+                        <div class="form-group">
+                            <label for="silverMaxRegistrants">Maximum Partners</label>
+                            <div class="input-with-actions">
+                                <input type="number" id="silverMaxRegistrants" class="form-control" min="0" value="30">
+                                <div class="input-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('silver', -1)">-</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('silver', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="silverCurrentCount">Current Partners</label>
+                            <input type="text" id="silverCurrentCount" class="form-control" value="0" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="silverAction">When Full</label>
+                            <select id="silverAction" class="form-control">
+                                <option value="hide">Hide from registration</option>
+                                <option value="disable">Disable registration</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bronze Package -->
+                <div class="package-capacity-card" data-package="bronze">
+                    <div class="package-header">
+                        <i class="fas fa-star"></i>
+                        <h5>Bronze Exhibition Partner</h5>
+                        <span class="package-status status-available" id="bronzeStatus">Available</span>
+                    </div>
+                    
+                    <div class="capacity-controls">
+                        <div class="form-group">
+                            <label for="bronzeMaxRegistrants">Maximum Partners</label>
+                            <div class="input-with-actions">
+                                <input type="number" id="bronzeMaxRegistrants" class="form-control" min="0" value="50">
+                                <div class="input-actions">
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('bronze', -1)">-</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('bronze', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bronzeCurrentCount">Current Partners</label>
+                            <input type="text" id="bronzeCurrentCount" class="form-control" value="0" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bronzeAction">When Full</label>
+                            <select id="bronzeAction" class="form-control">
+                                <option value="hide">Hide from registration</option>
+                                <option value="disable">Disable registration</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Package Benefits Configuration -->
+        <div class="form-section">
+            <h4>Package Benefits & Features</h4>
+            
+            <div class="benefits-tabs">
+                <div class="benefits-tab-nav">
+                    <button type="button" class="benefits-tab-btn active" data-package="diamond">
+                        <i class="fas fa-gem"></i> Diamond
+                    </button>
+                    <button type="button" class="benefits-tab-btn" data-package="gold">
+                        <i class="fas fa-medal"></i> Gold
+                    </button>
+                    <button type="button" class="benefits-tab-btn" data-package="silver">
+                        <i class="fas fa-award"></i> Silver
+                    </button>
+                    <button type="button" class="benefits-tab-btn" data-package="bronze">
+                        <i class="fas fa-star"></i> Bronze
+                    </button>
+                </div>
+                
+                <div class="benefits-tab-content">
+                    <!-- Diamond Benefits -->
+                    <div class="benefits-tab-pane active" id="diamondBenefits">
+                        <div class="form-group">
+                            <label for="diamondInvestment">Investment Amount (₦)</label>
+                            <input type="number" id="diamondInvestment" class="form-control" value="5000000" step="100000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="diamondFeatures">Key Features (one per line)</label>
+                            <textarea id="diamondFeatures" class="form-control" rows="5">• Prime booth location (6x9m)
+• 10 conference passes
+• Keynote speaking slot
+• Company logo on all promotional materials
+• VIP dinner with speakers
+• Dedicated event staff
+• Social media promotion
+• Full-page ad in conference brochure</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="diamondDescription">Package Description</label>
+                            <textarea id="diamondDescription" class="form-control" rows="3">Premium partnership with maximum visibility and exclusive benefits.</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Gold Benefits -->
+                    <div class="benefits-tab-pane" id="goldBenefits" style="display: none;">
+                        <div class="form-group">
+                            <label for="goldInvestment">Investment Amount (₦)</label>
+                            <input type="number" id="goldInvestment" class="form-control" value="3000000" step="100000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goldFeatures">Key Features (one per line)</label>
+                            <textarea id="goldFeatures" class="form-control" rows="5">• Standard booth location (6x6m)
+• 6 conference passes
+• Panel discussion participation
+• Company logo on event website
+• Networking reception access
+• Half-page ad in conference brochure</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goldDescription">Package Description</label>
+                            <textarea id="goldDescription" class="form-control" rows="3">Strategic partnership with strong visibility and networking opportunities.</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Silver Benefits -->
+                    <div class="benefits-tab-pane" id="silverBenefits" style="display: none;">
+                        <div class="form-group">
+                            <label for="silverInvestment">Investment Amount (₦)</label>
+                            <input type="number" id="silverInvestment" class="form-control" value="1500000" step="50000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="silverFeatures">Key Features (one per line)</label>
+                            <textarea id="silverFeatures" class="form-control" rows="5">• Standard booth location (3x6m)
+• 4 conference passes
+• Roundtable discussion participation
+• Company logo in event program
+• Listing on event website</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="silverDescription">Package Description</label>
+                            <textarea id="silverDescription" class="form-control" rows="3">Valued partnership with good visibility and engagement opportunities.</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Bronze Benefits -->
+                    <div class="benefits-tab-pane" id="bronzeBenefits" style="display: none;">
+                        <div class="form-group">
+                            <label for="bronzeInvestment">Investment Amount (₦)</label>
+                            <input type="number" id="bronzeInvestment" class="form-control" value="500000" step="25000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bronzeFeatures">Key Features (one per line)</label>
+                            <textarea id="bronzeFeatures" class="form-control" rows="5">• Exhibition space (3x3m)
+• 2 conference passes
+• Company listing on event website
+• Basic promotional materials</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bronzeDescription">Package Description</label>
+                            <textarea id="bronzeDescription" class="form-control" rows="3">Entry-level partnership with exhibition presence and networking access.</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment & Grace Period Settings -->
+        <div class="form-section">
+            <h4>Payment & Grace Period Settings</h4>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="paymentGracePeriod">Payment Grace Period (hours)</label>
+                    <input type="number" id="paymentGracePeriod" class="form-control" value="48" min="1" max="168">
+                    <small>Time allowed for partners to complete payment before slot is reopened</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="autoReopenEnabled">Auto-Reopen Full Packages</label>
+                    <select id="autoReopenEnabled" class="form-control">
+                        <option value="yes">Yes - Automatically reopen when payment fails</option>
+                        <option value="no">No - Manual review required</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="paymentReminderTemplate">Payment Reminder Template</label>
+                    <textarea id="paymentReminderTemplate" class="form-control" rows="4">Dear {partner_name},
+
+This is a reminder that your payment for the {package_name} package at ICSC 2026 is due within {grace_period} hours.
+
+Please complete your payment to secure your partnership. If payment is not received within the grace period, your reserved slot will be reopened for other partners.
+
+Best regards,
+ICSC 2026 Team</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Package Availability Override -->
+        <div class="form-section">
+            <h4>Manual Package Control</h4>
+            
+            <div class="package-override-controls">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Force Package Status</label>
+                        <div class="override-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('diamond', 'open')">
+                                Open Diamond
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('diamond', 'close')">
+                                Close Diamond
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('gold', 'open')">
+                                Open Gold
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('gold', 'close')">
+                                Close Gold
+                            </button>
+                        </div>
+                        <div class="override-buttons" style="margin-top: 10px;">
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('silver', 'open')">
+                                Open Silver
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('silver', 'close')">
+                                Close Silver
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('bronze', 'open')">
+                                Open Bronze
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('bronze', 'close')">
+                                Close Bronze
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="overrideReason">Override Reason (Optional)</label>
+                        <input type="text" id="overrideReason" class="form-control" placeholder="e.g., Special promotion, System maintenance">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="refreshPackageStatsBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Stats
+            </button>
+            <button type="button" class="btn btn-secondary" id="resetPackageDefaultsBtn">
+                <i class="fas fa-undo"></i> Reset to Defaults
+            </button>
+            <button type="submit" class="btn">
+                <i class="fas fa-save"></i> Save Package Cnfiguration
+            </button>
+        </div>        
+</form>
         </div>
 
         <!-- System Configuration -->
@@ -2801,10 +3506,6 @@
                         <div class="form-group">
                             <label for="editAttendeePhone">Phone Number *</label>
                             <input type="tel" id="editAttendeePhone" class="form-control" placeholder="Enter phone number" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editAttendeeNIN">National ID Number (NIN) *</label>
-                            <input type="text" id="editAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -3392,11 +4093,6 @@
     <div class="form-group">
         <label for="speakerPassword">Password</label>
         <input type="password" id="speakerPassword" class="form-control" placeholder="Enter password">
-    </div>
-
-    <div class="form-group">
-        <label for="speakerWorkPhone">Work Phone</label>
-        <input type="tel" id="speakerWorkPhone" class="form-control" placeholder="Enter work phone">
     </div>
 </div>
 
@@ -5677,12 +6373,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 'First Name': 'John',
                 'Last Name': 'Doe',
                 'Email': 'john.doe@ministry.gov.ng',
-                'Password': 'Password123',
                 'Job Title': 'Assistant Director',
                 'Organization': 'Federal Ministry',
-                'Work Phone': '+2348012345678',
                 'Phone Number': '+2348012345678',
-                'NIN': '12345678901',
                 'Position': 'Assistant Director',
                 'Grade Level': 'Assistant Director',
                 'Ministry': 'Ministry of Finance and Coordinating Ministry of the Economy',
@@ -5714,8 +6407,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ['6. Save the file as .xlsx format before uploading'],
             [''],
             ['Required Fields:'],
-            ['Prefix, First Name, Last Name, Email, Password, Job Title, Organization, Work Phone,'],
-            ['Phone Number, NIN, Position, Grade Level, Ministry, Department, Department Agency']
+            ['Prefix, First Name, Last Name, Email, Password, Job Title, Organization,'],
+            ['Phone Number,Position, Grade Level, Ministry, Department, Department Agency']
         ];
         
         const ws2 = XLSX.utils.aoa_to_sheet(instructionData);
@@ -5820,9 +6513,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Password': 'password',
                         'Job Title': 'jobTitle',
                         'Organization': 'organization',
-                        'Work Phone': 'workPhone',
                         'Phone Number': 'phone',
-                        'NIN': 'nin',
                         'Position': 'position',
                         'Grade Level': 'gradeLevel',
                         'Ministry': 'ministry',

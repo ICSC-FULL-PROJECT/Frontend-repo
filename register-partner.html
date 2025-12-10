@@ -434,6 +434,64 @@
             padding-right: 15px;
             max-width: 100%;
         }
+    /* Notification styles for mock mode */
+    .mock-notice {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #856404;
+    }
+    
+    .mock-notice i {
+        margin-right: 8px;
+    }
+    
+    .package-description {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    /* Improved disabled package styling */
+    .package-card.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        position: relative;
+    }
+    
+    .package-card.disabled::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 8px;
+    }
+    
+    .limited {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        text-align: center;
+        font-weight: 500;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #f8f9fa;
+    }
+    
+    .payment-amount {
+        background: #e8f5e9;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        border-left: 3px solid #28a745;
+    }
+
 
         /* Fix for button layout issue */
         .content-section .container {
@@ -776,97 +834,29 @@
             <div id="package-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Select Your Partnership Package</h2>
                 
-                <!-- PDF Viewer for Partner -->
-                <div class="sponsor-package-info">
-                    <h5><i class="fas fa-file-pdf me-2"></i>Partnership Package Information</h5>
-                    <p>Please review the partnership package details in the document below before making your selection.</p>
-                    <div class="pdf-viewer">
-                        <h5>ICSC Partnership Packages</h5>
-                        <div class="pdf-placeholder">
-                            <i class="fas fa-file-pdf"></i>
-                            <p>ICSC_Partnership_Packages.pdf</p>
-                            <p class="text-muted">This document contains detailed information about partnership packages and benefits.</p>
-                            <button type="button" class="btn btn-outline-primary mt-2" onclick="viewPartnerPackagePDF()">
-                                <i class="fas fa-eye me-2"></i>View PDF
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary mt-2" onclick="downloadPartnerPackagePDF()">
-                                <i class="fas fa-download me-2"></i>Download PDF
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals</p>
-                
-                <div class="package-cards">
-                    <div class="package-card" data-package="bronze-partner">
-                        <h4>Bronze Partner</h4>
-                        <div class="price">N5,000</div>
-                        <ul>
-                            <li>Logo on conference website</li>
-                            <li>Logo in conference program</li>
-                            <li>Social media mention</li>
-                            <li>1 complimentary registration</li>
-                            <li>Exhibition booth (3x3m)</li>
-                        </ul>
-                        <div class="limited">Limited availability</div>
-                    </div>
-                    
-                    <div class="package-card" data-package="silver-partner">
-                        <h4>Silver Partner</h4>
-                        <div class="price">N10,000</div>
-                        <ul>
-                            <li>All Bronze benefits</li>
-                            <li>Larger logo placement</li>
-                            <li>Dedicated social media posts</li>
-                            <li>2 complimentary registrations</li>
-                            <li>Exhibition booth (3x6m)</li>
-                            <li>Recognition during opening ceremony</li>
-                        </ul>
-                        <div class="limited">Limited availability</div>
-                    </div>
-                    
-                    <div class="package-card" data-package="gold-partner">
-                        <h4>Gold Partner</h4>
-                        <div class="price">N15,000</div>
-                        <ul>
-                            <li>All Silver benefits</li>
-                            <li>Prominent logo placement</li>
-                            <li>Featured in pre-conference communications</li>
-                            <li>4 complimentary registrations</li>
-                            <li>Premium exhibition booth (6x6m)</li>
-                            <li>Speaking opportunity at a breakout session</li>
-                            <li>Recognition during opening and closing ceremonies</li>
-                        </ul>
-                        <div class="limited">Very limited availability</div>
-                    </div>
-                    
-                    <div class="package-card" data-package="platinum-partner">
-                        <h4>Platinum Partner</h4>
-                        <div class="price">N30,000</div>
-                        <ul>
-                            <li>All Gold benefits</li>
-                            <li>Exclusive logo placement</li>
-                            <li>Keynote speaking opportunity</li>
-                            <li>8 complimentary registrations</li>
-                            <li>Custom exhibition space</li>
-                            <li>Dedicated press release</li>
-                            <li>Branding at VIP reception</li>
-                            <li>Private meeting with conference organizers</li>
-                        </ul>
-                        <div class="limited">Only 2 slots available</div>
-                    </div>
-                </div>
-                
-                <div class="button-container">
-                    <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back
-                    </button>
-                    <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
-                    </button>
-                </div>
-            </div>
+        
+                <!-- ADD MOCK MODE NOTICE HERE -->
+    <div class="mock-notice" id="mock-notice" style="display: none;">
+        <i class="fas fa-code"></i>
+        <strong>Development Mode:</strong> Using mock data. Packages will sync with admin system when backend is ready.
+    </div>
+    
+    <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals</p>
+    
+
+    <div class="package-cards">
+        <!-- Packages will be loaded dynamically from the admin system -->
+    </div>
+    
+    <div class="button-container">
+        <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
+            <i class="fas fa-arrow-circle-left me-2"></i> Back
+        </button>
+        <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
+            Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+        </button>
+    </div>
+</div>
 
             <!-- Step 4: Payment Section -->
             <div id="payment-section" class="form-section" style="display: none;">
@@ -885,38 +875,43 @@
                         </div>
                     </div>
                     
-                    <div class="payment-form" id="bank-transfer-form">
-                        <h5>Bank Transfer Details</h5>
-                        <p><strong>Bank Name:</strong> First Bank Nigeria</p>
-                        <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
-                        <p><strong>Account Number:</strong> 1234567890</p>
-                        <p><strong>Sort Code:</strong> 123456</p>
-                        <p>Please include your registration ID as the payment reference.</p>
-                        
-                        <!-- Payment Receipt Upload - Only for Bank Transfer -->
-                        <div class="form-group mt-4">
-                            <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
-                            <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                            <div class="help-block-error" id="paymentReceipt-error"></div>
-                            <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
-                        </div>
-                    </div>
+<div class="payment-form" id="bank-transfer-form">
+    <h5>Bank Transfer Details</h5>
+    <!-- Add payment amount dynamically here -->
+    <div id="bank-transfer-amount"></div>
+    <p><strong>Bank Name:</strong> First Bank Nigeria</p>
+    <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
+    <p><strong>Account Number:</strong> 1234567890</p>
+    <p><strong>Sort Code:</strong> 123456</p>
+    <p>Please include your registration ID as the payment reference.</p>
+    
+    <!-- Payment Receipt Upload - Only for Bank Transfer -->
+    <div class="form-group mt-4">
+        <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
+        <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        <div class="help-block-error" id="paymentReceipt-error"></div>
+        <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
+    </div>
+</div>
                     
                     <div class="payment-form" id="flutterwave-form">
-                        <h5>Flutterwave Payment</h5>
-                        <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
-                        <p>Accepted payment methods:</p>
-                        <ul>
-                            <li>Visa/Mastercard</li>
-                            <li>Bank Transfer</li>
-                            <li>USSD</li>
-                            <li>Mobile Money</li>
-                        </ul>
-                        <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
-                            <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
-                        </button>
-                    </div>
-                </div>
+    <h5>Flutterwave Payment</h5>
+    <div class="mock-notice" style="margin-bottom: 15px;">
+        <i class="fas fa-info-circle"></i>
+        In development mode, this shows a success message instead of redirecting to payment.
+    </div>
+    <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
+    <p>Accepted payment methods:</p>
+    <ul>
+        <li>Visa/Mastercard</li>
+        <li>Bank Transfer</li>
+        <li>USSD</li>
+        <li>Mobile Money</li>
+    </ul>
+    <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
+        <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
+    </button>
+</div>
                 
                 <div class="button-container">
                     <button type="button" class="btn btn-outline-standard" id="back-to-package-btn">
@@ -1014,9 +1009,12 @@
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <script src="js/apiClient.js"></script>
     <script src="js/auth.js"></script>
-
-    <!-- Main Application Script -->
     <script>
+
+           // ============================================
+        // MAIN APPLICATION CODE
+        // ============================================
+
         // Global variables for partner registration
         let currentStep = 1;
         const selectedRegistrantType = 'partner';
@@ -1027,6 +1025,8 @@
         let uploadedLogoUrl = ''; // holds the uploaded company logo URL returned by /misc/upload-image
         let lastPartnerRegistrationResponse = null;
         let availablePackages = [];
+        let autoRefreshInterval = null; // For auto-refresh functionality
+        let selectedPackageDashboard = 'partner-dash.html'; // Default dashboard
         
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -1052,6 +1052,10 @@
 
                 // Setup payment section
                 setupPaymentSection();
+
+                // Start auto-refresh for packages (every 10 seconds)
+                startAutoRefresh();
+
             } catch (error) {
                 console.error('Error initializing app:', error);
             }
@@ -1064,11 +1068,6 @@
 
             // Show loading placeholder
             container.innerHTML = '<div class="package-card"><h4>Loading packages...</h4></div>';
-
-            if (!window.apiClient || !window.apiClient.get) {
-                console.warn('apiClient not available - using existing static packages');
-                return;
-            }
 
             try {
                 const resp = await window.apiClient.get('/packages/event-partner-packages');
@@ -1091,23 +1090,74 @@
                 packages.forEach(pkg => {
                     const card = document.createElement('div');
                     card.className = 'package-card';
-                    card.setAttribute('data-package', pkg.slug || pkg.id || 'package-' + (pkg.id || Math.random()));
+                    
+                    // Store package identifier
+                    const packageSlug = pkg.slug || pkg.name?.toLowerCase().replace(/\s+/g, '-') || 'package-' + (pkg.id || Math.random());
+                    card.setAttribute('data-package', packageSlug);
+                    
                     if (pkg.id) card.setAttribute('data-package-id', String(pkg.id));
                     availablePackages.push(pkg);
 
-                    // price formatting
+                    // Price formatting
                     const price = typeof pkg.price === 'number' ? pkg.price : Number(pkg.price) || 0;
                     const priceText = price.toLocaleString();
 
-                    const featuresHtml = Array.isArray(pkg.features) && pkg.features.length > 0
-                        ? '<ul>' + pkg.features.map(f => `<li>${f}</li>`).join('') + '</ul>'
-                        : '';
+                    // Parse features from the package configuration
+                    // Handle both array format and textarea format from admin
+                    let featuresHtml = '';
+                    if (Array.isArray(pkg.features) && pkg.features.length > 0) {
+                        featuresHtml = '<ul>' + pkg.features.map(f => `<li>${f}</li>`).join('') + '</ul>';
+                    } else if (typeof pkg.features === 'string' && pkg.features.trim()) {
+                        // If features is stored as a string (textarea from admin), parse bullet points
+                        const featuresList = pkg.features.split('\n').filter(f => f.trim());
+                        featuresHtml = '<ul>' + featuresList.map(f => {
+                            const cleanFeature = f.replace(/^[•\-\*]\s*/, '').trim();
+                            return `<li>${cleanFeature}</li>`;
+                        }).join('') + '</ul>';
+                    } else if (pkg.description) {
+                        featuresHtml = `<p class="package-description">${pkg.description}</p>`;
+                    }
 
-                    const limitedText = pkg.limitedText ? `<div class="limited">${pkg.limitedText}</div>` : '';
+                    // Check package availability
+                    const currentCount = pkg.current_count || pkg.currentRegistrants || 0;
+                    const maxCount = pkg.max_count || pkg.maxRegistrants || 0;
+                    const isAvailable = maxCount === 0 || currentCount < maxCount;
+                    const isForcedClosed = pkg.force_closed || false;
+                    
+                    let limitedText = '';
+                    let statusClass = '';
+                    
+                    if (isForcedClosed) {
+                        limitedText = `<div class="limited" style="color: #dc3545;">Temporarily Unavailable</div>`;
+                        statusClass = 'disabled';
+                        card.style.opacity = '0.6';
+                        card.style.cursor = 'not-allowed';
+                    } else if (!isAvailable) {
+                        limitedText = `<div class="limited" style="color: #dc3545;">Fully Booked</div>`;
+                        statusClass = 'disabled';
+                        card.style.opacity = '0.6';
+                        card.style.cursor = 'not-allowed';
+                    } else if (maxCount > 0) {
+                        const remaining = maxCount - currentCount;
+                        limitedText = `<div class="limited">${remaining} of ${maxCount} slots remaining</div>`;
+                    } else {
+                        limitedText = `<div class="limited">Unlimited slots available</div>`;
+                    }
+
+                    // Add status class if disabled
+                    if (statusClass) {
+                        card.classList.add(statusClass);
+                    }
+
+                    // Get package display name
+                    const packageName = pkg.name || pkg.title || packageSlug;
+                    
+                    // Get investment amount from admin configuration
+                    const investmentAmount = pkg.investment || price;
 
                     card.innerHTML = `
-                        <h4>${pkg.title || pkg.slug}</h4>
-                        <div class="price">N${priceText}</div>
+                        <h4>${packageName}</h4>
+                        <div class="price">₦${investmentAmount.toLocaleString()}</div>
                         ${featuresHtml}
                         ${limitedText}
                     `;
@@ -1115,10 +1165,181 @@
                     container.appendChild(card);
                 });
 
+                // Add refresh status indicator
+                updateRefreshStatus();
+
             } catch (err) {
                 console.error('Failed to fetch partner packages:', err);
                 container.innerHTML = '<div class="package-card"><h4>Failed to load packages</h4><p>Please try again later.</p></div>';
             }
+        }
+        
+        // Start auto-refresh for packages
+        function startAutoRefresh() {
+            // Clear any existing interval
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            
+            // Set up new interval (10 seconds = 10000 milliseconds)
+            autoRefreshInterval = setInterval(async () => {
+                try {
+                    // Only refresh if we're on the package selection step
+                    if (currentStep === 3) {
+                        await silentPackageRefresh();
+                    }
+                } catch (error) {
+                    console.error('Auto-refresh failed:', error);
+                }
+            }, 10000); // 10 seconds
+            
+            console.log('Auto-refresh started: Packages will refresh every 10 seconds');
+        }
+        
+        // Silent package refresh (no UI notifications)
+        async function silentPackageRefresh() {
+            try {
+                const oldPackages = [...availablePackages];
+                await fetchAndRenderPackages();
+                
+                // Check if selected package is still available
+                if (selectedPackageId) {
+                    const isAvailable = await checkPackageAvailability(selectedPackageId);
+                    if (!isAvailable) {
+                        // Package no longer available, reset selection
+                        selectedPackage = '';
+                        selectedPackageId = null;
+                        selectedPackageDashboard = 'partner-dash.html';
+                        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                        const continueBtn = document.getElementById('continue-to-payment-btn');
+                        if (continueBtn) continueBtn.disabled = true;
+                        
+                        // Show subtle notification
+                        showNotification('Your selected package is no longer available. Please select a different package.', 'warning', 3000);
+                    }
+                }
+                
+                // Reattach event listeners
+                setupPackageSelection();
+                
+            } catch (err) {
+                console.error('Silent refresh failed:', err);
+            }
+        }
+        
+        // Update refresh status indicator
+        function updateRefreshStatus() {
+            let statusElement = document.getElementById('refresh-status');
+            if (!statusElement) {
+                const packageSection = document.querySelector('#package-section');
+                if (packageSection) {
+                    statusElement = document.createElement('div');
+                    statusElement.id = 'refresh-status';
+                    statusElement.className = 'text-center mt-3';
+                    statusElement.style.cssText = `
+                        font-size: 0.85rem;
+                        color: #6c757d;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                    `;
+                    
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-sync-alt fa-spin';
+                    icon.style.fontSize = '0.8rem';
+                    
+                    const text = document.createElement('span');
+                    text.id = 'refresh-status-text';
+                    text.textContent = 'Auto-refreshing packages...';
+                    
+                    statusElement.appendChild(icon);
+                    statusElement.appendChild(text);
+                    
+                    const packageCards = document.querySelector('.package-cards');
+                    if (packageCards && packageCards.parentNode) {
+                        packageCards.parentNode.insertBefore(statusElement, packageCards.nextSibling);
+                    }
+                }
+            }
+            
+            if (statusElement) {
+                const textElement = statusElement.querySelector('#refresh-status-text');
+                if (textElement) {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                    textElement.textContent = `Packages auto-refresh every 10s | Last updated: ${timeString}`;
+                }
+            }
+        }
+        
+        // Manual refresh packages function
+        async function refreshPackages() {
+            const refreshBtn = document.getElementById('refresh-packages-btn');
+            if (refreshBtn) {
+                const originalText = refreshBtn.innerHTML;
+                refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                refreshBtn.disabled = true;
+                
+                try {
+                    await fetchAndRenderPackages();
+                    
+                    // Reset selection if the selected package is no longer available
+                    if (selectedPackageId) {
+                        const isAvailable = await checkPackageAvailability(selectedPackageId);
+                        if (!isAvailable) {
+                            selectedPackage = '';
+                            selectedPackageId = null;
+                            selectedPackageDashboard = 'partner-dash.html';
+                            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                            const continueBtn = document.getElementById('continue-to-payment-btn');
+                            if (continueBtn) continueBtn.disabled = true;
+                            
+                            showNotification('Your selected package is no longer available. Please select a different package.', 'warning');
+                        }
+                    }
+                    
+                    // Reattach event listeners
+                    setupPackageSelection();
+                    
+                    showNotification('Packages refreshed successfully!', 'success');
+                } catch (err) {
+                    console.error('Failed to refresh packages:', err);
+                    showNotification('Failed to refresh packages. Please try again.', 'error');
+                } finally {
+                    refreshBtn.innerHTML = originalText;
+                    refreshBtn.disabled = false;
+                }
+            }
+        }
+        
+        // Check package availability function - FIXED VERSION
+        async function checkPackageAvailability(packageId) {
+            try {
+                const resp = await window.apiClient.get(`/packages/check-availability/${packageId}`);
+                const respData = resp && (resp.data || resp);
+                return respData && respData.available !== false;
+            } catch (err) {
+                // If endpoint doesn't exist (404), fall back to local calculation
+                if (err.status === 404 || err.response?.status === 404) {
+                    console.log('Availability endpoint not found, using local calculation');
+                    return checkLocalPackageAvailability(packageId);
+                }
+                console.error('Error checking package availability:', err);
+                return true; // Default to available on error
+            }
+        }
+        
+        // Local package availability check (fallback when endpoint doesn't exist)
+        function checkLocalPackageAvailability(packageId) {
+            const pkg = availablePackages.find(p => p.id === packageId);
+            if (!pkg) return false;
+            
+            const currentCount = pkg.current_count || pkg.currentRegistrants || 0;
+            const maxCount = pkg.max_count || pkg.maxRegistrants || 0;
+            const isForcedClosed = pkg.force_closed || false;
+            
+            return !isForcedClosed && (maxCount === 0 || currentCount < maxCount);
         }
         
         function initializePhoneInputs() {
@@ -1202,12 +1423,35 @@
             const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
             if (continueToPaymentBtn) {
                 continueToPaymentBtn.addEventListener('click', async function() {
+                    if (!selectedPackageId) {
+                        alert('Please select a package first');
+                        return;
+                    }
+
+                    // Check if package is still available
+                    const isAvailable = await checkPackageAvailability(selectedPackageId);
+                    if (!isAvailable) {
+                        alert('This package is no longer available. Please select another package.');
+                        
+                        // Refresh packages
+                        await refreshPackages();
+                        
+                        // Reset selection
+                        selectedPackage = '';
+                        selectedPackageId = null;
+                        selectedPackageDashboard = 'partner-dash.html';
+                        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                        this.disabled = true;
+                        return;
+                    }
+
+                    // Proceed with validation
                     if (!validatePackageSelection()) return;
 
                     // Attempt to create event partner on continue
                     try {
-                        // disable button to prevent double submits
-                        continueToPaymentBtn.disabled = true;
+                        this.disabled = true;
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                         await registerEventPartnerOnPackageSelect();
 
                         // proceed to payment step on success
@@ -1216,7 +1460,8 @@
                         console.error('Failed to register event partner before payment:', err);
                         alert('Failed to create partner record. Please check your details and try again.');
                     } finally {
-                        continueToPaymentBtn.disabled = false;
+                        this.disabled = false;
+                        this.innerHTML = 'Continue <i class="fas fa-arrow-circle-right ms-2"></i>';
                     }
                 });
             }
@@ -1230,9 +1475,9 @@
             
             const completeRegistrationBtn = document.getElementById('complete-registration-btn');
             if (completeRegistrationBtn) {
-                completeRegistrationBtn.addEventListener('click', function() {
+                completeRegistrationBtn.addEventListener('click', async function() {
                     if (validatePaymentForm()) {
-                        processRegistration();
+                        await processRegistration();
                     }
                 });
             }
@@ -1245,7 +1490,7 @@
                 });
             }
             
-            // Dashboard button
+            // Dashboard button - Updated to use dynamic dashboard URL
             const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
             if (goToDashboardBtn) {
                 goToDashboardBtn.addEventListener('click', function() {
@@ -1265,13 +1510,10 @@
                     hideError(errElId);
 
                     try {
-                        if (!window.apiClient) throw new Error('API client not available');
-
                         const fd = new FormData();
-                        // backend expects the uploaded file under the key 'company_logo'
                         fd.append('company_logo', file);
 
-                        // POST to /misc/upload-image using apiClient base url
+                        // POST to /misc/upload-image
                         const resp = await window.apiClient.post('/misc/upload-image', fd, {
                             headers: { 'Content-Type': 'multipart/form-data' }
                         });
@@ -1287,11 +1529,11 @@
                             uploadedLogoUrl = imageUrl;
                         }
 
-                        // simple success feedback: show filename in UI (reuse hint-block or error element)
+                        // simple success feedback: show filename in UI
                         const hintEl = document.createElement('div');
                         hintEl.className = 'hint-block';
                         hintEl.id = 'companyLogo-uploaded-hint';
-                        hintEl.textContent = `Uploaded: ${uploadedLogoUrl}`;
+                        hintEl.textContent = `Logo uploaded successfully`;
                         // remove existing hint if present
                         const existing = document.getElementById('companyLogo-uploaded-hint');
                         if (existing) existing.remove();
@@ -1308,11 +1550,17 @@
         }
         
         function setupPackageSelection() {
-            const packageCards = document.querySelectorAll('.package-card');
+            const packageCards = document.querySelectorAll('.package-card:not(.disabled)');
             packageCards.forEach(card => {
                 card.addEventListener('click', function() {
+                    // Skip disabled packages
+                    if (this.classList.contains('disabled')) {
+                        showNotification('This package is not available for selection', 'warning');
+                        return;
+                    }
+                    
                     // Remove selected class from all cards
-                    packageCards.forEach(c => c.classList.remove('selected'));
+                    document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
                     
                     // Add selected class to clicked card
                     this.classList.add('selected');
@@ -1322,11 +1570,30 @@
                     const pkgIdAttr = this.getAttribute('data-package-id');
                     selectedPackageId = pkgIdAttr ? Number(pkgIdAttr) : null;
                     
+                    // Get package details - FIXED: Use the package from availablePackages array
+                    const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                    if (selectedPkg) {
+                        console.log('Selected package:', selectedPkg.name || selectedPkg.title, 'Price:', selectedPkg.price);
+                        
+                        // Store the dashboard URL for this package
+                        selectedPackageDashboard = selectedPkg.redirect_dashboard || selectedPkg.dashboard_url || 'partner-dash.html';
+                        
+                        // Check if this is an exhibitor package
+                        if (selectedPkg.is_exhibitor) {
+                            console.log('This is an exhibitor package. Will redirect to exhibitors dashboard.');
+                        }
+                    } else {
+                        console.warn('Selected package not found in availablePackages array');
+                        selectedPackageDashboard = 'partner-dash.html';
+                    }
+                    
                     // Enable continue button
                     const continueBtn = document.getElementById('continue-to-payment-btn');
                     if (continueBtn) {
                         continueBtn.disabled = false;
                     }
+                    
+                    showNotification(`Selected: ${selectedPackage} package`, 'success');
                 });
             });
         }
@@ -1353,15 +1620,19 @@
                     if (file) {
                         // try uploading synchronously
                         const fd = new FormData();
-                        // backend expects the uploaded file under the key 'company_logo'
                         fd.append('company_logo', file);
-                        if (!window.apiClient) throw new Error('API client not available');
                         const resp = await window.apiClient.post('/misc/upload-image', fd, {
                             headers: { 'Content-Type': 'multipart/form-data' }
                         });
                         const data = resp && (resp.data || resp);
                         uploadedLogoUrl = (data && (data.image_url || data.url || data.data?.image_url || data.data?.url)) || uploadedLogoUrl;
                     }
+                }
+
+                // Find selected package details
+                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                if (!selectedPkg) {
+                    throw new Error('Selected package not found in available packages');
                 }
 
                 // build payload according to sample
@@ -1378,10 +1649,14 @@
                     partnerDescription: partnerDescription,
                     partnerInterest: partnerInterest,
                     password: password,
-                    selectedPackage: selectedPackage
+                    selectedPackage: selectedPackage,
+                    packageId: selectedPackageId,
+                    packageName: selectedPkg.name || selectedPkg.title || selectedPackage,
+                    packagePrice: selectedPkg.price || 0,
+                    packageInvestment: selectedPkg.investment || selectedPkg.price || 0
                 };
 
-                if (!window.apiClient) throw new Error('API client not available');
+                console.log('Sending registration payload:', payload);
 
                 // POST to /auth/event-partner-register
                 const res = await window.apiClient.post('/auth/event-partner-register', payload);
@@ -1401,10 +1676,10 @@
                     // ignore storage errors
                 }
 
-                // Simple success feedback
-                alert('Partner registration (event) submitted successfully.');
+                // Show success feedback
+                showNotification('Partner registration submitted successfully!', 'success');
 
-                // optionally update confirmation id if present in response
+                // Update confirmation id if present in response
                 try {
                     const reference = resData?.reference || resData?.registrationId || resData?.id || resData?.data?.reference;
                     if (reference) {
@@ -1417,7 +1692,7 @@
             } catch (err) {
                 console.error('Error registering event partner:', err);
                 const message = err?.message || err?.response?.data?.message || 'Registration failed';
-                alert('Event partner registration failed: ' + message);
+                showNotification('Event partner registration failed: ' + message, 'error');
                 throw err;
             }
         }
@@ -1435,6 +1710,18 @@
                         if (this.value === 'bank-transfer') {
                             const bankForm = document.getElementById('bank-transfer-form');
                             if (bankForm) bankForm.style.display = 'block';
+                            
+                            // Show payment amount in bank transfer form
+                            const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                            if (selectedPkg && bankForm) {
+                                const amountElement = bankForm.querySelector('.payment-amount');
+                                if (!amountElement) {
+                                    const amountInfo = document.createElement('div');
+                                    amountInfo.className = 'payment-amount';
+                                    amountInfo.innerHTML = `<strong>Amount to Pay:</strong> ₦${(selectedPkg.investment || selectedPkg.price || 0).toLocaleString()}`;
+                                    bankForm.insertBefore(amountInfo, bankForm.firstChild);
+                                }
+                            }
                         } else if (this.value === 'flutterwave') {
                             const flutterwaveForm = document.getElementById('flutterwave-form');
                             if (flutterwaveForm) flutterwaveForm.style.display = 'block';
@@ -1445,6 +1732,8 @@
                         if (completeBtn) {
                             completeBtn.disabled = false;
                         }
+                        
+                        showNotification(`Selected payment method: ${this.value}`, 'success');
                     }
                 });
             });
@@ -1513,7 +1802,7 @@
         
         function validatePackageSelection() {
             if (!selectedPackage) {
-                alert('Please select a partnership package');
+                showNotification('Please select a partnership package', 'warning');
                 return false;
             }
             return true;
@@ -1521,7 +1810,7 @@
         
         function validatePaymentForm() {
             if (!selectedPaymentMethod) {
-                alert('Please select a payment method');
+                showNotification('Please select a payment method', 'warning');
                 return false;
             }
             
@@ -1558,12 +1847,9 @@
             try {
                 // Ensure a package is selected
                 if (!selectedPackageId) {
-                    alert('Please select a package before proceeding to payment.');
+                    showNotification('Please select a package before proceeding to payment.', 'warning');
                     return;
                 }
-
-                // Ensure API client is available
-                if (!window.apiClient) throw new Error('API client not available');
 
                 // Ensure auth token is present; try to recover from last partner response if missing
                 try {
@@ -1582,18 +1868,22 @@
 
                 // Determine amount from availablePackages if present
                 let amount = 0;
+                let packageName = '';
                 try {
                     const pkg = availablePackages.find(p => Number(p.id) === Number(selectedPackageId));
-                    if (pkg && (pkg.price || pkg.price === 0)) amount = Number(pkg.price);
+                    if (pkg) {
+                        amount = Number(pkg.investment || pkg.price || 0);
+                        packageName = pkg.name || pkg.title || selectedPackage;
+                    }
                 } catch (e) {}
 
                 // fallback mapping
-                if (!amount) {
+                if (!amount || amount === 0) {
                     const packagePrices = {
-                        'bronze-partner': 5000,
-                        'silver-partner': 10000,
-                        'gold-partner': 15000,
-                        'platinum-partner': 30000
+                        'bronze-partner': 500000,
+                        'silver-partner': 1500000,
+                        'gold-partner': 3000000,
+                        'platinum-partner': 5000000
                     };
                     amount = packagePrices[selectedPackage] || 0;
                 }
@@ -1602,25 +1892,27 @@
                     event_package_id: selectedPackageId,
                     amount: amount,
                     currency: 'NGN',
-                    tx_ref: 'ICSC-' + Date.now()
+                    tx_ref: 'ICSC-' + Date.now(),
+                    package_name: packageName
                 };
 
                 // Call initialize endpoint
                 const resp = await window.apiClient.post('/payments/initialize-event-partner-payment', payload);
                 const data = resp && (resp.data || resp);
 
-                // extract hosted link from response
-                const hostedLink = data?.data?.data?.link || data?.data?.link || data?.link;
-                if (!hostedLink) {
-                    throw new Error('Payment link not returned by server');
-                }
+                // In mock mode, show success message instead of redirecting
+                showNotification(`Mock Payment: You would be redirected to Flutterwave to pay ₦${amount.toLocaleString()} for the ${packageName} package.`, 'info');
+                
+                // In real implementation, this would redirect:
+                // const hostedLink = data?.data?.data?.link || data?.data?.link || data?.link;
+                // if (hostedLink) {
+                //     window.location.href = hostedLink;
+                // }
 
-                // Redirect the user to the hosted payment link
-                window.location.href = hostedLink;
             } catch (err) {
                 console.error('Flutterwave payment initialization failed', err);
                 const message = err?.message || err?.response?.data?.message || 'Could not initialize payment';
-                alert(message);
+                showNotification(message, 'error');
             }
         }
         
@@ -1633,74 +1925,60 @@
             }
             
             try {
-                // REPLACE THIS WITH YOUR ACTUAL API CALL:
-                if (!window.RegisterAPI) throw new Error('RegisterAPI not available.');
+                // Use the last registration response to get partner ID
+                if (!lastPartnerRegistrationResponse) {
+                    throw new Error('Partner registration not completed');
+                }
                 
-                const payload = {
-                    company_prefix: document.getElementById('companyPrefix')?.value || '',
-                    company_name: document.getElementById('companyName')?.value || '',
-                    contact_first_name: document.getElementById('contactFirstName')?.value || '',
-                    contact_last_name: document.getElementById('contactLastName')?.value || '',
-                    contact_email: document.getElementById('contactEmail')?.value || '',
-                    contact_phone: document.getElementById('contactPhone')?.value || '',
-                    website: document.getElementById('website')?.value || '',
-                    social_media: document.getElementById('socialMedia')?.value || '',
-                    description: document.getElementById('partnerDescription')?.value || '',
-                    partnership_interest: document.getElementById('partnerInterest')?.value || '',
-                    partnership_package: selectedPackage,
-                    payment_method: selectedPaymentMethod,
-                    email: document.getElementById('email')?.value || '',
-                    password: document.getElementById('password')?.value || ''
-                };
+                const partnerId = lastPartnerRegistrationResponse?.data?.id || 
+                                 lastPartnerRegistrationResponse?.id || 
+                                 lastPartnerRegistrationResponse?.partnerId;
                 
-                // Add payment receipt file if bank transfer was selected
+                if (!partnerId) {
+                    throw new Error('Could not identify partner registration');
+                }
+
+                // For bank transfers, we need to upload the receipt and update payment status
                 if (selectedPaymentMethod === 'bank-transfer') {
                     const paymentReceipt = document.getElementById('paymentReceipt');
                     if (paymentReceipt && paymentReceipt.files && paymentReceipt.files[0]) {
-                        // For file uploads, you might need to use FormData instead of JSON
                         const formData = new FormData();
-                        
-                        // Append all form data
-                        Object.keys(payload).forEach(key => {
-                            formData.append(key, payload[key]);
-                        });
-                        
-                        // Append the file
                         formData.append('payment_receipt', paymentReceipt.files[0]);
+                        formData.append('partner_id', partnerId);
+                        formData.append('package_id', selectedPackageId);
+                        formData.append('payment_method', 'bank_transfer');
                         
-                        // Use formData for the API call instead of payload
-                        const responseData = await window.RegisterAPI.registerPartner(formData);
+                        // Update payment status with receipt
+                        const responseData = await window.apiClient.post('/payments/update-payment-status', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
                         
                         // Update confirmation with response data
                         try {
                             const data = responseData.data || responseData;
                             const confirmationIdEl = document.getElementById('confirmation-id');
-                            if (confirmationIdEl) confirmationIdEl.textContent = data.reference || data.registrationId || confirmationIdEl.textContent;
+                            if (confirmationIdEl) confirmationIdEl.textContent = data.reference || data.paymentId || confirmationIdEl.textContent;
+                            
+                            // Update payment status in confirmation
+                            const confirmationPaymentEl = document.getElementById('confirmation-payment');
+                            if (confirmationPaymentEl) confirmationPaymentEl.textContent = 'Bank Transfer (Receipt Submitted)';
                         } catch (e) {}
-                        
-                        updateConfirmationSection();
-                        showStep(5);
-                        return;
                     }
                 }
                 
-                // For Flutterwave payments or if no file upload needed
-                const responseData = await window.RegisterAPI.registerPartner(payload);
-                
-                // Update confirmation with response data
-                try {
-                    const data = responseData.data || responseData;
-                    const confirmationIdEl = document.getElementById('confirmation-id');
-                    if (confirmationIdEl) confirmationIdEl.textContent = data.reference || data.registrationId || confirmationIdEl.textContent;
-                } catch (e) {}
-                
+                // Update confirmation section with latest details
                 updateConfirmationSection();
+                
+                // Show success message
+                showNotification('Registration completed successfully!', 'success');
+                
+                // Move to confirmation step
                 showStep(5);
                 
             } catch (err) {
                 console.error('Registration failed', err);
                 const message = err?.message || err?.response?.data?.message || 'Registration failed';
-                alert(message);
+                showNotification(message, 'error');
             } finally {
                 if (completeBtn) {
                     completeBtn.classList.remove('btn-loading');
@@ -1727,26 +2005,50 @@
             if (confirmationEmailText) confirmationEmailText.textContent = contactEmail || email;
             if (confirmationName) confirmationName.textContent = `${contactFirstName} ${contactLastName}`.trim() || companyName;
             if (confirmationType) confirmationType.textContent = 'Partner';
+            
+            // Update package information
             if (confirmationPackage) {
-                const packageNames = {
-                    'bronze-partner': 'Bronze Partner',
-                    'silver-partner': 'Silver Partner', 
-                    'gold-partner': 'Gold Partner',
-                    'platinum-partner': 'Platinum Partner'
-                };
-                confirmationPackage.textContent = packageNames[selectedPackage] || selectedPackage;
+                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                if (selectedPkg) {
+                    confirmationPackage.textContent = `${selectedPkg.name || selectedPkg.title || selectedPackage} - ₦${(selectedPkg.investment || selectedPkg.price || 0).toLocaleString()}`;
+                } else {
+                    const packageNames = {
+                        'bronze-partner': 'Bronze Partner',
+                        'silver-partner': 'Silver Partner', 
+                        'gold-partner': 'Gold Partner',
+                        'platinum-partner': 'Platinum Partner'
+                    };
+                    confirmationPackage.textContent = packageNames[selectedPackage] || selectedPackage;
+                }
             }
+            
+            // Update payment method
             if (confirmationPayment) {
                 const paymentMethods = {
-                    'bank-transfer': 'Bank Transfer',
-                    'flutterwave': 'Flutterwave'
+                    'bank-transfer': 'Bank Transfer (Receipt Submitted)',
+                    'flutterwave': 'Flutterwave (Online Payment)'
                 };
                 confirmationPayment.textContent = paymentMethods[selectedPaymentMethod] || selectedPaymentMethod;
+            }
+            
+            // Update dashboard button text based on selected package
+            const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
+            if (goToDashboardBtn) {
+                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                if (selectedPkg && (selectedPkg.is_exhibitor || selectedPackage === 'bronze-partner')) {
+                    goToDashboardBtn.innerHTML = '<i class="fas fa-external-link-alt me-2"></i>Go to Exhibitor Dashboard';
+                } else {
+                    goToDashboardBtn.innerHTML = '<i class="fas fa-external-link-alt me-2"></i>Go to Partner Dashboard';
+                }
             }
         }
         
         function redirectToDashboard() {
-            window.location.href = 'partner-dash.html';
+            // Show notification about mock mode
+            showNotification(`In mock mode, would redirect to: ${selectedPackageDashboard}`, 'info');
+            
+            // In real implementation:
+            // window.location.href = selectedPackageDashboard;
         }
         
         function showStep(step) {
@@ -1770,13 +2072,38 @@
                 currentSection = document.getElementById('payment-section');
             } else if (step === 5) {
                 currentSection = document.getElementById('confirmation-section');
+                
+                // Show mock notice in confirmation if in mock mode
+                if (typeof window.apiClient !== 'undefined' && window.apiClient.mockPackages) {
+                    const mockNotice = document.getElementById('confirmation-mock-notice');
+                    if (mockNotice) {
+                        mockNotice.style.display = 'block';
+                    }
+                }
             }
             
             if (currentSection) {
                 currentSection.style.display = 'block';
             }
             
+            // Update current step
             currentStep = step;
+            
+            // Start or stop auto-refresh based on current step
+            if (step === 3) {
+                // On package selection step, ensure auto-refresh is running
+                if (!autoRefreshInterval) {
+                    startAutoRefresh();
+                }
+            } else {
+                // On other steps, stop auto-refresh to save resources
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                    console.log('Auto-refresh paused (not on package selection step)');
+                }
+            }
+            
             updateProgressIndicator();
             window.scrollTo(0, 0);
         }
@@ -1805,52 +2132,46 @@
             }
         }
 
-        // Add this to your registration page JavaScript
-/* function checkRegistrationCap(type) {
-    const capStatus = JSON.parse(localStorage.getItem('icsc_cap_status') || '{}');
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps') || '{}');
-    const registrationStatus = localStorage.getItem('icsc_registration_status') || 'open';
-    
-    // Check if registration is closed
-    if (registrationStatus === 'closed') {
-        return {
-            allowed: false,
-            message: 'Registration is currently closed. Please check back later.'
-        };
-    }
-    
-    // Check specific type cap
-    if (capStatus[type]) {
-        const action = caps[type]?.action || 'disable';
-        const message = caps.globalMessage || 'Registration for this category is currently full.';
-        
-        return {
-            allowed: false,
-            message: message,
-            action: action
-        };
-    }
-    
-    return { allowed: true };
-}
-
-// Example usage in registration form:
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    const capCheck = checkRegistrationCap('attendees'); // or 'speakers', 'exhibitors', 'partners'
-    
-    if (!capCheck.allowed) {
-        e.preventDefault();
-        alert(capCheck.message);
-        
-        if (capCheck.action === 'hide') {
-            document.getElementById('registrationForm').style.display = 'none';
-        } else if (capCheck.action === 'disable') {
-            this.querySelectorAll('input, select, textarea, button').forEach(el => {
-                el.disabled = true;
-            });
+        // Helper function to show notifications
+        function showNotification(message, type = 'success', duration = 5000) {
+            // Create notification element if it doesn't exist
+            let notificationEl = document.getElementById('registration-notification');
+            if (!notificationEl) {
+                notificationEl = document.createElement('div');
+                notificationEl.id = 'registration-notification';
+                notificationEl.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 9999;
+                    display: none;
+                    max-width: 300px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+                document.body.appendChild(notificationEl);
+            }
+            
+            // Set notification style based on type
+            const colors = {
+                success: '#28a745',
+                error: '#dc3545',
+                warning: '#ffc107',
+                info: '#17a2b8'
+            };
+            
+            notificationEl.style.backgroundColor = colors[type] || colors.success;
+            notificationEl.textContent = message;
+            notificationEl.style.display = 'block';
+            
+            // Auto-hide after duration
+            setTimeout(() => {
+                notificationEl.style.display = 'none';
+            }, duration);
         }
-    }
-}); */
         
         // PDF viewing functions
         function viewPartnerPackagePDF() {

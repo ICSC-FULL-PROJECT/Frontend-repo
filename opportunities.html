@@ -171,6 +171,51 @@
             font-size: 1.2rem;
             color: var(--text-medium);
         }
+         /* Mobile Menu Watch on Demand Button Styling */
+.mobile-demand-btn {
+    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+    color: var(--text-light) !important;
+    border-radius: 30px;
+    margin: 10px 0;
+    text-align: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+}
+
+.mobile-demand-btn:hover {
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
+}
+/* Make mobile menu scrollable */
+.mobile-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 80px);
+    background-color: var(--text-light);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 999;
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    display: block;
+    animation: slideDown 0.4s ease-out;
+}
+
 
         /* Header Styles */
         header {
@@ -884,34 +929,35 @@
 </head>
 <body>
     <!-- Fixed Header -->
+        <!-- Fixed Header -->
     <header id="header">
         <div class="header-container">
             <div class="logo">
-                <a href="index.html">
+                <a href="Index.html">
                     <img src="icsc-logos.png" alt="International Civil Service Conference">
                 </a>
                 <div class="logo-text">
                     <h1></h1>
-                    <p><p>
+                    <p></p>
                 </div>
             </div>
             
             <nav>
                 <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="#"><i class="fas fa-play-circle"></i> On Demand</a></li>
-                    <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+                    <li><a href="index.html" ><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="live-stream.html" id="liveStreamNav"><i class="fas fa-broadcast-tower"></i>Live Stream</a></li>
+                     <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
                     <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                     <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
                     <li>
-                        <a href="index.html#partners" class="active"><i class="fas fa-handshake"></i> Partners</a>
+                <a href="partners.html"><i class="fas fa-handshake"></i> Partners</a>
                         <ul>
-                            <li><a href="opportunities.html" class="active"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
-                            <li><a href="index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
+                            <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                            
                         </ul>
                     </li>
                     <li>
-                        <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+                        <a href="#about"><i class="fas fa-info-circle"></i> About</a>
                         <ul>
                             <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
                             <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
@@ -920,43 +966,53 @@
                 </ul>
             </nav>
             <div class="header-actions">
-                <!-- Social Media Links -->
-               
+    <!-- Social Media Links -->
+    
 
-                <a href="register.html" class="cta-btn">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Register</span>
-                </a>
-                <button class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
+    <a href="ICSC ADMIN/super-admin/super-admin-dashboard.html" class="cta-btn">
+        <i class="fas fa-user-plus"></i>
+        <span>Login</span>
+    </a>
+        <a href="register.html" class="cta-btn">
+        <i class="fa-sign-in-alt"></i>
+        <span>Register</span>
+    </a>
+    <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+   </div>
     </header>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <ul>
-            <li><a href="index.html"><i class="fas fa-play-circle"></i> On Demand</a></li>
-            <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
-            <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
-            <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
-            <li>
-                <a href="index.html#partners" class="active"><i class="fas fa-handshake"></i> Partners</a>
-                <ul>
-                    <li><a href="opportunities.html" class="active"><i class="fas fa-briefcase"></i>Partnership Opportunities</a></li>
-                    <li><a href="index.html#partners"><i class="fas fa-users"></i> 2025 Partners</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
-                <ul>
-                    <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
-                    <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+   <!-- Mobile Menu -->
+<div class="mobile-menu">
+    <ul>
+         <li><a href="live-stream.html" class="mobile-demand-btn" id="mobileLiveStream"><i class="fas fa-broadcast-tower"></i>Live Stream</a></li>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
+        <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+        <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
+        
+        <li>
+            <a href="partners.html"><i class="fas fa-handshake"></i> Partners</a>
+            <ul>
+                <li><a href="opportunities.html"><i class="fas fa-briefcase"></i> Partnership Opportunities</a></li>
+                
+            </ul>
+        </li>
+        <li>
+            <a href="why-attend.html#about-event"><i class="fas fa-info-circle"></i> About</a>
+            <ul>
+                <li><a href="why-attend.html"><i class="fas fa-question-circle"></i> Why Attend?</a></li>
+                <li><a href="venue.html"><i class="fas fa-map-marker-alt"></i> Venue</a></li>
+            </ul>
+        </li>
+        <!-- Add Register/Login buttons to mobile menu -->
+        <li class="mobile-auth-buttons">
+            <a href="register.html" class="mobile-register-btn"><i class="fas fa-user-plus"></i> Register</a>
+            
+        </li>
+    </ul>
+</div>v>
 
     <!-- Hero Section -->
     <section class="partnership-hero">

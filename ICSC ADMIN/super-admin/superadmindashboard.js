@@ -237,6 +237,14 @@ function initializeModalManager() {
         }
     }
     
+// Add to your initializeModalManager() or existing modal close handlers:
+document.addEventListener('click', function(e) {
+    // Close package success modal
+    const packageModal = document.getElementById('packageSuccessModal');
+    if (packageModal && packageModal.style.display === 'flex' && e.target === packageModal) {
+        packageModal.style.display = 'none';
+    }
+})
     // Close modals when clicking X button or outside
     document.addEventListener('click', function(e) {
         // Close modals when clicking X
@@ -247,12 +255,8 @@ function initializeModalManager() {
                 e.preventDefault();
             }
         }
-        
-        // Close modals when clicking outside
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
-        }
-    });
+});
+
 }
 
 // Event Listeners
@@ -426,9 +430,7 @@ async function handleAddAttendee(e) {
         password: document.getElementById('attendeePassword').value.trim(),
         jobTitle: document.getElementById('attendeeJobTitle').value.trim(),
         organization: document.getElementById('attendeeOrganization').value.trim(),
-        workPhone: document.getElementById('attendeeWorkPhone').value.trim(),
         phone: document.getElementById('attendeePhone').value.trim(),
-        nin: document.getElementById('attendeeNIN').value.trim(),
         position: document.getElementById('attendeePosition').value.trim(),
         gradeLevel: document.getElementById('attendeeGradeLevel').value,
         ministry: document.getElementById('attendeeMinistry')?.value || '',
@@ -442,7 +444,7 @@ async function handleAddAttendee(e) {
 
     const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
 
-    const required = ['prefix', 'firstName', 'lastName', 'email', 'password', 'jobTitle', 'organization', 'workPhone', 'phone', 'nin', 'position', 'gradeLevel'];
+    const required = ['prefix', 'firstName', 'lastName', 'email', 'password', 'jobTitle', 'organization', 'phone', 'position', 'gradeLevel'];
     for (const field of required) {
         if (!values[field]) {
             alert(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
@@ -455,7 +457,6 @@ async function handleAddAttendee(e) {
         email: values.email,
         password: values.password,
         phone_number: values.phone,
-        nin: values.nin,
         position: values.position,
         jobTitle: values.jobTitle,
         grade: values.gradeLevel,
@@ -506,7 +507,6 @@ async function handleAddAttendee(e) {
                 name: created.full_name || created.name || payload.full_name,
                 email: created.email || payload.email,
                 phone: created.phone || payload.phone,
-                nin: created.nin || payload.nin,
                 position: created.position || payload.position,
                 gradeLevel: created.grade_level || payload.grade_level,
                 ministry: created.ministry || payload.ministry,
@@ -555,9 +555,7 @@ async function handleEditAttendee(e) {
         password: document.getElementById('editAttendeePassword').value.trim(),
         jobTitle: document.getElementById('editAttendeeJobTitle').value.trim(),
         organization: document.getElementById('editAttendeeOrganization').value.trim(),
-        workPhone: document.getElementById('editAttendeeWorkPhone').value.trim(),
         phone: document.getElementById('editAttendeePhone').value.trim(),
-        nin: document.getElementById('editAttendeeNIN').value.trim(),
         position: document.getElementById('editAttendeePosition').value.trim(),
         gradeLevel: document.getElementById('editAttendeeGradeLevel').value
     };
@@ -569,8 +567,6 @@ async function handleEditAttendee(e) {
         email: updatedData.email,
         password: updatedData.password,
         phone_number: updatedData.phone,
-        work_phone: updatedData.workPhone,
-        nin: updatedData.nin,
         position: updatedData.position,
         job_title: updatedData.jobTitle,
         grade: updatedData.gradeLevel,
@@ -603,7 +599,6 @@ async function handleEditAttendee(e) {
                     name: fullName,
                     email: updatedData.email,
                     phone: updatedData.phone,
-                    nin: updatedData.nin,
                     position: updatedData.position,
                     gradeLevel: updatedData.gradeLevel,
                     ministry: updatedData.organization
@@ -943,7 +938,6 @@ async function fetchAttendees() {
                 name: item.full_name || item.name || item.fullName || item.fullname || '',
                 email: item.email || '',
                 phone: item.phone || item.phone_number || '',
-                nin: item.nin || item.national_id || '',
                 position: item.position || '',
                 gradeLevel: item.grade || item.gradeLevel || '',
                 ministry: item.ministry || item.organization_name || item.organization || '',
@@ -1026,9 +1020,7 @@ function openEditModal(attendeeId) {
         document.getElementById('editAttendeePassword').value = '';
         document.getElementById('editAttendeeJobTitle').value = attendee.position;
         document.getElementById('editAttendeeOrganization').value = attendee.ministry;
-        document.getElementById('editAttendeeWorkPhone').value = attendee.phone;
         document.getElementById('editAttendeePhone').value = attendee.phone;
-        document.getElementById('editAttendeeNIN').value = attendee.nin;
         document.getElementById('editAttendeePosition').value = attendee.position;
         document.getElementById('editAttendeeGradeLevel').value = attendee.gradeLevel;
         
@@ -1339,7 +1331,6 @@ function filterAttendees() {
         const matchesSearch = 
             attendee.name.toLowerCase().includes(searchTerm) ||
             attendee.email.toLowerCase().includes(searchTerm) ||
-            attendee.nin.includes(searchTerm) ||
             attendee.position.toLowerCase().includes(searchTerm);
         
         const matchesMinistry = ministryFilter ? attendee.ministry === ministryFilter : true;
@@ -1439,7 +1430,6 @@ function renderAttendeesTable(attendeesList) {
             <tr data-id="${attendee.id}">
                 <td>${attendee.name}</td>
                 <td>${attendee.email}</td>
-                <td>${attendee.nin}</td>
                 <td>${attendee.position}</td>
                 <td>${attendee.ministry}</td>
                 <td>${attendee.department}</td>
@@ -1496,6 +1486,2776 @@ if (superAdminLogoutBtn) {
         }
     });
 }
+
+// Bulk Approvals JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const bulkApprovalsTable = document.getElementById('bulkApprovalsTable');
+    const reviewBulkModal = document.getElementById('reviewBulkModal');
+    const viewApprovedBulkModal = document.getElementById('viewApprovedBulkModal');
+    const refreshBulkBtn = document.getElementById('refreshBulkApprovalsBtn');
+    const searchBulkInput = document.getElementById('searchBulkApprovals');
+    const filterBulkStatus = document.getElementById('filterBulkStatus');
+    const filterBulkMinistry = document.getElementById('filterBulkMinistry');
+    const clearBulkFiltersBtn = document.getElementById('clearBulkFiltersBtn');
+    
+    // Sample data for demonstration
+    const bulkUploadsData = [
+        {
+            id: 'BULK001',
+            ministry: 'Ministry of Finance',
+            filename: 'MOF_Attendees_2024.xlsx',
+            totalRecords: 25,
+            validRecords: 22,
+            errorRecords: 3,
+            submittedBy: 'MOF Admin',
+            dateSubmitted: '2024-01-15 14:30',
+            status: 'pending',
+            records: [
+                { id: 1, name: 'John Doe', email: 'john@finance.gov.ng', position: 'Assistant Director', department: 'Accounts', ministry: 'Ministry of Finance', grade: 'Assistant Director', status: 'valid' },
+                { id: 2, name: 'Jane Smith', email: 'jane@finance.gov.ng', position: 'Senior Officer', department: 'Budget', ministry: 'Ministry of Finance', grade: 'Senior Officer', status: 'valid' },
+                { id: 3, name: 'Error Record', email: 'invalid-email', position: '', department: '', ministry: 'Ministry of Finance', grade: '', status: 'error', error: 'Invalid email format' }
+            ],
+            errors: [
+                { row: 3, name: 'Error Record', email: 'invalid-email', errorType: 'Validation', errorMessage: 'Invalid email format' },
+                { row: 10, name: 'Another Error', email: 'duplicate@finance.gov.ng', errorType: 'Duplicate', errorMessage: 'Duplicate email address' },
+                { row: 15, name: '', email: '', errorType: 'Required', errorMessage: 'Name field is required' }
+            ]
+        },
+        {
+            id: 'BULK002',
+            ministry: 'Ministry of Education',
+            filename: 'MOE_Staff_Jan.xlsx',
+            totalRecords: 18,
+            validRecords: 18,
+            errorRecords: 0,
+            submittedBy: 'MOE Admin',
+            dateSubmitted: '2024-01-14 11:20',
+            status: 'approved',
+            approvedBy: 'Super Admin',
+            approvedDate: '2024-01-16 10:15',
+            records: [
+                { id: 1, name: 'Alice Johnson', email: 'alice@education.gov.ng', position: 'Director', department: 'Curriculum', ministry: 'Ministry of Education', grade: 'Director', approvalDate: '2024-01-16' },
+                { id: 2, name: 'Bob Williams', email: 'bob@education.gov.ng', position: 'Deputy Director', department: 'Examinations', ministry: 'Ministry of Education', grade: 'Deputy Director', approvalDate: '2024-01-16' }
+            ]
+        }
+    ];
+    
+    // Initialize Bulk Approvals Table
+    function initBulkApprovalsTable() {
+        if (!bulkApprovalsTable) return;
+        
+        // Add click event listener
+        bulkApprovalsTable.addEventListener('click', function(e) {
+            const reviewBtn = e.target.closest('.review-bulk-btn');
+            const viewApprovedBtn = e.target.closest('.view-approved-btn');
+            const rejectBtn = e.target.closest('.reject-bulk-btn');
+            
+            if (reviewBtn) {
+                const row = reviewBtn.closest('tr');
+                const uploadId = row.querySelector('td:first-child').textContent;
+                openReviewModal(uploadId);
+            }
+            
+            if (viewApprovedBtn) {
+                const row = viewApprovedBtn.closest('tr');
+                const uploadId = row.querySelector('td:first-child').textContent;
+                openApprovedViewModal(uploadId);
+            }
+            
+            if (rejectBtn) {
+                const row = rejectBtn.closest('tr');
+                const uploadId = row.querySelector('td:first-child').textContent;
+                const ministry = row.querySelector('td:nth-child(2)').textContent;
+                showRejectConfirmation(uploadId, ministry);
+            }
+        });
+        
+        // Populate table with data
+        populateBulkTable();
+    }
+    
+    // Populate Bulk Table with Data
+    function populateBulkTable() {
+        const tbody = bulkApprovalsTable.querySelector('tbody');
+        tbody.innerHTML = '';
+        
+        bulkUploadsData.forEach(upload => {
+            const statusBadge = getStatusBadge(upload.status);
+            const actionButtons = getActionButtons(upload.status, upload.id);
+            
+            const row = document.createElement('tr');
+            row.setAttribute('data-upload-id', upload.id);
+            row.setAttribute('data-ministry', upload.ministry);
+            row.setAttribute('data-records', JSON.stringify(upload.records));
+            
+            row.innerHTML = `
+                <td>${upload.id}</td>
+                <td>${upload.ministry}</td>
+                <td>${upload.filename}</td>
+                <td>${upload.totalRecords}</td>
+                <td>${upload.validRecords}</td>
+                <td>${upload.errorRecords}</td>
+                <td>${upload.submittedBy}</td>
+                <td>${upload.dateSubmitted}</td>
+                <td>${statusBadge}</td>
+                <td>${actionButtons}</td>
+            `;
+            
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Get Status Badge HTML
+    function getStatusBadge(status) {
+        const statusMap = {
+            'pending': { class: 'status-pending', text: 'Pending Review' },
+            'approved': { class: 'status-approved', text: 'Approved' },
+            'rejected': { class: 'status-rejected', text: 'Rejected' },
+            'partially_approved': { class: 'status-approved', text: 'Partially Approved' }
+        };
+        
+        const statusInfo = statusMap[status] || statusMap.pending;
+        return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
+    }
+    
+    // Get Action Buttons HTML
+    function getActionButtons(status, uploadId) {
+        if (status === 'pending') {
+            return `
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm review-bulk-btn">Review & Approve</button>
+                    <button class="btn btn-danger btn-sm reject-bulk-btn">Reject All</button>
+                </div>
+            `;
+        } else if (status === 'approved') {
+            return `
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-approved-btn">View Details</button>
+                </div>
+            `;
+        } else if (status === 'rejected') {
+            return `
+                <div class="action-buttons">
+                    <button class="btn btn-warning btn-sm review-bulk-btn">Review Again</button>
+                </div>
+            `;
+        }
+        
+        return '';
+    }
+    
+    // Open Review Modal
+    function openReviewModal(uploadId) {
+        const upload = bulkUploadsData.find(u => u.id === uploadId);
+        if (!upload) return;
+        
+        // Populate summary
+        document.getElementById('reviewUploadId').textContent = upload.id;
+        document.getElementById('reviewMinistry').textContent = upload.ministry;
+        document.getElementById('reviewFilename').textContent = upload.filename;
+        document.getElementById('reviewTotalRecords').textContent = upload.totalRecords;
+        document.getElementById('reviewValidRecords').textContent = upload.validRecords;
+        document.getElementById('reviewErrorRecords').textContent = upload.errorRecords;
+        document.getElementById('reviewSubmittedBy').textContent = upload.submittedBy;
+        document.getElementById('reviewDateSubmitted').textContent = upload.dateSubmitted;
+        
+        // Show/hide validation errors
+        const errorsSection = document.getElementById('validationErrorsSection');
+        if (upload.errorRecords > 0) {
+            errorsSection.style.display = 'block';
+            populateValidationErrors(upload.errors);
+        } else {
+            errorsSection.style.display = 'none';
+        }
+        
+        // Populate valid records preview
+        populateValidRecordsPreview(upload.records.filter(r => r.status === 'valid'));
+        
+        // Setup modal event listeners
+        setupReviewModalListeners(upload);
+        
+        // Show modal
+        reviewBulkModal.style.display = 'block';
+    }
+    
+    // Populate Validation Errors Table
+    function populateValidationErrors(errors) {
+        const tbody = document.getElementById('validationErrorsTable');
+        tbody.innerHTML = '';
+        
+        errors.forEach(error => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${error.row}</td>
+                <td>${error.name || '-'}</td>
+                <td>${error.email || '-'}</td>
+                <td><span class="status-badge status-rejected">${error.errorType}</span></td>
+                <td>${error.errorMessage}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm fix-error-btn" data-row="${error.row}">
+                        <i class="fas fa-wrench"></i> Fix
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Populate Valid Records Preview
+    function populateValidRecordsPreview(records) {
+        const tbody = document.getElementById('validRecordsPreviewTable');
+        tbody.innerHTML = '';
+        
+        // Show only first 10 records
+        const previewRecords = records.slice(0, 10);
+        
+        previewRecords.forEach(record => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.name}</td>
+                <td>${record.email}</td>
+                <td>${record.position}</td>
+                <td>${record.department}</td>
+                <td>${record.ministry}</td>
+                <td>${record.grade}</td>
+                <td><span class="status-badge status-approved">Valid</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Add info row if there are more records
+        if (records.length > 10) {
+            const infoRow = document.createElement('tr');
+            infoRow.innerHTML = `
+                <td colspan="8" style="text-align: center; font-style: italic;">
+                    ... and ${records.length - 10} more valid records
+                </td>
+            `;
+            tbody.appendChild(infoRow);
+        }
+    }
+    
+    // Setup Review Modal Event Listeners
+    function setupReviewModalListeners(upload) {
+        // Bulk status select change
+        const bulkStatusSelect = document.getElementById('bulkStatusSelect');
+        const customSection = document.getElementById('customSelectionSection');
+        
+        bulkStatusSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customSection.style.display = 'block';
+            } else {
+                customSection.style.display = 'none';
+            }
+        });
+        
+        // Selection buttons
+        document.getElementById('selectAllValidBtn')?.addEventListener('click', function() {
+            // Implementation for selecting all valid records
+            showToast('All valid records selected', 'info');
+        });
+        
+        document.getElementById('deselectAllBtn')?.addEventListener('click', function() {
+            // Implementation for deselecting all
+            showToast('All records deselected', 'info');
+        });
+        
+        // Close button
+        document.getElementById('closeReviewBtn').addEventListener('click', function() {
+            reviewBulkModal.style.display = 'none';
+        });
+        
+        // Reject button
+        document.getElementById('rejectBulkBtn').addEventListener('click', function() {
+            if (confirm(`Are you sure you want to reject the entire upload "${upload.filename}"? This will reject all ${upload.totalRecords} records.`)) {
+                rejectBulkUpload(upload.id);
+            }
+        });
+        
+        // Approve button
+        document.getElementById('approveBulkBtn').addEventListener('click', function() {
+            const action = bulkStatusSelect.value;
+            const remarks = document.getElementById('bulkRemarks').value;
+            
+            switch(action) {
+                case 'approve_all':
+                    approveBulkUpload(upload.id, 'all', remarks);
+                    break;
+                case 'approve_except_errors':
+                    approveBulkUpload(upload.id, 'except_errors', remarks);
+                    break;
+                case 'reject_all':
+                    rejectBulkUpload(upload.id, remarks);
+                    break;
+                case 'custom':
+                    approveBulkUpload(upload.id, 'custom', remarks);
+                    break;
+            }
+        });
+    }
+    
+    // Open Approved View Modal
+    function openApprovedViewModal(uploadId) {
+        const upload = bulkUploadsData.find(u => u.id === uploadId);
+        if (!upload) return;
+        
+        // Populate summary
+        document.getElementById('viewApprovedUploadId').textContent = upload.id;
+        document.getElementById('viewApprovedMinistry').textContent = upload.ministry;
+        document.getElementById('viewApprovedCount').textContent = upload.validRecords;
+        document.getElementById('viewApprovedBy').textContent = upload.approvedBy || 'Super Admin';
+        document.getElementById('viewApprovedDate').textContent = upload.approvedDate || '2024-01-16 10:15';
+        
+        // Populate approved records
+        populateApprovedRecords(upload.records);
+        
+        // Setup export buttons
+        document.getElementById('exportApprovedExcelBtn').addEventListener('click', function() {
+            exportApprovedRecords(upload.id, 'excel');
+        });
+        
+        document.getElementById('exportApprovedPDFBtn').addEventListener('click', function() {
+            exportApprovedRecords(upload.id, 'pdf');
+        });
+        
+        document.getElementById('exportApprovedCSVBtn').addEventListener('click', function() {
+            exportApprovedRecords(upload.id, 'csv');
+        });
+        
+        // Close button
+        document.getElementById('closeApprovedViewBtn').addEventListener('click', function() {
+            viewApprovedBulkModal.style.display = 'none';
+        });
+        
+        // Show modal
+        viewApprovedBulkModal.style.display = 'block';
+    }
+    
+    // Populate Approved Records Table
+    function populateApprovedRecords(records) {
+        const tbody = document.getElementById('approvedRecordsTable');
+        tbody.innerHTML = '';
+        
+        records.forEach(record => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.name}</td>
+                <td>${record.email}</td>
+                <td>${record.position}</td>
+                <td>${record.department}</td>
+                <td>${record.ministry}</td>
+                <td>${record.grade}</td>
+                <td>${record.approvalDate || '2024-01-16'}</td>
+                <td>
+                    <button class="btn btn-info btn-sm view-attendee-btn" data-email="${record.email}">
+                        View
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Approve Bulk Upload
+    function approveBulkUpload(uploadId, action, remarks = '') {
+        // API call to approve bulk upload
+        console.log(`Approving upload ${uploadId} with action: ${action}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            showToast(`Bulk upload approved successfully!`, 'success');
+            
+            // Update local data
+            const upload = bulkUploadsData.find(u => u.id === uploadId);
+            if (upload) {
+                upload.status = 'approved';
+                upload.approvedBy = 'Super Admin';
+                upload.approvedDate = new Date().toLocaleString();
+                upload.approvalRemarks = remarks;
+            }
+            
+            // Update table
+            populateBulkTable();
+            
+            // Close modal
+            reviewBulkModal.style.display = 'none';
+        }, 1500);
+    }
+    
+    // Reject Bulk Upload
+    function rejectBulkUpload(uploadId, remarks = '') {
+        // API call to reject bulk upload
+        console.log(`Rejecting upload ${uploadId}`);
+        
+        // Simulate API call
+        setTimeout(() => {
+            showToast(`Bulk upload rejected!`, 'warning');
+            
+            // Update local data
+            const upload = bulkUploadsData.find(u => u.id === uploadId);
+            if (upload) {
+                upload.status = 'rejected';
+                upload.rejectedBy = 'Super Admin';
+                upload.rejectedDate = new Date().toLocaleString();
+                upload.rejectionRemarks = remarks;
+            }
+            
+            // Update table
+            populateBulkTable();
+            
+            // Close modal
+            reviewBulkModal.style.display = 'none';
+        }, 1500);
+    }
+    
+    // Export Approved Records
+    function exportApprovedRecords(uploadId, format) {
+        const upload = bulkUploadsData.find(u => u.id === uploadId);
+        if (!upload) return;
+        
+        // Create export data
+        const exportData = upload.records.map(record => ({
+            'Full Name': record.name,
+            'Email': record.email,
+            'Position': record.position,
+            'Department': record.department,
+            'Ministry': record.ministry,
+            'Grade Level': record.grade,
+            'Approval Date': record.approvalDate || '2024-01-16'
+        }));
+        
+        // Export based on format
+        switch(format) {
+            case 'excel':
+                exportToExcel(exportData, `Bulk_Upload_${uploadId}_Approved`);
+                break;
+            case 'csv':
+                exportToCSV(exportData, `Bulk_Upload_${uploadId}_Approved`);
+                break;
+            case 'pdf':
+                exportToPDF(exportData, `Bulk_Upload_${uploadId}_Approved`);
+                break;
+        }
+        
+        showToast(`Exporting ${exportData.length} records as ${format.toUpperCase()}`, 'info');
+    }
+    
+    // Show Reject Confirmation
+    function showRejectConfirmation(uploadId, ministry) {
+        if (confirm(`Are you sure you want to reject the bulk upload from ${ministry}?\n\nThis will reject ALL records in this upload.`)) {
+            rejectBulkUpload(uploadId, 'Rejected via quick reject button');
+        }
+    }
+    
+    // Filter and Search Functions
+    function setupFilters() {
+        // Search functionality
+        searchBulkInput?.addEventListener('input', function() {
+            filterBulkTable();
+        });
+        
+        // Filter functionality
+        filterBulkStatus?.addEventListener('change', filterBulkTable);
+        filterBulkMinistry?.addEventListener('change', filterBulkTable);
+        
+        // Clear filters
+        clearBulkFiltersBtn?.addEventListener('click', function() {
+            searchBulkInput.value = '';
+            filterBulkStatus.value = '';
+            filterBulkMinistry.value = '';
+            filterBulkTable();
+        });
+        
+        // Refresh button
+        refreshBulkBtn?.addEventListener('click', function() {
+            // Simulate API refresh
+            showToast('Refreshing bulk approvals...', 'info');
+            setTimeout(() => {
+                populateBulkTable();
+                showToast('Bulk approvals refreshed successfully!', 'success');
+            }, 1000);
+        });
+    }
+    
+    // Filter Bulk Table
+    function filterBulkTable() {
+        const searchTerm = searchBulkInput?.value.toLowerCase() || '';
+        const statusFilter = filterBulkStatus?.value || '';
+        const ministryFilter = filterBulkMinistry?.value || '';
+        
+        const rows = bulkApprovalsTable.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const ministry = row.cells[1].textContent.toLowerCase();
+            const status = row.cells[8].textContent.toLowerCase();
+            const filename = row.cells[2].textContent.toLowerCase();
+            const uploadId = row.cells[0].textContent.toLowerCase();
+            
+            const matchesSearch = !searchTerm || 
+                ministry.includes(searchTerm) ||
+                filename.includes(searchTerm) ||
+                uploadId.includes(searchTerm);
+            
+            const matchesStatus = !statusFilter || 
+                (statusFilter === 'pending' && status.includes('pending')) ||
+                (statusFilter === 'approved' && status.includes('approved')) ||
+                (statusFilter === 'rejected' && status.includes('rejected')) ||
+                (statusFilter === 'partially_approved' && status.includes('partially'));
+            
+            const matchesMinistry = !ministryFilter || 
+                ministry === ministryFilter.toLowerCase();
+            
+            row.style.display = (matchesSearch && matchesStatus && matchesMinistry) ? '' : 'none';
+        });
+    }
+    
+    // Helper Functions for Export
+    function exportToExcel(data, filename) {
+        // Implementation for Excel export using SheetJS
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Approved Records");
+        XLSX.writeFile(wb, `${filename}.xlsx`);
+    }
+    
+    function exportToCSV(data, filename) {
+        const headers = Object.keys(data[0] || {});
+        const csvRows = [
+            headers.join(','),
+            ...data.map(row => headers.map(header => JSON.stringify(row[header] || '')).join(','))
+        ];
+        
+        const csv = csvRows.join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    
+    function exportToPDF(data, filename) {
+        // Simple PDF export implementation
+        showToast('PDF export would be implemented with a PDF library', 'info');
+    }
+    
+    // Show Toast Notification
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        // Add to body
+        document.body.appendChild(toast);
+        
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 100);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // Initialize when DOM is loaded
+    initBulkApprovalsTable();
+    setupFilters();
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === reviewBulkModal) {
+            reviewBulkModal.style.display = 'none';
+        }
+        if (e.target === viewApprovedBulkModal) {
+            viewApprovedBulkModal.style.display = 'none';
+        }
+    });
+});
+
+// Partnership Package Management
+let partnershipPackages = {
+    diamond: {
+        maxRegistrants: 10,
+        currentRegistrants: 0,
+        actionOnFull: "hide",
+        investment: 5000000,
+        features: [],
+        description: "",
+        isAvailable: true,
+        gracePeriod: 48,
+        autoReopen: false
+    },
+    gold: {
+        maxRegistrants: 20,
+        currentRegistrants: 0,
+        actionOnFull: "hide",
+        investment: 3000000,
+        features: [],
+        description: "",
+        isAvailable: true,
+        gracePeriod: 48,
+        autoReopen: false
+    },
+    silver: {
+        maxRegistrants: 30,
+        currentRegistrants: 0,
+        actionOnFull: "hide",
+        investment: 1500000,
+        features: [],
+        description: "",
+        isAvailable: true,
+        gracePeriod: 48,
+        autoReopen: false
+    },
+    bronze: {
+        maxRegistrants: 50,
+        currentRegistrants: 0,
+        actionOnFull: "hide",
+        investment: 500000,
+        features: [],
+        description: "",
+        isAvailable: true,
+        gracePeriod: 48,
+        autoReopen: false
+    }
+};
+
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+    initializePackageManagement();
+});
+
+function initializePackageManagement() {
+    loadPackageConfigurations();
+    initializeBenefitsTabs();
+    setupPackageEventListeners();
+    updatePackageStatistics();
+}
+
+// Load / Save
+function loadPackageConfigurations() {
+    try {
+        const saved = localStorage.getItem("partnershipPackages");
+        if (!saved) return;
+
+        let parsed = JSON.parse(saved);
+
+        if (typeof parsed === "object" && parsed !== null) {
+            partnershipPackages = parsed;
+        }
+
+        updatePackageUI();
+    } catch (e) {
+        console.error("Invalid saved configuration. Resetting.", e);
+        localStorage.removeItem("partnershipPackages");
+    }
+}
+
+function savePackageConfigurations() {
+    try {
+        localStorage.setItem("partnershipPackages", JSON.stringify(partnershipPackages));
+        updatePartnerDashboards();
+        showSuccessMessage("Package configurations saved successfully!");
+    } catch (e) {
+        console.error("Error saving package configurations:", e);
+        alert("Error saving configurations.");
+    }
+}
+
+// UI sync
+function updatePackageUI() {
+    for (const packageName in partnershipPackages) {
+        const pkg = partnershipPackages[packageName];
+
+        setValue(`${packageName}MaxRegistrants`, pkg.maxRegistrants);
+        setValue(`${packageName}CurrentCount`, pkg.currentRegistrants);
+        setValue(`${packageName}Action`, pkg.actionOnFull);
+        setValue(`${packageName}Investment`, pkg.investment);
+        setValue(`${packageName}Description`, pkg.description);
+
+        const featureBox = document.getElementById(`${packageName}Features`);
+        if (featureBox) featureBox.value = pkg.features.join("\n");
+    }
+
+    updatePackageStatistics();
+}
+
+function setValue(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+}
+
+function updatePackageStatistics() {
+    fetchCurrentPartnerCounts().then((counts) => {
+        for (const packageName in partnershipPackages) {
+            partnershipPackages[packageName].currentRegistrants =
+                counts[packageName] || 0;
+        }
+        updatePackageDisplay();
+    });
+}
+
+function updatePackageDisplay() {
+    for (const packageName in partnershipPackages) {
+        const pkg = partnershipPackages[packageName];
+
+        setText(`${packageName}Utilization`, `${pkg.currentRegistrants}/${pkg.maxRegistrants}`);
+
+        const percentage =
+            pkg.maxRegistrants > 0
+                ? Math.round((pkg.currentRegistrants / pkg.maxRegistrants) * 100)
+                : 0;
+
+        setText(`${packageName}Percentage`, `${percentage}%`);
+
+        const statusEl = document.getElementById(`${packageName}Status`);
+        if (statusEl) {
+            if (pkg.currentRegistrants >= pkg.maxRegistrants) {
+                statusEl.textContent = "Full";
+                statusEl.className = "package-status status-full";
+                handleFullPackage(packageName);
+            } else if (!pkg.isAvailable) {
+                statusEl.textContent = "Closed";
+                statusEl.className = "package-status status-closed";
+            } else {
+                statusEl.textContent = "Available";
+                statusEl.className = "package-status status-available";
+            }
+        }
+    }
+}
+
+function setText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+}
+
+// Full package handling
+function handleFullPackage(packageName) {
+    const action = partnershipPackages[packageName].actionOnFull;
+
+    switch (action) {
+        case "hide":
+            console.log(`Hiding ${packageName}`);
+            break;
+        case "disable":
+            console.log(`Disabling ${packageName}`);
+            break;
+        case "show_message":
+            console.log(`Showing full message for ${packageName}`);
+            break;
+        case "waitlist":
+            console.log(`Enabling waitlist for ${packageName}`);
+            break;
+    }
+}
+
+// Adjust capacity
+function adjustCapacity(packageName, delta) {
+    const input = document.getElementById(`${packageName}MaxRegistrants`);
+    if (!input) return;
+
+    let newValue = Math.max(0, parseInt(input.value) + delta);
+    input.value = newValue;
+
+    partnershipPackages[packageName].maxRegistrants = newValue;
+    updatePackageDisplay();
+}
+
+// Tabs
+function initializeBenefitsTabs() {
+    const tabButtons = document.querySelectorAll(".benefits-tab-btn");
+    const panes = document.querySelectorAll(".benefits-tab-pane");
+
+    tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            const packageName = button.dataset.package;
+            panes.forEach((pane) => (pane.style.display = "none"));
+
+            const pane = document.getElementById(`${packageName}Benefits`);
+            if (pane) pane.style.display = "block";
+        });
+    });
+}
+
+// Event Listeners
+function setupPackageEventListeners() {
+    const form = document.getElementById("packageConfigForm");
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            savePackageConfigurations();
+        });
+    }
+
+    bindClick("refreshPackageStatsBtn", () => {
+        updatePackageStatistics();
+        showSuccessMessage("Stats refreshed!");
+    });
+
+    bindClick("resetPackageDefaultsBtn", () => {
+        if (confirm("Reset all packages to default?")) resetPackageDefaults();
+    });
+
+    setupPackageChangeMonitoring();
+}
+
+function bindClick(id, fn) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("click", fn);
+}
+
+// Save config
+function saveAllPackageConfiguration() {
+    for (const packageName in partnershipPackages) {
+        const pkg = partnershipPackages[packageName];
+
+        pkg.maxRegistrants = getInt(`${packageName}MaxRegistrants`);
+        pkg.actionOnFull = getValue(`${packageName}Action`);
+        pkg.investment = getInt(`${packageName}Investment`);
+        pkg.description = getValue(`${packageName}Description`);
+
+        const featuresBox = document.getElementById(`${packageName}Features`);
+        if (featuresBox) {
+            pkg.features = featuresBox.value
+                .split("\n")
+                .map((x) => x.trim())
+                .filter(Boolean);
+        }
+
+        pkg.gracePeriod = getInt("paymentGracePeriod") || pkg.gracePeriod;
+        pkg.autoReopen = getValue("autoReopenEnabled") === "yes";
+    }
+
+    savePackageConfigurations();
+    updatePackageDisplay();
+}
+
+function getValue(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+}
+
+function getInt(id) {
+    return parseInt(getValue(id)) || 0;
+}
+
+// Defaults
+function resetPackageDefaults() {
+    partnershipPackages = JSON.parse(JSON.stringify(defaultPackageStructure()));
+    updatePackageUI();
+    savePackageConfigurations();
+    showSuccessMessage("Defaults restored!");
+}
+
+function defaultPackageStructure() {
+    return {
+        diamond: {
+            maxRegistrants: 10,
+            currentRegistrants: 0,
+            actionOnFull: "hide",
+            investment: 5000000,
+            features: [
+                "Prime booth location (6x9m)",
+                "10 conference passes",
+                "Keynote speaking slot",
+                "Company logo on all promotional materials",
+                "VIP dinner",
+                "Dedicated event staff",
+                "Social media promotion",
+                "Full-page brochure ad"
+            ],
+            description:
+                "Premium partnership with maximum visibility.",
+            isAvailable: true,
+            gracePeriod: 48,
+            autoReopen: false
+        },
+        gold: {
+            maxRegistrants: 20,
+            currentRegistrants: 0,
+            actionOnFull: "hide",
+            investment: 3000000,
+            features: [
+                "Standard booth (6x6m)",
+                "6 passes",
+                "Panel discussion",
+                "Logo on website",
+                "Networking reception",
+                "Half-page brochure ad"
+            ],
+            description: "Strong visibility and networking opportunities.",
+            isAvailable: true,
+            gracePeriod: 48,
+            autoReopen: false
+        },
+        silver: {
+            maxRegistrants: 30,
+            currentRegistrants: 0,
+            actionOnFull: "hide",
+            investment: 1500000,
+            features: [
+                "Booth (3x6m)",
+                "4 passes",
+                "Roundtable participation",
+                "Logo in event program",
+                "Website listing"
+            ],
+            description: "Good visibility and engagement.",
+            isAvailable: true,
+            gracePeriod: 48,
+            autoReopen: false
+        },
+        bronze: {
+            maxRegistrants: 50,
+            currentRegistrants: 0,
+            actionOnFull: "hide",
+            investment: 500000,
+            features: [
+                "Exhibition space (3x3m)",
+                "2 passes",
+                "Website listing",
+                "Basic promo materials"
+            ],
+            description: "Entry-level partnership tier.",
+            isAvailable: true,
+            gracePeriod: 48,
+            autoReopen: false
+        }
+    };
+}
+
+// Monitoring
+function setupPackageChangeMonitoring() {
+    setInterval(() => updatePackageStatistics(), 30000);
+
+    document.addEventListener("partnerApplicationSubmitted", (e) => {
+        const { packageName } = e.detail;
+        if (partnershipPackages[packageName]) {
+            partnershipPackages[packageName].currentRegistrants++;
+            updatePackageDisplay();
+            savePackageConfigurations();
+        }
+    });
+
+    document.addEventListener("paymentFailed", (e) => {
+        const { packageName } = e.detail;
+        if (partnershipPackages[packageName]?.autoReopen) {
+            partnershipPackages[packageName].currentRegistrants--;
+            updatePackageDisplay();
+            savePackageConfigurations();
+            showSuccessMessage(`${packageName} reopened due to failed payment`);
+        }
+    });
+}
+
+// Fake fetch
+async function fetchCurrentPartnerCounts() {
+    try {
+        const response = await fetch("/api/partners/counts-by-package");
+        if (response.ok) return await response.json();
+        throw new Error("API failed");
+    } catch (error) {
+        console.warn("Using fallback partner counts");
+        return { diamond: 0, gold: 0, silver: 0, bronze: 0 };
+    }
+}
+
+// Toast
+function showSuccessMessage(message) {
+    const modal = document.getElementById("packageSuccessModal");
+    const msgEl = document.getElementById("packageSuccessMessage");
+
+    if (!modal || !msgEl) {
+        console.warn("Package success modal not found, using alert fallback");
+        alert(message);
+        return;
+    }
+
+    msgEl.textContent = message;
+    modal.style.display = "flex";
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        modal.style.display = "none";
+    }, 3000);
+    
+    // Add click to close
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    }, { once: true }); // Use once so we don't add multiple listeners
+}
+// Report System Functionality with Chart.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart instances storage
+    const charts = {};
+    
+    // Initialize event dates (2-day event)
+    const eventStartDate = '2026-06-01';
+    const eventEndDate = '2026-06-02';
+    
+    // Set default date range to event dates
+    document.getElementById('reportStartDate').value = eventStartDate;
+    document.getElementById('reportEndDate').value = eventEndDate;
+    
+    // Report Type Switching
+    const reportTypeCards = document.querySelectorAll('.report-type-card');
+    const reportSections = document.querySelectorAll('.report-section');
+    
+    reportTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const reportType = this.getAttribute('data-report');
+            
+            // Remove active class from all cards
+            reportTypeCards.forEach(c => c.classList.remove('active'));
+            // Add active class to clicked card
+            this.classList.add('active');
+            
+            // Hide all report sections
+            reportSections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+            
+            // Show selected report section
+            const targetSection = document.getElementById(`${reportType}Report`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+                
+                // Update report data for selected section
+                updateReportData(reportType);
+            }
+        });
+    });
+    
+    // Quick Date Range Selection
+    const quickDateRange = document.getElementById('quickDateRange');
+    const startDateInput = document.getElementById('reportStartDate');
+    const endDateInput = document.getElementById('reportEndDate');
+    
+    quickDateRange.addEventListener('change', function() {
+        const today = new Date();
+        let startDate = new Date();
+        let endDate = new Date();
+        
+        switch(this.value) {
+            case 'all':
+                // For 2-day event, show both days
+                startDate = new Date(eventStartDate);
+                endDate = new Date(eventEndDate);
+                break;
+            case 'today':
+                // If today is within event dates
+                const eventDate1 = new Date(eventStartDate);
+                const eventDate2 = new Date(eventEndDate);
+                const todayStr = today.toISOString().split('T')[0];
+                
+                if (todayStr === eventStartDate) {
+                    startDate = eventDate1;
+                    endDate = eventDate1;
+                } else if (todayStr === eventEndDate) {
+                    startDate = eventDate2;
+                    endDate = eventDate2;
+                } else {
+                    // Default to event dates if today is not event day
+                    startDate = eventDate1;
+                    endDate = eventDate2;
+                }
+                break;
+            case 'yesterday':
+                // For demo, show first day if "yesterday"
+                startDate = new Date(eventStartDate);
+                endDate = new Date(eventStartDate);
+                break;
+            case 'week':
+            case 'month':
+            case 'quarter':
+                // For 2-day event, these all show the full event
+                startDate = new Date(eventStartDate);
+                endDate = new Date(eventEndDate);
+                break;
+            case 'year':
+                startDate = new Date('2026-01-01');
+                endDate = new Date('2026-12-31');
+                break;
+            case 'last_year':
+                startDate = new Date('2025-01-01');
+                endDate = new Date('2025-12-31');
+                break;
+            case 'custom':
+                // Allow custom selection but validate within event dates
+                startDateInput.disabled = false;
+                endDateInput.disabled = false;
+                return;
+        }
+        
+        // Format dates as YYYY-MM-DD
+        startDateInput.value = startDate.toISOString().split('T')[0];
+        endDateInput.value = endDate.toISOString().split('T')[0];
+        
+        // Update all reports with new date range
+        const activeReport = document.querySelector('.report-type-card.active').getAttribute('data-report');
+        updateReportData(activeReport);
+    });
+    
+    // Date Input Validation for 2-day event
+    startDateInput.addEventListener('change', validateDateRange);
+    endDateInput.addEventListener('change', validateDateRange);
+    
+    function validateDateRange() {
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+        const eventStart = new Date(eventStartDate);
+        const eventEnd = new Date(eventEndDate);
+        
+        // Ensure dates are within event range
+        if (startDate < eventStart) {
+            startDateInput.value = eventStartDate;
+        }
+        if (endDate > eventEnd) {
+            endDateInput.value = eventEndDate;
+        }
+        if (startDate > eventEnd) {
+            startDateInput.value = eventStartDate;
+        }
+        if (endDate < eventStart) {
+            endDateInput.value = eventEndDate;
+        }
+        
+        // Update quick select to custom
+        quickDateRange.value = 'custom';
+        
+        // Update reports
+        const activeReport = document.querySelector('.report-type-card.active').getAttribute('data-report');
+        updateReportData(activeReport);
+    }
+    
+    // Initialize date validation
+    validateDateRange();
+    
+    // Export Functionality
+    document.getElementById('exportPDFBtn').addEventListener('click', () => exportReport('pdf'));
+    document.getElementById('exportExcelBtn').addEventListener('click', () => exportReport('excel'));
+    document.getElementById('exportCSVBtn').addEventListener('click', () => exportReport('csv'));
+    document.getElementById('exportChartBtn').addEventListener('click', exportCharts);
+    document.getElementById('clearCanvasBtn').addEventListener('click', clearCanvas);
+    document.getElementById('generateCustomBtn').addEventListener('click', generateCustomReport);
+    document.getElementById('saveTemplateBtn').addEventListener('click', saveTemplate);
+    
+    // Multi-select filters
+    initializeMultiSelectFilters();
+    
+    // Initialize drag and drop for custom report builder
+    initializeDragAndDrop();
+    
+    // Initialize sample data
+    initializeSampleData();
+    
+    // Generate initial report
+    updateReportData('overview');
+    
+    function updateReportData(reportType) {
+        const startDate = document.getElementById('reportStartDate').value;
+        const endDate = document.getElementById('reportEndDate').value;
+        
+        console.log(`Updating ${reportType} report for dates: ${startDate} to ${endDate}`);
+        
+        switch(reportType) {
+            case 'overview':
+                updateOverviewReport();
+                break;
+            case 'attendees':
+                updateAttendeeReport();
+                break;
+            case 'financial':
+                updateFinancialReport();
+                break;
+            case 'ministry':
+                updateMinistryReport();
+                break;
+            case 'participation':
+                updateParticipationReport();
+                break;
+            case 'custom':
+                // Custom report doesn't auto-update
+                break;
+        }
+    }
+    
+    function updateOverviewReport() {
+        // Sample data for 2-day event
+        const data = {
+            totalRegistrations: 1874,
+            approvalRate: '92%',
+            revenue: '₦47,850,000',
+            ministryCount: 32,
+            registrationTrend: {
+                labels: ['Day 1 AM', 'Day 1 PM', 'Day 2 AM', 'Day 2 PM'],
+                data: [450, 620, 530, 274]
+            },
+            ministryDistribution: {
+                labels: ['Finance', 'Education', 'Health', 'Transport', 'Agriculture', 'Technology', 'Energy', 'Defense', 'Justice', 'Environment'],
+                data: [210, 185, 178, 162, 150, 145, 142, 138, 135, 129]
+            },
+            statusDistribution: {
+                labels: ['Approved', 'Pending', 'Rejected'],
+                data: [1724, 100, 50]
+            },
+            revenueByCategory: {
+                labels: ['Registration', 'Exhibition', 'Sponsorship', 'Merchandise'],
+                data: [28000000, 12500000, 5000000, 2350000]
+            }
+        };
+        
+        // Update KPI values
+        document.getElementById('kpiTotalReg').textContent = data.totalRegistrations.toLocaleString();
+        document.getElementById('kpiApprovalRate').textContent = data.approvalRate;
+        document.getElementById('kpiRevenue').textContent = data.revenue;
+        document.getElementById('kpiMinistryCount').textContent = data.ministryCount;
+        
+        // Update progress bars (calculate based on targets)
+        const progressBars = document.querySelectorAll('.key-metrics-table .progress-bar > div');
+        const percentages = [
+            (data.totalRegistrations / 2500 * 100).toFixed(0),
+            parseFloat(data.approvalRate),
+            (parseFloat(data.revenue.replace(/[^0-9]/g, '')) / 50000000 * 100).toFixed(0),
+            (data.ministryCount / 35 * 100).toFixed(0)
+        ];
+        
+        progressBars.forEach((bar, index) => {
+            const percent = Math.min(percentages[index], 100);
+            bar.style.width = `${percent}%`;
+            bar.previousElementSibling.textContent = `${percent}%`;
+        });
+        
+        // Initialize/Update charts
+        createOrUpdateChart('registrationTrendChart', {
+            type: 'line',
+            data: {
+                labels: data.registrationTrend.labels,
+                datasets: [{
+                    label: 'Registrations',
+                    data: data.registrationTrend.data,
+                    borderColor: '#008751',
+                    backgroundColor: 'rgba(0, 135, 81, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        createOrUpdateChart('ministryDistributionChart', {
+            type: 'bar',
+            data: {
+                labels: data.ministryDistribution.labels,
+                datasets: [{
+                    label: 'Attendees',
+                    data: data.ministryDistribution.data,
+                    backgroundColor: [
+                        '#008751', '#00c974', '#27ae60', '#f39c12', '#e74c3c',
+                        '#3498db', '#9b59b6', '#34495e', '#1abc9c', '#d35400'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        createOrUpdateChart('statusDistributionChart', {
+            type: 'doughnut',
+            data: {
+                labels: data.statusDistribution.labels,
+                datasets: [{
+                    data: data.statusDistribution.data,
+                    backgroundColor: [
+                        '#27ae60', // Approved - green
+                        '#f39c12', // Pending - orange
+                        '#e74c3c'  // Rejected - red
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        createOrUpdateChart('revenueCategoryChart', {
+            type: 'pie',
+            data: {
+                labels: data.revenueByCategory.labels,
+                datasets: [{
+                    data: data.revenueByCategory.data,
+                    backgroundColor: [
+                        '#008751', // Registration
+                        '#00c974', // Exhibition
+                        '#27ae60', // Sponsorship
+                        '#f39c12'  // Merchandise
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateAttendeeReport() {
+        // Sample attendee data for 2-day event
+        const ministries = [
+            { name: 'Ministry of Finance', total: 210, approved: 195, pending: 10, rejected: 5, grades: [15, 25, 30, 40, 50, 50] },
+            { name: 'Ministry of Education', total: 185, approved: 175, pending: 8, rejected: 2, grades: [12, 22, 28, 35, 45, 43] },
+            { name: 'Ministry of Health', total: 178, approved: 165, pending: 10, rejected: 3, grades: [10, 20, 25, 38, 42, 43] },
+            { name: 'Ministry of Transport', total: 162, approved: 150, pending: 9, rejected: 3, grades: [8, 18, 22, 35, 40, 39] },
+            { name: 'Ministry of Agriculture', total: 150, approved: 140, pending: 7, rejected: 3, grades: [7, 15, 20, 32, 38, 38] }
+        ];
+        
+        // Populate ministry filter
+        const ministryFilter = document.getElementById('attendeeMinistryFilter');
+        if (ministryFilter.children.length <= 1) { // Only has "All Ministries" option
+            ministries.forEach(ministry => {
+                const option = document.createElement('option');
+                option.value = ministry.name;
+                option.textContent = ministry.name;
+                ministryFilter.appendChild(option);
+            });
+        }
+        
+        // Update detailed stats table
+        const tbody = document.getElementById('attendeeDetailedStats');
+        tbody.innerHTML = '';
+        
+        ministries.forEach(ministry => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${ministry.name}</td>
+                <td>${ministry.total}</td>
+                <td>${ministry.approved}</td>
+                <td>${ministry.pending}</td>
+                <td>${ministry.rejected}</td>
+                <td>${ministry.grades[0]}</td>
+                <td>${ministry.grades[1]}</td>
+                <td>${ministry.grades[2]}</td>
+                <td>${ministry.grades[3]}</td>
+                <td>${ministry.grades[4]}</td>
+                <td>${ministry.grades[5]}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Add total row
+        const totalRow = document.createElement('tr');
+        totalRow.innerHTML = `
+            <td><strong>Total</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.total, 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.approved, 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.pending, 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.rejected, 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[0], 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[1], 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[2], 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[3], 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[4], 0)}</strong></td>
+            <td><strong>${ministries.reduce((sum, m) => sum + m.grades[5], 0)}</strong></td>
+        `;
+        tbody.appendChild(totalRow);
+        
+        // Create attendee distribution chart
+        const gradeLabels = ['Directors', 'Deputy Directors', 'Assistant Directors', 'Chief Officers', 'Senior Officers', 'Officers'];
+        const ministryLabels = ministries.map(m => m.name);
+        
+        const gradeData = [];
+        gradeLabels.forEach((grade, gradeIndex) => {
+            gradeData.push(ministries.map(m => m.grades[gradeIndex]));
+        });
+        
+        createOrUpdateChart('attendeeDistributionChart', {
+            type: 'bar',
+            data: {
+                labels: ministryLabels,
+                datasets: gradeLabels.map((label, index) => ({
+                    label: label,
+                    data: gradeData[index],
+                    backgroundColor: [
+                        '#008751', '#00c974', '#27ae60', '#f39c12', '#e74c3c', '#3498db'
+                    ][index],
+                    borderWidth: 1
+                }))
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateFinancialReport() {
+        // Sample financial data for 2-day event
+        const financialData = {
+            totalRevenue: '₦47,850,000',
+            boothRevenue: '₦12,500,000',
+            partnerRevenue: '₦5,000,000',
+            speakerRevenue: '₦2,800,000',
+            monthlyTrend: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                data: [5000000, 8500000, 12500000, 18500000, 28500000, 47850000]
+            },
+            categories: [
+                { name: 'Registration', total: 28000000, paid: 25000000, pending: 2500000, overdue: 500000, rate: '89%', avg: '₦175,000' },
+                { name: 'Exhibition', total: 12500000, paid: 11000000, pending: 1000000, overdue: 500000, rate: '88%', avg: '₦2,500,000' },
+                { name: 'Sponsorship', total: 5000000, paid: 4500000, pending: 500000, overdue: 0, rate: '90%', avg: '₦1,250,000' },
+                { name: 'Merchandise', total: 2350000, paid: 2000000, pending: 350000, overdue: 0, rate: '85%', avg: '₦25,000' }
+            ]
+        };
+        
+        // Update financial cards
+        document.getElementById('financialTotalRevenue').textContent = financialData.totalRevenue;
+        document.getElementById('financialBoothRevenue').textContent = financialData.boothRevenue;
+        document.getElementById('financialPartnerRevenue').textContent = financialData.partnerRevenue;
+        document.getElementById('financialSpeakerRevenue').textContent = financialData.speakerRevenue;
+        
+        // Update revenue details table
+        const tbody = document.getElementById('revenueDetailsTable');
+        tbody.innerHTML = '';
+        
+        financialData.categories.forEach(category => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${category.name}</td>
+                <td>₦${category.total.toLocaleString()}</td>
+                <td>₦${category.paid.toLocaleString()}</td>
+                <td>₦${category.pending.toLocaleString()}</td>
+                <td>₦${category.overdue.toLocaleString()}</td>
+                <td>${category.rate}</td>
+                <td>${category.avg}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Create revenue trend chart
+        createOrUpdateChart('revenueTrendChart', {
+            type: 'line',
+            data: {
+                labels: financialData.monthlyTrend.labels,
+                datasets: [{
+                    label: 'Revenue (₦)',
+                    data: financialData.monthlyTrend.data,
+                    borderColor: '#008751',
+                    backgroundColor: 'rgba(0, 135, 81, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₦' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Create payment status chart
+        const paymentStatusData = {
+            paid: financialData.categories.reduce((sum, cat) => sum + cat.paid, 0),
+            pending: financialData.categories.reduce((sum, cat) => sum + cat.pending, 0),
+            overdue: financialData.categories.reduce((sum, cat) => sum + cat.overdue, 0)
+        };
+        
+        createOrUpdateChart('paymentStatusChart', {
+            type: 'doughnut',
+            data: {
+                labels: ['Paid', 'Pending', 'Overdue'],
+                datasets: [{
+                    data: [paymentStatusData.paid, paymentStatusData.pending, paymentStatusData.overdue],
+                    backgroundColor: [
+                        '#27ae60', // Paid - green
+                        '#f39c12', // Pending - orange
+                        '#e74c3c'  // Overdue - red
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateMinistryReport() {
+        // Sample ministry data
+        const ministries = [
+            { name: 'Ministry of Finance', code: 'MOF', registrations: 210, approvalRate: '93%', completionRate: '98%', processingTime: '2.1h', lastUpdated: '2026-06-02', score: 95 },
+            { name: 'Ministry of Education', code: 'MOE', registrations: 185, approvalRate: '95%', completionRate: '96%', processingTime: '1.8h', lastUpdated: '2026-06-02', score: 93 },
+            { name: 'Ministry of Health', code: 'MOH', registrations: 178, approvalRate: '93%', completionRate: '95%', processingTime: '2.3h', lastUpdated: '2026-06-01', score: 91 },
+            { name: 'Ministry of Transport', code: 'MOT', registrations: 162, approvalRate: '93%', completionRate: '94%', processingTime: '2.5h', lastUpdated: '2026-06-01', score: 89 },
+            { name: 'Ministry of Agriculture', code: 'MOA', registrations: 150, approvalRate: '93%', completionRate: '93%', processingTime: '2.8h', lastUpdated: '2026-06-01', score: 87 }
+        ];
+        
+        // Update ranking list
+        const rankingList = document.getElementById('ministryRankingList');
+        rankingList.innerHTML = '';
+        
+        ministries.forEach((ministry, index) => {
+            const rankItem = document.createElement('div');
+            rankItem.className = 'ranking-item';
+            rankItem.innerHTML = `
+                <div class="ranking-position">${index + 1}</div>
+                <div class="ranking-info">
+                    <div class="ranking-name">${ministry.name}</div>
+                    <div class="ranking-stats">
+                        <span class="ranking-stat"><strong>${ministry.registrations}</strong> registrations</span>
+                        <span class="ranking-stat"><strong>${ministry.approvalRate}</strong> approval rate</span>
+                        <span class="ranking-stat"><strong>${ministry.score}/100</strong> score</span>
+                    </div>
+                </div>
+            `;
+            rankingList.appendChild(rankItem);
+        });
+        
+        // Update performance table
+        const tbody = document.getElementById('ministryPerformanceTable');
+        tbody.innerHTML = '';
+        
+        ministries.forEach(ministry => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${ministry.name}</td>
+                <td>${ministry.code}</td>
+                <td>${ministry.registrations}</td>
+                <td>${ministry.approvalRate}</td>
+                <td>${ministry.completionRate}</td>
+                <td>${ministry.processingTime}</td>
+                <td>${ministry.lastUpdated}</td>
+                <td>
+                    <div class="progress-bar" style="width: 100px; margin: 0 auto;">
+                        <div style="width: ${ministry.score}%"></div>
+                        <span>${ministry.score}%</span>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Create ministry timeline chart
+        const timelineData = {
+            labels: ['Day 1 AM', 'Day 1 PM', 'Day 2 AM', 'Day 2 PM'],
+            datasets: ministries.map((ministry, index) => ({
+                label: ministry.name,
+                data: [
+                    Math.floor(ministry.registrations * 0.2), // Day 1 AM
+                    Math.floor(ministry.registrations * 0.35), // Day 1 PM
+                    Math.floor(ministry.registrations * 0.3), // Day 2 AM
+                    Math.floor(ministry.registrations * 0.15)  // Day 2 PM
+                ],
+                borderColor: [
+                    '#008751', '#00c974', '#27ae60', '#f39c12', '#e74c3c'
+                ][index % 5],
+                backgroundColor: 'rgba(0, 135, 81, 0.1)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.4
+            }))
+        };
+        
+        createOrUpdateChart('ministryTimelineChart', {
+            type: 'line',
+            data: timelineData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateParticipationReport() {
+        // Sample participation data
+        const data = {
+            totalSpeakers: 45,
+            totalExhibitors: 28,
+            totalPartners: 15,
+            topPackage: 'Platinum',
+            packageDistribution: {
+                labels: ['Platinum', 'Gold', 'Silver', 'Bronze'],
+                data: [15, 20, 7, 3]
+            },
+            exhibitorStatus: {
+                labels: ['Confirmed', 'Pending', 'Cancelled'],
+                data: [22, 4, 2]
+            },
+            details: [
+                { category: 'Speakers', confirmed: 40, pending: 5, rejected: 0, paid: 38, paymentPending: 2, totalValue: '₦28,500,000', avgValue: '₦712,500' },
+                { category: 'Exhibitors', confirmed: 22, pending: 4, rejected: 2, paid: 20, paymentPending: 2, totalValue: '₦12,500,000', avgValue: '₦568,182' },
+                { category: 'Partners', confirmed: 12, pending: 3, rejected: 0, paid: 10, paymentPending: 2, totalValue: '₦5,000,000', avgValue: '₦416,667' }
+            ]
+        };
+        
+        // Update stats cards
+        document.getElementById('totalSpeakersCount').textContent = data.totalSpeakers;
+        document.getElementById('totalExhibitorsCount').textContent = data.totalExhibitors;
+        document.getElementById('totalPartnersCount').textContent = data.totalPartners;
+        document.getElementById('topSpeakerPackage').textContent = data.topPackage;
+        
+        // Update details table
+        const tbody = document.getElementById('participationDetailsTable');
+        tbody.innerHTML = '';
+        
+        data.details.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.category}</td>
+                <td>${item.confirmed}</td>
+                <td>${item.pending}</td>
+                <td>${item.rejected}</td>
+                <td>${item.paid}</td>
+                <td>${item.paymentPending}</td>
+                <td>${item.totalValue}</td>
+                <td>${item.avgValue}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        // Create speaker package chart
+        createOrUpdateChart('speakerPackageChart', {
+            type: 'bar',
+            data: {
+                labels: data.packageDistribution.labels,
+                datasets: [{
+                    label: 'Speakers',
+                    data: data.packageDistribution.data,
+                    backgroundColor: [
+                        '#008751', // Platinum
+                        '#00c974', // Gold
+                        '#27ae60', // Silver
+                        '#f39c12'  // Bronze
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Create exhibitor status chart
+        createOrUpdateChart('exhibitorStatusChart', {
+            type: 'doughnut',
+            data: {
+                labels: data.exhibitorStatus.labels,
+                datasets: [{
+                    data: data.exhibitorStatus.data,
+                    backgroundColor: [
+                        '#27ae60', // Confirmed - green
+                        '#f39c12', // Pending - orange
+                        '#e74c3c'  // Cancelled - red
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Chart utility function
+    function createOrUpdateChart(canvasId, config) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        // Destroy existing chart if it exists
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
+        
+        // Create new chart
+        charts[canvasId] = new Chart(canvas, config);
+    }
+    
+    function initializeMultiSelectFilters() {
+        // Convert select elements to multi-select with checkboxes
+        const multiSelects = document.querySelectorAll('select[multiple]');
+        
+        multiSelects.forEach(select => {
+            // Store original select
+            const originalSelect = select;
+            
+            // Create container for custom multi-select
+            const container = document.createElement('div');
+            container.className = 'multi-select-container';
+            
+            // Create selected items display
+            const selectedDisplay = document.createElement('div');
+            selectedDisplay.className = 'multi-select-display';
+            selectedDisplay.textContent = 'Select options...';
+            selectedDisplay.addEventListener('click', () => {
+                optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Create options list
+            const optionsList = document.createElement('div');
+            optionsList.className = 'multi-select-options';
+            optionsList.style.display = 'none';
+            
+            // Populate options
+            Array.from(originalSelect.options).forEach(option => {
+                if (option.value) {
+                    const optionItem = document.createElement('div');
+                    optionItem.className = 'multi-select-option';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = option.value;
+                    checkbox.id = `${originalSelect.id}_${option.value}`;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = checkbox.id;
+                    label.textContent = option.text;
+                    
+                    optionItem.appendChild(checkbox);
+                    optionItem.appendChild(label);
+                    optionsList.appendChild(optionItem);
+                    
+                    // Handle checkbox change
+                    checkbox.addEventListener('change', () => {
+                        updateSelectedDisplay(selectedDisplay, Array.from(optionsList.querySelectorAll('input:checked')));
+                    });
+                }
+            });
+            
+            container.appendChild(selectedDisplay);
+            container.appendChild(optionsList);
+            
+            // Replace original select with custom container
+            originalSelect.style.display = 'none';
+            originalSelect.parentNode.insertBefore(container, originalSelect.nextSibling);
+            
+            // Close options when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!container.contains(e.target)) {
+                    optionsList.style.display = 'none';
+                }
+            });
+        });
+        
+        function updateSelectedDisplay(display, selectedCheckboxes) {
+            if (selectedCheckboxes.length === 0) {
+                display.textContent = 'Select options...';
+            } else if (selectedCheckboxes.length === 1) {
+                display.textContent = selectedCheckboxes[0].nextElementSibling.textContent;
+            } else {
+                display.textContent = `${selectedCheckboxes.length} options selected`;
+            }
+        }
+    }
+    
+    function initializeDragAndDrop() {
+        const componentItems = document.querySelectorAll('.component-item');
+        const canvas = document.getElementById('reportCanvas');
+        const canvasPlaceholder = canvas.querySelector('.canvas-placeholder');
+        
+        componentItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('component', item.getAttribute('data-component'));
+                item.classList.add('dragging');
+            });
+            
+            item.addEventListener('dragend', () => {
+                item.classList.remove('dragging');
+            });
+        });
+        
+        canvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            canvas.classList.add('drag-over');
+        });
+        
+        canvas.addEventListener('dragleave', () => {
+            canvas.classList.remove('drag-over');
+        });
+        
+        canvas.addEventListener('drop', (e) => {
+            e.preventDefault();
+            canvas.classList.remove('drag-over');
+            
+            const componentType = e.dataTransfer.getData('component');
+            if (componentType) {
+                addComponentToCanvas(componentType);
+                
+                // Hide placeholder if first component added
+                if (canvasPlaceholder.style.display !== 'none') {
+                    canvasPlaceholder.style.display = 'none';
+                }
+            }
+        });
+        
+        function addComponentToCanvas(type) {
+            const component = document.createElement('div');
+            component.className = 'report-component';
+            component.draggable = true;
+            
+            let content = '';
+            switch(type) {
+                case 'table':
+                    content = `
+                        <div class="component-header">
+                            <h5>Data Table</h5>
+                            <div class="component-actions">
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Remove</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Column 1</th><th>Column 2</th></tr></thead>
+                                <tbody><tr><td>Sample Data</td><td>Sample Data</td></tr></tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+                case 'chart':
+                    content = `
+                        <div class="component-header">
+                            <h5>Chart Visualization</h5>
+                            <div class="component-actions">
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Remove</button>
+                            </div>
+                        </div>
+                        <div style="padding: 20px; text-align: center; background: #f8f9fa; border-radius: 4px;">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem; color: var(--text-light);"></i>
+                            <p style="margin-top: 10px; color: var(--text-medium);">Chart will be generated based on data source</p>
+                        </div>
+                    `;
+                    break;
+                case 'summary':
+                    content = `
+                        <div class="component-header">
+                            <h5>Summary Card</h5>
+                            <div class="component-actions">
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Remove</button>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>1,234</h3>
+                                <p>Total Metric</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'metrics':
+                    content = `
+                        <div class="component-header">
+                            <h5>Metrics Grid</h5>
+                            <div class="component-actions">
+                                <button class="btn btn-sm btn-secondary">Edit</button>
+                                <button class="btn btn-sm btn-danger">Remove</button>
+                            </div>
+                        </div>
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-icon total">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>567</h3>
+                                    <p>Attendees</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon approved">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>89%</h3>
+                                    <p>Approval Rate</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            component.innerHTML = content;
+            component.querySelector('.btn-danger').addEventListener('click', () => {
+                component.remove();
+                // Show placeholder if no components left
+                if (canvas.querySelectorAll('.report-component').length === 0) {
+                    canvasPlaceholder.style.display = 'block';
+                }
+            });
+            
+            canvas.appendChild(component);
+        }
+    }
+    
+    function clearCanvas() {
+        const canvas = document.getElementById('reportCanvas');
+        const components = canvas.querySelectorAll('.report-component');
+        components.forEach(component => component.remove());
+        
+        // Show placeholder
+        canvas.querySelector('.canvas-placeholder').style.display = 'block';
+    }
+    
+    function generateCustomReport() {
+        const dataSource = document.getElementById('customDataSource');
+        const selectedSources = Array.from(dataSource.selectedOptions).map(opt => opt.value);
+        
+        if (selectedSources.length === 0) {
+            alert('Please select at least one data source');
+            return;
+        }
+        
+        const components = document.querySelectorAll('.report-component');
+        if (components.length === 0) {
+            alert('Please add at least one component to the canvas');
+            return;
+        }
+        
+        // Show loading state
+        const generateBtn = document.getElementById('generateCustomBtn');
+        const originalText = generateBtn.innerHTML;
+        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+        generateBtn.disabled = true;
+        
+        // Simulate report generation
+        setTimeout(() => {
+            generateBtn.innerHTML = originalText;
+            generateBtn.disabled = false;
+            
+            // Show success message
+            showToast('Custom report generated successfully!', 'success');
+            
+            // Switch to overview to show generated report
+            document.querySelector('.report-type-card[data-report="overview"]').click();
+        }, 2000);
+    }
+    
+    function saveTemplate() {
+        const templateName = prompt('Enter template name:');
+        if (templateName) {
+            showToast(`Template "${templateName}" saved successfully!`, 'success');
+        }
+    }
+    
+    function exportReport(format) {
+        const fileName = document.getElementById('exportFileName').value || 'ICSC2026_Report';
+        const formatType = document.getElementById('exportFormat').value;
+        const includeOptions = Array.from(document.getElementById('exportInclude').selectedOptions).map(opt => opt.value);
+        
+        // Show loading state
+        showToast(`Exporting ${format.toUpperCase()} report...`, 'info');
+        
+        // Simulate export process
+        setTimeout(() => {
+            showToast(`${fileName}.${format} downloaded successfully!`, 'success');
+            
+            // Add to report history
+            addToReportHistory(fileName, format, formatType);
+        }, 1500);
+    }
+    
+    function exportCharts() {
+        // Export all charts as images
+        Object.keys(charts).forEach(chartId => {
+            const chart = charts[chartId];
+            if (chart) {
+                const link = document.createElement('a');
+                link.download = `${chartId}.png`;
+                link.href = chart.toBase64Image();
+                link.click();
+            }
+        });
+        showToast('Charts exported as images!', 'success');
+    }
+    
+    function addToReportHistory(name, format, type) {
+        const historyTable = document.getElementById('reportHistoryTable');
+        const now = new Date();
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
+            <td>Super Admin</td>
+            <td>${now.toISOString().split('T')[0]} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}</td>
+            <td>${(Math.random() * 2 + 1).toFixed(1)} MB</td>
+            <td>${format.toUpperCase()}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-info btn-sm view-report-btn">View</button>
+                    <button class="btn btn-success btn-sm download-report-btn">Download</button>
+                    <button class="btn btn-danger btn-sm delete-report-btn">Delete</button>
+                </div>
+            </td>
+        `;
+        
+        // Add event listeners to new buttons
+        row.querySelector('.view-report-btn').addEventListener('click', () => {
+            showToast('Opening report...', 'info');
+        });
+        
+        row.querySelector('.download-report-btn').addEventListener('click', () => {
+            showToast('Downloading report...', 'info');
+        });
+        
+        row.querySelector('.delete-report-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this report?')) {
+                this.closest('tr').remove();
+                showToast('Report deleted successfully!', 'success');
+            }
+        });
+        
+        historyTable.insertBefore(row, historyTable.firstChild);
+    }
+    
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        
+        // Remove toast after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+    
+    function initializeSampleData() {
+        // Add event listeners to existing history rows
+        document.querySelectorAll('.view-report-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showToast('Opening report...', 'info');
+            });
+        });
+        
+        document.querySelectorAll('.download-report-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showToast('Downloading report...', 'info');
+            });
+        });
+        
+        document.querySelectorAll('.delete-report-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this report?')) {
+                    this.closest('tr').remove();
+                    showToast('Report deleted successfully!', 'success');
+                }
+            });
+        });
+    }
+});
+
+// Dashboard Charts Module
+class DashboardCharts {
+    constructor() {
+        this.registrationChart = null;
+        this.ministryChart = null;
+        this.lastUpdateTime = null;
+        this.updateInterval = null;
+        
+        // Sample real-time data
+        this.sampleData = {
+            registrationTrend: {
+                today: [45, 68, 92, 120, 150, 185, 210],
+                week: [450, 620, 780, 920, 1100, 1350, 1600],
+                month: [1500, 1850, 2100, 2300, 2500, 2700, 2900],
+                all: [1874]
+            },
+            ministries: [
+                { name: 'Finance', attendees: 210, approvalRate: 93, color: '#008751' },
+                { name: 'Education', attendees: 185, approvalRate: 95, color: '#00c974' },
+                { name: 'Health', attendees: 178, approvalRate: 93, color: '#27ae60' },
+                { name: 'Transport', attendees: 162, approvalRate: 93, color: '#f39c12' },
+                { name: 'Agriculture', attendees: 150, approvalRate: 93, color: '#e74c3c' }
+            ]
+        };
+    }
+    
+    init() {
+        this.createCharts();
+        this.setupEventListeners();
+        this.startRealTimeUpdates();
+        this.updateLastUpdateTime();
+    }
+    
+    createCharts() {
+        // Registration Trend Chart
+        const regCtx = document.getElementById('dashboardRegTrendChart');
+        if (regCtx) {
+            this.registrationChart = new Chart(regCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Registrations',
+                        data: this.sampleData.registrationTrend.week,
+                        borderColor: '#008751',
+                        backgroundColor: 'rgba(0, 135, 81, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#008751',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 12 },
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    }
+                }
+            });
+        }
+        
+        // Ministry Chart
+        const ministryCtx = document.getElementById('dashboardMinistryChart');
+        if (ministryCtx) {
+            const sortedMinistries = [...this.sampleData.ministries].sort((a, b) => b.attendees - a.attendees);
+            const top5Ministries = sortedMinistries.slice(0, 5);
+            
+            this.ministryChart = new Chart(ministryCtx, {
+                type: 'bar',
+                data: {
+                    labels: top5Ministries.map(m => m.name),
+                    datasets: [{
+                        label: 'Attendees',
+                        data: top5Ministries.map(m => m.attendees),
+                        backgroundColor: top5Ministries.map(m => m.color),
+                        borderColor: top5Ministries.map(m => m.color),
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const ministry = top5Ministries[context.dataIndex];
+                                    return [
+                                        `Attendees: ${ministry.attendees}`,
+                                        `Approval Rate: ${ministry.approvalRate}%`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update dashboard stats
+            this.updateDashboardStats(sortedMinistries);
+        }
+    }
+    
+    updateDashboardStats(ministries) {
+        if (ministries.length > 0) {
+            document.getElementById('topMinistryName').textContent = ministries[0].name;
+            document.getElementById('topMinistryCount').textContent = ministries[0].attendees;
+            document.getElementById('totalMinistries').textContent = ministries.length;
+            
+            // Calculate registration trend
+            const totalRegistrations = ministries.reduce((sum, m) => sum + m.attendees, 0);
+            const prevTotal = totalRegistrations * 0.88; // Simulate previous period
+            const trendPercentage = ((totalRegistrations - prevTotal) / prevTotal * 100).toFixed(1);
+            
+            document.getElementById('currentRegCount').textContent = totalRegistrations.toLocaleString();
+            document.getElementById('regTrend').textContent = `${trendPercentage >= 0 ? '+' : ''}${trendPercentage}%`;
+            document.getElementById('regTrend').className = `stat-value ${trendPercentage >= 0 ? 'positive' : 'negative'}`;
+        }
+    }
+    
+    setupEventListeners() {
+        // Registration time selector
+        const timeSelector = document.querySelector('.chart-time-selector');
+        if (timeSelector) {
+            timeSelector.addEventListener('change', (e) => {
+                this.updateRegistrationChart(e.target.value);
+            });
+        }
+        
+        // Ministry chart type selector
+        const typeSelector = document.querySelector('.chart-type-selector');
+        if (typeSelector) {
+            typeSelector.addEventListener('change', (e) => {
+                this.updateMinistryChart(e.target.value);
+            });
+        }
+        
+        // Manual refresh button
+        const refreshBtn = document.querySelector('.refresh-charts-btn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                this.updateChartsWithNewData();
+            });
+        }
+    }
+    
+    updateRegistrationChart(timeRange) {
+        if (!this.registrationChart) return;
+        
+        let data = this.sampleData.registrationTrend[timeRange];
+        let labels = [];
+        
+        switch(timeRange) {
+            case 'today':
+                labels = ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM'];
+                break;
+            case 'week':
+                labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                break;
+            case 'month':
+                labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'];
+                data = data.slice(0, 5);
+                break;
+            case 'all':
+                labels = ['Total'];
+                break;
+        }
+        
+        this.registrationChart.data.labels = labels;
+        this.registrationChart.data.datasets[0].data = data;
+        this.registrationChart.update('none');
+    }
+    
+    updateMinistryChart(chartType) {
+        if (!this.ministryChart) return;
+        
+        const sortedMinistries = [...this.sampleData.ministries];
+        
+        switch(chartType) {
+            case 'attendance':
+                sortedMinistries.sort((a, b) => b.attendees - a.attendees);
+                this.ministryChart.data.datasets[0].label = 'Attendees';
+                this.ministryChart.data.datasets[0].data = sortedMinistries.map(m => m.attendees);
+                break;
+            case 'approval':
+                sortedMinistries.sort((a, b) => b.approvalRate - a.approvalRate);
+                this.ministryChart.data.datasets[0].label = 'Approval Rate %';
+                this.ministryChart.data.datasets[0].data = sortedMinistries.map(m => m.approvalRate);
+                break;
+            case 'completion':
+                // Simulate completion rates
+                sortedMinistries.forEach(m => m.completionRate = 80 + Math.random() * 15);
+                sortedMinistries.sort((a, b) => b.completionRate - a.completionRate);
+                this.ministryChart.data.datasets[0].label = 'Completion Rate %';
+                this.ministryChart.data.datasets[0].data = sortedMinistries.map(m => m.completionRate);
+                break;
+        }
+        
+        this.ministryChart.data.labels = sortedMinistries.map(m => m.name);
+        this.ministryChart.update('none');
+    }
+    
+    startRealTimeUpdates() {
+        // Update every 30 seconds for real-time effect
+        this.updateInterval = setInterval(() => {
+            this.updateChartsWithNewData();
+        }, 30000); // 30 seconds
+        
+        // Also update on page visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                this.updateChartsWithNewData();
+            }
+        });
+    }
+    
+    updateChartsWithNewData() {
+        // Simulate new registrations
+        const increment = Math.floor(Math.random() * 10) + 1;
+        
+        // Update registration data
+        const lastValue = this.sampleData.registrationTrend.week[this.sampleData.registrationTrend.week.length - 1];
+        this.sampleData.registrationTrend.week.push(lastValue + increment);
+        this.sampleData.registrationTrend.week.shift(); // Remove first item to keep 7 items
+        
+        // Update ministries randomly
+        this.sampleData.ministries.forEach(ministry => {
+            // Small random changes
+            const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+            ministry.attendees = Math.max(0, ministry.attendees + change);
+            
+            // Small random approval rate changes
+            const rateChange = (Math.random() * 0.5) - 0.25; // -0.25 to +0.25
+            ministry.approvalRate = Math.min(100, Math.max(0, ministry.approvalRate + rateChange));
+        });
+        
+        // Update charts
+        if (this.registrationChart) {
+            this.registrationChart.data.datasets[0].data = this.sampleData.registrationTrend.week;
+            this.registrationChart.update('none');
+        }
+        
+        if (this.ministryChart) {
+            const sortedMinistries = [...this.sampleData.ministries].sort((a, b) => b.attendees - a.attendees);
+            const top5Ministries = sortedMinistries.slice(0, 5);
+            
+            this.ministryChart.data.labels = top5Ministries.map(m => m.name);
+            this.ministryChart.data.datasets[0].data = top5Ministries.map(m => m.attendees);
+            this.ministryChart.update('none');
+            
+            // Update dashboard stats
+            this.updateDashboardStats(sortedMinistries);
+        }
+        
+        this.updateLastUpdateTime();
+        this.showUpdateNotification();
+    }
+    
+    updateLastUpdateTime() {
+        this.lastUpdateTime = new Date();
+        const timeStr = this.lastUpdateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Update time indicator if it exists
+        const timeIndicator = document.querySelector('.last-update-time');
+        if (timeIndicator) {
+            timeIndicator.textContent = `Last updated: ${timeStr}`;
+        }
+    }
+    
+    showUpdateNotification() {
+        // Show a subtle notification
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <i class="fas fa-sync-alt"></i>
+            <span>Charts updated</span>
+        `;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease-out, fadeOut 2s ease-out 1s forwards;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Add animation styles if not already present
+        if (!document.querySelector('style[data-update-animations]')) {
+            const style = document.createElement('style');
+            style.setAttribute('data-update-animations', 'true');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes fadeOut {
+                    from {
+                        opacity: 1;
+                    }
+                    to {
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Remove notification after animation
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
+    }
+    
+    destroy() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+        }
+        
+        if (this.registrationChart) {
+            this.registrationChart.destroy();
+        }
+        
+        if (this.ministryChart) {
+            this.ministryChart.destroy();
+        }
+    }
+}
+
+// Settings Tab Charts
+class SettingsCharts {
+    constructor() {
+        this.charts = {};
+    }
+    
+    init() {
+        this.createSettingsCharts();
+    }
+    
+    createSettingsCharts() {
+        // Create settings section charts if the container exists
+        const settingsChartsContainer = document.querySelector('.settings-charts-container');
+        if (settingsChartsContainer) {
+            // Registration trend for settings
+            const settingsRegCanvas = document.createElement('canvas');
+            settingsRegCanvas.id = 'settingsRegTrendChart';
+            settingsRegCanvas.height = 200;
+            
+            const settingsRegCard = document.createElement('div');
+            settingsRegCard.className = 'settings-chart-card';
+            settingsRegCard.innerHTML = '<h4><i class="fas fa-user-plus"></i> Registration Activity</h4>';
+            settingsRegCard.appendChild(settingsRegCanvas);
+            settingsChartsContainer.appendChild(settingsRegCard);
+            
+            // Ministry distribution for settings
+            const settingsMinistryCanvas = document.createElement('canvas');
+            settingsMinistryCanvas.id = 'settingsMinistryChart';
+            settingsMinistryCanvas.height = 200;
+            
+            const settingsMinistryCard = document.createElement('div');
+            settingsMinistryCard.className = 'settings-chart-card';
+            settingsMinistryCard.innerHTML = '<h4><i class="fas fa-university"></i> Ministry Distribution</h4>';
+            settingsMinistryCard.appendChild(settingsMinistryCanvas);
+            settingsChartsContainer.appendChild(settingsMinistryCard);
+            
+            // Initialize the charts
+            this.createRegistrationChart();
+            this.createMinistryChart();
+        }
+    }
+    
+    createRegistrationChart() {
+        const ctx = document.getElementById('settingsRegTrendChart');
+        if (!ctx) return;
+        
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Registrations',
+                data: [150, 320, 480, 620, 850, 1100],
+                borderColor: '#008751',
+                backgroundColor: 'rgba(0, 135, 81, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        };
+        
+        this.charts.settingsReg = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    createMinistryChart() {
+        const ctx = document.getElementById('settingsMinistryChart');
+        if (!ctx) return;
+        
+        const data = {
+            labels: ['Finance', 'Education', 'Health', 'Transport', 'Others'],
+            datasets: [{
+                data: [25, 22, 18, 15, 20],
+                backgroundColor: [
+                    '#008751', '#00c974', '#27ae60', '#f39c12', '#3498db'
+                ],
+                borderWidth: 1
+            }]
+        };
+        
+        this.charts.settingsMinistry = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Initialize dashboard charts when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dashboard charts
+    window.dashboardCharts = new DashboardCharts();
+    dashboardCharts.init();
+    
+    // Initialize settings charts
+    window.settingsCharts = new SettingsCharts();
+    settingsCharts.init();
+    
+    // Also initialize when settings tab is clicked
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('[data-tab="settings"]') || 
+            e.target.closest('.sidebar-menu a[href*="settings"]')) {
+            // Reinitialize settings charts if needed
+            setTimeout(() => {
+                if (settingsCharts && !document.getElementById('settingsRegTrendChart')) {
+                    settingsCharts.init();
+                }
+            }, 100);
+        }
+    });
+});
+
 
 // Initialize the page to show content
 document.body.style.display = 'block';
