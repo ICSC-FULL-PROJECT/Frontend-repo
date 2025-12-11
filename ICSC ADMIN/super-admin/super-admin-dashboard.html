@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="path/to/chart.min.js"></script>
+    <script src="path/to/xlsx.full.min.js"></script>
+<script src="notification-attendance-system.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="display: none;" data-protected="super_admin">
@@ -44,18 +46,48 @@
             </ul>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="dashboard-header">
-                <h1 id="pageTitle">Super Admin Dashboard</h1>
-                <div class="user-info">
-                    <div class="user-avatar">SA</div>
-                    <div>
-                        <div>Super Admin</div>
-                        <div style="font-size: 0.8rem; color: var(--text-medium);">Last login:</div>
+<!-- Main Content -->
+<div class="main-content">
+    <div class="dashboard-header">
+        <h1 id="pageTitle">Super Admin Dashboard</h1>
+    <div class="header-right-section">
+        <!-- Notification Bell -->
+        <div class="notification-wrapper">
+            <div class="notification-bell" id="notificationBell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notificationCount">0</span>
+            </div>
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notification-header">
+                    <h3>Schedule Notifications</h3>
+                    <div class="notification-actions">
+                        <button class="btn btn-sm" id="markAllReadBtn">Mark All Read</button>
+                        <button class="btn btn-sm" id="refreshNotificationsBtn">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
                     </div>
                 </div>
+                <div class="notification-list" id="notificationList">
+                    <!-- Notifications will be loaded dynamically -->
+                </div>
+                <div class="notification-footer">
+                    <a href="#" class="view-all-link" id="viewAllNotificationsBtn">
+                        <i class="fas fa-list"></i> View All Notifications
+                    </a>
+                </div>
             </div>
+        </div>
+        
+        <!-- User Info -->
+        <div class="user-info">
+            <div class="user-avatar">SA</div>
+            <div>
+                <div>Super Admin</div>
+                <div style="font-size: 0.8rem; color: var(--text-medium);">Last login: <span id="lastLoginTime">Just now</span></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
             <!-- Dashboard Tab -->
@@ -739,7 +771,7 @@
                                     <td>
                                         <div class="action-buttons">
                                             <button class="btn btn-success btn-sm view-ministry-btn">View</button>
-                                            <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
+                                            <button class="btn-accept">Edit</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -1774,6 +1806,90 @@
             </div>
         </div>
 
+
+        <div class="stat-card attendance-highlight">
+        <div class="stat-icon" style="background: #667eea;">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-info">
+            <h3 id="totalAttendance">0</h3>
+            <p>Total Attendance</p>
+            <div class="attendance-breakdown">
+                <small>Day 1: <span id="day1Attendance">0</span></small>
+                <small>Day 2: <span id="day2Attendance">0</span></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add filter section for attendance reports -->
+<div class="attendance-filters">
+    <h4>Attendance Filter</h4>
+    <div class="filter-row">
+        <div class="filter-group">
+            <label class="filter-label">Event Day</label>
+            <select id="attendanceDayFilter" class="filter-select">
+                <option value="all">All Days</option>
+                <option value="wednesday">Wednesday 25 June</option>
+                <option value="thursday">Thursday 26 June</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">User Type</label>
+            <select id="attendanceTypeFilter" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="attendee">Attendees</option>
+                <option value="speaker">Speakers</option>
+                <option value="exhibitor">Exhibitors</option>
+                <option value="partner">Partners</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">Event</label>
+            <select id="attendanceEventFilter" class="filter-select">
+                <option value="all">All Events</option>
+                <option value="A001">Registration & Welcome Coffee</option>
+                <option value="A002">Opening Ceremony & Keynote</option>
+                <option value="A003">Coffee Break & Networking</option>
+                <option value="A004">Digital Transformation Panel</option>
+                <option value="A005">Leadership Workshop</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-secondary" id="applyAttendanceFilter">Apply Filter</button>
+    <button class="btn btn-secondary" id="exportAttendanceBtn">Export Report</button>
+</div>
+
+<!-- Attendance Details Table -->
+<div class="dashboard-section">
+    <div class="section-header">
+        <h3>Attendance Details</h3>
+        <div class="section-actions">
+            <button class="btn btn-secondary" id="refreshAttendanceBtn">Refresh</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table" id="attendanceTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Email</th>
+                    <th>Event</th>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Approved By</th>
+                    <th>Approved At</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+                <!-- Will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
         <!-- Report Generation Options -->
         <div class="reports-options">
             <div class="report-type-selector">
@@ -1784,11 +1900,12 @@
                         <h4>Overview Dashboard</h4>
                         <p>Comprehensive system overview</p>
                     </div>
-                    <div class="report-type-card" data-report="attendees">
+                
+                    <!-- <div class="report-type-card" data-report="attendees">
                         <i class="fas fa-users"></i>
                         <h4>Attendee Reports</h4>
                         <p>Detailed attendee analytics</p>
-                    </div>
+                    </div> *// -->
                     <div class="report-type-card" data-report="financial">
                         <i class="fas fa-money-bill"></i>
                         <h4>Financial Reports</h4>
@@ -2646,13 +2763,13 @@
 
                 <!-- Action Buttons -->
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="closeReviewBtn">
+                    <button type="button" class="btn-cancel" id="closeReviewBtn">
                         Cancel
                     </button>
-                    <button type="button" class="btn btn-danger" id="rejectBulkBtn">
+                    <button type="button" class="btn-remove" id="rejectBulkBtn">
                         <i class="fas fa-times"></i> Reject Entire Upload
                     </button>
-                    <button type="button" class="btn" id="approveBulkBtn">
+                    <button type="button" class="btn-accept" id="approveBulkBtn">
                         <i class="fas fa-check"></i> Approve Selected Records
                     </button>
                 </div>
@@ -3621,8 +3738,8 @@ ICSC 2026 Team</textarea>
                 <p><strong id="deleteAttendeeName"></strong></p>
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                <button type="button" class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn-accept" id="confirmDeleteBtn">Delete</button>
             </div>
         </div>
     </div>
@@ -3638,8 +3755,8 @@ ICSC 2026 Team</textarea>
                 <p><strong id="deleteMinistryName"></strong></p>
             </div>
             <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="cancelDeleteMinistryBtn">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteMinistryBtn">Delete</button>
+                <button type="button" class="btn-cancel" id="cancelDeleteMinistryBtn">Cancel</button>
+                <button type="button" class="btn-accept" id="confirmDeleteMinistryBtn">Delete</button>
             </div>
         </div>
     </div>
@@ -3693,8 +3810,8 @@ ICSC 2026 Team</textarea>
                     <input type="hidden" id="generatedPasswordInput" name="generatedPassword" value="">
 
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelAddMinistryBtn">Cancel</button>
-                        <button type="submit" class="btn">Add Ministry</button>
+                        <button type="button" class="btn-cancel" id="cancelAddMinistryBtn">Cancel</button>
+                        <button type="submit" class="btn-accept">Add Ministry</button>
                     </div>
                 </form>
             </div>
@@ -3863,8 +3980,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAddBoothBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Booth</button>
+                    <button type="button" class="btn-cancel" id="cancelAddBoothBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Booth</button>
                 </div>
             </form>
         </div>
@@ -4025,8 +4142,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAssignBoothBtn">Cancel</button>
-                    <button type="submit" class="btn">Assign Booth</button>
+                    <button type="button" class="btn-cancel" id="cancelAssignBoothBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Assign Booth</button>
                 </div>
             </form>
         </div>
@@ -4164,8 +4281,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAddSpeakerBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Speaker</button>
+                    <button type="button" class="btn-cancel" id="cancelAddSpeakerBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Speaker</button>
                 </div>
             </form>
         </div>
@@ -4344,8 +4461,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelEditSpeakerBtn">Cancel</button>
-                    <button type="submit" class="btn">Update Speaker</button>
+                    <button type="button" class="btn-cancel" id="cancelEditSpeakerBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Update Speaker</button>
                 </div>
             </form>
         </div>
@@ -4622,8 +4739,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelEditPartnerBtn">Cancel</button>
-                    <button type="submit" class="btn">Update Partner</button>
+                    <button type="button" class="btn-cancel" id="cancelEditPartnerBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Update Partner</button>
                 </div>
             </form>
         </div>
@@ -4757,8 +4874,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAddAgendaBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Agenda Item</button>
+                    <button type="button" class="btn-cancel" id="cancelAddAgendaBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Agenda Item</button>
                 </div>
             </form>
         </div>
@@ -4882,8 +4999,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAddExhibitorBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Exhibitor</button>
+                    <button type="button" class="btn-cancel" id="cancelAddExhibitorBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Exhibitor</button>
                 </div>
             </form>
         </div>
@@ -5015,8 +5132,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelEditExhibitorBtn">Cancel</button>
-                    <button type="submit" class="btn">Update Exhibitor</button>
+                    <button type="button" class="btn-cancel" id="cancelEditExhibitorBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Update Exhibitor</button>
                 </div>
             </form>
         </div>
@@ -5179,8 +5296,8 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelAddPartnerBtn">Cancel</button>
-                    <button type="submit" class="btn">Add Partner</button>
+                    <button type="button" class="btn-cancel" id="cancelAddPartnerBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Partner</button>
                 </div>
             </form>
         </div>

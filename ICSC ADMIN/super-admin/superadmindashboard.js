@@ -4255,7 +4255,1012 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+// notification-attendance-system.js - Complete Implementation
+class NotificationSystem {
+    constructor() {
+        this.notifications = [];
+        this.unreadCount = 0;
+        this.currentFilter = 'all';
+        this.initialize();
+    }
 
+    async initialize() {
+        await this.loadNotifications();
+        this.setupEventListeners();
+        this.startPolling();
+        this.updateNotificationBadge();
+    }
+
+    setupEventListeners() {
+        // Notification bell click
+        const bell = document.getElementById('notificationBell');
+        const dropdown = document.getElementById('notificationDropdown');
+        
+        if (bell) {
+            bell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+                if (dropdown.classList.contains('show')) {
+                    this.loadNotifications();
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!bell?.contains(e.target) && !dropdown?.contains(e.target)) {
+                dropdown?.classList.remove('show');
+            }
+        });
+
+        // Mark all as read
+        document.getElementById('markAllReadBtn')?.addEventListener('click', () => {
+            this.markAllAsRead();
+        });
+
+        // Refresh notifications
+        document.getElementById('refreshNotificationsBtn')?.addEventListener('click', () => {
+            this.loadNotifications();
+        });
+
+        // View all notifications
+        document.getElementById('viewAllNotificationsBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showAllNotificationsModal();
+        });
+    }
+
+    async loadNotifications() {
+        try {
+            const mockNotifications = await this.fetchMockNotifications();
+            this.notifications = mockNotifications;
+            this.unreadCount = mockNotifications.filter(n => n.status === 'pending').length;
+            this.renderNotifications();
+            this.updateNotificationBadge();
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    }
+
+    async fetchMockNotifications() {
+        return [
+            {
+                id: 1,
+                type: 'attendee',
+                userId: 101,
+                userName: 'John Doe',
+                userEmail: 'john.doe@finance.gov.ng',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'pending',
+                notificationStatus: 'unread',
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                type: 'speaker',
+                userId: 201,
+                userName: 'Dr. Elizabeth Williams',
+                userEmail: 'elizabeth@university.edu',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'pending',
+                notificationStatus: 'unread',
+                createdAt: new Date(Date.now() - 3600000).toISOString()
+            },
+            {
+                id: 3,
+                type: 'exhibitor',
+                userId: 301,
+                userName: 'Tech Innovations Ltd',
+                userEmail: 'exhibitor@techinnovations.com',
+                eventId: 'A004',
+                eventTitle: 'Digital Transformation in Public Service',
+                eventDate: '2026-06-26',
+                eventTime: '08:30',
+                eventDay: 'Thursday',
+                status: 'pending',
+                notificationStatus: 'unread',
+                createdAt: new Date(Date.now() - 7200000).toISOString()
+            },
+            {
+                id: 4,
+                type: 'partner',
+                userId: 401,
+                userName: 'Global Solutions Inc',
+                userEmail: 'partner@globalsolutions.com',
+                eventId: 'A005',
+                eventTitle: 'Leadership Workshop',
+                eventDate: '2026-06-26',
+                eventTime: '10:00',
+                eventDay: 'Thursday',
+                status: 'pending',
+                notificationStatus: 'unread',
+                createdAt: new Date(Date.now() - 10800000).toISOString()
+            }
+        ];
+    }
+
+    renderNotifications() {
+        const container = document.getElementById('notificationList');
+        if (!container) return;
+
+        const filteredNotifications = this.currentFilter === 'all' 
+            ? this.notifications 
+            : this.notifications.filter(n => n.status === this.currentFilter);
+
+        if (filteredNotifications.length === 0) {
+            container.innerHTML = `
+                <div class="empty-notifications">
+                    <i class="fas fa-bell-slash fa-2x" style="margin-bottom: 10px;"></i>
+                    <p>No notifications to display</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = filteredNotifications.map(notification => `
+            <div class="notification-item ${notification.status}" data-id="${notification.id}">
+                <div class="notification-content">
+                    <div class="notification-icon icon-${notification.type}">
+                        <i class="fas ${this.getTypeIcon(notification.type)}"></i>
+                    </div>
+                    <div class="notification-details">
+                        <div class="notification-title">
+                            <span>${notification.userName}</span>
+                            <span class="status-badge status-${notification.status}">
+                                ${notification.status.charAt(0).toUpperCase() + notification.status.slice(1)}
+                            </span>
+                        </div>
+                        <div class="notification-message">
+                            Wants to attend ${notification.eventDay} event
+                        </div>
+                        <div class="notification-event">
+                            <div class="event-title">${notification.eventTitle}</div>
+                            <div class="event-details">
+                                <span><i class="far fa-calendar"></i> ${notification.eventDate}</span>
+                                <span><i class="far fa-clock"></i> ${notification.eventTime}</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions-bottom">
+                            <button class="btn-sm btn-approve" onclick="window.notificationSystem.approveSchedule(${notification.id})">
+                                <i class="fas fa-check"></i> Accept
+                            </button>
+                            <button class="btn-sm btn-reject" onclick="window.notificationSystem.rejectSchedule(${notification.id})">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                        <div class="notification-time">
+                            <i class="far fa-clock"></i> ${this.formatTimeAgo(notification.createdAt)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    getTypeIcon(type) {
+        const icons = {
+            'attendee': 'fa-user',
+            'speaker': 'fa-microphone',
+            'exhibitor': 'fa-store',
+            'partner': 'fa-handshake'
+        };
+        return icons[type] || 'fa-user';
+    }
+
+    async approveSchedule(notificationId) {
+        try {
+            const notification = this.notifications.find(n => n.id === notificationId);
+            
+            if (notification) {
+                // Update notification status
+                notification.status = 'approved';
+                
+                // Record attendance in reports system
+                await this.recordAttendance(notification);
+                
+                // Send approval notification to user
+                await this.sendApprovalNotification(notification);
+                
+                // Update UI
+                this.renderNotifications();
+                this.unreadCount = Math.max(0, this.unreadCount - 1);
+                this.updateNotificationBadge();
+                
+                // Update reports if manager exists
+                if (window.attendanceReportManager) {
+                    window.attendanceReportManager.refreshData();
+                }
+                
+                // Show success message
+                this.showToast('Schedule approved successfully!', 'success');
+                
+                // Close notification dropdown after approval
+                setTimeout(() => {
+                    const dropdown = document.getElementById('notificationDropdown');
+                    if (dropdown) dropdown.classList.remove('show');
+                }, 1500);
+            }
+        } catch (error) {
+            console.error('Error approving schedule:', error);
+            this.showToast('Error approving schedule', 'error');
+        }
+    }
+
+    async rejectSchedule(notificationId) {
+        try {
+            const notification = this.notifications.find(n => n.id === notificationId);
+            
+            if (notification) {
+                notification.status = 'rejected';
+                
+                // Send rejection notification to user
+                await this.sendRejectionNotification(notification);
+                
+                this.renderNotifications();
+                this.unreadCount = Math.max(0, this.unreadCount - 1);
+                this.updateNotificationBadge();
+                this.showToast('Schedule rejected', 'info');
+            }
+        } catch (error) {
+            console.error('Error rejecting schedule:', error);
+            this.showToast('Error rejecting schedule', 'error');
+        }
+    }
+
+    async recordAttendance(notification) {
+        const attendanceRecord = {
+            id: Date.now(),
+            userId: notification.userId,
+            userName: notification.userName,
+            userType: notification.type,
+            userEmail: notification.userEmail,
+            eventId: notification.eventId,
+            eventTitle: notification.eventTitle,
+            eventDate: notification.eventDate,
+            eventTime: notification.eventTime,
+            eventDay: notification.eventDay,
+            status: 'attended',
+            approvedBy: 'Super Admin',
+            approvedAt: new Date().toISOString()
+        };
+
+        // Save to localStorage for demo
+        let attendanceRecords = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
+        attendanceRecords.push(attendanceRecord);
+        localStorage.setItem('icsc_attendance_records', JSON.stringify(attendanceRecords));
+        
+        return attendanceRecord;
+    }
+
+    async sendApprovalNotification(notification) {
+        // Mock API call
+        console.log(`Approval notification sent to ${notification.userEmail}`);
+        return true;
+    }
+
+    async sendRejectionNotification(notification) {
+        // Mock API call
+        console.log(`Rejection notification sent to ${notification.userEmail}`);
+        return true;
+    }
+
+    async markAllAsRead() {
+        this.notifications.forEach(n => {
+            if (n.status === 'pending') {
+                n.status = 'read';
+            }
+        });
+        this.unreadCount = 0;
+        this.renderNotifications();
+        this.updateNotificationBadge();
+        this.showToast('All notifications marked as read', 'info');
+    }
+
+    updateNotificationBadge() {
+        const badge = document.getElementById('notificationCount');
+        if (badge) {
+            badge.textContent = this.unreadCount;
+            badge.style.display = this.unreadCount > 0 ? 'flex' : 'none';
+        }
+    }
+
+    showAllNotificationsModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'block';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2>All Schedule Notifications</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="filter-controls" style="margin-bottom: 15px;">
+                        <select class="form-control" id="allNotificationsFilter" style="width: 200px;">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="notification-list-full" id="allNotificationsList" style="max-height: 400px; overflow-y: auto; padding: 10px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Close</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Close modal
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        // Filter change
+        modal.querySelector('#allNotificationsFilter').addEventListener('change', (e) => {
+            this.renderAllNotifications(e.target.value);
+        });
+        
+        // Initial render
+        this.renderAllNotifications('all');
+    }
+
+    renderAllNotifications(filter) {
+        const container = document.getElementById('allNotificationsList');
+        if (!container) return;
+        
+        const filtered = filter === 'all' 
+            ? this.notifications 
+            : this.notifications.filter(n => n.status === filter);
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-notifications">No notifications found</div>';
+            return;
+        }
+        
+        container.innerHTML = filtered.map(notification => `
+            <div class="notification-item ${notification.status}" style="margin-bottom: 10px; padding: 12px; border-radius: 6px; background: #f8f9fa;">
+                <div class="notification-content" style="align-items: center;">
+                    <div class="notification-icon icon-${notification.type}" style="width: 35px; height: 35px; font-size: 0.9rem;">
+                        <i class="fas ${this.getTypeIcon(notification.type)}"></i>
+                    </div>
+                    <div class="notification-details" style="flex: 1;">
+                        <div class="notification-title" style="margin-bottom: 5px;">
+                            <strong style="color: #333;">${notification.userName}</strong>
+                            <span class="status-badge status-${notification.status}" style="margin-left: 10px;">
+                                ${notification.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="notification-message" style="font-size: 0.9rem; color: #666;">
+                            ${notification.type.toUpperCase()} - ${notification.eventTitle}
+                        </div>
+                        <div class="notification-time" style="font-size: 0.8rem; color: #888;">
+                            ${notification.eventDate} • ${notification.eventTime}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    startPolling() {
+        // Check for new notifications every 30 seconds
+        setInterval(() => {
+            this.checkForNewNotifications();
+        }, 30000);
+    }
+
+    async checkForNewNotifications() {
+        const oldCount = this.unreadCount;
+        await this.loadNotifications();
+        
+        if (this.unreadCount > oldCount) {
+            this.showDesktopNotification(`You have ${this.unreadCount - oldCount} new schedule submissions`);
+            this.playNotificationSound();
+        }
+    }
+
+    formatTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        
+        if (seconds < 60) return 'just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+        return `${Math.floor(seconds / 86400)} days ago`;
+    }
+
+    showToast(message, type = 'info') {
+        // Remove existing toasts
+        document.querySelectorAll('.toast').forEach(toast => toast.remove());
+        
+        // Create toast
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 10);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    showDesktopNotification(message) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('ICSC 2026 Dashboard', {
+                body: message,
+                icon: '../icsc-logo.png'
+            });
+        } else if (Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    }
+
+    playNotificationSound() {
+        // Simple beep sound
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+}
+
+class AttendanceReportManager {
+    constructor() {
+        this.attendanceData = [];
+        this.filters = {
+            day: 'all',
+            type: 'all',
+            event: 'all'
+        };
+        this.initialize();
+    }
+
+    async initialize() {
+        await this.loadAttendanceData();
+        this.setupEventListeners();
+        this.renderAttendanceTable();
+        this.updateAttendanceStats();
+    }
+
+    async loadAttendanceData() {
+        // Load from localStorage (mock)
+        this.attendanceData = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
+        
+        // If no data, load mock data for demo
+        if (this.attendanceData.length === 0) {
+            this.attendanceData = this.getMockAttendanceData();
+            localStorage.setItem('icsc_attendance_records', JSON.stringify(this.attendanceData));
+        }
+    }
+
+    getMockAttendanceData() {
+        return [
+            {
+                id: 1,
+                userId: 101,
+                userName: 'John Doe',
+                userType: 'attendee',
+                userEmail: 'john.doe@finance.gov.ng',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'attended',
+                approvedBy: 'Super Admin',
+                approvedAt: '2026-01-15T10:30:00Z'
+            },
+            {
+                id: 2,
+                userId: 102,
+                userName: 'Sarah Johnson',
+                userType: 'attendee',
+                userEmail: 'sarah@education.gov.ng',
+                eventId: 'A004',
+                eventTitle: 'Digital Transformation in Public Service',
+                eventDate: '2026-06-26',
+                eventTime: '08:30',
+                eventDay: 'Thursday',
+                status: 'attended',
+                approvedBy: 'Super Admin',
+                approvedAt: '2026-01-15T11:45:00Z'
+            },
+            {
+                id: 3,
+                userId: 201,
+                userName: 'Dr. Elizabeth Williams',
+                userType: 'speaker',
+                userEmail: 'elizabeth@university.edu',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'attended',
+                approvedBy: 'Super Admin',
+                approvedAt: '2026-01-15T09:15:00Z'
+            },
+            {
+                id: 4,
+                userId: 301,
+                userName: 'Tech Innovations Ltd',
+                userType: 'exhibitor',
+                userEmail: 'exhibitor@techinnovations.com',
+                eventId: 'A004',
+                eventTitle: 'Digital Transformation in Public Service',
+                eventDate: '2026-06-26',
+                eventTime: '08:30',
+                eventDay: 'Thursday',
+                status: 'attended',
+                approvedBy: 'Super Admin',
+                approvedAt: '2026-01-16T14:20:00Z'
+            }
+        ];
+    }
+
+    setupEventListeners() {
+        // Filter controls
+        document.getElementById('applyAttendanceFilter')?.addEventListener('click', () => {
+            this.applyFilters();
+        });
+
+        document.getElementById('refreshAttendanceBtn')?.addEventListener('click', () => {
+            this.refreshData();
+        });
+
+        document.getElementById('exportAttendanceBtn')?.addEventListener('click', () => {
+            this.exportToExcel();
+        });
+
+        document.getElementById('clearAttendanceFiltersBtn')?.addEventListener('click', () => {
+            this.clearFilters();
+        });
+
+        // Filter change listeners
+        ['attendanceDayFilter', 'attendanceTypeFilter', 'attendanceEventFilter'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => {
+                    this.updateFilterValues();
+                    // Auto-apply filters on change
+                    setTimeout(() => this.applyFilters(), 100);
+                });
+            }
+        });
+    }
+
+    updateFilterValues() {
+        this.filters = {
+            day: document.getElementById('attendanceDayFilter')?.value || 'all',
+            type: document.getElementById('attendanceTypeFilter')?.value || 'all',
+            event: document.getElementById('attendanceEventFilter')?.value || 'all'
+        };
+    }
+
+    clearFilters() {
+        document.getElementById('attendanceDayFilter').value = 'all';
+        document.getElementById('attendanceTypeFilter').value = 'all';
+        document.getElementById('attendanceEventFilter').value = 'all';
+        this.filters = { day: 'all', type: 'all', event: 'all' };
+        this.renderAttendanceTable();
+        this.updateAttendanceStats();
+        this.showToast('Filters cleared', 'info');
+    }
+
+    applyFilters() {
+        this.updateFilterValues();
+        this.renderAttendanceTable();
+        this.updateAttendanceStats();
+    }
+
+    getFilteredData() {
+        return this.attendanceData.filter(record => {
+            // Apply day filter
+            if (this.filters.day !== 'all') {
+                const dayMap = {
+                    'wednesday': 'Wednesday',
+                    'thursday': 'Thursday'
+                };
+                if (record.eventDay !== dayMap[this.filters.day]) {
+                    return false;
+                }
+            }
+            
+            // Apply type filter
+            if (this.filters.type !== 'all' && record.userType !== this.filters.type) {
+                return false;
+            }
+            
+            // Apply event filter
+            if (this.filters.event !== 'all' && record.eventId !== this.filters.event) {
+                return false;
+            }
+            
+            return true;
+        });
+    }
+
+    renderAttendanceTable() {
+        const tbody = document.getElementById('attendanceTableBody');
+        if (!tbody) return;
+
+        const filteredData = this.getFilteredData();
+
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px;">
+                        <i class="fas fa-users-slash fa-2x" style="color: #ccc; margin-bottom: 10px;"></i>
+                        <p>No attendance records found for the selected filters</p>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tbody.innerHTML = filteredData.map(record => `
+            <tr>
+                <td><strong>${record.userName}</strong></td>
+                <td>
+                    <span class="status-badge ${this.getTypeClass(record.userType)}">
+                        ${record.userType.toUpperCase()}
+                    </span>
+                </td>
+                <td>${record.userEmail}</td>
+                <td>${record.eventTitle}</td>
+                <td>
+                    <span class="status-badge ${record.eventDay === 'Wednesday' ? 'status-pending' : 'status-approved'}">
+                        ${record.eventDay}
+                    </span>
+                </td>
+                <td>${record.eventTime}</td>
+                <td><span class="status-badge status-approved">Attended</span></td>
+                <td>${record.approvedBy}</td>
+                <td>${this.formatDate(record.approvedAt)}</td>
+            </tr>
+        `).join('');
+    }
+
+    getTypeClass(type) {
+        const classes = {
+            'attendee': 'status-approved',
+            'speaker': 'status-pending',
+            'exhibitor': 'status-rejected',
+            'partner': 'status-approved'
+        };
+        return classes[type] || '';
+    }
+
+    updateAttendanceStats() {
+        const filteredData = this.getFilteredData();
+        const day1Count = filteredData.filter(r => r.eventDay === 'Wednesday').length;
+        const day2Count = filteredData.filter(r => r.eventDay === 'Thursday').length;
+        const totalCount = filteredData.length;
+
+        // Update stats in the card
+        const totalEl = document.getElementById('totalAttendance');
+        const day1El = document.getElementById('day1Attendance');
+        const day2El = document.getElementById('day2Attendance');
+        
+        if (totalEl) totalEl.textContent = totalCount;
+        if (day1El) day1El.textContent = day1Count;
+        if (day2El) day2El.textContent = day2Count;
+    }
+
+    formatDate(dateString) {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+    async refreshData() {
+        await this.loadAttendanceData();
+        this.renderAttendanceTable();
+        this.updateAttendanceStats();
+        this.showToast('Attendance data refreshed', 'success');
+    }
+
+    exportToExcel() {
+        const filteredData = this.getFilteredData();
+        
+        if (filteredData.length === 0) {
+            this.showToast('No data to export', 'error');
+            return;
+        }
+
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        
+        // Create worksheet data
+        const wsData = [
+            ['Attendance Report - ICSC 2026'],
+            ['Generated: ' + new Date().toLocaleDateString()],
+            [''],
+            ['Name', 'Type', 'Email', 'Event', 'Day', 'Time', 'Status', 'Approved By', 'Approved At']
+        ];
+        
+        // Add filtered data
+        filteredData.forEach(record => {
+            wsData.push([
+                record.userName,
+                record.userType.toUpperCase(),
+                record.userEmail,
+                record.eventTitle,
+                record.eventDay,
+                record.eventTime,
+                'Attended',
+                record.approvedBy,
+                this.formatDate(record.approvedAt)
+            ]);
+        });
+        
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // Set column widths
+        const colWidths = [
+            {wch: 25}, // Name
+            {wch: 12}, // Type
+            {wch: 30}, // Email
+            {wch: 40}, // Event
+            {wch: 15}, // Day
+            {wch: 10}, // Time
+            {wch: 12}, // Status
+            {wch: 15}, // Approved By
+            {wch: 20}  // Approved At
+        ];
+        ws['!cols'] = colWidths;
+        
+        // Merge header rows
+        ws['!merges'] = [
+            {s: {r: 0, c: 0}, e: {r: 0, c: 8}}, // Title row
+            {s: {r: 1, c: 0}, e: {r: 1, c: 8}}  // Date row
+        ];
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
+        
+        // Generate filename based on filters
+        let filename = 'ICSC_Attendance_';
+        
+        if (this.filters.day !== 'all') {
+            filename += this.filters.day.charAt(0).toUpperCase() + this.filters.day.slice(1) + '_';
+        }
+        
+        if (this.filters.type !== 'all') {
+            filename += this.filters.type + '_';
+        }
+        
+        if (this.filters.event !== 'all') {
+            const eventName = this.filters.event === 'A001' ? 'Registration' :
+                            this.filters.event === 'A002' ? 'Opening' :
+                            this.filters.event === 'A003' ? 'CoffeeBreak' :
+                            this.filters.event === 'A004' ? 'DigitalTransformation' :
+                            this.filters.event === 'A005' ? 'Leadership' : 'Event';
+            filename += eventName + '_';
+        }
+        
+        filename += new Date().toISOString().split('T')[0] + '.xlsx';
+        
+        // Export file
+        XLSX.writeFile(wb, filename);
+        
+        this.showToast(`Exported ${filteredData.length} records to Excel`, 'success');
+    }
+
+    showToast(message, type = 'info') {
+        // Use notification system's toast if available
+        if (window.notificationSystem) {
+            window.notificationSystem.showToast(message, type);
+        } else {
+            // Fallback toast
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                border-left: 4px solid ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                padding: 12px 16px;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 9999;
+            `;
+            
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}" 
+                   style="color: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};"></i>
+                <span style="font-size: 0.9rem;">${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Add animation
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    }
+}
+
+// Initialize systems when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on super admin dashboard
+    const isSuperAdmin = document.body.getAttribute('data-protected') === 'super_admin';
+    
+    if (isSuperAdmin) {
+        // Initialize Notification System
+        window.notificationSystem = new NotificationSystem();
+        
+        // Initialize Attendance Report System
+        window.attendanceReportManager = new AttendanceReportManager();
+        
+        // Load attendance data when reports tab is clicked
+        const reportsTabLink = document.querySelector('a[data-tab="reports"]');
+        if (reportsTabLink) {
+            reportsTabLink.addEventListener('click', function() {
+                setTimeout(() => {
+                    if (window.attendanceReportManager) {
+                        window.attendanceReportManager.refreshData();
+                    }
+                }, 100);
+            });
+        }
+        
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+        
+        // Add export button styling
+        const exportBtn = document.getElementById('exportAttendanceBtn');
+        if (exportBtn) {
+            exportBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export to Excel';
+        }
+    }
+});
+
+// Make functions available globally for onclick attributes
+window.approveSchedule = function(notificationId) {
+    if (window.notificationSystem) {
+        window.notificationSystem.approveSchedule(notificationId);
+    }
+};
+
+window.rejectSchedule = function(notificationId) {
+    if (window.notificationSystem) {
+        window.notificationSystem.rejectSchedule(notificationId);
+    }
+};
+
+// Add inline styles for toast notifications
+const style = document.createElement('style');
+style.textContent = `
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border-left: 4px solid #1976d2;
+        border-radius: 4px;
+        padding: 12px 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+        max-width: 350px;
+    }
+    
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .toast-success {
+        border-left-color: #4CAF50;
+    }
+    
+    .toast-error {
+        border-left-color: #f44336;
+    }
+    
+    .toast-info {
+        border-left-color: #2196F3;
+    }
+    
+    .toast i {
+        font-size: 1.1rem;
+    }
+    
+    .toast-success i { color: #4CAF50; }
+    .toast-error i { color: #f44336; }
+    .toast-info i { color: #2196F3; }
+    
+    .toast span {
+        font-size: 0.9rem;
+        color: #333;
+    }
+    
+    /* Status badge colors */
+    .status-badge.status-approved {
+        background: #D4EDDA;
+        color: #155724;
+        border: 1px solid #C3E6CB;
+    }
+    
+    .status-badge.status-pending {
+        background: #FFF3CD;
+        color: #856404;
+        border: 1px solid #FFEAA7;
+    }
+    
+    .status-badge.status-rejected {
+        background: #F8D7DA;
+        color: #721C24;
+        border: 1px solid #F5C6CB;
+    }
+`;
+document.head.appendChild(style);
 
 // Initialize the page to show content
 document.body.style.display = 'block';
