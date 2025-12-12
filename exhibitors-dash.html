@@ -220,31 +220,6 @@
             background-color: #388e3c;
         }
         
-        .exhibit-day-btn {
-            background-color: #ffecb3;
-            color: #7d6608;
-            border: 1px solid #ffd54f;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .exhibit-day-btn:hover {
-            background-color: #ffd54f;
-        }
-        
-        .exhibiting-day {
-            background-color: #ff9800;
-            color: white;
-            border-color: #ff9800;
-        }
-        
-        .exhibiting-day:hover {
-            background-color: #f57c00;
-        }
-        
         .day-content {
             padding: 20px;
         }
@@ -533,6 +508,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
+            position: relative;
         }
         
         .booth-option:hover {
@@ -584,10 +560,257 @@
             color: white;
         }
         
+        /* Benefits Section Styles */
+        .benefits-section {
+            margin-top: 20px;
+        }
+
+        .benefits-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .benefits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .benefits-header h3 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .benefits-count {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .benefit-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .benefit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .benefit-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-used {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .benefit-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .benefit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Email Instructions Section */
+        .email-instructions {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .email-instructions h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .email-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .email-info {
+            margin-bottom: 15px;
+        }
+
+        .email-info-item {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .email-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: #333;
+        }
+
+        .email-value {
+            color: #555;
+        }
+
+        .email-template {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border: 1px dashed #ccc;
+        }
+
+        /* Form Styles for Benefits */
+        .benefit-form {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .benefit-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .benefit-form .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .benefit-form .form-group input,
+        .benefit-form .form-group select,
+        .benefit-form .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .benefit-form .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
             100% { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .payment-option.selected {
+            border-color: var(--primary);
+            background-color: #f0f5ff;
+        }
+        
+        .booth-option.sold-out::after {
+            content: "✗";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #e53935;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        
+        .booth-option.sold-out {
+            position: relative;
+            background-color: #ffebee;
         }
         
         /* Live Stream Styles */
@@ -1002,7 +1225,7 @@
                 width: 100%;
             }
             
-            .attend-day-btn, .exhibit-day-btn {
+            .attend-day-btn {
                 width: 100%;
                 text-align: center;
             }
@@ -1021,6 +1244,14 @@
             
             .youtube-player {
                 height: 300px;
+            }
+            
+            .benefit-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
             }
         }
     </style>
@@ -1048,6 +1279,7 @@
                 <ul class="sidebar-menu">
                     <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="#" data-tab="benefits"><i class="fas fa-gift"></i> Benefits</a></li>
                     <li><a href="#" data-tab="live-stream"><i class="fas fa-play-circle"></i> Live Stream</a></li>
                     <li><a href="#" data-tab="resources"><i class="fas fa-receipt"></i> Receipts & Resources</a></li>
                     <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
@@ -1090,6 +1322,18 @@
                                 <div class="stat-label">Visitor Interactions</div>
                             </div>
                         </div>
+                        
+                        <!-- Single Exhibit Button for Whole Conference -->
+                        <div class="stats-grid" style="margin-top: 20px; margin-bottom: 20px;">
+                            <div class="stat-card" style="grid-column: span 3; text-align: center;">
+                                <h3 style="margin-bottom: 15px; color: var(--primary);">Exhibition Setup</h3>
+                                <p style="margin-bottom: 15px; color: #666;">Set up your exhibition booth for the entire conference</p>
+                                <button class="payment-btn" id="setup-exhibition-btn" style="width: auto; padding: 12px 30px; font-size: 1.1rem;">
+                                    <i class="fas fa-store"></i> Setup Exhibition Booth
+                                </button>
+                            </div>
+                        </div>
+                        
                         <p>Welcome to your personalized exhibitor dashboard. Here you can manage your conference schedule, set up exhibitions, and access resources.</p>
                     </div>
                     
@@ -1106,6 +1350,238 @@
                         
                         <div class="agenda-container" id="full-agenda">
                             <!-- Full agenda will be dynamically populated by JavaScript from backend -->
+                        </div>
+                    </div>
+                    
+                    <!-- Benefits Tab -->
+                    <div class="tab-content" id="benefits">
+                        <div class="content-header">
+                            <h2>Package Benefits</h2>
+                        </div>
+                        
+                        <div class="benefits-section">
+                            <div class="benefits-card">
+                                <div class="benefits-header">
+                                    <h3>Your Standard Exhibitor Package Benefits</h3>
+                                    <div class="benefits-count">5 Benefits</div>
+                                </div>
+                                
+                                <!-- Benefit 1: Booth Space -->
+                                <div class="benefit-item">
+                                    <div class="benefit-header">
+                                        <div class="benefit-title">Booth Space</div>
+                                        <div class="benefit-status status-available">Available: 1</div>
+                                    </div>
+                                    <div class="benefit-description">
+                                        6x6m standard booth in the main exhibition hall for the entire conference duration.
+                                    </div>
+                                    <div class="benefit-actions">
+                                        <button class="btn btn-primary" onclick="openBenefitForm('booth')">
+                                            <i class="fas fa-map-marker-alt"></i> Setup Your Booth
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Benefit Form (Hidden by default) -->
+                                    <div class="benefit-form" id="booth-form" style="display: none;">
+                                        <h5>Booth Setup Requirements</h5>
+                                        <form id="boothSetupForm">
+                                            <div class="form-group">
+                                                <label>Company Name for Booth</label>
+                                                <input type="text" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Booth Theme/Title</label>
+                                                <input type="text" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Special Requirements</label>
+                                                <textarea placeholder="Power needs, special setup, furniture, etc."></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Setup Contact Person</label>
+                                                <input type="text" required>
+                                            </div>
+                                            <div class="benefit-actions">
+                                                <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('booth')">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Submit Requirements</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <!-- Benefit 2: Conference Passes -->
+                                <div class="benefit-item">
+                                    <div class="benefit-header">
+                                        <div class="benefit-title">Conference Passes</div>
+                                        <div class="benefit-status status-available">Available: 4</div>
+                                    </div>
+                                    <div class="benefit-description">
+                                        You are eligible for 4 conference passes for your staff. Submit the names and email addresses of attendees.
+                                    </div>
+                                    <div class="benefit-actions">
+                                        <button class="btn btn-primary" onclick="openBenefitForm('passes')">
+                                            <i class="fas fa-user-plus"></i> Register Staff
+                                        </button>
+                                        <button class="btn btn-outline" onclick="viewRegisteredStaff()">
+                                            <i class="fas fa-users"></i> View Registered Staff
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Benefit Form -->
+                                    <div class="benefit-form" id="passes-form" style="display: none;">
+                                        <h5>Register Staff Members</h5>
+                                        <form id="staffForm">
+                                            <div class="form-group">
+                                                <label>Staff 1 (Primary Contact)</label>
+                                                <input type="text" placeholder="Full Name" required>
+                                                <input type="email" placeholder="Email Address" required style="margin-top: 5px;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Staff 2</label>
+                                                <input type="text" placeholder="Full Name">
+                                                <input type="email" placeholder="Email Address" style="margin-top: 5px;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Staff 3</label>
+                                                <input type="text" placeholder="Full Name">
+                                                <input type="email" placeholder="Email Address" style="margin-top: 5px;">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Staff 4</label>
+                                                <input type="text" placeholder="Full Name">
+                                                <input type="email" placeholder="Email Address" style="margin-top: 5px;">
+                                            </div>
+                                            <div class="benefit-actions">
+                                                <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('passes')">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Submit to Admin</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <!-- Benefit 3: Company Listing -->
+                                <div class="benefit-item">
+                                    <div class="benefit-header">
+                                        <div class="benefit-title">Company Listing</div>
+                                        <div class="benefit-status status-pending">Pending Approval</div>
+                                    </div>
+                                    <div class="benefit-description">
+                                        Company profile and logo in the conference app, website, and printed directory.
+                                    </div>
+                                    <div class="benefit-actions">
+                                        <button class="btn btn-outline" onclick="openBenefitForm('listing')">
+                                            <i class="fas fa-building"></i> Submit Company Profile
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Benefit Form -->
+                                    <div class="benefit-form" id="listing-form" style="display: none;">
+                                        <h5>Company Profile</h5>
+                                        <form id="companyForm">
+                                            <div class="form-group">
+                                                <label>Company Description</label>
+                                                <textarea placeholder="Brief description of your company (max 200 words)..." required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Website URL</label>
+                                                <input type="url" placeholder="https://example.com" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Upload Company Logo</label>
+                                                <input type="file" accept=".jpg,.png,.svg">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Key Products/Services</label>
+                                                <textarea placeholder="List your key products or services..."></textarea>
+                                            </div>
+                                            <div class="benefit-actions">
+                                                <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('listing')">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Submit for Approval</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <!-- Benefit 4: Promotional Materials -->
+                                <div class="benefit-item">
+                                    <div class="benefit-header">
+                                        <div class="benefit-title">Promotional Materials Distribution</div>
+                                        <div class="benefit-status status-used">Submitted</div>
+                                    </div>
+                                    <div class="benefit-description">
+                                        Your promotional materials have been received and will be included in conference bags.
+                                    </div>
+                                    <div class="benefit-actions">
+                                        <button class="btn btn-outline">
+                                            <i class="fas fa-eye"></i> View Submission
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Benefit 5: Networking Events -->
+                                <div class="benefit-item">
+                                    <div class="benefit-header">
+                                        <div class="benefit-title">Networking Events Access</div>
+                                        <div class="benefit-status status-available">Available</div>
+                                    </div>
+                                    <div class="benefit-description">
+                                        Access to all networking events and receptions during the conference for registered staff.
+                                    </div>
+                                    <div class="benefit-actions">
+                                        <button class="btn btn-outline">
+                                            <i class="fas fa-calendar-check"></i> Add to Schedule
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Email Instructions -->
+                            <div class="email-instructions">
+                                <h4>How to Claim Your Benefits</h4>
+                                <p>To claim your benefits or submit requirements, please send the required information to our exhibition team:</p>
+                                
+                                <div class="email-box">
+                                    <div class="email-info">
+                                        <div class="email-info-item">
+                                            <div class="email-label">Email to:</div>
+                                            <div class="email-value">exhibitors@icsc2026.org</div>
+                                        </div>
+                                        <div class="email-info-item">
+                                            <div class="email-label">Subject:</div>
+                                            <div class="email-value">Exhibitor Benefit Claim - [Your Company Name]</div>
+                                        </div>
+                                        <div class="email-info-item">
+                                            <div class="email-label">CC:</div>
+                                            <div class="email-value">admin@icsc2026.org</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="email-template">
+                                        <strong>Email Template:</strong><br><br>
+                                        To: exhibitors@icsc2026.org<br>
+                                        CC: admin@icsc2026.org<br>
+                                        Subject: Exhibitor Benefit Claim - [Your Company Name]<br><br>
+                                        
+                                        Dear ICSC 2026 Exhibition Team,<br><br>
+                                        
+                                        I am writing to claim the following benefit from our Exhibitor Package:<br><br>
+                                        
+                                        <strong>Benefit:</strong> [e.g., Booth Setup, Staff Registration, etc.]<br>
+                                        <strong>Details:</strong> [Provide specific details, names, requirements, etc.]<br>
+                                        <strong>Attachments:</strong> [List any attached files]<br><br>
+                                        
+                                        Please confirm receipt and let me know if any additional information is required.<br><br>
+                                        
+                                        Best regards,<br>
+                                        [Your Name]<br>
+                                        [Your Company Name]
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="copyEmailTemplate()">
+                                        <i class="fas fa-copy"></i> Copy Email Template
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1171,6 +1647,157 @@
                                         <i class="fab fa-youtube"></i> Browse All Videos on YouTube
                                     </a>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Modal -->
+                    <div class="modal" id="payment-modal">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <div class="modal-header">
+                                <h3>Complete Payment</h3>
+                                <button class="close-modal">&times;</button>
+                            </div>
+                            
+                            <div class="api-indicator">
+                                <strong>PAYSTACK INTEGRATION:</strong> Simulating Paystack payment process
+                            </div>
+                            
+                            <div class="payment-summary" style="padding: 20px; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Payment Summary</h4>
+                                <div class="info-item">
+                                    <div class="info-label">Exhibition Title:</div>
+                                    <div class="info-value" id="payment-exhibition-title">--</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Selected Booth:</div>
+                                    <div class="info-value" id="payment-booth-number">--</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Exhibition Day:</div>
+                                    <div class="info-value" id="payment-exhibition-day">--</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Booth Price:</div>
+                                    <div class="info-value" id="payment-booth-price">₦250,000</div>
+                                </div>
+                                <div class="info-item" style="border-top: 2px solid var(--primary); padding-top: 10px; margin-top: 10px;">
+                                    <div class="info-label" style="font-size: 1.1rem;">Total Amount:</div>
+                                    <div class="info-value" style="font-size: 1.3rem; font-weight: bold; color: var(--primary);" id="payment-total-amount">₦250,000</div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-methods" style="margin-bottom: 20px;">
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Select Payment Method</h4>
+                                <div class="payment-option" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" data-method="card">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-credit-card" style="color: var(--primary); font-size: 1.2rem;"></i>
+                                        <div>
+                                            <div style="font-weight: 600;">Credit/Debit Card</div>
+                                            <div style="font-size: 0.9rem; color: #666;">Pay with Visa, Mastercard, or Verve</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="payment-option" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" data-method="bank">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-university" style="color: var(--primary); font-size: 1.2rem;"></i>
+                                        <div>
+                                            <div style="font-weight: 600;">Bank Transfer</div>
+                                            <div style="font-size: 0.9rem; color: #666;">Transfer directly to our account</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Payment Form (Hidden by default) -->
+                            <div id="card-payment-form" style="display: none;">
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Enter Card Details</h4>
+                                <div class="form-group">
+                                    <label for="card-number">Card Number</label>
+                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                                <div style="display: flex; gap: 15px;">
+                                    <div class="form-group" style="flex: 1;">
+                                        <label for="expiry-date">Expiry Date</label>
+                                        <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5">
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label for="cvv">CVV</label>
+                                        <input type="password" id="cvv" placeholder="123" maxlength="3">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="card-name">Name on Card</label>
+                                    <input type="text" id="card-name" placeholder="John Doe">
+                                </div>
+                            </div>
+                            
+                            <!-- Bank Transfer Details (Hidden by default) -->
+                            <div id="bank-transfer-details" style="display: none; padding: 20px; background-color: #f0f9f0; border-radius: 8px;">
+                                <h4 style="color: var(--primary); margin-bottom: 15px;">Bank Transfer Instructions</h4>
+                                <div class="info-item">
+                                    <div class="info-label">Bank Name:</div>
+                                    <div class="info-value">Guaranty Trust Bank</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Account Name:</div>
+                                    <div class="info-value">ICSC 2026 Exhibition</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Account Number:</div>
+                                    <div class="info-value">0123456789</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Amount:</div>
+                                    <div class="info-value" id="bank-transfer-amount">₦250,000</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Reference:</div>
+                                    <div class="info-value" id="bank-transfer-reference">ICSC-EXH-001</div>
+                                </div>
+                                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                                    After making the transfer, please upload your payment proof in the exhibition form.
+                                </p>
+                            </div>
+                            
+                            <div id="payment-processing" style="display: none; text-align: center; padding: 20px;">
+                                <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px;"></div>
+                                <p style="color: var(--primary); font-weight: 500;">Processing payment...</p>
+                            </div>
+                            
+                            <div id="payment-success" style="display: none; text-align: center; padding: 20px;">
+                                <div style="width: 60px; height: 60px; background-color: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                                    <i class="fas fa-check" style="color: white; font-size: 1.5rem;"></i>
+                                </div>
+                                <h4 style="color: #4caf50; margin-bottom: 10px;">Payment Successful!</h4>
+                                <p style="margin-bottom: 20px;">Your exhibition booth has been reserved successfully.</p>
+                                <div class="info-item">
+                                    <div class="info-label">Transaction ID:</div>
+                                    <div class="info-value" id="success-transaction-id">TXN-001234</div>
+                                </div>
+                                <button class="payment-btn" id="close-payment-success" style="margin-top: 20px;">
+                                    <i class="fas fa-check-circle"></i> Continue
+                                </button>
+                            </div>
+                            
+                            <div id="payment-failed" style="display: none; text-align: center; padding: 20px;">
+                                <div style="width: 60px; height: 60px; background-color: #e53935; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                                    <i class="fas fa-times" style="color: white; font-size: 1.5rem;"></i>
+                                </div>
+                                <h4 style="color: #e53935; margin-bottom: 10px;">Payment Failed</h4>
+                                <p style="margin-bottom: 20px;" id="payment-error-message">Please try again or use a different payment method.</p>
+                                <button class="payment-btn" id="retry-payment" style="margin-top: 10px; background-color: #666;">
+                                    <i class="fas fa-redo"></i> Try Again
+                                </button>
+                            </div>
+                            
+                            <div id="payment-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="payment-btn" id="proceed-payment" style="flex: 1;">
+                                    <i class="fas fa-lock"></i> Proceed to Pay ₦250,000
+                                </button>
+                                <button class="payment-btn" id="cancel-payment" style="flex: 1; background-color: #666;">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1379,7 +2006,7 @@
                             <div class="event-item">
                                 <div class="event-info">
                                     <h4>How do I set up an exhibition?</h4>
-                                    <p>Click "Exhibit This Day" on any day in the Dashboard tab to set up your exhibition.</p>
+                                    <p>Click "Setup Exhibition Booth" on the Dashboard tab to set up your exhibition for the entire conference.</p>
                                 </div>
                             </div>
                             
@@ -1387,6 +2014,13 @@
                                 <div class="event-info">
                                     <h4>Where can I watch live streams?</h4>
                                     <p>All live streams are available in the "Live Stream" tab during conference hours.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-info">
+                                    <h4>How do I access my package benefits?</h4>
+                                    <p>All your package benefits are available in the "Benefits" tab.</p>
                                 </div>
                             </div>
                             
@@ -1451,7 +2085,30 @@
                             <h3>My Schedule</h3>
                         </div>
                         <div id="selected-events">
-                            <p>No days selected yet. Click "Attend This Day" or "Exhibit" to add days to your schedule.</p>
+                            <p>No days selected yet. Click "Attend This Day" to add days to your schedule.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <div class="widget-header">
+                            <i class="fas fa-gift"></i>
+                            <h3>Benefits Status</h3>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Total Benefits</div>
+                            <div class="info-value">5</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Available</div>
+                            <div class="info-value">3</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Pending</div>
+                            <div class="info-value">1</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Used</div>
+                            <div class="info-value">1</div>
                         </div>
                     </div>
                     
@@ -1508,7 +2165,7 @@
     <div class="modal" id="exhibit-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Exhibition Setup</h3>
+                <h3>Conference Exhibition Setup</h3>
                 <button class="close-modal">&times;</button>
             </div>
             
@@ -1525,24 +2182,18 @@
                 <label for="exhibition-description">Description</label>
                 <textarea id="exhibition-description" placeholder="Describe what you'll be exhibiting"></textarea>
             </div>
-          <div id="venue-map-wrapper" style="overflow: hidden; position: relative; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-  <div id="venue-map" style="width: 100%; height: 600px; cursor: grab;">
-  <div id="venue-map-container"
-     style="width: 100%; height: 600px; overflow: hidden; position: relative; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #fafafa;">
-  <div id="venue-map-inner"
-       style="transform-origin: 0 0; transition: transform 0.05s ease-out;">
-    <img src="venue.png" alt="Venue Layout" draggable="false"
-         style="width: 100%; height: auto; user-select: none; pointer-events: none;">
-  </div>
-</div>
-<p style="font-size: 0.85rem; color: #555; margin-top: 8px; text-align: center;">
-  Scroll to zoom, drag to move around the venue map
-</p>
-
-  </div>
-</div>
-<p style="font-size: 0.85rem; color: #555; margin-top: 8px;">Zoom or drag to explore the layout of the venue.</p>
-
+            <div id="venue-map-wrapper" style="overflow: hidden; position: relative; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div id="venue-map" style="width: 100%; height: 600px; cursor: grab;">
+                    <div id="venue-map-container" style="width: 100%; height: 600px; overflow: hidden; position: relative; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #fafafa;">
+                        <div id="venue-map-inner" style="transform-origin: 0 0; transition: transform 0.05s ease-out;">
+                            <img src="venue.png" alt="Venue Layout" draggable="false" style="width: 100%; height: auto; user-select: none; pointer-events: none;">
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 8px; text-align: center;">
+                        Scroll to zoom, drag to move around the venue map
+                    </p>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label>Booth Selection</label>
@@ -1565,10 +2216,10 @@
                 </div>
                 <div id="file-list"></div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="exhibition-budget">Budget (₦)</label>
                 <input type="number" id="exhibition-budget" placeholder="Enter your exhibition budget in Naira">
-            </div>
+            </div> -->
             <button class="payment-btn" id="submit-exhibition">Submit Exhibition & Make Payment</button>
         </div>
     </div>
@@ -1610,11 +2261,19 @@
             RESOURCES: '/api/resources',
             RESOURCES_UPLOAD: '/api/resources/upload',
             
+            // Benefits endpoints
+            BENEFITS: '/api/benefits',
+            
             // Admin notification endpoints
             NOTIFY_ADMIN: '/api/admin/notify',
             
             // Real-time updates endpoint
-            REAL_TIME_UPDATES: '/api/real-time/updates'
+            REAL_TIME_UPDATES: '/api/real-time/updates',
+            
+            // Booth prices endpoint
+            BOOTH_PRICES: '/api/booths/prices',
+            PAYSTACK_INITIALIZE: '/api/paystack/initialize',
+            PAYSTACK_VERIFY: '/api/paystack/verify'
         };
 
         // Global state for real-time booth management
@@ -1629,7 +2288,9 @@
         let selectedDays = [];
         let agendaData = {};
         let currentExhibitDay = null;
-        let youtubePlayer = null;
+        let currentExhibitionData = null;
+        let selectedPaymentMethod = null;
+        let boothPrices = {}; // This would come from backend
 
         // Featured YouTube sessions
         const FEATURED_SESSIONS = [
@@ -1987,6 +2648,35 @@
                 return {};
             }
         }
+        
+        // Fetch booth prices from backend (fixed by admin)
+        async function fetchBoothPrices() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch(API_ENDPOINTS.BOOTH_PRICES);
+                // const data = await response.json();
+                // return data;
+                
+                // Sample data - in real app, this comes from admin settings
+                return {
+                    "B1": 250000,
+                    "B2": 250000,
+                    "B3": 300000, // Premium booth
+                    "B4": 250000,
+                    "B5": 250000,
+                    // ... other booths
+                    "default": 250000
+                };
+            } catch (error) {
+                console.error('Error fetching booth prices:', error);
+                return { "default": 250000 };
+            }
+        }
+        
+        // Initialize booth prices on load
+        async function initializeBoothPrices() {
+            boothPrices = await fetchBoothPrices();
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             // Load initial data
@@ -2019,6 +2709,9 @@
                     } else if (tabId === 'resources') {
                         loadPaymentReceipts();
                         loadResources();
+                    } else if (tabId === 'benefits') {
+                        // Load benefits data if needed
+                        // You might want to fetch benefits data from backend here
                     }
                 });
             });
@@ -2038,6 +2731,19 @@
                 playLiveStream();
             });
             
+            // Setup exhibition button
+            const setupExhibitionBtn = document.getElementById('setup-exhibition-btn');
+            if (setupExhibitionBtn) {
+                setupExhibitionBtn.addEventListener('click', function() {
+                    // Open exhibit modal for the whole conference
+                    currentExhibitDay = {
+                        id: 'conference',
+                        title: 'ICSC 2026 Conference'
+                    };
+                    openExhibitModal('conference');
+                });
+            }
+            
             // Load initial data
             async function loadInitialData() {
                 // Load agenda data from backend
@@ -2051,11 +2757,17 @@
                 // Load booth data from backend
                 await loadBoothData();
                 
+                // Load booth prices
+                await initializeBoothPrices();
+                
                 // Load featured sessions
                 renderFeaturedSessions();
                 
                 // Initialize YouTube player
                 initializeYouTubePlayer();
+                
+                // Initialize payment functionality
+                initializePaymentFunctionality();
             }
             
             // Update real-time data
@@ -2135,9 +2847,6 @@
                                 <div class="day-actions">
                                     <button class="attend-day-btn ${daySelection && daySelection.type === 'attend' ? 'attending-day' : ''}" data-day="${dayId}">
                                         ${daySelection && daySelection.type === 'attend' ? 'Attending' : 'Attend This Day'}
-                                    </button>
-                                    <button class="exhibit-day-btn ${daySelection && daySelection.type === 'exhibit' ? 'exhibiting-day' : ''}" data-day="${dayId}">
-                                        ${daySelection && daySelection.type === 'exhibit' ? 'Exhibiting' : 'Exhibit'}
                                     </button>
                                 </div>
                             </div>
@@ -2410,54 +3119,39 @@
                 document.getElementById('stream-status').className = 'event-status live-now';
             }
             
-            // Render booth grid for exhibit modal from backend data
-            function renderBoothGrid(day) {
-                const container = document.getElementById('booth-grid');
-                let html = '';
-                
-                // Generate 200 booths
-                for (let i = 1; i <= 200; i++) {
-                    const boothId = `B${i}`;
-                    const isSoldOut = globalBooths.boothDetails[boothId] && globalBooths.boothDetails[boothId].soldOut;
-                    
-                    html += `
-                        <div class="booth-option ${isSoldOut ? 'sold-out' : ''}" data-booth-id="${boothId}">
-                            ${boothId}
-                            ${isSoldOut ? '<span class="sold-out-badge">Sold</span>' : ''}
-                        </div>
-                    `;
+            // Open exhibit modal for whole conference
+            async function openExhibitModal(day) {
+                // Initialize booth prices if not already done
+                if (Object.keys(boothPrices).length === 0) {
+                    await initializeBoothPrices();
                 }
                 
-                container.innerHTML = html;
-                
-               // Preserve selected booth across re-renders and real-time updates
-                const previouslySelected = localStorage.getItem('selectedBooth');
-                container.innerHTML = html;
-
-                document.querySelectorAll('.booth-option:not(.sold-out)').forEach(option => {
-                    const boothId = option.getAttribute('data-booth-id');
-                    if (previouslySelected === boothId) option.classList.add('selected');
-
-                    option.addEventListener('click', function () {
-                        document.querySelectorAll('.booth-option').forEach(opt => opt.classList.remove('selected'));
-                        this.classList.add('selected');
-                        localStorage.setItem('selectedBooth', boothId);
-                    });
-                });
-            }
-            
-            // Open exhibit modal
-            function openExhibitModal(day) {
                 const modal = document.getElementById('exhibit-modal');
                 
-                // Render booth grid from backend data
+                // Store current exhibition data
+                currentExhibitDay = {
+                    id: day,
+                    title: day === 'conference' ? 'ICSC 2026 Conference' : day
+                };
+                
+                // Update modal title for whole conference
+                const modalTitle = modal.querySelector('.modal-header h3');
+                if (modalTitle && day === 'conference') {
+                    modalTitle.textContent = 'Conference Exhibition Setup';
+                }
+                
+                // Render booth grid with prices
                 renderBoothGrid(day);
-
                 enableVenueMapZoom();
-
                 
                 // Show modal
                 modal.style.display = 'flex';
+                
+                // Update the submit button to show payment modal instead of directly processing
+                const submitBtn = document.getElementById('submit-exhibition');
+                submitBtn.onclick = function() {
+                    validateAndProceedToPayment();
+                };
                 
                 // File upload functionality
                 document.getElementById('browse-files').addEventListener('click', function() {
@@ -2479,133 +3173,419 @@
                         fileList.appendChild(fileItem);
                     }
                 });
+            }
+            
+            // Render booth grid for exhibit modal from backend data
+            function renderBoothGrid(day) {
+                const container = document.getElementById('booth-grid');
+                let html = '';
                 
-                // Submit exhibition
-                document.getElementById('submit-exhibition').addEventListener('click', async function() {
-                    const title = document.getElementById('exhibition-title').value;
-                    const description = document.getElementById('exhibition-description').value;
-                    const budget = document.getElementById('exhibition-budget').value;
-                    const selectedBooth = document.querySelector('.booth-option.selected');
+                // Generate 200 booths with prices
+                for (let i = 1; i <= 200; i++) {
+                    const boothId = `B${i}`;
+                    const isSoldOut = globalBooths.boothDetails[boothId] && globalBooths.boothDetails[boothId].soldOut;
+                    const price = boothPrices[boothId] || boothPrices["default"];
+                    const formattedPrice = new Intl.NumberFormat('en-NG', {
+                        style: 'currency',
+                        currency: 'NGN'
+                    }).format(price);
                     
-                    if (!title || !description || !selectedBooth || !budget) {
-                        showNotification('Please fill in all required fields and select a booth.');
+                    html += `
+                        <div class="booth-option ${isSoldOut ? 'sold-out' : ''}" data-booth-id="${boothId}" data-price="${price}">
+                            ${boothId}
+                            ${isSoldOut ? '<span class="sold-out-badge">Sold</span>' : ''}
+                            <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">${formattedPrice}</div>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html;
+                
+                // Booth selection with price display
+                const previouslySelected = localStorage.getItem('selectedBooth');
+                
+                document.querySelectorAll('.booth-option:not(.sold-out)').forEach(option => {
+                    const boothId = option.getAttribute('data-booth-id');
+                    if (previouslySelected === boothId) option.classList.add('selected');
+                    
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.booth-option').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        localStorage.setItem('selectedBooth', boothId);
+                        
+                        // Update submit button with selected booth price
+                        const price = this.getAttribute('data-price');
+                        const submitBtn = document.getElementById('submit-exhibition');
+                        submitBtn.innerHTML = `Submit Exhibition & Pay ₦${parseInt(price).toLocaleString()}`;
+                    });
+                });
+            }
+            
+            // Validate form and proceed to payment
+            async function validateAndProceedToPayment() {
+                const title = document.getElementById('exhibition-title').value;
+                const description = document.getElementById('exhibition-description').value;
+                // const budget = document.getElementById('exhibition-budget').value;
+                const selectedBooth = document.querySelector('.booth-option.selected');
+                
+                if (!title || !description || !selectedBooth) {
+                    showNotification('Please fill in all required fields and select a booth.');
+                    return;
+                }
+                
+                const boothId = selectedBooth.getAttribute('data-booth-id');
+                const boothPrice = selectedBooth.getAttribute('data-price');
+                
+                // Store exhibition data for payment
+                currentExhibitionData = {
+                    title: title,
+                    description: description,
+                    day: currentExhibitDay.id,
+                    dayTitle: currentExhibitDay.title,
+                    booth: boothId,
+                    boothPrice: boothPrice,
+                    files: document.getElementById('exhibition-files').files,
+                    // budget: budget
+                };
+                
+                // Show payment modal
+                showPaymentModal();
+            }
+            
+            // Show payment modal with details
+            function showPaymentModal() {
+                const modal = document.getElementById('payment-modal');
+                const dayTitle = currentExhibitDay.title;
+                
+                // Update payment summary
+                document.getElementById('payment-exhibition-title').textContent = currentExhibitionData.title;
+                document.getElementById('payment-booth-number').textContent = currentExhibitionData.booth;
+                document.getElementById('payment-exhibition-day').textContent = dayTitle;
+                
+                // Format and display price
+                const price = parseInt(currentExhibitionData.boothPrice);
+                const formattedPrice = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN'
+                }).format(price);
+                
+                document.getElementById('payment-booth-price').textContent = formattedPrice;
+                document.getElementById('payment-total-amount').textContent = formattedPrice;
+                document.getElementById('bank-transfer-amount').textContent = formattedPrice;
+                
+                // Generate reference
+                const reference = `ICSC-EXH-${Date.now().toString().slice(-6)}`;
+                document.getElementById('bank-transfer-reference').textContent = reference;
+                
+                // Reset payment UI
+                document.getElementById('payment-actions').style.display = 'flex';
+                document.getElementById('card-payment-form').style.display = 'none';
+                document.getElementById('bank-transfer-details').style.display = 'none';
+                document.getElementById('payment-processing').style.display = 'none';
+                document.getElementById('payment-success').style.display = 'none';
+                document.getElementById('payment-failed').style.display = 'none';
+                
+                // Update proceed button text
+                document.getElementById('proceed-payment').innerHTML = 
+                    `<i class="fas fa-lock"></i> Proceed to Pay ${formattedPrice}`;
+                
+                modal.style.display = 'flex';
+            }
+            
+            // Initialize payment functionality
+            function initializePaymentFunctionality() {
+                // Payment method selection
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.payment-option').forEach(opt => {
+                            opt.style.borderColor = '#ddd';
+                            opt.style.backgroundColor = '';
+                        });
+                        
+                        this.style.borderColor = 'var(--primary)';
+                        this.style.backgroundColor = '#f0f5ff';
+                        selectedPaymentMethod = this.getAttribute('data-method');
+                        
+                        // Show appropriate form
+                        if (selectedPaymentMethod === 'card') {
+                            document.getElementById('card-payment-form').style.display = 'block';
+                            document.getElementById('bank-transfer-details').style.display = 'none';
+                        } else if (selectedPaymentMethod === 'bank') {
+                            document.getElementById('card-payment-form').style.display = 'none';
+                            document.getElementById('bank-transfer-details').style.display = 'block';
+                        }
+                    });
+                });
+                
+                // Proceed to payment
+                document.getElementById('proceed-payment').addEventListener('click', async function() {
+                    if (!selectedPaymentMethod) {
+                        showNotification('Please select a payment method.', 'error');
                         return;
                     }
                     
-                    const boothId = selectedBooth.getAttribute('data-booth-id');
-                    
-                    // Process payment via backend
-                    const paymentResult = await processPayment({
-                        amount: budget,
-                        currency: 'NGN',
-                        description: `Exhibition: ${title} at ${currentExhibitDay.title}`,
-                        booth: boothId
-                    });
-                    
-                    if (!paymentResult.success) {
-                        showNotification('Payment failed. Please try again.');
-                        return;
+                    if (selectedPaymentMethod === 'card') {
+                        // Validate card details
+                        const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+                        const expiryDate = document.getElementById('expiry-date').value;
+                        const cvv = document.getElementById('cvv').value;
+                        const cardName = document.getElementById('card-name').value;
+                        
+                        if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                            showNotification('Please fill in all card details.', 'error');
+                            return;
+                        }
+                        
+                        if (cardNumber.length < 16) {
+                            showNotification('Please enter a valid card number.', 'error');
+                            return;
+                        }
+                        
+                        if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                            showNotification('Please enter expiry date in MM/YY format.', 'error');
+                            return;
+                        }
+                        
+                        if (cvv.length < 3) {
+                            showNotification('Please enter a valid CVV.', 'error');
+                            return;
+                        }
                     }
                     
-                    // Submit exhibition to backend
-                    const exhibitionResult = await submitExhibition({
-                        title: title,
-                        description: description,
-                        day: currentExhibitDay.id,
-                        dayTitle: currentExhibitDay.title,
-                        booth: boothId,
-                        budget: budget,
-                        files: document.getElementById('exhibition-files').files.length
-                    });
+                    // Show processing
+                    document.getElementById('payment-actions').style.display = 'none';
+                    document.getElementById('card-payment-form').style.display = 'none';
+                    document.getElementById('bank-transfer-details').style.display = 'none';
+                    document.getElementById('payment-processing').style.display = 'block';
                     
-                    if (!exhibitionResult.success) {
-                        showNotification('Exhibition submission failed. Please try again.');
-                        return;
+                    // Simulate Paystack payment processing
+                    await processPaystackPayment();
+                });
+                
+                // Cancel payment
+                document.getElementById('cancel-payment').addEventListener('click', function() {
+                    document.getElementById('payment-modal').style.display = 'none';
+                    showNotification('Payment cancelled.', 'info');
+                });
+                
+                // Retry payment
+                document.getElementById('retry-payment').addEventListener('click', function() {
+                    showPaymentModal();
+                });
+                
+                // Close payment success
+                document.getElementById('close-payment-success').addEventListener('click', function() {
+                    document.getElementById('payment-modal').style.display = 'none';
+                    completeExhibitionSetup();
+                });
+                
+                // Format card number input
+                document.getElementById('card-number').addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+                    if (value.length > 16) value = value.substring(0, 16);
+                    
+                    let formatted = '';
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) formatted += ' ';
+                        formatted += value[i];
                     }
                     
-                    // Update booth status in backend
-                    await updateBoothStatus({
-                        boothId: boothId,
-                        soldOut: true,
-                        exhibitor: 'Michael Chen',
-                        company: 'Tech Innovations Ltd'
+                    e.target.value = formatted;
+                });
+                
+                // Format expiry date input
+                document.getElementById('expiry-date').addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 4) value = value.substring(0, 4);
+                    
+                    if (value.length >= 2) {
+                        e.target.value = value.substring(0, 2) + '/' + value.substring(2);
+                    } else {
+                        e.target.value = value;
+                    }
+                });
+                
+                // Format CVV input
+                document.getElementById('cvv').addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 3) value = value.substring(0, 3);
+                    e.target.value = value;
+                });
+            }
+            
+            // Process payment via Paystack
+            async function processPaystackPayment() {
+                try {
+                    // Simulate API call delay
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // BACKEND INTEGRATION: Replace with actual Paystack API call
+                    /*
+                    const response = await fetch(API_ENDPOINTS.PAYSTACK_INITIALIZE, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: 'michael@techinnovations.com',
+                            amount: currentExhibitionData.boothPrice * 100, // Convert to kobo
+                            reference: `ICSC-EXH-${Date.now()}`,
+                            metadata: {
+                                exhibition_title: currentExhibitionData.title,
+                                booth: currentExhibitionData.booth,
+                                day: currentExhibitionData.day
+                            }
+                        })
                     });
                     
+                    const data = await response.json();
+                    
+                    if (data.status) {
+                        // Redirect to Paystack payment page
+                        window.location.href = data.data.authorization_url;
+                    } else {
+                        throw new Error('Payment initialization failed');
+                    }
+                    */
+                    
+                    // For demo purposes, simulate successful payment 80% of the time
+                    const isSuccess = Math.random() > 0.2;
+                    
+                    if (isSuccess) {
+                        // Simulate successful payment
+                        const transactionId = `TXN-${Date.now().toString().slice(-8)}`;
+                        document.getElementById('success-transaction-id').textContent = transactionId;
+                        
+                        document.getElementById('payment-processing').style.display = 'none';
+                        document.getElementById('payment-success').style.display = 'block';
+                        
+                        // Mark booth as sold in real-time
+                        await markBoothAsSold(currentExhibitionData.booth, transactionId);
+                    } else {
+                        throw new Error('Payment declined. Please try again.');
+                    }
+                    
+                } catch (error) {
+                    document.getElementById('payment-processing').style.display = 'none';
+                    document.getElementById('payment-error-message').textContent = error.message;
+                    document.getElementById('payment-failed').style.display = 'block';
+                }
+            }
+            
+            // Mark booth as sold after successful payment
+            async function markBoothAsSold(boothId, transactionId) {
+                try {
                     // Update global booth state
                     globalBooths.available--;
                     globalBooths.soldOut++;
                     globalBooths.boothDetails[boothId] = {
                         soldOut: true,
                         exhibitor: 'Michael Chen',
-                        company: 'Tech Innovations Ltd'
+                        company: 'Tech Innovations Ltd',
+                        transactionId: transactionId,
+                        timestamp: new Date().toISOString()
                     };
                     
-                    // Save resources to backend
-                    await saveResources({
-                        exhibitionId: exhibitionResult.id,
-                        title: title,
-                        description: description,
-                        booth: boothId,
-                        files: document.getElementById('exhibition-files').files
-                    });
-                    
-                    // Add day to selected days for exhibition
-                    selectedDays.push({
-                        id: currentExhibitDay.id,
-                        title: currentExhibitDay.title,
-                        type: 'exhibit',
-                        exhibitionDetails: {
-                            title: title,
-                            description: description,
-                            booth: boothId,
-                            budget: budget,
-                            files: document.getElementById('exhibition-files').files,
-                            paymentId: paymentResult.transactionId,
-                            receiptId: paymentResult.receiptId,
-                            exhibitionId: exhibitionResult.id
-                        }
-                    });
-                    
-                    // Update UI
-                    const exhibitBtn = document.querySelector(`.exhibit-day-btn[data-day="${day}"]`);
-                    exhibitBtn.textContent = 'Exhibiting';
-                    exhibitBtn.classList.add('exhibiting-day');
-                    
-                    // Disable attend button for this day
-                    const attendBtn = document.querySelector(`.attend-day-btn[data-day="${day}"]`);
-                    attendBtn.disabled = true;
-                    
-                    // Notify admin via backend
-                    await notifyAdmin({
-                        type: 'exhibition_booking',
+                    // Update booth status in backend
+                    await updateBoothStatus({
+                        boothId: boothId,
+                        soldOut: true,
                         exhibitor: 'Michael Chen',
                         company: 'Tech Innovations Ltd',
-                        day: currentExhibitDay.title,
+                        transactionId: transactionId
+                    });
+                    
+                    // Update UI in real-time
+                    updateBoothStats();
+                    
+                    // Mark booth with X in the grid
+                    const boothOption = document.querySelector(`.booth-option[data-booth-id="${boothId}"]`);
+                    if (boothOption) {
+                        boothOption.classList.add('sold-out');
+                    }
+                    
+                    // Notify admin
+                    await notifyAdmin({
+                        type: 'booth_payment_success',
+                        exhibitor: 'Michael Chen',
+                        company: 'Tech Innovations Ltd',
                         booth: boothId,
-                        budget: `₦${budget}`,
+                        amount: `₦${parseInt(currentExhibitionData.boothPrice).toLocaleString()}`,
+                        transactionId: transactionId,
                         timestamp: new Date().toISOString()
                     });
                     
-                    // Close modal
-                    modal.style.display = 'none';
-                    
-                    // Reset form
-                    document.getElementById('exhibition-title').value = '';
-                    document.getElementById('exhibition-description').value = '';
-                    document.getElementById('exhibition-budget').value = '';
-                    document.getElementById('file-list').innerHTML = '';
-                    document.getElementById('exhibition-files').value = '';
-                    
-                    showNotification(`Exhibition setup complete for ${currentExhibitDay.title}! Payment processed and booth ${boothId} reserved.`);
-                    localStorage.removeItem('selectedBooth');
-
-                    
-                    updateSelectedEventsDisplay();
-                    updateUpcomingEventsDisplay();
-                    updateStats();
-                    loadPaymentReceipts();
-                    loadResources();
+                } catch (error) {
+                    console.error('Error marking booth as sold:', error);
+                }
+            }
+            
+            // Complete exhibition setup after payment
+            async function completeExhibitionSetup() {
+                const modal = document.getElementById('exhibit-modal');
+                
+                // Submit exhibition to backend
+                const exhibitionResult = await submitExhibition({
+                    title: currentExhibitionData.title,
+                    description: currentExhibitionData.description,
+                    day: currentExhibitionData.day,
+                    dayTitle: currentExhibitionData.dayTitle,
+                    booth: currentExhibitionData.booth,
+                    price: currentExhibitionData.boothPrice,
+                    // budget: currentExhibitionData.budget,
+                    files: currentExhibitionData.files.length
                 });
+                
+                if (!exhibitionResult.success) {
+                    showNotification('Exhibition submission failed. Please contact support.', 'error');
+                    return;
+                }
+                
+                // Save resources to backend
+                await saveResources({
+                    exhibitionId: exhibitionResult.id,
+                    title: currentExhibitionData.title,
+                    description: currentExhibitionData.description,
+                    booth: currentExhibitionData.booth,
+                    files: currentExhibitionData.files
+                });
+                
+                // Add day to selected days for exhibition
+                selectedDays.push({
+                    id: currentExhibitionData.day,
+                    title: currentExhibitionData.dayTitle,
+                    type: 'exhibit',
+                    exhibitionDetails: {
+                        title: currentExhibitionData.title,
+                        description: currentExhibitionData.description,
+                        booth: currentExhibitionData.booth,
+                        price: currentExhibitionData.boothPrice,
+                        // budget: currentExhibitionData.budget,
+                        files: currentExhibitionData.files,
+                        transactionId: globalBooths.boothDetails[currentExhibitionData.booth]?.transactionId,
+                        exhibitionId: exhibitionResult.id
+                    }
+                });
+                
+                // Update UI
+                showNotification(`Exhibition setup complete! Booth ${currentExhibitionData.booth} reserved and payment confirmed.`);
+                localStorage.removeItem('selectedBooth');
+                
+                // Close modal
+                modal.style.display = 'none';
+                
+                // Reset form
+                document.getElementById('exhibition-title').value = '';
+                document.getElementById('exhibition-description').value = '';
+                // document.getElementById('exhibition-budget').value = '';
+                document.getElementById('file-list').innerHTML = '';
+                document.getElementById('exhibition-files').value = '';
+                
+                updateSelectedEventsDisplay();
+                updateUpcomingEventsDisplay();
+                updateStats();
+                loadPaymentReceipts();
+                loadResources();
             }
             
             // Update selected events display
@@ -2613,7 +3593,7 @@
                 const selectedEventsContainer = document.getElementById('selected-events');
                 
                 if (selectedDays.length === 0) {
-                    selectedEventsContainer.innerHTML = '<p>No days selected yet. Click "Attend This Day" or "Exhibit" to add days to your schedule.</p>';
+                    selectedEventsContainer.innerHTML = '<p>No days selected yet. Click "Attend This Day" to add days to your schedule.</p>';
                     return;
                 }
                 
@@ -2744,8 +3724,22 @@
                 }, 1000);
             }
             
-            function showNotification(message) {
+            function showNotification(message, type = 'success') {
                 const notification = document.getElementById('notification');
+                const icon = notification.querySelector('i');
+                
+                // Update icon based on type
+                if (type === 'error') {
+                    icon.className = 'fas fa-exclamation-circle';
+                    notification.style.backgroundColor = '#e53935';
+                } else if (type === 'info') {
+                    icon.className = 'fas fa-info-circle';
+                    notification.style.backgroundColor = '#2196f3';
+                } else {
+                    icon.className = 'fas fa-check-circle';
+                    notification.style.backgroundColor = 'var(--primary)';
+                }
+                
                 notification.querySelector('.notification-text').textContent = message;
                 notification.classList.add('show');
                 
@@ -2760,44 +3754,6 @@
             
             // Set up event delegation for dynamically created agenda buttons
             document.addEventListener('click', function(e) {
-                // Handle exhibit day button clicks
-                if (e.target.classList.contains('exhibit-day-btn') || e.target.closest('.exhibit-day-btn')) {
-                    const exhibitBtn = e.target.classList.contains('exhibit-day-btn') ? e.target : e.target.closest('.exhibit-day-btn');
-                    const day = exhibitBtn.getAttribute('data-day');
-                    const dayHeader = exhibitBtn.closest('.day-header');
-                    const dayTitle = dayHeader.querySelector('h3').textContent;
-                    
-                    // Check if day is already selected for attendance
-                    const dayIndex = selectedDays.findIndex(d => d.id === day);
-                    
-                    if (dayIndex === -1) {
-                        // Open exhibit modal
-                        currentExhibitDay = {
-                            id: day,
-                            title: dayTitle
-                        };
-                        openExhibitModal(day);
-                    } else if (selectedDays[dayIndex].type === 'exhibit') {
-                        // Remove day from selected days
-                        selectedDays.splice(dayIndex, 1);
-                        
-                        exhibitBtn.textContent = 'Exhibit';
-                        exhibitBtn.classList.remove('exhibiting-day');
-                        
-                        // Enable attend button for this day
-                        const attendBtn = dayHeader.querySelector('.attend-day-btn');
-                        if (attendBtn) attendBtn.disabled = false;
-                        
-                        showNotification(`Exhibition removed from ${dayTitle}!`);
-                        
-                        updateSelectedEventsDisplay();
-                        updateUpcomingEventsDisplay();
-                        updateStats();
-                        loadPaymentReceipts();
-                        loadResources();
-                    }
-                }
-                
                 // Handle attend day button clicks
                 if (e.target.classList.contains('attend-day-btn') || e.target.closest('.attend-day-btn')) {
                     const attendBtn = e.target.classList.contains('attend-day-btn') ? e.target : e.target.closest('.attend-day-btn');
@@ -2805,7 +3761,7 @@
                     const dayHeader = attendBtn.closest('.day-header');
                     const dayTitle = dayHeader.querySelector('h3').textContent;
                     
-                    // Check if day is already selected for exhibit
+                    // Check if day is already selected
                     const dayIndex = selectedDays.findIndex(d => d.id === day);
                     
                     if (dayIndex === -1) {
@@ -2819,10 +3775,6 @@
                         attendBtn.textContent = 'Attending';
                         attendBtn.classList.add('attending-day');
                         
-                        // Disable exhibit button for this day
-                        const exhibitBtn = dayHeader.querySelector('.exhibit-day-btn');
-                        if (exhibitBtn) exhibitBtn.disabled = true;
-                        
                         showNotification(`${dayTitle} added to your schedule!`);
                     } else if (selectedDays[dayIndex].type === 'attend') {
                         // Remove day from selected days
@@ -2830,10 +3782,6 @@
                         
                         attendBtn.textContent = 'Attend This Day';
                         attendBtn.classList.remove('attending-day');
-                        
-                        // Enable exhibit button for this day
-                        const exhibitBtn = dayHeader.querySelector('.exhibit-day-btn');
-                        if (exhibitBtn) exhibitBtn.disabled = false;
                         
                         showNotification(`${dayTitle} removed from your schedule!`);
                     }
@@ -3047,6 +3995,47 @@
             // In a real application, this would trigger a download from the backend
         }
         
+        // Benefits Forms functionality
+        window.openBenefitForm = function(benefitType) {
+            const form = document.getElementById(`${benefitType}-form`);
+            if (form) {
+                form.style.display = 'block';
+            }
+        };
+
+        window.closeBenefitForm = function(benefitType) {
+            const form = document.getElementById(`${benefitType}-form`);
+            if (form) {
+                form.style.display = 'none';
+                const formElement = form.querySelector('form');
+                if (formElement) formElement.reset();
+            }
+        };
+
+        // Benefit form submissions
+        document.addEventListener('submit', function(e) {
+            if (e.target.closest('.benefit-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const benefitType = form.closest('.benefit-form').id.replace('-form', '');
+                closeBenefitForm(benefitType);
+                showNotification('Benefit submission sent to Super Admin for processing.');
+            }
+        });
+
+        // Copy email template
+        window.copyEmailTemplate = function() {
+            const template = document.querySelector('.email-template').innerText;
+            navigator.clipboard.writeText(template).then(() => {
+                showNotification('Email template copied to clipboard!');
+            });
+        };
+
+        // View registered staff
+        window.viewRegisteredStaff = function() {
+            showNotification('Showing registered staff members...');
+        };
+        
         // Logout functionality
         document.addEventListener('DOMContentLoaded', () => {
             const logoutLink = document.querySelector('.sidebar-menu a[href="Index.html"]');
@@ -3066,6 +4055,30 @@
                 });
             }
         });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .booth-option.sold-out {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .payment-processing {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        `;
+        document.head.appendChild(style);
 
     </script>
 </body>
