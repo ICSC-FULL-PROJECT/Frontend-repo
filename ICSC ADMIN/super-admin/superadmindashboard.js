@@ -427,19 +427,20 @@ async function handleAddAttendee(e) {
         firstName: document.getElementById('attendeeFirstName').value.trim(),
         lastName: document.getElementById('attendeeLastName').value.trim(),
         email: document.getElementById('attendeeEmail').value.trim(),
-        password: document.getElementById('attendeePassword').value.trim(),
+        // password: document.getElementById('attendeePassword').value.trim(),
+        country: document.getElementById('attendeeCountry').value.trim(),
         jobTitle: document.getElementById('attendeeJobTitle').value.trim(),
         organization: document.getElementById('attendeeOrganization').value.trim(),
         phone: document.getElementById('attendeePhone').value.trim(),
-        position: document.getElementById('attendeePosition').value.trim(),
-        gradeLevel: document.getElementById('attendeeGradeLevel').value,
+        // position: document.getElementById('attendeePosition').value.trim(),
+        // gradeLevel: document.getElementById('attendeeGradeLevel').value,
         ministry: document.getElementById('attendeeMinistry')?.value || '',
-        department: document.getElementById('attendeeDepartment')?.value.trim() || '',
-        agency: document.getElementById('attendeeAgency')?.value.trim() || '',
-        staffId: document.getElementById('attendeeStaffId')?.value.trim() || '',
-        office: document.getElementById('attendeeOffice')?.value.trim() || '',
-        status: document.getElementById('attendeeStatus')?.value || 'Pending',
-        remarks: document.getElementById('attendeeRemarks')?.value.trim() || ''
+        // department: document.getElementById('attendeeDepartment')?.value.trim() || '',
+        // agency: document.getElementById('attendeeAgency')?.value.trim() || '',
+        // staffId: document.getElementById('attendeeStaffId')?.value.trim() || '',
+        // office: document.getElementById('attendeeOffice')?.value.trim() || '',
+        // status: document.getElementById('attendeeStatus')?.value || 'Pending',
+        // remarks: document.getElementById('attendeeRemarks')?.value.trim() || ''
     };
 
     const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
@@ -455,18 +456,13 @@ async function handleAddAttendee(e) {
     const payload = {
         fullname: fullName,
         email: values.email,
-        password: values.password,
+        
         phone_number: values.phone,
-        position: values.position,
+        
         jobTitle: values.jobTitle,
-        grade: values.gradeLevel,
+        
         organization: values.organization,
-        department: values.department,
-        department_agency: values.agency,
-        staff_id: values.staffId,
-        office_location: values.office,
-        status: values.status,
-        remark: values.remarks
+        ministry:values.ministry
     };
 
     const submitBtn = addAttendeeForm.querySelector('button[type="submit"]');
@@ -552,12 +548,9 @@ async function handleEditAttendee(e) {
         firstName: document.getElementById('editAttendeeFirstName').value.trim(),
         lastName: document.getElementById('editAttendeeLastName').value.trim(),
         email: document.getElementById('editAttendeeEmail').value.trim(),
-        password: document.getElementById('editAttendeePassword').value.trim(),
         jobTitle: document.getElementById('editAttendeeJobTitle').value.trim(),
         organization: document.getElementById('editAttendeeOrganization').value.trim(),
-        phone: document.getElementById('editAttendeePhone').value.trim(),
-        position: document.getElementById('editAttendeePosition').value.trim(),
-        gradeLevel: document.getElementById('editAttendeeGradeLevel').value
+        phone: document.getElementById('editAttendeePhone').value.trim()
     };
 
     const fullName = `${updatedData.prefix} ${updatedData.firstName} ${updatedData.lastName}`.trim();
@@ -565,11 +558,9 @@ async function handleEditAttendee(e) {
     const payload = {
         fullname: fullName,
         email: updatedData.email,
-        password: updatedData.password,
+        
         phone_number: updatedData.phone,
-        position: updatedData.position,
         job_title: updatedData.jobTitle,
-        grade: updatedData.gradeLevel,
         organization: updatedData.organization
     };
 
@@ -599,8 +590,6 @@ async function handleEditAttendee(e) {
                     name: fullName,
                     email: updatedData.email,
                     phone: updatedData.phone,
-                    position: updatedData.position,
-                    gradeLevel: updatedData.gradeLevel,
                     ministry: updatedData.organization
                 };
                 
@@ -938,13 +927,8 @@ async function fetchAttendees() {
                 name: item.full_name || item.name || item.fullName || item.fullname || '',
                 email: item.email || '',
                 phone: item.phone || item.phone_number || '',
-                position: item.position || '',
-                gradeLevel: item.grade || item.gradeLevel || '',
                 ministry: item.ministry || item.organization_name || item.organization || '',
                 department: item.department || '',
-                agency: item.agency || item.department_agency || '',
-                staffId: item.staff_id || item.staffId || '',
-                office: item.office_location || item.office || '',
                 status: (item.status || 'Pending'),
                 remarks: item.remark || '',
                 dateAdded: item.created_at || item.dateAdded || item.date || (new Date().toISOString().split('T')[0])
@@ -1016,14 +1000,9 @@ function openEditModal(attendeeId) {
         document.getElementById('editAttendeePrefix').value = prefix;
         document.getElementById('editAttendeeFirstName').value = firstName;
         document.getElementById('editAttendeeLastName').value = lastName;
-        document.getElementById('editAttendeeEmail').value = attendee.email;
-        document.getElementById('editAttendeePassword').value = '';
-        document.getElementById('editAttendeeJobTitle').value = attendee.position;
+        document.getElementById('editAttendeeEmail').value = attendee.email;;
         document.getElementById('editAttendeeOrganization').value = attendee.ministry;
         document.getElementById('editAttendeePhone').value = attendee.phone;
-        document.getElementById('editAttendeePosition').value = attendee.position;
-        document.getElementById('editAttendeeGradeLevel').value = attendee.gradeLevel;
-        
         editAttendeeModal.style.display = 'flex';
     }
 }
@@ -1046,11 +1025,6 @@ function openViewModal(attendeeId) {
         document.getElementById('viewName').textContent = attendee.name;
         document.getElementById('viewEmail').textContent = attendee.email;
         document.getElementById('viewPhone').textContent = attendee.phone;
-        document.getElementById('viewWorkPhone').textContent = attendee.phone;
-        document.getElementById('viewNIN').textContent = attendee.nin;
-        document.getElementById('viewPosition').textContent = attendee.position;
-        document.getElementById('viewJobTitle').textContent = attendee.position;
-        document.getElementById('viewGradeLevel').textContent = attendee.gradeLevel;
         document.getElementById('viewOrganization').textContent = attendee.ministry;
         document.getElementById('viewStatus').textContent = attendee.status;
         
@@ -1316,7 +1290,7 @@ function rejectAttendee(attendeeId) {
         updateAttendeesTable();
         updatePendingTable();
         updateStats();
-        alert('Attendee has been rejected!');
+        alert('Participant has been rejected!');
     }
 }
 
@@ -1330,8 +1304,7 @@ function filterAttendees() {
     const filteredAttendees = attendees.filter(attendee => {
         const matchesSearch = 
             attendee.name.toLowerCase().includes(searchTerm) ||
-            attendee.email.toLowerCase().includes(searchTerm) ||
-            attendee.position.toLowerCase().includes(searchTerm);
+            attendee.email.toLowerCase().includes(searchTerm);
         
         const matchesMinistry = ministryFilter ? attendee.ministry === ministryFilter : true;
         const matchesStatus = statusFilter ? attendee.status === statusFilter : true;
@@ -1430,10 +1403,10 @@ function renderAttendeesTable(attendeesList) {
             <tr data-id="${attendee.id}">
                 <td>${attendee.name}</td>
                 <td>${attendee.email}</td>
-                <td>${attendee.position}</td>
+                <td>${attendee.jobTitle}</td>
                 <td>${attendee.ministry}</td>
                 <td>${attendee.department}</td>
-                <td>${attendee.agency}</td>
+                <td>${attendee.country}</td>
                 <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
                 <td>
                     <div class="action-buttons">
@@ -1512,9 +1485,9 @@ document.addEventListener('DOMContentLoaded', function() {
             dateSubmitted: '2024-01-15 14:30',
             status: 'pending',
             records: [
-                { id: 1, name: 'John Doe', email: 'john@finance.gov.ng', position: 'Assistant Director', department: 'Accounts', ministry: 'Ministry of Finance', grade: 'Assistant Director', status: 'valid' },
-                { id: 2, name: 'Jane Smith', email: 'jane@finance.gov.ng', position: 'Senior Officer', department: 'Budget', ministry: 'Ministry of Finance', grade: 'Senior Officer', status: 'valid' },
-                { id: 3, name: 'Error Record', email: 'invalid-email', position: '', department: '', ministry: 'Ministry of Finance', grade: '', status: 'error', error: 'Invalid email format' }
+                { id: 1, name: 'John Doe', email: 'john@finance.gov.ng',ministry: 'Ministry of Finance',status: 'valid' },
+                { id: 2, name: 'Jane Smith', email: 'jane@finance.gov.ng',ministry: 'Ministry of Finance',status: 'valid' },
+                { id: 3, name: 'Error Record', email: 'invalid-email',ministry: 'Ministry of Finance',status: 'error', error: 'Invalid email format' }
             ],
             errors: [
                 { row: 3, name: 'Error Record', email: 'invalid-email', errorType: 'Validation', errorMessage: 'Invalid email format' },
@@ -1535,8 +1508,8 @@ document.addEventListener('DOMContentLoaded', function() {
             approvedBy: 'Super Admin',
             approvedDate: '2024-01-16 10:15',
             records: [
-                { id: 1, name: 'Alice Johnson', email: 'alice@education.gov.ng', position: 'Director', department: 'Curriculum', ministry: 'Ministry of Education', grade: 'Director', approvalDate: '2024-01-16' },
-                { id: 2, name: 'Bob Williams', email: 'bob@education.gov.ng', position: 'Deputy Director', department: 'Examinations', ministry: 'Ministry of Education', grade: 'Deputy Director', approvalDate: '2024-01-16' }
+                { id: 1, name: 'Alice Johnson', email: 'alice@education.gov.ng',ministry: 'Ministry of Education',approvalDate: '2024-01-16' },
+                { id: 2, name: 'Bob Williams', email: 'bob@education.gov.ng',ministry: 'Ministry of Education',approvalDate: '2024-01-16' }
             ]
         }
     ];
@@ -1719,7 +1692,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${record.position}</td>
                 <td>${record.department}</td>
                 <td>${record.ministry}</td>
-                <td>${record.grade}</td>
+                
                 <td><span class="status-badge status-approved">Valid</span></td>
             `;
             tbody.appendChild(row);
@@ -1844,7 +1817,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${record.id}</td>
                 <td>${record.name}</td>
                 <td>${record.email}</td>
-                <td>${record.position}</td>
                 <td>${record.department}</td>
                 <td>${record.ministry}</td>
                 <td>${record.grade}</td>
@@ -1920,10 +1892,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const exportData = upload.records.map(record => ({
             'Full Name': record.name,
             'Email': record.email,
-            'Position': record.position,
             'Department': record.department,
             'Ministry': record.ministry,
-            'Grade Level': record.grade,
+            'Country' : record.country,
             'Approval Date': record.approvalDate || '2024-01-16'
         }));
         

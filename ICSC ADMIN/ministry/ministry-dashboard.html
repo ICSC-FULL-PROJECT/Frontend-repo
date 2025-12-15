@@ -23,8 +23,8 @@
             </div>
             <ul class="sidebar-menu">
                 <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> My Attendees</a></li>
-                <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Attendee</a></li>
+                <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> My Participant</a></li>
+                <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Participant</a></li>
                 <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
                 <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
                 <!-- change href to '#' so the page doesn't navigate before JS attaches -->
@@ -71,7 +71,7 @@
                 <!-- Stats Overview -->
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>Attendee Overview</h2>
+                        <h2>Participant Overview</h2>
                     </div>
                     <div class="stats-container">
                         <div class="stat-card">
@@ -89,7 +89,7 @@
                             </div>
                             <div class="stat-info">
                                 <h3 id="ministryApprovedCount">42</h3>
-                                <p>Approved Attendees</p>
+                                <p>Approved Participant</p>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -98,7 +98,7 @@
                             </div>
                             <div class="stat-info">
                                 <h3 id="ministryTotalCount">45</h3>
-                                <p>Total Attendees</p>
+                                <p>Total Participant</p>
                             </div>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                             <thead>
                                 <tr>
                                     <th>Action</th>
-                                    <th>Attendee</th>
+                                    <th>Participant</th>
                                     <th>Position</th>
                                     <th>Date & Time</th>
                                     <th>Status</th>
@@ -155,10 +155,10 @@
             <div id="attendees" class="tab-content">
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>My Attendees</h2>
+                        <h2>My Participant</h2>
                         <div class="section-actions">
                             <button class="btn btn-secondary" id="exportMinistryAttendeesBtn">Export</button>
-                            <a href="#" class="btn" data-tab="add-attendee">Add New Attendee</a>
+                            <a href="#" class="btn" data-tab="add-attendee">Add New Participant</a>
                         </div>
                     </div>
 
@@ -257,9 +257,9 @@
 <div id="add-attendee" class="tab-content">
     <div class="dashboard-section">
         <div class="section-header">
-            <h2>Add New Attendees</h2>
+            <h2>Add New Participant</h2>
             <div class="section-actions">
-                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Participant</a>
             </div>
         </div>
         
@@ -269,7 +269,7 @@
                 <i class="fas fa-file-excel"></i> Bulk Upload via Excel
             </h3>
             <p style="margin-bottom: 15px; color: var(--text-medium);">
-                Upload an Excel file with attendee data. All uploaded attendees will require Super Admin approval.
+                Upload an Excel file with participant data. All uploaded participants will require Super Admin approval.
             </p>
             
             <div class="form-row" style="align-items: center;">
@@ -346,7 +346,7 @@
         <!-- Manual Entry Section -->
         <div class="manual-entry-section">
             <h3 style="margin-bottom: 20px; color: var(--primary-color);">
-                <i class="fas fa-user-plus"></i> Manual Entry (Single Attendee)
+                <i class="fas fa-user-plus"></i> Manual Entry (Single Participant)
             </h3>
             
             <form id="addMinistryAttendeeForm">
@@ -365,7 +365,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="ministryAttendeeFirstName">First Name *</label>
+                        <label for="ministryAttendeeFirstName">First Name </label>
                         <input type="text" id="ministryAttendeeFirstName" class="form-control" placeholder="Enter first name" required>
                     </div>
                 </div>
@@ -373,19 +373,19 @@
                 <!-- Row 2: Last Name and Email -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="ministryAttendeeLastName">Last Name *</label>
+                        <label for="ministryAttendeeLastName">Last Name </label>
                         <input type="text" id="ministryAttendeeLastName" class="form-control" placeholder="Enter last name" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="ministryAttendeeEmail">Email Address (Login) *</label>
+                        <label for="ministryAttendeeEmail">Email Address (Login) </label>
                         <input type="email" id="ministryAttendeeEmail" class="form-control" placeholder="Enter email address" required>
                     </div>
                 </div>
 
                 <!-- Row 3: Password and Job Title -->
                 <div class="form-row">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="ministryAttendeePassword">Password *</label>
                         <div class="password-input-container">
                             <input type="password" id="ministryAttendeePassword" class="form-control" placeholder="Enter password (min 8 characters)" required>
@@ -394,10 +394,10 @@
                             </button>
                         </div>
                         <small class="form-text text-muted">Minimum 8 characters with letters and numbers</small>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
-                        <label for="ministryAttendeeJobTitle">Job Title *</label>
+                        <label for="ministryAttendeeJobTitle">Job Title </label>
                         <input type="text" id="ministryAttendeeJobTitle" class="form-control" placeholder="Enter job title" required>
                     </div>
                 </div>
@@ -422,10 +422,10 @@
                         <input type="tel" id="ministryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
                     </div>
                     
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="ministryAttendeeNIN">National ID Number (NIN) *</label>
                         <input type="text" id="ministryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Row 6: Position and Grade Level -->
@@ -452,7 +452,7 @@
                 <!-- Row 7: Ministry and Department -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="ministryAttendeeMinistry">Ministry *</label>
+                        <label for="ministryAttendeeMinistry">Ministry</label>
                         <input type="text" id="ministryAttendeeMinistry" class="form-control" readonly>
                     </div>
                     
@@ -491,14 +491,14 @@
                 <!-- Note about approval -->
                 <div class="alert alert-info" style="margin: 20px 0; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3;">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Note:</strong> All attendees added through Ministry Dashboard will be submitted for Super Admin approval. 
+                    <strong>Note:</strong> All participant added through Ministry Dashboard will be submitted for Super Admin approval. 
                     They will appear in the "Bulk Approvals" tab of the Super Admin Dashboard.
                 </div>
 
                 <!-- Submit Buttons -->
                 <div class="form-actions">
                     <button type="reset" class="btn btn-secondary">Reset Form</button>
-                    <button type="submit" class="btn">Add Attendee (Requires Approval)</button>
+                    <button type="submit" class="btn">Add Participant (Requires Approval)</button>
                 </div>
             </form>
         </div>
@@ -544,13 +544,13 @@
             <div class="modal-body">
                 <div class="success-message">
                     <i class="fas fa-check-circle"></i>
-                    <p id="successMessage">Attendee has been successfully added!</p>
-                    <p style="font-size: 0.9rem; color: var(--text-medium);">The attendee is now pending verification by the Super Admin.</p>
+                    <p id="successMessage">Participant has been successfully added!</p>
+                    <p style="font-size: 0.9rem; color: var(--text-medium);">The Participant is now pending verification by the Super Admin.</p>
                 </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn" id="addAnotherBtn">Add Another</button>
-                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Attendees</a>
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View My Participant</a>
             </div>
         </div>
     </div>
@@ -559,7 +559,7 @@
 <div id="editMinistryAttendeeModal" class="modal">
     <div class="modal-content modal-lg">
         <div class="modal-header">
-            <h2>Edit Attendee</h2>
+            <h2>Edit Participant</h2>
             <button class="close-modal">&times;</button>
         </div>
         <div class="modal-body">
@@ -636,10 +636,10 @@
                         <input type="tel" id="editMinistryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
                     </div>
                     
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="editMinistryAttendeeNIN">National ID Number (NIN) *</label>
                         <input type="text" id="editMinistryAttendeeNIN" class="form-control" placeholder="Enter NIN" required>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Row 6: Position and Grade Level -->
@@ -716,7 +716,7 @@
 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancelMinistryEditBtn">Cancel</button>
-                    <button type="submit" class="btn">Update Attendee</button>
+                    <button type="submit" class="btn">Update Participant</button>
                 </div>
             </form>
         </div>
@@ -731,7 +731,7 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this attendee? This action cannot be undone.</p>
+                <p>Are you sure you want to delete this participant? This action cannot be undone.</p>
                 <p><strong id="deleteMinistryAttendeeName"></strong></p>
             </div>
             <div class="form-actions">

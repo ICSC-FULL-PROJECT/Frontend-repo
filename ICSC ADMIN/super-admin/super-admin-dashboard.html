@@ -29,8 +29,8 @@
             <ul class="sidebar-menu">
                 <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="#" data-tab="verification"><i class="fas fa-user-check"></i> Verification</a></li>
-                <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Attendee</a></li>
-                <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> All Attendees</a></li>
+                <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Participant</a></li>
+                <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> All Participant</a></li>
                 <li><a href="#" data-tab="ministries"><i class="fas fa-building"></i> Ministries</a></li>
                 <li><a href="#" data-tab="booths"><i class="fas fa-th-large"></i> Booths</a></li>
                 <li><a href="#" data-tab="speakers"><i class="fas fa-microphone"></i> Speakers</a></li>
@@ -113,7 +113,7 @@
                             </div>
                             <div class="stat-info">
                                 <h3 id="approvedCount"></h3>
-                                <p>Approved Attendees</p>
+                                <p>Approved Participants</p>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -122,7 +122,7 @@
                             </div>
                             <div class="stat-info">
                                 <h3 id="totalCount"></h3>
-                                <p>Total Attendees</p>
+                                <p>Total Participants</p>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -150,7 +150,7 @@
                             <thead>
                                 <tr>
                                     <th>Action</th>
-                                    <th>Attendee</th>
+                                    <th>Participant</th>
                                     <th>Ministry</th>
                                     <th>Date & Time</th>
                                     <th>Status</th>
@@ -207,7 +207,6 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Position</th>
                                     <th>Department</th>
                                     <th>Ministry</th>
                                     <th>Date Added</th>
@@ -259,7 +258,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Position</th>
+                                    
                                     <th>Department</th>
                                     <th>Ministry</th>
                                     <th>Status</th>
@@ -308,9 +307,9 @@
 <div id="add-attendee" class="tab-content">
     <div class="dashboard-section">
         <div class="section-header">
-            <h2>Add Attendees</h2>
+            <h2>Add Participants</h2>
             <div class="section-actions">
-                <a href="#" class="btn btn-secondary" data-tab="attendees">View All Attendees</a>
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View All Participants</a>
             </div>
         </div>
         
@@ -320,7 +319,7 @@
                 <i class="fas fa-file-excel"></i> Bulk Upload via Excel
             </h3>
             <p style="margin-bottom: 15px; color: var(--text-medium);">
-                Upload an Excel file with attendee data. Download the template first to ensure correct formatting.
+                Upload an Excel file with Participants data. Download the template first to ensure correct formatting.
             </p>
             
             <div class="form-row" style="align-items: center;">
@@ -398,7 +397,7 @@
         <!-- Manual Entry Section -->
         <div class="manual-entry-section">
             <h3 style="margin-bottom: 20px; color: var(--primary-color);">
-                <i class="fas fa-user-plus"></i> Manual Entry (Single Attendee)
+                <i class="fas fa-user-plus"></i> Manual Entry (Participant)
             </h3>
             
             <form id="addAttendeeForm">
@@ -433,21 +432,68 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="attendeePassword">Password</label>
-                        <input type="password" id="attendeePassword" class="form-control" placeholder="Enter password" >
-                    </div>
+        
+                    <div class="form-row">
+    <div class="form-group">
+        <label for="AttendeeCountry">Country</label>
+        <label for=""></label>
+        <select class="form-control" required>
+            <option>Select country</option>
+            <option>Nigeria</option>
+            <option>Afghanistan</option>
+            <option>Albania</option>
+            <option>Algeria</option>
+            <option>American Samoa</option>
+            <option>Andorra</option>
+            <option>Angola</option>
+            <option>Anguilla</option>
+            <option>Antarctica</option>
+            <option>Antigua and Barbuda</option>
+            <option>Argentina</option>
+            <option>Armenia</option>
+            <option>Aruba</option>
+            <option>Australia</option>
+            <option>Austria</option>
+            <option>Azerbaijan</option>
+            <option>Bahamas</option>
+            <option>Bahrain</option>
+            <option>Bangladesh</option>
+            <option>Barbados</option>
+            <option>Belarus</option>
+            <option>Belgium</option>
+            <option>Belize</option>
+            <option>Benin</option>
+            <option>Bermuda</option>
+            <option>Bhutan</option>
+            <option>Bolivia</option>
+            <option>Bonaire, Sint Eustatius and Saba</option>
+            <option>Bosnia and Herzegovina</option>
+            <option>Botswana</option>
+            <option>Bouvet Island</option>
+            <option>Brazil</option>
+            <option>British Indian Ocean Territory</option>
+            <option>Brunei Darussalam</option>
+            <option>Bulgaria</option>
+            <option>Burkina Faso</option>
+            <option>Burundi</option>
+            <option>Cabo Verde</option>
+            <option>Cambodia</option>
+            <option>Cameroon</option>
+            <option>Canada</option>
+            <option>Zimbabwe</option>
+        </select>
+    </div>
+</div>
 
                     <div class="form-group">
                         <label for="attendeeJobTitle">Job Title</label>
-                        <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title" required>
+                        <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="attendeeOrganization">Organization</label>
+                        <label for="attendeeOrganization">Organization/Department</label>
                         <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization" required>
                     </div>
                 </div>
@@ -458,7 +504,7 @@
                         <input type="tel" id="attendeePhone" class="form-control" placeholder="Enter phone number" required>
                     </div>
                 </div>
-                <div class="form-row">
+                <!-- <div class="form-row">
                     <div class="form-group">
                         <label for="attendeePosition">Position</label>
                         <input type="text" id="attendeePosition" class="form-control" placeholder="Enter position" required>
@@ -474,8 +520,8 @@
                             <option value="Senior Officer">Senior Officer</option>
                             <option value="Officer">Officer</option>
                         </select>
-                    </div>
-                </div>
+                    </div> -->
+                <!-- </div> --> 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeMinistry">Ministry</label>
@@ -514,12 +560,12 @@
                             <option value="Ministry of Youth Development">Ministry of Youth Development</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="attendeeDepartment">Department</label>
                         <input type="text" id="attendeeDepartment" class="form-control" placeholder="Enter department" required>
                     </div>
-                </div>
-                <div class="form-row">
+                </div> -->
+                <!-- <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeAgency">Department Agency</label>
                         <input type="text" id="attendeeAgency" class="form-control" placeholder="Enter department agency" required>
@@ -528,8 +574,8 @@
                         <label for="attendeeStaffId">Staff ID</label>
                         <input type="text" id="attendeeStaffId" class="form-control" placeholder="Enter staff ID">
                     </div>
-                </div>
-                <div class="form-row">
+                </div> -->
+                <!-- <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeOffice">Office Location</label>
                         <input type="text" id="attendeeOffice" class="form-control" placeholder="Enter office location">
@@ -542,16 +588,16 @@
                             <option value="Rejected">Rejected</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-row">
+                </div> -->
+                <!-- <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeRemarks">Remarks</label>
                         <textarea id="attendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-actions">
                     <button type="reset" class="btn btn-secondary">Reset Form</button>
-                    <button type="submit" class="btn">Add Attendee</button>
+                    <button type="submit" class="btn">Add Participant</button>
                 </div>
             </form>
         </div>
@@ -562,10 +608,10 @@
             <div id="attendees" class="tab-content">
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>All Attendees</h2>
+                        <h2>All Participant</h2>
                         <div class="section-actions">
                             <button class="btn btn-secondary" id="exportAttendeesBtn">Export</button>
-                            <a href="#" class="btn" data-tab="add-attendee">Add New Attendee</a>
+                            <a href="#" class="btn" data-tab="add-attendee">Add New Participants</a>
                         </div>
                     </div>
 
@@ -573,7 +619,7 @@
                     <div class="search-filter-container">
                         <div class="search-box">
                             <i class="fas fa-search"></i>
-                            <input type="text" id="searchAttendees" class="form-control" placeholder="Search by name, email, NIN, or position...">
+                            <input type="text" id="searchAttendees" class="form-control" placeholder="Search by name, email, or Ministry...">
                         </div>
                         <div class="filter-group">
                             <select id="filterMinistry" class="form-control filter-select">
@@ -611,7 +657,9 @@
     <option value="Ministry of Works">Ministry of Works</option>
     <option value="Ministry of Youth Development">Ministry of Youth Development</option>
 </select>
-                            <select id="filterStatus" class="form-control filter-select">
+
+
+<select id="filterStatus" class="form-control filter-select">
                                 <option value="">All Statuses</option>
                                 <option value="Approved">Approved</option>
                                 <option value="Pending">Pending</option>
@@ -625,13 +673,6 @@
     placeholder="Enter department..."
 >
 
-<datalist id="departments">
-    <option value="Budget & Planning">
-    <option value="Accounts">
-    <option value="Audit">
-    <option value="Treasury">
-    <option value="Other">
-</datalist>
 
                             <button class="btn btn-secondary" id="clearFiltersBtn">Clear Filters</button>
                         </div>
@@ -642,14 +683,10 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>NIN</th>
-                                    <th>Position</th>
+                                    <th>Email</th>    
                                     <th>Ministry</th>
                                     <th>Department</th>
-                                    <th>Agency</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="allAttendeesTable">
@@ -663,7 +700,7 @@
         <div id="viewAttendeeModal" class="modal">
             <div class="modal-content modal-lg">
                 <div class="modal-header">
-                    <h2>Attendee Details</h2>
+                    <h2>Participant Details</h2>
                     <button class="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -685,48 +722,12 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Position</label>
-                            <p id="viewPosition" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>Grade Level</label>
-                            <p id="viewGradeLevel" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
                             <label>Ministry</label>
                             <p id="viewMinistry" class="form-control" style="background: #f8f9fa;"></p>
                         </div>
                         <div class="form-group">
                             <label>Department</label>
                             <p id="viewDepartment" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Department Agency</label>
-                            <p id="viewAgency" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>Staff ID</label>
-                            <p id="viewStaffId" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Office Location</label>
-                            <p id="viewOffice" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <p id="viewStatus" class="form-control" style="background: #f8f9fa;"></p>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label>Remarks</label>
-                            <p id="viewRemarks" class="form-control" style="background: #f8f9fa; min-height: 80px;"></p>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -751,7 +752,7 @@
                                 <tr>
                                     <th>Ministry Name</th>
                                     <th>Code</th>
-                                    <th>Attendees Count</th>
+                                    <th>Participant Count</th>
                                     <th>Pending</th>
                                     <th>Approved</th>
                                     <th>Contact Person</th>
@@ -1459,7 +1460,7 @@
                         <h4 class="session-title">Registration & Welcome Coffee</h4>
                         <p class="session-track">Registration</p>
                         <p class="session-venue">Main Lobby</p>
-                        <p class="session-speakers">All Attendees</p>
+                        <p class="session-speakers">All Participant</p>
                     </div>
                     <div class="session-actions">
                         <button class="btn btn-info btn-sm view-agenda-btn">View</button>
@@ -1494,7 +1495,7 @@
                         <h4 class="session-title">Coffee Break & Networking</h4>
                         <p class="session-track">Networking</p>
                         <p class="session-venue">Networking Zone</p>
-                        <p class="session-speakers">All Attendees</p>
+                        <p class="session-speakers">All Participant</p>
                     </div>
                     <div class="session-actions">
                         <button class="btn btn-info btn-sm view-agenda-btn">View</button>
@@ -1636,7 +1637,7 @@
                     <option value="">All Categories</option>
                     <option value="speaker">Speaker Resources</option>
                     <option value="exhibitor">Exhibitor Resources</option>
-                    <option value="attendee">Attendee Resources</option>
+                    <option value="attendee">Participant Resources</option>
                     <option value="partner">Partner Resources</option>
                     <option value="admin">Admin Resources</option>
                 </select>
@@ -1838,9 +1839,8 @@
             <label class="filter-label">User Type</label>
             <select id="attendanceTypeFilter" class="filter-select">
                 <option value="all">All Types</option>
-                <option value="attendee">Attendees</option>
+                <option value="attendee">Participants</option>
                 <option value="speaker">Speakers</option>
-                <option value="exhibitor">Exhibitors</option>
                 <option value="partner">Partners</option>
             </select>
         </div>
@@ -1972,7 +1972,7 @@
                             <canvas id="registrationTrendChart" height="250"></canvas>
                         </div>
                         <div class="chart-box">
-                            <h4>Attendees by Ministry (Top 10)</h4>
+                            <h4>Participants by Ministry (Top 10)</h4>
                             <canvas id="ministryDistributionChart" height="250"></canvas>
                         </div>
                     </div>
@@ -2040,7 +2040,7 @@
 
             <!-- Attendee Reports -->
             <div id="attendeeReport" class="report-section">
-                <h3><i class="fas fa-user-chart"></i> Attendee Analytics Report</h3>
+                <h3><i class="fas fa-user-chart"></i> Participants Analytics Report</h3>
                 
                 <div class="report-filters">
                     <div class="form-row">
@@ -2109,7 +2109,7 @@
 
                 <div class="chart-container">
                     <div class="chart-box full-width">
-                        <h4>Attendee Distribution by Ministry & Grade</h4>
+                        <h4>Participants Distribution by Ministry & Grade</h4>
                         <canvas id="attendeeDistributionChart" height="300"></canvas>
                     </div>
                 </div>
@@ -2120,7 +2120,7 @@
                         <thead>
                             <tr>
                                 <th>Ministry</th>
-                                <th>Total Attendees</th>
+                                <th>Total Participant</th>
                                 <th>Approved</th>
                                 <th>Pending</th>
                                 <th>Rejected</th>
@@ -2347,7 +2347,7 @@
                         <div class="data-sources">
                             <h4>Data Sources</h4>
                             <select id="customDataSource" class="form-control" multiple>
-                                <option value="attendees">Attendees</option>
+                                <option value="attendees">Participants</option>
                                 <option value="speakers">Speakers</option>
                                 <option value="exhibitors">Exhibitors</option>
                                 <option value="partners">Partners</option>
@@ -2460,8 +2460,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Attendee_Demographics</td>
-                            <td>Attendee Analysis</td>
+                            <td>Participants_Demographics</td>
+                            <td>Participant Analysis</td>
                             <td>Super Admin</td>
                             <td>2024-03-30 11:15</td>
                             <td>1.8 MB</td>
@@ -2597,7 +2597,7 @@
                     <tr data-upload-id="BULK001" data-ministry="Ministry of Finance" data-records='[{"id":"1","name":"John Doe","email":"john@finance.gov.ng","position":"AD","department":"Accounts"}]'>
                         <td>BULK001</td>
                         <td>Ministry of Finance</td>
-                        <td>MOF_Attendees_2024.xlsx</td>
+                        <td>MOF_Participant_2024.xlsx</td>
                         <td>25</td>
                         <td>22</td>
                         <td>3</td>
@@ -2653,7 +2653,7 @@
                     </div>
                     <div class="summary-item">
                         <span class="summary-label">Filename:</span>
-                        <span class="summary-value" id="reviewFilename">MOF_Attendees_2024.xlsx</span>
+                        <span class="summary-value" id="reviewFilename">MOF_Participants_2024.xlsx</span>
                     </div>
                 </div>
                 <div class="summary-row">
@@ -2714,10 +2714,10 @@
                                 <th>#</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Position</th>
+                                
                                 <th>Department</th>
                                 <th>Ministry</th>
-                                <th>Grade Level</th>
+                                
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -2816,7 +2816,7 @@
 
             <!-- Approved Records -->
             <div class="approved-records">
-                <h3><i class="fas fa-check-circle"></i> Approved Attendees</h3>
+                <h3><i class="fas fa-check-circle"></i> Approved Participants</h3>
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
@@ -2824,10 +2824,10 @@
                                 <th>#</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Position</th>
+                                
                                 <th>Department</th>
                                 <th>Ministry</th>
-                                <th>Grade Level</th>
+                                
                                 <th>Approval Date</th>
                                 <th>Actions</th>
                             </tr>
@@ -2958,7 +2958,7 @@
                     </div>
                     <div class="stat-info">
                         <h3 id="currentAttendees">0</h3>
-                        <p>Current Attendees</p>
+                        <p>Current Participant</p>
                         <small>Out of <span id="maxAttendees">0</span> allowed</small>
                     </div>
                 </div>
@@ -3000,22 +3000,19 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="attendeeCap">Attendee Maximum</label>
+                            <label for="attendeeCap">Participants Maximum</label>
                             <input type="number" id="attendeeCap" class="form-control" min="0" placeholder="Enter maximum attendees">
                             <small>Set to 0 for unlimited</small>
                         </div>
                         <div class="form-group">
                             <label for="attendeeCapAction">When Cap is Reached</label>
                             <select id="attendeeCapAction" class="form-control">
-                                <option value="hide">Hide registration form</option>
-                                <option value="disable">Disable registration form</option>
                                 <option value="show_message">Show "Full" message</option>
-                                <option value="waitlist">Enable waitlist</option>
                             </select>
                         </div>
-                    </div>
+                   
 
-                    <div class="form-row">
+                    <!-- <div class="form-row">
                         <div class="form-group">
                             <label for="speakerCap">Speaker Maximum</label>
                             <input type="number" id="speakerCap" class="form-control" min="0" placeholder="Enter maximum speakers">
@@ -3029,9 +3026,9 @@
                                 <option value="show_message">Show "Closed" message</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-row">
+                    <!-- <div class="form-row">
                         <div class="form-group">
                             <label for="exhibitorCap">Exhibitor Maximum</label>
                             <input type="number" id="exhibitorCap" class="form-control" min="0" placeholder="Enter maximum exhibitors">
@@ -3045,8 +3042,8 @@
                                 <option value="show_message">Show "Booths Full" message</option>
                             </select>
                         </div>
-                    </div>
-
+                    </div> -->
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="partnerCap">Partner Maximum</label>
@@ -3063,8 +3060,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
+
                   <!-- Global Cap Settings -->
                     <div class="form-row">
                         <div class="form-group full-width">
@@ -3581,6 +3577,7 @@ ICSC 2026 Team</textarea>
         </div>
     </div>
 </div>
+</div>
 
     <!-- Success Modal -->
     <div id="successModal" class="modal">
@@ -3592,12 +3589,12 @@ ICSC 2026 Team</textarea>
             <div class="modal-body">
                 <div class="success-message">
                     <i class="fas fa-check-circle"></i>
-                    <p id="successMessage">Attendee has been successfully added!</p>
+                    <p id="successMessage">Participant has been successfully added!</p>
                 </div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn" id="addAnotherBtn">Add Another</button>
-                <a href="#" class="btn btn-secondary" data-tab="attendees">View All Attendees</a>
+                <a href="#" class="btn btn-secondary" data-tab="attendees">View All Participant</a>
             </div>
         </div>
     </div>
@@ -3606,48 +3603,88 @@ ICSC 2026 Team</textarea>
     <div id="editAttendeeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Edit Attendee</h2>
+                <h2>Edit Participant</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editAttendeeForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="editAttendeeName">Full Name *</label>
+                            <label for="editAttendeeName">Full Name </label>
                             <input type="text" id="editAttendeeName" class="form-control" placeholder="Enter full name" required>
                         </div>
                         <div class="form-group">
-                            <label for="editAttendeeEmail">Email Address *</label>
+                            <label for="editAttendeeEmail">Email Address </label>
                             <input type="email" id="editAttendeeEmail" class="form-control" placeholder="Enter email address" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="editAttendeePhone">Phone Number *</label>
+                            <label for="editAttendeePhone">Phone Number</label>
                             <input type="tel" id="editAttendeePhone" class="form-control" placeholder="Enter phone number" required>
                         </div>
                     </div>
                     <div class="form-row">
+
                         <div class="form-group">
-                            <label for="editAttendeePosition">Position *</label>
-                            <input type="text" id="editAttendeePosition" class="form-control" placeholder="Enter position" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editAttendeeGradeLevel">Grade Level *</label>
-                            <select id="editAttendeeGradeLevel" class="form-control" required>
-                                <option value="">Select grade level</option>
-                                <option value="Director">Director</option>
-                                <option value="Deputy Director">Deputy Director</option>
-                                <option value="Assistant Director">Assistant Director</option>
-                                <option value="Chief Officer">Chief Officer</option>
-                                <option value="Senior Officer">Senior Officer</option>
-                                <option value="Officer">Officer</option>
-                            </select>
-                        </div>
+    <label for="editAttendeeCountry">Country</label>
+    <select id="editAttendeeCountry" class="form-control">
+        <option value="">Select Country</option>
+        <option value="Nigeria">Nigeria</option>
+        <option value="Ghana">Ghana</option>
+        <option value="Kenya">Kenya</option>
+        <option value="South Africa">South Africa</option>
+                <select class="form-control" required>
+            <option>Select country</option>
+            <option>Nigeria</option>
+            <option>Afghanistan</option>
+            <option>Albania</option>
+            <option>Algeria</option>
+            <option>American Samoa</option>
+            <option>Andorra</option>
+            <option>Angola</option>
+            <option>Anguilla</option>
+            <option>Antarctica</option>
+            <option>Antigua and Barbuda</option>
+            <option>Argentina</option>
+            <option>Armenia</option>
+            <option>Aruba</option>
+            <option>Australia</option>
+            <option>Austria</option>
+            <option>Azerbaijan</option>
+            <option>Bahamas</option>
+            <option>Bahrain</option>
+            <option>Bangladesh</option>
+            <option>Barbados</option>
+            <option>Belarus</option>
+            <option>Belgium</option>
+            <option>Belize</option>
+            <option>Benin</option>
+            <option>Bermuda</option>
+            <option>Bhutan</option>
+            <option>Bolivia</option>
+            <option>Bonaire, Sint Eustatius and Saba</option>
+            <option>Bosnia and Herzegovina</option>
+            <option>Botswana</option>
+            <option>Bouvet Island</option>
+            <option>Brazil</option>
+            <option>British Indian Ocean Territory</option>
+            <option>Brunei Darussalam</option>
+            <option>Bulgaria</option>
+            <option>Burkina Faso</option>
+            <option>Burundi</option>
+            <option>Cabo Verde</option>
+            <option>Cambodia</option>
+            <option>Cameroon</option>
+            <option>Canada</option>
+            <option>Zimbabwe</option>
+    </select>
+</div>
+            
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="editAttendeeMinistry">Ministry *</label>
+                            <label for="editAttendeeMinistry">Ministry </label>
                             <select id="editAttendeeMinistry" class="form-control" required>
                                 <option value="">Select Ministry</option>
     <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
@@ -3682,46 +3719,22 @@ ICSC 2026 Team</textarea>
     <option value="Ministry of Works">Ministry of Works</option>
     <option value="Ministry of Youth Development">Ministry of Youth Development</option>
 </select>
-                            </select>
+                                            <div class="form-group">
+                        <label for="attendeeJobTitle">Job Title</label>
+                        <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title">
+                    </div>
+                </div>
+
                         </div>
                         <div class="form-group">
-                            <label for="editAttendeeDepartment">Department *</label>
+                            <label for="editAttendeeDepartment">Organization/Department</label>
                             <input type="text" id="editAttendeeDepartment" class="form-control" placeholder="Enter department" required>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editAttendeeAgency">Department Agency *</label>
-                            <input type="text" id="editAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editAttendeeStaffId">Staff ID</label>
-                            <input type="text" id="editAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editAttendeeOffice">Office Location</label>
-                            <input type="text" id="editAttendeeOffice" class="form-control" placeholder="Enter office location">
-                        </div>
-                        <div class="form-group">
-                            <label for="editAttendeeStatus">Status</label>
-                            <select id="editAttendeeStatus" class="form-control">
-                                <option value="Approved">Approved</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="editAttendeeRemarks">Remarks</label>
-                            <textarea id="editAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
-                        </div>
-                    </div>
+
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
-                        <button type="submit" class="btn">Update Attendee</button>
+                        <button type="submit" class="btn">Update Participant</button>
                     </div>
                 </form>
             </div>
@@ -3736,7 +3749,7 @@ ICSC 2026 Team</textarea>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this attendee? This action cannot be undone.</p>
+                <p>Are you sure you want to delete this Participant? This action cannot be undone.</p>
                 <p><strong id="deleteAttendeeName"></strong></p>
             </div>
             <div class="form-actions">
@@ -6492,18 +6505,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 'First Name': 'John',
                 'Last Name': 'Doe',
                 'Email': 'john.doe@ministry.gov.ng',
-                'Job Title': 'Assistant Director',
+                'Country':'Nigeria',
                 'Organization': 'Federal Ministry',
                 'Phone Number': '+2348012345678',
-                'Position': 'Assistant Director',
-                'Grade Level': 'Assistant Director',
                 'Ministry': 'Ministry of Finance and Coordinating Ministry of the Economy',
-                'Department': 'Accounts',
-                'Department Agency': 'Federal Ministry of Finance',
-                'Staff ID': 'FMF/AD/001',
-                'Office Location': 'Abuja Headquarters',
-                'Status': 'Approved',
-                'Remarks': 'Sample entry'
+
             }
         ];
 
@@ -6520,14 +6526,12 @@ document.addEventListener('DOMContentLoaded', function() {
             [''],
             ['1. Keep the column headers exactly as shown in the template'],
             ['2. Fill in all required fields (marked with * in manual form)'],
-            ['3. For Ministry field, use the exact ministry name from the dropdown list'],
-            ['4. For Grade Level, use one of: Director, Deputy Director, Assistant Director, Chief Officer, Senior Officer, Officer'],
-            ['5. For Status, use: Approved, Pending, or Rejected'],
+            ['3. For Ministry field, use the exact ministry name from the dropdown list'], 
             ['6. Save the file as .xlsx format before uploading'],
             [''],
             ['Required Fields:'],
-            ['Prefix, First Name, Last Name, Email, Password, Job Title, Organization,'],
-            ['Phone Number,Position, Grade Level, Ministry, Department, Department Agency']
+            ['Prefix, First Name, Last Name, Email,Organization,'],
+            ['Phone Number, Ministry,Email']
         ];
         
         const ws2 = XLSX.utils.aoa_to_sheet(instructionData);
@@ -6629,19 +6633,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         'First Name': 'firstName',
                         'Last Name': 'lastName',
                         'Email': 'email',
-                        'Password': 'password',
-                        'Job Title': 'jobTitle',
                         'Organization': 'organization',
-                        'Phone Number': 'phone',
-                        'Position': 'position',
-                        'Grade Level': 'gradeLevel',
-                        'Ministry': 'ministry',
-                        'Department': 'department',
-                        'Department Agency': 'agency',
-                        'Staff ID': 'staffId',
-                        'Office Location': 'office',
-                        'Status': 'status',
-                        'Remarks': 'remarks'
+                       
+                        
                     };
 
                     const fieldName = fieldMap[header];
@@ -6664,9 +6658,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 errors.push('Missing ministry');
             }
             
-            if (!attendee.department) {
-                errors.push('Missing department');
-            }
 
             // Set default values for missing optional fields
             if (!attendee.status) attendee.status = 'Approved';
@@ -6674,10 +6665,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!attendee.prefix) attendee.prefix = 'Mr';
 
             // Validate grade level
-            const validGradeLevels = ['Director', 'Deputy Director', 'Assistant Director', 'Chief Officer', 'Senior Officer', 'Officer'];
-            if (attendee.gradeLevel && !validGradeLevels.includes(attendee.gradeLevel)) {
-                errors.push('Invalid grade level');
-            }
+            // const validGradeLevels = ['Director', 'Deputy Director', 'Assistant Director', 'Chief Officer', 'Senior Officer', 'Officer'];
+            // if (attendee.gradeLevel && !validGradeLevels.includes(attendee.gradeLevel)) {
+            //     errors.push('Invalid grade level');
+            // }
 
             if (errors.length === 0) {
                 // Generate a unique ID for this attendee
@@ -6728,7 +6719,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${attendee.prefix} ${attendee.firstName} ${attendee.lastName}</td>
                 <td>${attendee.email}</td>
                 <td>${attendee.ministry}</td>
-                <td>${attendee.department}</td>
                 <td><span class="status-badge status-approved">Valid</span></td>
             `;
             
@@ -6872,7 +6862,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             // Show success message for manual entry too
-            showSuccessMessage('Attendee has been successfully added!');
+            showSuccessMessage('Participant has been successfully added!');
             
             // Reset form
             this.reset();

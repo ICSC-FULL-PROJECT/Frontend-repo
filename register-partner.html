@@ -53,68 +53,6 @@
             width: auto;
         }
         
-        .progress-container {
-            margin: 30px 0;
-            position: relative;
-            padding: 0 15px;
-        }
-        
-        .progress-indicator.dots {
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .progress-indicator.dots::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #ddd;
-            transform: translateY(-50%);
-            z-index: 1;
-            border-radius: 2px;
-        }
-
-        .progress-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            height: 2px;
-            background: #008751;
-            transform: translateY(-50%);
-            border-radius: 2px;
-            width: 0%;
-            z-index: 2;
-            transition: width 0.4s ease-in-out;
-        }
-
-        .progress-indicator.dots .dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: #ccc;
-            position: relative;
-            z-index: 3;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .progress-indicator.dots .dot.active {
-            background-color: #008751;
-            transform: scale(1.2);
-        }
-
-        .progress-indicator.dots .dot.completed {
-            background-color: #4caf50;
-        }
-        
         .form-section {
             background: white;
             border-radius: 8px;
@@ -434,6 +372,55 @@
             padding-right: 15px;
             max-width: 100%;
         }
+        
+        .checkbox-group {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .checkbox-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .checkbox-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input {
+            margin-right: 10px;
+            margin-top: 4px;
+        }
+        
+        .checkbox-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .checkbox-note {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .newsletter-option {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
     /* Notification styles for mock mode */
     .mock-notice {
         background-color: #fff3cd;
@@ -499,10 +486,6 @@
             z-index: 1;
         }
 
-        .progress-container {
-            z-index: 2;
-        }
-
         .form-section {
             position: relative;
             z-index: 1;
@@ -544,15 +527,6 @@
         }
 
         @media (max-width: 576px) {
-            .progress-indicator.dots {
-                max-width: 100%;
-            }
-            
-            .progress-indicator.dots .dot {
-                width: 14px;
-                height: 14px;
-            }
-            
             .package-card h4 {
                 font-size: 1.1rem;
             }
@@ -681,27 +655,16 @@
     <!-- Main Content -->
     <div class="content-section">
         <div class="container">
-            <!-- Progress Indicator (Dot Style) -->
-            <div class="progress-container">
-                <div class="progress-indicator dots" id="progress-indicator">
-                    <span class="dot active" id="dot-1" title="Account Information"></span>
-                    <span class="dot" id="dot-2" title="Profile Information"></span>
-                    <span class="dot" id="dot-3" title="Package Selection"></span>
-                    <span class="dot" id="dot-4" title="Payment"></span>
-                    <span class="dot" id="dot-5" title="Confirmation"></span>
-                    <div class="progress-line"></div>
-                </div>
-            </div>
-            
             <div class="text-center mb-4">
                 <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
             </div>
 
-            <!-- Step 1: Account Creation Section -->
-            <div id="account-section" class="form-section">
-                <h2 class="text-center mb-4">Create Your Account</h2>
+            <!-- Single Comprehensive Form Section -->
+            <div id="main-form-section" class="form-section">
+                <h2 class="text-center mb-4">Partner Registration</h2>
                 
-                <form id="account-form">
+                <form id="main-form">
+                    <!-- Email and Password Section -->
                     <div class="form-group">
                         <label class="has-star" for="email">Email Address</label>
                         <input type="email" id="email" name="email" class="form-control" required>
@@ -717,7 +680,6 @@
                             </button>
                         </div>
                         <div class="help-block-error" id="password-error"></div>
-                        <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
                     </div>
                     
                     <div class="form-group">
@@ -730,135 +692,175 @@
                         </div>
                         <div class="help-block-error" id="confirmPassword-error"></div>
                     </div>
+                    
+                    <!-- Company Information -->
+                    <div class="form-group">
+                        <label class="has-star" for="prefix">Prefix</label>
+                        <select id="prefix" name="prefix" class="form-control" required>
+                            <option value="">Please choose...</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Prof">Prof</option>
+                        </select>
+                        <div class="help-block-error" id="prefix-error"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="has-star" for="firstName">First name</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" required>
+                            <div class="help-block-error" id="firstName-error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="has-star" for="lastName">Last name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control" required>
+                            <div class="help-block-error" id="lastName-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="country">Country</label>
+                        <select id="country" name="country" class="form-control" required>
+                            <option value="">Please choose...</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="United States">United States</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Ghana">Ghana</option>
+                            <option value="South Africa">South Africa</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="help-block-error" id="country-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="jobTitle">Job title</label>
+                        <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
+                        <div class="help-block-error" id="jobTitle-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="organisation">Organisation/MDA/Company</label>
+                        <input type="text" id="organisation" name="organisation" class="form-control" required>
+                        <div class="help-block-error" id="organisation-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="workPhone">Work phone</label>
+                        <div class="phone-input-container">
+                            <input type="tel" id="workPhone" name="workPhone" class="form-control" placeholder="0802 123 4567" required>
+                        </div>
+                        <div class="help-block-error" id="workPhone-error"></div>
+                    </div>
+                    
+                    <!-- Data Sharing Agreement -->
+                    <div class="checkbox-group">
+                        <h5>I agree to my information being shared with third party partners and exhibitors of the International Civil Service Conference</h5>
+                        
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="radio" name="dataSharing" value="yes" required>
+                                <div class="checkbox-text">
+                                    <strong>Yes, I agree to the data I have submitted being shared with the third party knowledge partners and exhibitors of International Civil Service Conference</strong>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="radio" name="dataSharing" value="no" required>
+                                <div class="checkbox-text">
+                                    <strong>No, I do not agree to share my data with relevant third party organisations</strong>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-note">
+                            * Please note that in this instance 'data' refers to your name, job title, organisation, email address and contact number submitted as part of this registration form.
+                        </div>
+                        
+                        <div class="checkbox-note">
+                            * All third party knowledge partners and exhibitors of the inaugural International Civil Service Conference can be found <a href="#" target="_blank">here</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms and Conditions -->
+                    <div class="checkbox-group">
+                        <h5>Terms and conditions</h5>
+                        
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <div class="checkbox-text">
+                                    <strong>I have read and agree with the Terms and Conditions, and wish to register for International Civil Service Conference</strong>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-note">
+                            * Terms and conditions for International Civil Service Conference can be found <a href="#" target="_blank">here</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Newsletter Subscription -->
+                    <div class="newsletter-option">
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="newsletter" name="newsletter">
+                                <div class="checkbox-text">
+                                    <strong>Subscribe to our newsletter</strong><br>
+                                    <span class="checkbox-note">Yes please, sign me up!</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-note">
+                            *Tick this box if you would like to have the weekly Global Government Forum newsletters sent directly to your inbox. It's free and if you change your mind you can unsubscribe at any time.
+                        </div>
+                    </div>
                 </form>
                 
                 <div class="button-container">
                     <a href="register.html" class="btn btn-outline-standard">
                         <i class="fas fa-arrow-circle-left me-2"></i> Back to Registration Types
                     </a>
-                    <button type="button" class="btn btn-standard" id="continue-to-profile-btn">
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 2: Profile Information Section -->
-            <div id="profile-section" class="form-section" style="display: none;">
-                <h2 class="text-center mb-4">Partner Profile Information</h2>
-                
-                <form id="profile-form">
-                    <div class="form-group">
-                        <label class="has-star" for="companyPrefix">Prefix</label>
-                        <select id="companyPrefix" name="companyPrefix" class="form-control" required>
-                            <option value="">Select Prefix</option>
-                            <option value="company">Company</option>
-                            <option value="organization">Organization</option>
-                            <option value="institution">Institution</option>
-                            <option value="agency">Agency</option>
-                        </select>
-                        <div class="help-block-error" id="companyPrefix-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="companyName">Company/Organization Name</label>
-                        <input type="text" id="companyName" name="companyName" class="form-control" required>
-                        <div class="help-block-error" id="companyName-error"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="has-star" for="companyLogo">Company/Organization Logo</label>
-                        <input type="file" id="companyLogo" name="companyLogo" class="form-control" required>
-                        <div class="help-block-error" id="companyLogo-error"></div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="has-star" for="contactFirstName">Contact First Name</label>
-                            <input type="text" id="contactFirstName" name="contactFirstName" class="form-control" required>
-                            <div class="help-block-error" id="contactFirstName-error"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="has-star" for="contactLastName">Contact Last Name</label>
-                            <input type="text" id="contactLastName" name="contactLastName" class="form-control" required>
-                            <div class="help-block-error" id="contactLastName-error"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="contactEmail">Contact Email</label>
-                        <input type="email" id="contactEmail" name="contactEmail" class="form-control" required>
-                        <div class="help-block-error" id="contactEmail-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="contactPhone">Contact Phone</label>
-                        <div class="phone-input-container">
-                            <input type="tel" id="contactPhone" name="contactPhone" class="form-control" required>
-                        </div>
-                        <div class="help-block-error" id="contactPhone-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="website">Website</label>
-                        <input type="url" id="website" name="website" class="form-control" placeholder="https://">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="socialMedia">Social Media Handles</label>
-                        <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="e.g., @companyname">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerDescription">Company/Organization Description</label>
-                        <textarea id="partnerDescription" name="partnerDescription" class="form-control" rows="4" placeholder="Please describe your company/organization and its mission"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerInterest">Why are you interested in partnering with ICSC 2026?</label>
-                        <textarea id="partnerInterest" name="partnerInterest" class="form-control" rows="3" placeholder="Please explain your interest in partnering with the conference"></textarea>
-                    </div>
-                </form>
-                
-                <div class="button-container">
-                    <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back
-                    </button>
                     <button type="button" class="btn btn-standard" id="continue-to-package-btn">
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                        Continue to Package Selection <i class="fas fa-arrow-circle-right ms-2"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Step 3: Package Selection Section -->
+            <!-- Step 2: Package Selection Section -->
             <div id="package-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Select Your Partnership Package</h2>
                 
-        
-                <!-- ADD MOCK MODE NOTICE HERE -->
-    <div class="mock-notice" id="mock-notice" style="display: none;">
-        <i class="fas fa-code"></i>
-        <strong>Development Mode:</strong> Using mock data. Packages will sync with admin system when backend is ready.
-    </div>
-    
-    <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals</p>
-    
+                <div class="mock-notice" id="mock-notice" style="display: none;">
+                    <i class="fas fa-code"></i>
+                    <strong>Development Mode:</strong> Using mock data. Packages will sync with admin system when backend is ready.
+                </div>
+                
+                <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals</p>
+                
+                <div class="package-cards">
+                    <!-- Packages will be loaded dynamically from the admin system -->
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" class="btn btn-outline-standard" id="back-to-main-form-btn">
+                        <i class="fas fa-arrow-circle-left me-2"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
+                        Continue to Payment <i class="fas fa-arrow-circle-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
 
-    <div class="package-cards">
-        <!-- Packages will be loaded dynamically from the admin system -->
-    </div>
-    
-    <div class="button-container">
-        <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
-            <i class="fas fa-arrow-circle-left me-2"></i> Back
-        </button>
-        <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
-            Continue <i class="fas fa-arrow-circle-right ms-2"></i>
-        </button>
-    </div>
-</div>
-
-            <!-- Step 4: Payment Section -->
+            <!-- Step 3: Payment Section -->
             <div id="payment-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Payment Information</h2>
                 
@@ -875,43 +877,44 @@
                         </div>
                     </div>
                     
-<div class="payment-form" id="bank-transfer-form">
-    <h5>Bank Transfer Details</h5>
-    <!-- Add payment amount dynamically here -->
-    <div id="bank-transfer-amount"></div>
-    <p><strong>Bank Name:</strong> First Bank Nigeria</p>
-    <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
-    <p><strong>Account Number:</strong> 1234567890</p>
-    <p><strong>Sort Code:</strong> 123456</p>
-    <p>Please include your registration ID as the payment reference.</p>
-    
-    <!-- Payment Receipt Upload - Only for Bank Transfer -->
-    <div class="form-group mt-4">
-        <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
-        <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-        <div class="help-block-error" id="paymentReceipt-error"></div>
-        <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
-    </div>
-</div>
+                    <div class="payment-form" id="bank-transfer-form">
+                        <h5>Bank Transfer Details</h5>
+                        <!-- Add payment amount dynamically here -->
+                        <div id="bank-transfer-amount"></div>
+                        <p><strong>Bank Name:</strong> First Bank Nigeria</p>
+                        <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
+                        <p><strong>Account Number:</strong> 1234567890</p>
+                        <p><strong>Sort Code:</strong> 123456</p>
+                        <p>Please include your registration ID as the payment reference.</p>
+                        
+                        <!-- Payment Receipt Upload - Only for Bank Transfer -->
+                        <div class="form-group mt-4">
+                            <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
+                            <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                            <div class="help-block-error" id="paymentReceipt-error"></div>
+                            <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
+                        </div>
+                    </div>
                     
                     <div class="payment-form" id="flutterwave-form">
-    <h5>Flutterwave Payment</h5>
-    <div class="mock-notice" style="margin-bottom: 15px;">
-        <i class="fas fa-info-circle"></i>
-        In development mode, this shows a success message instead of redirecting to payment.
-    </div>
-    <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
-    <p>Accepted payment methods:</p>
-    <ul>
-        <li>Visa/Mastercard</li>
-        <li>Bank Transfer</li>
-        <li>USSD</li>
-        <li>Mobile Money</li>
-    </ul>
-    <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
-        <i class="fas fa-credit-card me-2"></i>Pay with Paystack
-    </button>
-</div>
+                        <h5>Flutterwave Payment</h5>
+                        <div class="mock-notice" style="margin-bottom: 15px;">
+                            <i class="fas fa-info-circle"></i>
+                            In development mode, this shows a success message instead of redirecting to payment.
+                        </div>
+                        <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
+                        <p>Accepted payment methods:</p>
+                        <ul>
+                            <li>Visa/Mastercard</li>
+                            <li>Bank Transfer</li>
+                            <li>USSD</li>
+                            <li>Mobile Money</li>
+                        </ul>
+                        <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
+                            <i class="fas fa-credit-card me-2"></i>Pay with Paystack
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="button-container">
                     <button type="button" class="btn btn-outline-standard" id="back-to-package-btn">
@@ -923,7 +926,7 @@
                 </div>
             </div>
 
-            <!-- Step 5: Confirmation Section -->
+            <!-- Step 4: Confirmation Section -->
             <div id="confirmation-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Registration Confirmation</h2>
                 
@@ -1043,9 +1046,6 @@
 
                 // Set up event listeners
                 setupEventListeners();
-
-                // Update progress indicator
-                updateProgressIndicator();
 
                 // Setup package selection (after dynamic rendering)
                 setupPackageSelection();
@@ -1216,7 +1216,7 @@
             autoRefreshInterval = setInterval(async () => {
                 try {
                     // Only refresh if we're on the package selection step
-                    if (currentStep === 3) {
+                    if (currentStep === 2) {
                         await silentPackageRefresh();
                     }
                 } catch (error) {
@@ -1374,7 +1374,7 @@
         }
         
         function initializePhoneInputs() {
-            const phoneInputIds = ['contactPhone'];
+            const phoneInputIds = ['workPhone'];
             
             phoneInputs = phoneInputs || [];
             
@@ -1419,35 +1419,19 @@
             }
             
             // Navigation buttons
-            const continueToProfileBtn = document.getElementById('continue-to-profile-btn');
-            if (continueToProfileBtn) {
-                continueToProfileBtn.addEventListener('click', function() {
-                    if (validateAccountForm()) {
+            const continueToPackageBtn = document.getElementById('continue-to-package-btn');
+            if (continueToPackageBtn) {
+                continueToPackageBtn.addEventListener('click', function() {
+                    if (validateMainForm()) {
                         showStep(2);
                     }
                 });
             }
             
-            const backToAccountBtn = document.getElementById('back-to-account-btn');
-            if (backToAccountBtn) {
-                backToAccountBtn.addEventListener('click', function() {
+            const backToMainFormBtn = document.getElementById('back-to-main-form-btn');
+            if (backToMainFormBtn) {
+                backToMainFormBtn.addEventListener('click', function() {
                     showStep(1);
-                });
-            }
-            
-            const continueToPackageBtn = document.getElementById('continue-to-package-btn');
-            if (continueToPackageBtn) {
-                continueToPackageBtn.addEventListener('click', function() {
-                    if (validateProfileForm()) {
-                        showStep(3);
-                    }
-                });
-            }
-            
-            const backToProfileBtn = document.getElementById('back-to-profile-btn');
-            if (backToProfileBtn) {
-                backToProfileBtn.addEventListener('click', function() {
-                    showStep(2);
                 });
             }
             
@@ -1469,14 +1453,14 @@
                         await registerEventPartnerOnPackageSelect();
 
                         // proceed to payment step on success
-                        showStep(4);
+                        showStep(3);
                     } catch (err) {
                         console.error('Failed to register event partner before payment:', err);
                         // MODIFICATION: Continue to payment even in mock mode
-                        showStep(4);
+                        showStep(3);
                     } finally {
                         this.disabled = false;
-                        this.innerHTML = 'Continue <i class="fas fa-arrow-circle-right ms-2"></i>';
+                        this.innerHTML = 'Continue to Payment <i class="fas fa-arrow-circle-right ms-2"></i>';
                     }
                 });
             }
@@ -1484,7 +1468,7 @@
             const backToPackageBtn = document.getElementById('back-to-package-btn');
             if (backToPackageBtn) {
                 backToPackageBtn.addEventListener('click', function() {
-                    showStep(3);
+                    showStep(2);
                 });
             }
             
@@ -1510,56 +1494,6 @@
             if (goToDashboardBtn) {
                 goToDashboardBtn.addEventListener('click', function() {
                     redirectToDashboard();
-                });
-            }
-
-            // Upload company logo immediately when selected
-            const companyLogoInput = document.getElementById('companyLogo');
-            if (companyLogoInput) {
-                companyLogoInput.addEventListener('change', async function (ev) {
-                    const file = this.files && this.files[0];
-                    if (!file) return;
-
-                    // show simple feedback
-                    const errElId = 'companyLogo-error';
-                    hideError(errElId);
-
-                    try {
-                        const fd = new FormData();
-                        fd.append('company_logo', file);
-
-                        // POST to /misc/upload-image
-                        const resp = await window.apiClient.post('/misc/upload-image', fd, {
-                            headers: { 'Content-Type': 'multipart/form-data' }
-                        });
-
-                        // extract image url from common response shapes
-                        const data = resp && (resp.data || resp);
-                        const imageUrl = (data && (data.image_url || data.url || data.data?.image_url || data.data?.url)) || null;
-                        if (!imageUrl) {
-                            // sometimes API returns the url directly as string
-                            if (typeof data === 'string') uploadedLogoUrl = data;
-                            else throw new Error('Could not determine uploaded image URL from response');
-                        } else {
-                            uploadedLogoUrl = imageUrl;
-                        }
-
-                        // simple success feedback: show filename in UI
-                        const hintEl = document.createElement('div');
-                        hintEl.className = 'hint-block';
-                        hintEl.id = 'companyLogo-uploaded-hint';
-                        hintEl.textContent = `Logo uploaded successfully`;
-                        // remove existing hint if present
-                        const existing = document.getElementById('companyLogo-uploaded-hint');
-                        if (existing) existing.remove();
-                        companyLogoInput.parentNode.appendChild(hintEl);
-
-                        console.log('Company logo uploaded:', uploadedLogoUrl);
-                    } catch (err) {
-                        console.error('Logo upload failed', err);
-                        showError('companyLogo-error', err?.message || 'Image upload failed');
-                        uploadedLogoUrl = '';
-                    }
                 });
             }
         }
@@ -1689,7 +1623,7 @@
             });
         }
         
-        function validateAccountForm() {
+        function validateMainForm() {
             let isValid = true;
             
             // Email validation
@@ -1719,20 +1653,15 @@
                 hideError('confirmPassword-error');
             }
             
-            return isValid;
-        }
-        
-        function validateProfileForm() {
-            let isValid = true;
-            
+            // Required fields validation
             const requiredFields = [
-                'companyPrefix', 'companyName', 'companyLogo', 'contactFirstName', 
-                'contactLastName', 'contactEmail', 'contactPhone'
+                'prefix', 'firstName', 'lastName', 'country', 
+                'jobTitle', 'organisation', 'workPhone'
             ];
             
             requiredFields.forEach(field => {
                 const element = document.getElementById(field);
-                if (!element || !element.value) {
+                if (!element || !element.value.trim()) {
                     showError(`${field}-error`, 'This field is required');
                     isValid = false;
                 } else {
@@ -1740,10 +1669,17 @@
                 }
             });
             
-            // Email validation for contact email
-            const contactEmail = document.getElementById('contactEmail').value;
-            if (contactEmail && !isValidEmail(contactEmail)) {
-                showError('contactEmail-error', 'Please enter a valid email address');
+            // Data sharing agreement validation
+            const dataSharing = document.querySelector('input[name="dataSharing"]:checked');
+            if (!dataSharing) {
+                showNotification('Please select an option for data sharing agreement', 'warning');
+                isValid = false;
+            }
+            
+            // Terms and conditions validation
+            const terms = document.getElementById('terms');
+            if (!terms || !terms.checked) {
+                showNotification('You must agree to the terms and conditions', 'warning');
                 isValid = false;
             }
             
@@ -1829,49 +1765,49 @@
             }
             
             try {
-        // MODIFICATION: Skip actual API calls for demo
-        console.log('Demo: Completing registration without API calls');
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Update confirmation with mock data
-        updateConfirmationSection();
-        
-        // Add mock confirmation ID if not set
-        const confirmationIdEl = document.getElementById('confirmation-id');
-        if (confirmationIdEl && !confirmationIdEl.textContent.includes('ICSC')) {
-            confirmationIdEl.textContent = 'ICSC2026-DEMO-' + Math.floor(Math.random() * 10000);
-        }
-        
-        // Show success
-        showNotification('Registration completed successfully! (Demo Mode)', 'success');
-        
-        // Move to confirmation step
-        showStep(5);
-        
-        // ====================================================
-        // ADD REDIRECTION LOGIC HERE (NEW CODE)
-        // ====================================================
-        
-        // Determine which dashboard to redirect to based on selected package
-        const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
-        let redirectUrl = 'partners-dash.html'; // Default
-        
-        if (selectedPkg) {
-            // Use the redirect_dashboard from package data
-            redirectUrl = selectedPkg.redirect_dashboard || 'partners-dash.html';
-        }
-        
-        // Auto-redirect after 3 seconds (adjust timing as needed)
-        setTimeout(() => {
-            window.location.href = redirectUrl;
-        }, 3000);
+                // MODIFICATION: Skip actual API calls for demo
+                console.log('Demo: Completing registration without API calls');
                 
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Update confirmation with mock data
+                updateConfirmationSection();
+                
+                // Add mock confirmation ID if not set
+                const confirmationIdEl = document.getElementById('confirmation-id');
+                if (confirmationIdEl && !confirmationIdEl.textContent.includes('ICSC')) {
+                    confirmationIdEl.textContent = 'ICSC2026-DEMO-' + Math.floor(Math.random() * 10000);
+                }
+                
+                // Show success
+                showNotification('Registration completed successfully! (Demo Mode)', 'success');
+                
+                // Move to confirmation step
+                showStep(4);
+                
+                // ====================================================
+                // ADD REDIRECTION LOGIC HERE (NEW CODE)
+                // ====================================================
+                
+                // Determine which dashboard to redirect to based on selected package
+                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                let redirectUrl = 'partners-dash.html'; // Default
+                
+                if (selectedPkg) {
+                    // Use the redirect_dashboard from package data
+                    redirectUrl = selectedPkg.redirect_dashboard || 'partners-dash.html';
+                }
+                
+                // Auto-redirect after 3 seconds (adjust timing as needed)
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 3000);
+                        
             } catch (err) {
                 console.error('Demo registration failed', err);
                 showNotification('Registration completed in demo mode', 'info');
-                showStep(5); // Still show confirmation
+                showStep(4); // Still show confirmation
             } finally {
                 if (completeBtn) {
                     completeBtn.classList.remove('btn-loading');
@@ -1882,10 +1818,9 @@
         
         function updateConfirmationSection() {
             const email = document.getElementById('email')?.value || '';
-            const contactEmail = document.getElementById('contactEmail')?.value || '';
-            const contactFirstName = document.getElementById('contactFirstName')?.value || '';
-            const contactLastName = document.getElementById('contactLastName')?.value || '';
-            const companyName = document.getElementById('companyName')?.value || '';
+            const firstName = document.getElementById('firstName')?.value || '';
+            const lastName = document.getElementById('lastName')?.value || '';
+            const organisation = document.getElementById('organisation')?.value || '';
             
             const confirmationEmail = document.getElementById('confirmation-email');
             const confirmationEmailText = document.getElementById('confirmation-email-text');
@@ -1894,9 +1829,9 @@
             const confirmationPackage = document.getElementById('confirmation-package');
             const confirmationPayment = document.getElementById('confirmation-payment');
             
-            if (confirmationEmail) confirmationEmail.textContent = contactEmail || email;
-            if (confirmationEmailText) confirmationEmailText.textContent = contactEmail || email;
-            if (confirmationName) confirmationName.textContent = `${contactFirstName} ${contactLastName}`.trim() || companyName;
+            if (confirmationEmail) confirmationEmail.textContent = email;
+            if (confirmationEmailText) confirmationEmailText.textContent = email;
+            if (confirmationName) confirmationName.textContent = `${firstName} ${lastName}`.trim() || organisation;
             if (confirmationType) confirmationType.textContent = 'Partner';
             
             // Update package information
@@ -1945,7 +1880,7 @@
         }
         
         function showStep(step) {
-            const sections = ['account-section', 'profile-section', 'package-section', 'payment-section', 'confirmation-section'];
+            const sections = ['main-form-section', 'package-section', 'payment-section', 'confirmation-section'];
             
             sections.forEach(section => {
                 const element = document.getElementById(section);
@@ -1956,14 +1891,12 @@
             
             let currentSection;
             if (step === 1) {
-                currentSection = document.getElementById('account-section');
+                currentSection = document.getElementById('main-form-section');
             } else if (step === 2) {
-                currentSection = document.getElementById('profile-section');
-            } else if (step === 3) {
                 currentSection = document.getElementById('package-section');
-            } else if (step === 4) {
+            } else if (step === 3) {
                 currentSection = document.getElementById('payment-section');
-            } else if (step === 5) {
+            } else if (step === 4) {
                 currentSection = document.getElementById('confirmation-section');
                 
                 // Show mock notice in confirmation if in mock mode
@@ -1983,7 +1916,7 @@
             currentStep = step;
             
             // Start or stop auto-refresh based on current step
-            if (step === 3) {
+            if (step === 2) {
                 // On package selection step, ensure auto-refresh is running
                 if (!autoRefreshInterval) {
                     startAutoRefresh();
@@ -1997,32 +1930,7 @@
                 }
             }
             
-            updateProgressIndicator();
             window.scrollTo(0, 0);
-        }
-        
-        function updateProgressIndicator() {
-            document.querySelectorAll('.dot').forEach(dot => {
-                dot.classList.remove('active', 'completed');
-            });
-            
-            const progressLine = document.querySelector('.progress-line');
-            if (progressLine) {
-                const totalSteps = 5;
-                const widthPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
-                progressLine.style.width = `${widthPercentage}%`;
-            }
-            
-            for (let i = 1; i <= 5; i++) {
-                const dot = document.getElementById(`dot-${i}`);
-                if (dot) {
-                    if (i < currentStep) {
-                        dot.classList.add('completed');
-                    } else if (i === currentStep) {
-                        dot.classList.add('active');
-                    }
-                }
-            }
         }
 
         // Helper function to show notifications
@@ -2064,22 +1972,6 @@
             setTimeout(() => {
                 notificationEl.style.display = 'none';
             }, duration);
-        }
-        
-        // PDF viewing functions
-        function viewPartnerPackagePDF() {
-            const pdfUrl = 'ICSC Sponsor Packages.pdf';
-            window.open(pdfUrl, '_blank');
-        }
-
-        function downloadPartnerPackagePDF() {
-            const pdfUrl = 'ICSC Sponsor Packages.pdf';
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = 'ICSC Sponsor Packages.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
         
         function isValidEmail(email) {

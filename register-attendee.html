@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICSC 2026 - Attendee Registration</title>
+    <title>ICSC 2026 - Participant Registration</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,400italic,700italic" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -744,240 +744,207 @@
 
             <!-- Registration Form Sections -->
             
-            <!-- Step 1: Account Creation Section -->
-            <div id="account-section" class="form-section">
-                <h2 class="text-center mb-4">Create Your Account</h2>
-                
-                <form id="account-form">
-                    <div class="form-group">
-                        <label class="has-star" for="email">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                        <div class="help-block-error" id="email-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="password">Choose a Password</label>
-                        <div class="position-relative">
-                            <input type="password" id="password" name="password" class="form-control" required>
-                            <button type="button" class="password-toggle" id="togglePassword">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="help-block-error" id="password-error"></div>
-                        <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="confirmPassword">Repeat Your Password</label>
-                        <div class="position-relative">
-                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
-                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="help-block-error" id="confirmPassword-error"></div>
-                    </div>
-                </form>
-                
-                <div class="button-container">
-                    <a href="register.html" class="btn btn-outline-standard">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back to Registration Types
-                    </a>
-                    <button type="button" class="btn btn-standard" id="continue-to-profile-btn">
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
-                    </button>
-                </div>
+<!-- Step 1: Combined Account & Profile Information -->
+<div id="account-section" class="form-section">
+    <h2 class="text-center mb-4">Create Your Account</h2>
+    
+    <form id="account-form">
+        <!-- Account Information -->
+
+                <!-- Profile Information -->
+        <h3 class="mt-4 mb-3"></h3>
+        
+        <div class="form-group">
+            <label class="has-star" for="prefix">Prefix</label>
+            <select id="prefix" name="prefix" class="form-control" required>
+                <option value="">Select Prefix</option>
+                <option value="mr">Mr</option>
+                <option value="mrs">Mrs</option>
+                <option value="miss">Miss</option>
+                <option value="ms">Ms</option>
+                <option value="dr">Dr</option>
+                <option value="prof">Prof</option>
+            </select>
+            <div class="help-block-error" id="prefix-error"></div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="has-star" for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" required>
+                <div class="help-block-error" id="firstName-error"></div>
             </div>
-
-            <!-- Step 2: Profile Information Section -->
-            <div id="profile-section" class="form-section" style="display: none;">
-                <h2 class="text-center mb-4">Attendee Profile Information</h2>
-                
-                <form id="profile-form">
-                    <div class="form-group">
-                        <label class="has-star" for="prefix">Prefix</label>
-                        <select id="prefix" name="prefix" class="form-control" required>
-                            <option value="">Select Prefix</option>
-                            <option value="mr">Mr</option>
-                            <option value="mrs">Mrs</option>
-                            <option value="miss">Miss</option>
-                            <option value="ms">Ms</option>
-                            <option value="dr">Dr</option>
-                            <option value="prof">Prof</option>
-                        </select>
-                        <div class="help-block-error" id="prefix-error"></div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="has-star" for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" class="form-control" required>
-                            <div class="help-block-error" id="fullName-error"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="has-star" for="nin">National Identification Number (NIN)</label>
-                        <input type="text" id="nin" name="nin" class="form-control" required>
-                        <div class="help-block-error" id="nin-error"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="has-star" for="ministry">Ministry (Select One)</label>
-                        <select id="ministry" name="ministry" class="form-control">
-                            <option value="">Select Ministry</option>
-                            <option>Federal Ministry of Agriculture and Rural Development</option>
-                            <option>Federal Ministry of Aviation</option>
-                            <option>Federal Ministry of Budget and National Planning</option>
-                            <option>Federal Ministry of Communications and Digital Economy</option>
-                            <option>Federal Ministry of Defence</option>
-                            <option>Federal Ministry of Environment</option>
-                            <option>Federal Ministry of Foreign Affairs</option>
-                            <option>Federal Ministry of Industry, Trade and Investment</option>
-                            <option>Federal Ministry of Finance</option>
-                            <option>Federal Ministry of Labour and Employment</option>
-                            <option>Federal Ministry of Mines and Steel Development</option>
-                            <option>Federal Ministry of Niger Delta Affairs</option>
-                            <option>Federal Ministry of Petroleum Resources</option>
-                            <option>Federal Ministry of Education</option>
-                            <option>Federal Ministry of Police Affairs</option>
-                            <option>Federal Ministry of Science, Technology and Innovation</option>
-                            <option>Federal Ministry of Health</option>
-                            <option>Federal Ministry of Water Resources</option>
-                            <option>Federal Ministry of Special Duties and Inter-Governmental Affairs</option>
-                            <option>Federal Ministry of Information and Culture</option>
-                            <option>Federal Ministry of Interior</option>
-                            <option>Federal Ministry of Justice</option>
-                            <option>Federal Ministry of Humanitarian Affairs, Disaster Management and Social Development</option>
-                            <option>Federal Ministry of Power</option>
-                            <option>Federal Ministry of Transportation</option>
-                            <option>Federal Ministry of Works and Housing</option>
-                            <option>Federal Ministry of Women Affairs</option>
-                            <option>Federal Ministry of Youth and Sports Development</option>
-                            <option>Other</option>
-                        </select>
-                        <div class="help-block-error" id="ministry-error"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="has-star" for="gradeLevel">Grade Level</label>
-                        <select id="gradeLevel" name="gradeLevel" class="form-control">
-                            <option value="">Select Grade Level</option>
-                            <option>Director</option>
-                            <option>Deputy Director</option>
-                            <option>Assistant Director</option>
-                            <option>Chief Officer</option>
-                            <option>Principal Officer</option>
-                            <option>Senior Officer</option>
-                            <option>Officer</option>
-                        </select>
-                        <div class="help-block-error" id="gradeLevel-error"></div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="department">Department</label>
-                            <input type="text" id="department" name="department" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="agency">Agency</label>
-                            <input type="text" id="agency" name="agency" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="staffId">Staff ID</label>
-                            <input type="text" id="staffId" name="staffId" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="officeLocation">Office Location</label>
-                            <input type="text" id="officeLocation" name="officeLocation" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="has-star" for="position">Position</label>
-                            <input type="text" id="position" name="position" class="form-control">
-                            <div class="help-block-error" id="position-error"></div>
-                        </div>
-                        <div class="form-group">
-                            <label class="has-star" for="attendeePhone">Phone Number</label>
-                            <div class="phone-input-container">
-                                <input type="tel" id="attendeePhone" name="attendeePhone" class="form-control" required>
-                            </div>
-                            <div class="help-block-error" id="attendeePhone-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="has-star" for="country">Country</label>
-                        <select id="country" name="country" class="form-control" required>
-                            <option value="" disabled>Select your country</option>
-                        </select>
-                        <div class="help-block-error" id="country-error"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="remark">Remark</label>
-                        <textarea id="remark" name="remark" class="form-control" rows="4" placeholder="Please provide a brief introduction about yourself"></textarea>
-                        <div class="help-block-error" id="remark-error"></div>
-                    </div>
-                </form>
-                
-                <div class="button-container">
-                    <button type="button" class="btn btn-outline-standard" id="back-to-account-btn">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back
-                    </button>
-                    <button type="button" class="btn btn-standard" id="continue-to-confirmation-btn">
-                        Complete Registration <i class="fas fa-arrow-circle-right ms-2"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 3: Confirmation Section -->
-            <div id="confirmation-section" class="form-section" style="display: none;">
-                <h2 class="text-center mb-4">Registration Confirmation</h2>
-                
-                <div class="success-message">
-                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                    <h3>Registration Successful!</h3>
-                    <p class="mb-0">Thank you for registering as an Attendee for the International Civil Service Conference 2026.</p>
-                </div>
-                
-                <div class="confirmation-details">
-                    <h4 class="mb-3">Registration Details</h4>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Registration ID</div>
-                        <div class="confirmation-value" id="confirmation-id">ICSC2026-001234</div>
-                    </div>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Registrant Type</div>
-                        <div class="confirmation-value" id="confirmation-type">Attendee</div>
-                    </div>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Name</div>
-                        <div class="confirmation-value" id="confirmation-name">John Doe</div>
-                    </div>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Email</div>
-                        <div class="confirmation-value" id="confirmation-email">john.doe@example.com</div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-4">
-                    <p>A confirmation email has been sent to <strong id="confirmation-email-text">john.doe@example.com</strong> with all the details.</p>
-                    <div class="button-container">
-                        <button type="button" class="btn btn-standard" id="go-to-dashboard-btn">
-                            Go to Dashboard
-                        </button>
-                        <a href="Index.html" class="btn btn-outline-standard">Return to Conference Website</a>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label class="has-star" for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" required>
+                <div class="help-block-error" id="lastName-error"></div>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="has-star" for="country">Country</label>
+            <select id="country" name="country" class="form-control" required>
+                <option value="" disabled>Select your country</option>
+            </select>
+            <div class="help-block-error" id="country-error"></div>
+        </div>
+
+        <!-- Job Title field (constant for all countries) -->
+        <div class="form-group" id="jobTitle-group">
+            <label class="has-star" for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" class="form-control">
+            <div class="help-block-error" id="jobTitle-error"></div>
+        </div>
+
+        <!-- Ministry field (only shown for Nigeria) -->
+        <div class="form-group" id="ministry-group" style="display: none;">
+            <label class="has-star" for="ministry">Ministry (Select One)</label>
+            <select id="ministry" name="ministry" class="form-control">
+                <option value="">Select Ministry</option>
+                <option>Federal Ministry of Agriculture and Rural Development</option>
+                <option>Federal Ministry of Aviation</option>
+                <option>Federal Ministry of Budget and National Planning</option>
+                <option>Federal Ministry of Communications and Digital Economy</option>
+                <option>Federal Ministry of Defence</option>
+                <option>Federal Ministry of Environment</option>
+                <option>Federal Ministry of Foreign Affairs</option>
+                <option>Federal Ministry of Industry, Trade and Investment</option>
+                <option>Federal Ministry of Finance</option>
+                <option>Federal Ministry of Labour and Employment</option>
+                <option>Federal Ministry of Mines and Steel Development</option>
+                <option>Federal Ministry of Niger Delta Affairs</option>
+                <option>Federal Ministry of Petroleum Resources</option>
+                <option>Federal Ministry of Education</option>
+                <option>Federal Ministry of Police Affairs</option>
+                <option>Federal Ministry of Science, Technology and Innovation</option>
+                <option>Federal Ministry of Health</option>
+                <option>Federal Ministry of Water Resources</option>
+                <option>Federal Ministry of Special Duties and Inter-Governmental Affairs</option>
+                <option>Federal Ministry of Information and Culture</option>
+                <option>Federal Ministry of Interior</option>
+                <option>Federal Ministry of Justice</option>
+                <option>Federal Ministry of Humanitarian Affairs, Disaster Management and Social Development</option>
+                <option>Federal Ministry of Power</option>
+                <option>Federal Ministry of Transportation</option>
+                <option>Federal Ministry of Works and Housing</option>
+                <option>Federal Ministry of Women Affairs</option>
+                <option>Federal Ministry of Youth and Sports Development</option>
+                <option>Other</option>
+            </select>
+            <div class="help-block-error" id="ministry-error"></div>
+        </div>
+
+        <!-- Organization field (only shown for non-Nigeria) -->
+        <div class="form-group" id="organization-group" style="display: none;">
+            <label class="has-star" for="organization">Organization/Department</label>
+            <input type="text" id="organization" name="organization" class="form-control">
+            <div class="help-block-error" id="organization-error"></div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="has-star" for="attendeePhone">Phone Number</label>
+                <div class="phone-input-container">
+                    <input type="tel" id="attendeePhone" name="attendeePhone" class="form-control" required>
+                </div>
+                <div class="help-block-error" id="attendeePhone-error"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="has-star" for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+            <div class="help-block-error" id="email-error"></div>
+            <div class="hint-block" id="email-hint"></div>
+        </div>
+        
+        <div class="form-group">
+            <label class="has-star" for="password">Choose a Password</label>
+            <div class="position-relative">
+                <input type="password" id="password" name="password" class="form-control" required>
+                <button type="button" class="password-toggle" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <div class="help-block-error" id="password-error"></div>
+            <div class="hint-block">Creating a password lets you log back in to modify your registration and access your dashboard</div>
+        </div>
+        
+        <div class="form-group">
+            <label class="has-star" for="confirmPassword">Repeat Your Password</label>
+            <div class="position-relative">
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <div class="help-block-error" id="confirmPassword-error"></div>
+        </div>
+
+
+
+        <!-- Data Sharing Consent -->
+        <div class="form-group">
+            <label class="has-star">Data Sharing Consent</label>
+            <p class="mb-2">I agree to my information being shared with third party partners and exhibitors of the International Civil Service Conference</p>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="dataSharing" id="dataSharingYes" value="yes" required>
+                <label class="form-check-label" for="dataSharingYes">
+                    Yes, I agree to the data I have submitted being shared with the third party knowledge partners and exhibitors of International Civil Service Conference
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="dataSharing" id="dataSharingNo" value="no" required>
+                <label class="form-check-label" for="dataSharingNo">
+                    No, I do not agree to share my data with relevant third party organisations
+                </label>
+            </div>
+            <div class="hint-block mt-1">
+                * Please note that in this instance 'data' refers to your name, job title, organisation, email address and contact number submitted as part of this registration form.
+            </div>
+            <div class="hint-block">
+                * All third party knowledge partners and exhibitors of the inaugural International Civil Service Conference can be found <a href="#" target="_blank">here</a>
+            </div>
+            <div class="help-block-error" id="dataSharing-error"></div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="termsConditions" required>
+                <label class="form-check-label" for="termsConditions">
+                    I have read and agree with the Terms and Conditions, and wish to register for International Civil Service Conference
+                </label>
+            </div>
+            <div class="hint-block">
+                * Terms and conditions for International Civil Service Conference can be found <a href="#" target="_blank">here</a>
+            </div>
+            <div class="help-block-error" id="termsConditions-error"></div>
+        </div>
+
+        <!-- Newsletter Subscription -->
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="newsletterSubscription">
+                <label class="form-check-label" for="newsletterSubscription">
+                    Yes please, sign me up!
+                </label>
+            </div>
+            <div class="hint-block">
+                *Tick this box if you would like to have the weekly Global Government Forum newsletters sent directly to your inbox. It's free and if you change your mind you can unsubscribe at any time.
+            </div>
+        </div>
+    </form>
+    
+    <div class="button-container">
+        <a href="register.html" class="btn btn-outline-standard">
+            <i class="fas fa-arrow-circle-left me-2"></i> Back to Registration Types
+        </a>
+        <button type="button" class="btn btn-standard" id="continue-to-confirmation-btn">
+            Complete Registration <i class="fas fa-arrow-circle-right ms-2"></i>
+        </button>
     </div>
+</div>
 
     <!-- Footer -->
     <div class="footer-container">
@@ -1015,54 +982,7 @@
     <script src="js/auth.js"></script>
 
     <!-- Main Application Script -->
-    <script>
-
-        // Add this to your registration page JavaScript
-/*function checkRegistrationCap(type) {
-    const capStatus = JSON.parse(localStorage.getItem('icsc_cap_status') || '{}');
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps') || '{}');
-    const registrationStatus = localStorage.getItem('icsc_registration_status') || 'open';
-    
-    // Check if registration is closed
-    if (registrationStatus === 'closed') {
-        return {
-            allowed: false,
-            message: 'Registration is currently closed. Please check back later.'
-        };
-    }
-    
-    // Check specific type cap
-    if (capStatus[type]) {
-        const action = caps[type]?.action || 'disable';
-        const message = caps.globalMessage || 'Registration for this category is currently full.';
-        
-        return {
-            allowed: false,
-            message: message,
-            action: action
-        };
-    }
-    
-    return { allowed: true };
-}
-
-// Example usage in registration form:
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    const capCheck = checkRegistrationCap('attendees'); // or 'speakers', 'exhibitors', 'partners'
-    
-    if (!capCheck.allowed) {
-        e.preventDefault();
-        alert(capCheck.message);
-        
-        if (capCheck.action === 'hide') {
-            document.getElementById('registrationForm').style.display = 'none';
-        } else if (capCheck.action === 'disable') {
-            this.querySelectorAll('input, select, textarea, button').forEach(el => {
-                el.disabled = true;
-            });
-        }
-    }
-}); */
+<script>
         // Global variables for attendee registration
         let currentStep = 1;
         const selectedRegistrantType = 'attendee';
@@ -1070,7 +990,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         
         // Country list for dropdowns
         const countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+            "Nigeria","Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
             "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
             "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
             "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
@@ -1110,7 +1030,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                 // Set up event listeners
                 setupEventListeners();
                 
-                // Update progress indicator
+                // Update progress indicator (only 2 steps now)
                 updateProgressIndicator();
             } catch (error) {
                 console.error('Error initializing app:', error);
@@ -1139,11 +1059,8 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                         }
                     });
                     
-                    if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
-                        select.value = 'Nigeria';
-                    } else {
-                        select.selectedIndex = 0;
-                    }
+                    // Set empty default
+                    select.selectedIndex = 0;
                 }
             });
         }
@@ -1193,28 +1110,39 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                 });
             }
             
-            // Back buttons
-            const backToAccountBtn = document.getElementById('back-to-account-btn');
-            if (backToAccountBtn) {
-                backToAccountBtn.addEventListener('click', function() {
-                    showStep(1);
+            // Country change listener
+            const countrySelect = document.getElementById('country');
+            if (countrySelect) {
+                countrySelect.addEventListener('change', function() {
+                    toggleFieldsBasedOnCountry(this.value);
+                    validateEmailForMinistry();
                 });
             }
             
-            // Continue buttons
-            const continueToProfileBtn = document.getElementById('continue-to-profile-btn');
-            if (continueToProfileBtn) {
-                continueToProfileBtn.addEventListener('click', function() {
-                    if (validateAccountForm()) {
-                        showStep(2);
-                    }
+            // Ministry change listener
+            const ministrySelect = document.getElementById('ministry');
+            if (ministrySelect) {
+                ministrySelect.addEventListener('change', function() {
+                    validateEmailForMinistry();
                 });
             }
             
+            // Email change listener for real-time validation
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.addEventListener('input', function() {
+                    validateEmailForMinistry();
+                });
+                emailInput.addEventListener('blur', function() {
+                    validateEmailForMinistry();
+                });
+            }
+            
+            // Continue button
             const continueToConfirmationBtn = document.getElementById('continue-to-confirmation-btn');
             if (continueToConfirmationBtn) {
                 continueToConfirmationBtn.addEventListener('click', function() {
-                    if (validateProfileForm()) {
+                    if (validateCompleteForm()) {
                         processRegistration();
                     }
                 });
@@ -1229,16 +1157,114 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             }
         }
         
-        function validateAccountForm() {
+        function toggleFieldsBasedOnCountry(country) {
+            const ministryGroup = document.getElementById('ministry-group');
+            const organizationGroup = document.getElementById('organization-group');
+            const emailHint = document.getElementById('email-hint');
+            
+            // Job Title is now always visible, so we don't need to toggle it
+            
+            if (country === 'Nigeria') {
+                // Show ministry, hide organization
+                if (ministryGroup) ministryGroup.style.display = 'block';
+                if (organizationGroup) organizationGroup.style.display = 'none';
+                
+                // Show email hint conditionally
+                const ministry = document.getElementById('ministry')?.value || '';
+                if (ministry && ministry !== '') {
+                    if (emailHint) {
+                        emailHint.textContent = 'For Nigerian government officials, email must end with .gov.ng';
+                        emailHint.style.display = 'block';
+                    }
+                } else {
+                    if (emailHint) {
+                        emailHint.textContent = '';
+                        emailHint.style.display = 'none';
+                    }
+                }
+                
+                // Clear organization field if it exists
+                const organizationField = document.getElementById('organization');
+                if (organizationField) organizationField.value = '';
+            } else if (country) {
+                // Show organization, hide ministry
+                if (ministryGroup) ministryGroup.style.display = 'none';
+                if (organizationGroup) organizationGroup.style.display = 'block';
+                
+                // Clear email hint
+                if (emailHint) {
+                    emailHint.textContent = '';
+                    emailHint.style.display = 'none';
+                }
+                
+                // Clear ministry field if it exists
+                const ministryField = document.getElementById('ministry');
+                if (ministryField) ministryField.value = '';
+            } else {
+                // No country selected, hide conditional fields but keep Job Title visible
+                if (ministryGroup) ministryGroup.style.display = 'none';
+                if (organizationGroup) organizationGroup.style.display = 'none';
+                if (emailHint) {
+                    emailHint.textContent = '';
+                    emailHint.style.display = 'none';
+                }
+            }
+        }
+        
+        function validateEmailForMinistry() {
+            const country = document.getElementById('country')?.value || '';
+            const ministry = document.getElementById('ministry')?.value || '';
+            const email = document.getElementById('email')?.value || '';
+            const emailHint = document.getElementById('email-hint');
+            
+            // Only validate .gov.ng if Nigeria is selected AND a ministry is selected
+            if (country === 'Nigeria' && ministry && ministry !== '') {
+                // Update hint
+                if (emailHint) {
+                    emailHint.textContent = 'For Nigerian government officials, email must end with .gov.ng';
+                    emailHint.style.display = 'block';
+                }
+                
+                // Validate email if entered
+                if (email && !email.toLowerCase().endsWith('.gov.ng')) {
+                    showError('email-error', 'For Nigerian government officials, email must end with .gov.ng');
+                    return false;
+                } else {
+                    hideError('email-error');
+                    return true;
+                }
+            } else {
+                // Clear hint and error if conditions not met
+                if (emailHint) {
+                    emailHint.textContent = '';
+                    emailHint.style.display = 'none';
+                }
+                hideError('email-error');
+                return true;
+            }
+        }
+        
+        function validateCompleteForm() {
             let isValid = true;
             
-            // Email validation
+            // Clear all errors first
+            document.querySelectorAll('.help-block-error').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.error').forEach(el => {
+                el.classList.remove('error');
+            });
+            
+            // Validate email format
             const email = document.getElementById('email').value;
             if (!email || !isValidEmail(email)) {
                 showError('email-error', 'Please enter a valid email address');
                 isValid = false;
-            } else {
-                hideError('email-error');
+            }
+            
+            // Validate email for ministry (only if Nigeria and ministry selected)
+            if (!validateEmailForMinistry()) {
+                isValid = false;
             }
             
             // Password validation
@@ -1246,8 +1272,6 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             if (!password || password.length < 8) {
                 showError('password-error', 'Password must be at least 8 characters long');
                 isValid = false;
-            } else {
-                hideError('password-error');
             }
             
             // Confirm password validation
@@ -1255,33 +1279,57 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             if (!confirmPassword || password !== confirmPassword) {
                 showError('confirmPassword-error', 'Passwords do not match');
                 isValid = false;
-            } else {
-                hideError('confirmPassword-error');
             }
             
-            return isValid;
-        }
-        
-        function validateProfileForm() {
-            return validateAttendeeProfile();
-        }
-        
-        function validateAttendeeProfile() {
-            let isValid = true;
-            
-            const requiredFields = [
-                'prefix', 'fullName', 'nin', 'ministry', 'gradeLevel', 'position', 'attendeePhone', 'country'
+            // Basic required fields
+            const basicRequiredFields = [
+                'prefix', 'firstName', 'lastName', 'attendeePhone', 'country',
             ];
             
-            requiredFields.forEach(field => {
+            // Validate basic fields
+            basicRequiredFields.forEach(field => {
                 const element = document.getElementById(field);
-                if (!element || !element.value) {
+                if (!element || !element.value.trim()) {
                     showError(`${field}-error`, 'This field is required');
                     isValid = false;
-                } else {
-                    hideError(`${field}-error`);
                 }
             });
+            
+            // Get country value
+            const country = document.getElementById('country')?.value || '';
+            
+            // Special validation for Nigeria
+            if (country === 'Nigeria') {
+                // Validate ministry field
+                const ministryField = document.getElementById('ministry');
+                if (!ministryField || !ministryField.value.trim()) {
+                    showError('ministry-error', 'Ministry is required for Nigerian participants');
+                    isValid = false;
+                }
+            } else if (country) {
+                // For non-Nigeria, validate organization
+                const organizationField = document.getElementById('organization');
+                
+                if (!organizationField || !organizationField.value.trim()) {
+                    showError('organization-error', 'Organization is required');
+                    isValid = false;
+                }
+            }
+            
+            // Validate Data Sharing Consent
+            const dataSharingYes = document.getElementById('dataSharingYes');
+            const dataSharingNo = document.getElementById('dataSharingNo');
+            if (!dataSharingYes.checked && !dataSharingNo.checked) {
+                showError('dataSharing-error', 'Please select a data sharing option');
+                isValid = false;
+            }
+            
+            // Validate Terms and Conditions
+            const termsConditions = document.getElementById('termsConditions');
+            if (!termsConditions.checked) {
+                showError('termsConditions-error', 'You must agree to the terms and conditions to register');
+                isValid = false;
+            }
             
             return isValid;
         }
@@ -1297,22 +1345,42 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             try {
                 if (!window.RegisterAPI) throw new Error('RegisterAPI not available.');
                 
+                // Get country value
+                const country = document.getElementById('country')?.value || '';
+                
+                // Build payload based on country
                 const payload = {
                     prefix: document.getElementById('prefix')?.value || '',
-                    fullname: document.getElementById('fullName')?.value || '',
+                    firstName: document.getElementById('firstName')?.value || '',
+                    lastName: document.getElementById('lastName')?.value || '',
                     email: document.getElementById('email')?.value || '',
                     phone_number: document.getElementById('attendeePhone')?.value || '',
-                    position: document.getElementById('position')?.value || '',
-                    organization: document.getElementById('ministry')?.value || '',
-                    department: document.getElementById('department')?.value || '',
-                    department_agency: document.getElementById('agency')?.value || '',
-                    grade: document.getElementById('gradeLevel')?.value || '',
-                    nin: document.getElementById('nin')?.value || '',
-                    staff_id: document.getElementById('staffId')?.value || '',
-                    office_location: document.getElementById('officeLocation')?.value || '',
-                    remark: document.getElementById('remark')?.value || null,
-                    password: document.getElementById('password')?.value || ''
+                    jobTitle: document.getElementById('jobTitle')?.value || '', // Now always included
+                    country: country,
+                    password: document.getElementById('password')?.value || '',
+                    dataSharingConsent: document.getElementById('dataSharingYes').checked ? 'yes' : 'no',
+                    agreedToTerms: true,
+                    newsletterSubscription: document.getElementById('newsletterSubscription')?.checked || false
                 };
+                
+                // Add organization based on country
+                if (country === 'Nigeria') {
+                    payload.organization = document.getElementById('ministry')?.value || '';
+                } else {
+                    payload.organization = document.getElementById('organization')?.value || '';
+                }
+                
+                // Add optional fields if they exist
+                const department = document.getElementById('department')?.value;
+                const remark = document.getElementById('remark')?.value;
+                
+                if (department && department.trim()) {
+                    payload.department = department;
+                }
+                
+                if (remark && remark.trim()) {
+                    payload.remark = remark;
+                }
                 
                 const responseData = await window.RegisterAPI.registerAttendee(payload);
                 
@@ -1321,14 +1389,16 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                     const data = responseData.data || responseData;
                     const confirmationIdEl = document.getElementById('confirmation-id');
                     if (confirmationIdEl) confirmationIdEl.textContent = data.reference || data.registrationId || confirmationIdEl.textContent;
-                } catch (e) {}
+                } catch (e) {
+                    console.log('No custom confirmation ID in response');
+                }
                 
                 updateConfirmationSection();
-                showStep(3);
+                showStep(2);
                 
             } catch (err) {
                 console.error('Registration failed', err);
-                const message = err?.message || err?.response?.data?.message || 'Registration failed';
+                const message = err?.message || err?.response?.data?.message || 'Registration failed. Please try again.';
                 alert(message);
             } finally {
                 if (continueBtn) {
@@ -1351,10 +1421,11 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                 confirmationType.textContent = 'Attendee';
             }
             
-            const firstName = document.getElementById('fullName')?.value || '';
+            const firstName = document.getElementById('firstName')?.value || '';
+            const lastName = document.getElementById('lastName')?.value || '';
             const confirmationName = document.getElementById('confirmation-name');
             if (confirmationName) {
-                confirmationName.textContent = firstName;
+                confirmationName.textContent = `${firstName} ${lastName}`;
             }
         }
         
@@ -1363,7 +1434,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         }
         
         function showStep(step) {
-            const sections = ['account-section', 'profile-section', 'confirmation-section'];
+            const sections = ['account-section', 'confirmation-section'];
             
             sections.forEach(section => {
                 const element = document.getElementById(section);
@@ -1376,8 +1447,6 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             if (step === 1) {
                 currentSection = document.getElementById('account-section');
             } else if (step === 2) {
-                currentSection = document.getElementById('profile-section');
-            } else if (step === 3) {
                 currentSection = document.getElementById('confirmation-section');
             }
             
@@ -1397,12 +1466,13 @@ document.getElementById('registrationForm').addEventListener('submit', function(
             
             const progressLine = document.querySelector('.progress-line');
             if (progressLine) {
-                const totalSteps = 3;
+                const totalSteps = 2;
                 const widthPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
                 progressLine.style.width = `${widthPercentage}%`;
             }
             
-            for (let i = 1; i <= 3; i++) {
+            // Update dots for 2-step process
+            for (let i = 1; i <= 2; i++) {
                 const dot = document.getElementById(`dot-${i}`);
                 if (dot) {
                     if (i < currentStep) {
@@ -1411,6 +1481,12 @@ document.getElementById('registrationForm').addEventListener('submit', function(
                         dot.classList.add('active');
                     }
                 }
+            }
+            
+            // Hide the third dot since we only have 2 steps now
+            const dot3 = document.getElementById('dot-3');
+            if (dot3) {
+                dot3.style.display = 'none';
             }
         }
         
