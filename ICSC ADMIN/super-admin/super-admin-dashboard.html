@@ -191,112 +191,208 @@
                 </div>
             </div>
 
-            <!-- Verification Tab -->
+            <!-- Verification Tab - UPDATED FOR PARTNER SUBMISSIONS -->
             <div id="verification" class="tab-content">
                 <!-- Pending Verification Section -->
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>Pending Verification</h2>
+                        <h2><i class="fas fa-hourglass-half"></i> Pending Verification</h2>
                         <div class="section-actions">
-                            <button class="btn btn-secondary" id="refreshPendingBtn">Refresh</button>
+                            <div class="filter-controls">
+                                <select id="submissionTypeFilter" class="form-control-sm">
+                                    <option value="all">All Types</option>
+                                    <option value="exhibition">Exhibition Booth</option>
+                                    <option value="speaker">Speaker Details</option>
+                                    <option value="session">Session Proposal</option>
+                                    <option value="benefit">Benefit Claim</option>
+                                </select>
+                                <select id="partnerTypeFilter" class="form-control-sm">
+                                    <option value="all">All Partners</option>
+                                    <option value="diamond">Diamond Partners</option>
+                                    <option value="gold">Gold Partners</option>
+                                    <option value="silver">Silver Partners</option>
+                                    <option value="bronze">Bronze Partners</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-secondary" id="refreshPendingBtn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
                         </div>
                     </div>
+                    
                     <div class="table-responsive">
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Department</th>
-                                    <th>Ministry</th>
-                                    <th>Date Added</th>
+                                    <th>Submission ID</th>
+                                    <th>Partner/Company</th>
+                                    <th>Submission Type</th>
+                                    <th>Details</th>
+                                    <th>Documents</th>
+                                    <th>Submitted Date</th>
+                                    <th>Package Level</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="pendingAttendeesTable">
-                                <tr>
-                                    <td>Samuel Johnson</td>
-                                    <td>s.johnson@finance.gov.ng</td>
-                                    <td>Assistant Director</td>
-                                    <td>Audit</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>2023-10-20</td>
-                                    <td>
-                                        <div class="verification-actions">
-                                            <button class="btn btn-success approve-btn">Approve</button>
-                                            <button class="btn btn-danger reject-btn">Reject</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>James Okoro</td>
-                                    <td>j.okoro@health.gov.ng</td>
-                                    <td>Senior Officer</td>
-                                    <td>Public Health</td>
-                                    <td>Ministry of Health</td>
-                                    <td>2023-10-25</td>
-                                    <td>
-                                        <div class="verification-actions">
-                                            <button class="btn btn-success approve-btn">Approve</button>
-                                            <button class="btn btn-danger reject-btn">Reject</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="pendingSubmissionsTable">
+                                <!-- Will be populated by JavaScript -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                
+                <!-- Verification Details Modal -->
+                <div class="modal" id="verificationModal">
+                    <div class="modal-content" style="max-width: 800px;">
+                        <div class="modal-header">
+                            <h3 id="verificationModalTitle">Verify Submission</h3>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="submission-details-container">
+                                <!-- Submission details will be loaded here -->
+                            </div>
+                            
+                            <!-- Review Form -->
+                            <div class="review-section">
+                                <h4><i class="fas fa-clipboard-check"></i> Admin Review</h4>
+                                <form id="verificationForm">
+                                    <div class="form-group">
+                                        <label for="reviewStatus">Decision</label>
+                                        <select id="reviewStatus" class="form-control" required>
+                                            <option value="">Select decision</option>
+                                            <option value="approved">Approve</option>
+                                            <option value="rejected">Reject</option>
+                                            <option value="pending_changes">Request Changes</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="reviewComments">Comments / Feedback</label>
+                                        <textarea id="reviewComments" class="form-control" rows="4" 
+                                                  placeholder="Provide feedback or reasons for your decision..."></textarea>
+                                    </div>
+                                    
+                                    <!-- Schedule Section (for approved submissions) -->
+                                    <div id="scheduleSection" style="display: none;">
+                                        <h5><i class="fas fa-calendar-alt"></i> Schedule Assignment</h5>
+                                        <div class="form-group">
+                                            <label for="scheduledDate">Scheduled Date</label>
+                                            <input type="date" id="scheduledDate" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="scheduledTime">Scheduled Time</label>
+                                            <input type="time" id="scheduledTime" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="venueLocation">Venue Location</label>
+                                            <input type="text" id="venueLocation" class="form-control" 
+                                                   placeholder="e.g., Main Hall, Booth A12, Conference Room 3">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sessionDuration">Duration (minutes)</label>
+                                            <input type="number" id="sessionDuration" class="form-control" 
+                                                   placeholder="e.g., 30, 45, 60">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="additionalNotes">Additional Notes for Partner</label>
+                                            <textarea id="additionalNotes" class="form-control" rows="3" 
+                                                      placeholder="Any additional instructions or information..."></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Email Notification Options -->
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="sendEmailNotification" checked>
+                                            Send email notification to partner
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="modal-actions">
+                                        <button type="button" class="btn btn-secondary" id="cancelReview">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" id="submitReview">Submit Review</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Document Viewer Modal -->
+                <div class="modal" id="documentViewerModal">
+                    <div class="modal-content" style="max-width: 900px;">
+                        <div class="modal-header">
+                            <h3 id="documentViewerTitle">Document Viewer</h3>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="document-viewer-container">
+                                <!-- Document will be displayed here -->
+                                <iframe id="documentFrame" style="width: 100%; height: 600px; border: none;"></iframe>
+                                
+                                <!-- Image viewer -->
+                                <div id="imageViewer" style="display: none; text-align: center;">
+                                    <img id="viewerImage" src="" alt="" style="max-width: 100%; max-height: 600px;">
+                                    <div class="image-controls" style="margin-top: 15px;">
+                                        <button class="btn btn-sm btn-secondary" id="zoomInBtn">
+                                            <i class="fas fa-search-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary" id="zoomOutBtn">
+                                            <i class="fas fa-search-minus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary" id="resetZoomBtn">
+                                            <i class="fas fa-expand-arrows-alt"></i>
+                                        </button>
+                                        <a href="#" id="downloadImageBtn" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Verification History -->
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>Verification History</h2>
+                        <h2><i class="fas fa-history"></i> Verification History</h2>
+                        <div class="section-actions">
+                            <div class="search-box">
+                                <input type="text" id="searchHistory" placeholder="Search by partner or ID...">
+                                <button class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <select id="historyStatusFilter" class="form-control-sm">
+                                <option value="all">All Status</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="pending_changes">Changes Requested</option>
+                            </select>
+                        </div>
                     </div>
+                    
                     <div class="table-responsive">
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    
-                                    <th>Department</th>
-                                    <th>Ministry</th>
+                                    <th>Submission ID</th>
+                                    <th>Partner/Company</th>
+                                    <th>Submission Type</th>
+                                    <th>Details</th>
                                     <th>Status</th>
-                                    <th>Verified By</th>
-                                    <th>Date Verified</th>
+                                    <th>Reviewed By</th>
+                                    <th>Reviewed Date</th>
+                                    <th>Scheduled</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="verificationHistoryTable">
-                                <tr>
-                                    <td>Fatima Bello</td>
-                                    <td>f.bello@finance.gov.ng</td>
-                                    <td>Chief Officer</td>
-                                    <td>Treasury</td>
-                                    <td>Ministry of Finance</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>Super Admin</td>
-                                    <td>2023-10-22</td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Adekunle</td>
-                                    <td>m.adekunle@finance.gov.ng</td>
-                                    <td>Senior Officer</td>
-                                    <td>Budget & Planning</td>
-                                    <td>Ministry of Finance</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>Super Admin</td>
-                                    <td>2023-10-23</td>
-                                </tr>
-                                <tr>
-                                    <td>Grace Williams</td>
-                                    <td>g.williams@transport.gov.ng</td>
-                                    <td>Officer</td>
-                                    <td>Infrastructure</td>
-                                    <td>Ministry of Transport</td>
-                                    <td><span class="status-badge status-rejected">Rejected</span></td>
-                                    <td>Super Admin</td>
-                                    <td>2023-10-25</td>
-                                </tr>
+                                <!-- Will be populated by JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -494,7 +590,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeOrganization">Organization/Department</label>
-                        <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization" required>
+                        <input type="text" id="attendeeOrganization" class="form-control" placeholder="Enter organization">
                     </div>
                 </div>
 
@@ -504,24 +600,7 @@
                         <input type="tel" id="attendeePhone" class="form-control" placeholder="Enter phone number" required>
                     </div>
                 </div>
-                <!-- <div class="form-row">
-                    <div class="form-group">
-                        <label for="attendeePosition">Position</label>
-                        <input type="text" id="attendeePosition" class="form-control" placeholder="Enter position" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="attendeeGradeLevel">Grade Level</label>
-                        <select id="attendeeGradeLevel" class="form-control" required>
-                            <option value="">Select grade level</option>
-                            <option value="Director">Director</option>
-                            <option value="Deputy Director">Deputy Director</option>
-                            <option value="Assistant Director">Assistant Director</option>
-                            <option value="Chief Officer">Chief Officer</option>
-                            <option value="Senior Officer">Senior Officer</option>
-                            <option value="Officer">Officer</option>
-                        </select>
-                    </div> -->
-                <!-- </div> --> 
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeMinistry">Ministry</label>
@@ -3306,9 +3385,404 @@
             </div>
         </div>
 
+        <!-- NEW: Feature Rights Configuration -->
+        <div class="form-section">
+            <h4>Package Feature Rights</h4>
+            <p>Control which packages have access to exhibition and speaking features</p>
+            
+            <div class="feature-rights-container">
+                <!-- Diamond Feature Rights -->
+                <div class="feature-rights-card" data-package="diamond">
+                    <div class="feature-header">
+                        <i class="fas fa-gem"></i>
+                        <h5>Diamond Package Features</h5>
+                    </div>
+                    
+                    <div class="feature-controls">
+                        <!-- Exhibit Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-store"></i>
+                                    <span>Exhibition Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="diamondExhibitRights" class="feature-checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="diamondExhibitDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="diamondBoothSlots">Number of Booth Slots</label>
+                                        <input type="number" id="diamondBoothSlots" class="form-control" min="0" value="2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diamondBoothSize">Booth Size</label>
+                                        <select id="diamondBoothSize" class="form-control">
+                                            <option value="6x9m">Prime (6x9m)</option>
+                                            <option value="6x6m">Standard (6x6m)</option>
+                                            <option value="3x6m">Basic (3x6m)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="diamondBoothLocation">Preferred Booth Location</label>
+                                        <select id="diamondBoothLocation" class="form-control">
+                                            <option value="main_entrance">Near Main Entrance</option>
+                                            <option value="stage_front">Front of Stage</option>
+                                            <option value="networking_area">Networking Area</option>
+                                            <option value="food_court">Near Food Court</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diamondSetupTime">Setup Time (hours)</label>
+                                        <input type="number" id="diamondSetupTime" class="form-control" min="1" value="4">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Speak Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-microphone"></i>
+                                    <span>Speaking Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="diamondSpeakRights" class="feature-checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="diamondSpeakDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="diamondSpeakingSlots">Number of Speaking Slots</label>
+                                        <input type="number" id="diamondSpeakingSlots" class="form-control" min="0" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diamondSessionType">Session Type</label>
+                                        <select id="diamondSessionType" class="form-control">
+                                            <option value="keynote">Keynote Speaker</option>
+                                            <option value="panel">Panel Discussion</option>
+                                            <option value="roundtable">Roundtable</option>
+                                            <option value="workshop">Workshop</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="diamondSessionDuration">Session Duration (minutes)</label>
+                                        <input type="number" id="diamondSessionDuration" class="form-control" min="5" value="45">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="diamondSpeakerPriority">Speaker Priority</label>
+                                        <select id="diamondSpeakerPriority" class="form-control">
+                                            <option value="1">Priority 1 (First Choice)</option>
+                                            <option value="2">Priority 2</option>
+                                            <option value="3">Priority 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Feature Rights -->
+                <div class="feature-rights-card" data-package="gold">
+                    <div class="feature-header">
+                        <i class="fas fa-medal"></i>
+                        <h5>Gold Package Features</h5>
+                    </div>
+                    
+                    <div class="feature-controls">
+                        <!-- Exhibit Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-store"></i>
+                                    <span>Exhibition Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="goldExhibitRights" class="feature-checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="goldExhibitDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="goldBoothSlots">Number of Booth Slots</label>
+                                        <input type="number" id="goldBoothSlots" class="form-control" min="0" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goldBoothSize">Booth Size</label>
+                                        <select id="goldBoothSize" class="form-control">
+                                            <option value="6x6m">Standard (6x6m)</option>
+                                            <option value="3x6m">Basic (3x6m)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="goldBoothLocation">Preferred Booth Location</label>
+                                        <select id="goldBoothLocation" class="form-control">
+                                            <option value="stage_front">Front of Stage</option>
+                                            <option value="networking_area">Networking Area</option>
+                                            <option value="food_court">Near Food Court</option>
+                                            <option value="standard">Standard Location</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goldSetupTime">Setup Time (hours)</label>
+                                        <input type="number" id="goldSetupTime" class="form-control" min="1" value="3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Speak Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-microphone"></i>
+                                    <span>Speaking Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="goldSpeakRights" class="feature-checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="goldSpeakDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="goldSpeakingSlots">Number of Speaking Slots</label>
+                                        <input type="number" id="goldSpeakingSlots" class="form-control" min="0" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goldSessionType">Session Type</label>
+                                        <select id="goldSessionType" class="form-control">
+                                            <option value="panel">Panel Discussion</option>
+                                            <option value="roundtable">Roundtable</option>
+                                            <option value="workshop">Workshop</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="goldSessionDuration">Session Duration (minutes)</label>
+                                        <input type="number" id="goldSessionDuration" class="form-control" min="5" value="30">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goldSpeakerPriority">Speaker Priority</label>
+                                        <select id="goldSpeakerPriority" class="form-control">
+                                            <option value="2">Priority 2</option>
+                                            <option value="3">Priority 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Silver Feature Rights -->
+                <div class="feature-rights-card" data-package="silver">
+                    <div class="feature-header">
+                        <i class="fas fa-award"></i>
+                        <h5>Silver Package Features</h5>
+                    </div>
+                    
+                    <div class="feature-controls">
+                        <!-- Exhibit Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-store"></i>
+                                    <span>Exhibition Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="silverExhibitRights" class="feature-checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="silverExhibitDetails">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="silverBoothSlots">Number of Booth Slots</label>
+                                        <input type="number" id="silverBoothSlots" class="form-control" min="0" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="silverBoothSize">Booth Size</label>
+                                        <select id="silverBoothSize" class="form-control">
+                                            <option value="3x6m">Basic (3x6m)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="silverBoothLocation">Booth Location</label>
+                                        <select id="silverBoothLocation" class="form-control">
+                                            <option value="standard">Standard Location</option>
+                                            <option value="general_area">General Area</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="silverSetupTime">Setup Time (hours)</label>
+                                        <input type="number" id="silverSetupTime" class="form-control" min="1" value="2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Speak Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-microphone"></i>
+                                    <span>Speaking Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="silverSpeakRights" class="feature-checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="silverSpeakDetails" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="silverSpeakingSlots">Number of Speaking Slots</label>
+                                        <input type="number" id="silverSpeakingSlots" class="form-control" min="0" value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="silverSessionType">Session Type</label>
+                                        <select id="silverSessionType" class="form-control">
+                                            <option value="roundtable">Roundtable</option>
+                                            <option value="workshop">Workshop</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="silverSessionDuration">Session Duration (minutes)</label>
+                                        <input type="number" id="silverSessionDuration" class="form-control" min="5" value="20">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="silverSpeakerPriority">Speaker Priority</label>
+                                        <select id="silverSpeakerPriority" class="form-control">
+                                            <option value="3">Priority 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bronze Feature Rights -->
+                <div class="feature-rights-card" data-package="bronze">
+                    <div class="feature-header">
+                        <i class="fas fa-star"></i>
+                        <h5>Bronze Package Features</h5>
+                    </div>
+                    
+                    <div class="feature-controls">
+                        <!-- Exhibit Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-store"></i>
+                                    <span>Exhibition Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="bronzeExhibitRights" class="feature-checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="bronzeExhibitDetails" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bronzeBoothSlots">Number of Booth Slots</label>
+                                        <input type="number" id="bronzeBoothSlots" class="form-control" min="0" value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bronzeBoothSize">Booth Size</label>
+                                        <select id="bronzeBoothSize" class="form-control">
+                                            <option value="3x3m">Small (3x3m)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bronzeBoothLocation">Booth Location</label>
+                                        <select id="bronzeBoothLocation" class="form-control">
+                                            <option value="general_area">General Area</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bronzeSetupTime">Setup Time (hours)</label>
+                                        <input type="number" id="bronzeSetupTime" class="form-control" min="1" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Speak Rights -->
+                        <div class="feature-toggle">
+                            <div class="feature-toggle-header">
+                                <div class="feature-icon">
+                                    <i class="fas fa-microphone"></i>
+                                    <span>Speaking Rights</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="bronzeSpeakRights" class="feature-checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="feature-details" id="bronzeSpeakDetails" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bronzeSpeakingSlots">Number of Speaking Slots</label>
+                                        <input type="number" id="bronzeSpeakingSlots" class="form-control" min="0" value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bronzeSessionType">Session Type</label>
+                                        <select id="bronzeSessionType" class="form-control">
+                                            <option value="workshop">Workshop</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="bronzeSessionDuration">Session Duration (minutes)</label>
+                                        <input type="number" id="bronzeSessionDuration" class="form-control" min="5" value="15">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bronzeSpeakerPriority">Speaker Priority</label>
+                                        <select id="bronzeSpeakerPriority" class="form-control">
+                                            <option value="3">Priority 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Package Benefits Configuration -->
         <div class="form-section">
-            <h4>Package Benefits & Features</h4>
+            <h4>Package Benefits Summary</h4>
             
             <div class="benefits-tabs">
                 <div class="benefits-tab-nav">
@@ -3326,17 +3800,16 @@
                     </button>
                 </div>
                 
-                <div class="benefits-tab-content">
-                    <!-- Diamond Benefits -->
-                    <div class="benefits-tab-pane active" id="diamondBenefits">
-                        <div class="form-group">
-                            <label for="diamondInvestment">Investment Amount (₦)</label>
-                            <input type="number" id="diamondInvestment" class="form-control" value="5000000" step="100000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="diamondFeatures">Key Features (one per line)</label>
-                            <textarea id="diamondFeatures" class="form-control" rows="5">• Prime booth location (6x9m)
+                <!-- Diamond Benefits -->
+                <div class="benefits-tab-pane active" id="diamondBenefits">
+                    <div class="form-group">
+                        <label for="diamondInvestment">Investment Amount (₦)</label>
+                        <input type="number" id="diamondInvestment" class="form-control" value="5000000" step="100000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="diamondFeatures">Key Features (one per line)</label>
+                        <textarea id="diamondFeatures" class="form-control" rows="5">• Prime booth location (6x9m)
 • 10 conference passes
 • Keynote speaking slot
 • Company logo on all promotional materials
@@ -3344,78 +3817,77 @@
 • Dedicated event staff
 • Social media promotion
 • Full-page ad in conference brochure</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="diamondDescription">Package Description</label>
-                            <textarea id="diamondDescription" class="form-control" rows="3">Premium partnership with maximum visibility and exclusive benefits.</textarea>
-                        </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="diamondDescription">Package Description</label>
+                        <textarea id="diamondDescription" class="form-control" rows="3">Premium partnership with maximum visibility and exclusive benefits.</textarea>
+                    </div>
+                </div>
 
-                    <!-- Gold Benefits -->
-                    <div class="benefits-tab-pane" id="goldBenefits" style="display: none;">
-                        <div class="form-group">
-                            <label for="goldInvestment">Investment Amount (₦)</label>
-                            <input type="number" id="goldInvestment" class="form-control" value="3000000" step="100000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="goldFeatures">Key Features (one per line)</label>
-                            <textarea id="goldFeatures" class="form-control" rows="5">• Standard booth location (6x6m)
+                <!-- Gold Benefits -->
+                <div class="benefits-tab-pane" id="goldBenefits" style="display: none;">
+                    <div class="form-group">
+                        <label for="goldInvestment">Investment Amount (₦)</label>
+                        <input type="number" id="goldInvestment" class="form-control" value="3000000" step="100000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="goldFeatures">Key Features (one per line)</label>
+                        <textarea id="goldFeatures" class="form-control" rows="5">• Standard booth location (6x6m)
 • 6 conference passes
 • Panel discussion participation
 • Company logo on event website
 • Networking reception access
 • Half-page ad in conference brochure</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="goldDescription">Package Description</label>
-                            <textarea id="goldDescription" class="form-control" rows="3">Strategic partnership with strong visibility and networking opportunities.</textarea>
-                        </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="goldDescription">Package Description</label>
+                        <textarea id="goldDescription" class="form-control" rows="3">Strategic partnership with strong visibility and networking opportunities.</textarea>
+                    </div>
+                </div>
 
-                    <!-- Silver Benefits -->
-                    <div class="benefits-tab-pane" id="silverBenefits" style="display: none;">
-                        <div class="form-group">
-                            <label for="silverInvestment">Investment Amount (₦)</label>
-                            <input type="number" id="silverInvestment" class="form-control" value="1500000" step="50000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="silverFeatures">Key Features (one per line)</label>
-                            <textarea id="silverFeatures" class="form-control" rows="5">• Standard booth location (3x6m)
+                <!-- Silver Benefits -->
+                <div class="benefits-tab-pane" id="silverBenefits" style="display: none;">
+                    <div class="form-group">
+                        <label for="silverInvestment">Investment Amount (₦)</label>
+                        <input type="number" id="silverInvestment" class="form-control" value="1500000" step="50000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="silverFeatures">Key Features (one per line)</label>
+                        <textarea id="silverFeatures" class="form-control" rows="5">• Standard booth location (3x6m)
 • 4 conference passes
 • Roundtable discussion participation
 • Company logo in event program
 • Listing on event website</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="silverDescription">Package Description</label>
-                            <textarea id="silverDescription" class="form-control" rows="3">Valued partnership with good visibility and engagement opportunities.</textarea>
-                        </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="silverDescription">Package Description</label>
+                        <textarea id="silverDescription" class="form-control" rows="3">Valued partnership with good visibility and engagement opportunities.</textarea>
+                    </div>
+                </div>
 
-                    <!-- Bronze Benefits -->
-                    <div class="benefits-tab-pane" id="bronzeBenefits" style="display: none;">
-                        <div class="form-group">
-                            <label for="bronzeInvestment">Investment Amount (₦)</label>
-                            <input type="number" id="bronzeInvestment" class="form-control" value="500000" step="25000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bronzeFeatures">Key Features (one per line)</label>
-                            <textarea id="bronzeFeatures" class="form-control" rows="5">• Exhibition space (3x3m)
+                <!-- Bronze Benefits -->
+                <div class="benefits-tab-pane" id="bronzeBenefits" style="display: none;">
+                    <div class="form-group">
+                        <label for="bronzeInvestment">Investment Amount (₦)</label>
+                        <input type="number" id="bronzeInvestment" class="form-control" value="500000" step="25000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bronzeFeatures">Key Features (one per line)</label>
+                        <textarea id="bronzeFeatures" class="form-control" rows="5">• Exhibition space (3x3m)
 • 2 conference passes
 • Company listing on event website
 • Basic promotional materials</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bronzeDescription">Package Description</label>
-                            <textarea id="bronzeDescription" class="form-control" rows="3">Entry-level partnership with exhibition presence and networking access.</textarea>
-                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bronzeDescription">Package Description</label>
+                        <textarea id="bronzeDescription" class="form-control" rows="3">Entry-level partnership with exhibition presence and networking access.</textarea>
                     </div>
                 </div>
             </div>
@@ -3512,11 +3984,11 @@ ICSC 2026 Team</textarea>
                 <i class="fas fa-undo"></i> Reset to Defaults
             </button>
             <button type="submit" class="btn">
-                <i class="fas fa-save"></i> Save Package Cnfiguration
+                <i class="fas fa-save"></i> Save Package Configuration
             </button>
-        </div>        
-</form>
         </div>
+    </form>
+</div>
 
         <!-- System Configuration -->
         <div class="settings-section">

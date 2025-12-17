@@ -358,24 +358,24 @@ function initializeEventListeners() {
             if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
         }
 
-        // Verification actions
-        if (e.target.classList.contains('approve-btn') && closestRow) {
-            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(attendeeId)) approveAttendee(attendeeId);
-        }
-        if (e.target.classList.contains('reject-btn') && closestRow) {
-            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(attendeeId)) rejectAttendee(attendeeId);
-        }
+        // // Verification actions
+        // if (e.target.classList.contains('approve-btn') && closestRow) {
+        //     const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+        //     if (!Number.isNaN(attendeeId)) approveAttendee(attendeeId);
+        // }
+        // if (e.target.classList.contains('reject-btn') && closestRow) {
+        //     const attendeeId = parseInt(closestRow.getAttribute('data-id'));
+        //     if (!Number.isNaN(attendeeId)) rejectAttendee(attendeeId);
+        // }
 
-        if (e.target.classList.contains('view-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
-        }
-        if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
-        }
+        // if (e.target.classList.contains('view-ministry-btn') && closestRow) {
+        //     const ministryId = parseInt(closestRow.getAttribute('data-id'));
+        //     if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
+        // }
+        // if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
+        //     const ministryId = parseInt(closestRow.getAttribute('data-id'));
+        //     if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
+        // }
 
         // Exhibitor actions
         if (e.target.classList.contains('edit-exhibitor-btn') && closestRow) {
@@ -1270,18 +1270,1090 @@ function viewPartner(partnerId) {
     
     modal.style.display = 'flex';
 }
-
-// Verification Functions
-function approveAttendee(attendeeId) {
-    const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
-    if (attendeeIndex !== -1) {
-        attendees[attendeeIndex].status = 'Approved';
-        updateAttendeesTable();
-        updatePendingTable();
-        updateStats();
-        alert('Attendee has been approved!');
+// Verification System for Admin Dashboard - COMPLETE WITH DIAMOND PARTNER & EMAIL
+class VerificationSystem {
+    constructor() {
+        this.pendingSubmissions = [];
+        this.verifiedSubmissions = [];
+        this.currentSubmission = null;
+        this.emailTemplates = {};
+        
+        this.initialize();
+    }
+    
+    initialize() {
+        // Load sample data including Diamond Partner
+        this.loadSampleData();
+        
+        // Load email templates
+        this.loadEmailTemplates();
+        
+        // Bind event listeners
+        this.bindEvents();
+        
+        // Render tables
+        this.renderPendingSubmissions();
+        this.renderVerificationHistory();
+    }
+    
+    loadSampleData() {
+        // Sample pending submissions - INCLUDING DIAMOND PARTNER
+        this.pendingSubmissions = [
+            // DIAMOND PARTNER SUBMISSION
+            {
+                id: 'SUB-2026-001',
+                partnerId: 'PART-001',
+                partnerName: 'Tech Innovations Ltd',
+                contactPerson: 'Michael Chen',
+                email: 'michael@techinnovations.com',
+                packageLevel: 'diamond',
+                submissionType: 'exhibition',
+                submissionDate: '2026-06-15',
+                details: {
+                    title: 'AI Solutions for Government',
+                    description: 'Premium exhibition showcasing AI-driven solutions for public sector efficiency',
+                    boothNumber: 'A01, A02', // Diamond gets 2 booths
+                    boothSize: '8x8m each',
+                    setupRequirements: 'Premium power outlets, dedicated wifi, custom branding, VIP lounge, 4K displays',
+                    materials: ['Company brochures', 'Product samples', 'Demo equipment', 'VR setup', 'Interactive displays'],
+                    specialRequests: 'Early setup access, VIP parking, private meeting room'
+                },
+                documents: [
+                    { name: 'exhibition_layout_diamond.pdf', type: 'pdf', url: '#' },
+                    { name: 'company_logo.png', type: 'image', url: '#' },
+                    { name: 'premium_branding_kit.zip', type: 'archive', url: '#' },
+                    { name: 'booth_design_3d.jpg', type: 'image', url: '#' }
+                ],
+                status: 'pending',
+                submittedAt: '2026-06-15 10:30:00'
+            },
+            // GOLD PARTNER SPEAKER SUBMISSION
+            {
+                id: 'SUB-2026-002',
+                partnerId: 'PART-002',
+                partnerName: 'Global Solutions Inc',
+                contactPerson: 'Sarah Johnson',
+                email: 'sarah@globalsolutions.com',
+                packageLevel: 'gold',
+                submissionType: 'speaker',
+                submissionDate: '2026-06-16',
+                details: {
+                    speakerName: 'Dr. Robert Kim',
+                    speakerTitle: 'Chief Technology Officer',
+                    presentationTopic: 'Digital Transformation in Public Sector',
+                    presentationDescription: 'How emerging technologies are reshaping government services',
+                    duration: 45,
+                    sessionType: 'keynote',
+                    targetAudience: 'Government executives, IT directors, Policy makers',
+                    specialRequirements: 'Projector, microphone, recording equipment, live streaming setup'
+                },
+                documents: [
+                    { name: 'speaker_bio.pdf', type: 'pdf', url: '#' },
+                    { name: 'presentation_outline.pdf', type: 'pdf', url: '#' },
+                    { name: 'speaker_photo.jpg', type: 'image', url: '#' },
+                    { name: 'company_profile.pdf', type: 'pdf', url: '#' }
+                ],
+                status: 'pending',
+                submittedAt: '2026-06-16 14:15:00'
+            },
+            // SILVER PARTNER SESSION SUBMISSION
+            {
+                id: 'SUB-2026-003',
+                partnerId: 'PART-003',
+                partnerName: 'Data Analytics Corp',
+                contactPerson: 'James Wilson',
+                email: 'james@datacorp.com',
+                packageLevel: 'silver',
+                submissionType: 'session',
+                submissionDate: '2026-06-17',
+                details: {
+                    sessionTitle: 'Data-Driven Decision Making Workshop',
+                    sessionDescription: 'Hands-on workshop on using data analytics for policy decisions',
+                    facilitator: 'Jane Smith, Senior Data Scientist',
+                    duration: 90,
+                    maxParticipants: 30,
+                    equipmentNeeded: 'Projector, whiteboard, wifi, charging stations, laptops',
+                    materials: ['Workbooks', 'Case studies', 'Software demos', 'Hands-on exercises']
+                },
+                documents: [
+                    { name: 'session_plan.pdf', type: 'pdf', url: '#' },
+                    { name: 'facilitator_cv.pdf', type: 'pdf', url: '#' },
+                    { name: 'workshop_materials.zip', type: 'archive', url: '#' }
+                ],
+                status: 'pending',
+                submittedAt: '2026-06-17 09:45:00'
+            },
+            // DIAMOND PARTNER BENEFIT CLAIM
+            {
+                id: 'SUB-2026-004',
+                partnerId: 'PART-001',
+                partnerName: 'Tech Innovations Ltd',
+                contactPerson: 'Michael Chen',
+                email: 'michael@techinnovations.com',
+                packageLevel: 'diamond',
+                submissionType: 'benefit',
+                submissionDate: '2026-06-18',
+                details: {
+                    benefitType: 'VIP Networking Reception Hosting',
+                    description: 'Request to co-host VIP networking reception',
+                    quantity: 'Full hosting rights',
+                    attendees: ['John Doe (CEO)', 'Jane Smith (CTO)', 'Bob Johnson (COO)'],
+                    justification: 'Strategic partnership opportunity with key government stakeholders',
+                    eventDate: '2026-06-26',
+                    specialRequests: 'Branding opportunities, speaking slot, media coverage'
+                },
+                documents: [
+                    { name: 'hosting_proposal.pdf', type: 'pdf', url: '#' },
+                    { name: 'attendee_profiles.pdf', type: 'pdf', url: '#' },
+                    { name: 'company_letterhead.pdf', type: 'pdf', url: '#' }
+                ],
+                status: 'pending',
+                submittedAt: '2026-06-18 16:20:00'
+            }
+        ];
+        
+        // Sample verified submissions
+        this.verifiedSubmissions = [
+            {
+                id: 'SUB-2026-000',
+                partnerId: 'PART-004',
+                partnerName: 'Cloud Systems Ltd',
+                contactPerson: 'Emma Davis',
+                email: 'emma@cloudsystems.com',
+                packageLevel: 'diamond',
+                submissionType: 'exhibition',
+                submissionDate: '2026-06-14',
+                details: {
+                    title: 'Cloud Infrastructure Solutions',
+                    description: 'Enterprise cloud solutions for government digital transformation',
+                    boothNumber: 'A03',
+                    boothSize: '8x8m',
+                    setupRequirements: 'Premium power, dedicated internet, large display monitor, VIP area'
+                },
+                documents: [],
+                status: 'approved',
+                reviewedBy: 'Super Admin',
+                reviewedAt: '2026-06-14 15:30:00',
+                reviewComments: 'Approved for prime location in main exhibition hall. Diamond partner benefits applied.',
+                sendEmail: true,
+                schedule: {
+                    date: '2026-06-25',
+                    time: '09:00',
+                    location: 'Booth A03, Main Hall (Prime Location)',
+                    duration: 480,
+                    additionalNotes: 'VIP access granted. Early setup from 7:00 AM.'
+                },
+                emailSent: true,
+                emailSentAt: '2026-06-14 16:00:00'
+            }
+        ];
+    }
+    
+    loadEmailTemplates() {
+        this.emailTemplates = {
+            approved: {
+                subject: 'Your ICSC 2026 Submission Has Been Approved!',
+                body: (submission, reviewData) => `
+                    <h2>🎉 Submission Approved!</h2>
+                    <p>Dear ${submission.contactPerson},</p>
+                    
+                    <p>Great news! Your submission <strong>${submission.id}</strong> has been <strong>APPROVED</strong> by our review team.</p>
+                    
+                    <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #4caf50; margin: 20px 0;">
+                        <h3 style="color: #2e7d32; margin-top: 0;">Submission Details</h3>
+                        <p><strong>Submission ID:</strong> ${submission.id}</p>
+                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
+                        <p><strong>Company:</strong> ${submission.partnerName}</p>
+                        <p><strong>Package Level:</strong> <span style="color: #6dafff; font-weight: bold;">${submission.packageLevel.toUpperCase()}</span></p>
+                        
+                        ${reviewData.reviewComments ? `
+                            <p><strong>Review Comments:</strong> ${reviewData.reviewComments}</p>
+                        ` : ''}
+                        
+                        ${reviewData.schedule ? `
+                            <hr style="border-color: #c8e6c9;">
+                            <h3 style="color: #2e7d32;">📅 Schedule Details</h3>
+                            ${reviewData.schedule.date ? `<p><strong>Date:</strong> ${reviewData.schedule.date}</p>` : ''}
+                            ${reviewData.schedule.time ? `<p><strong>Time:</strong> ${reviewData.schedule.time}</p>` : ''}
+                            ${reviewData.schedule.location ? `<p><strong>Location:</strong> ${reviewData.schedule.location}</p>` : ''}
+                            ${reviewData.schedule.duration ? `<p><strong>Duration:</strong> ${reviewData.schedule.duration} minutes</p>` : ''}
+                            ${reviewData.schedule.additionalNotes ? `<p><strong>Additional Notes:</strong> ${reviewData.schedule.additionalNotes}</p>` : ''}
+                            
+                            ${submission.packageLevel === 'diamond' ? `
+                                <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                    <p style="color: #1976d2; margin: 0;">
+                                        <strong>⭐ Diamond Partner Benefit:</strong> Your premium status provides priority access and enhanced visibility.
+                                    </p>
+                                </div>
+                            ` : ''}
+                        ` : ''}
+                    </div>
+                    
+                    <p><strong>Next Steps:</strong></p>
+                    <ul>
+                        <li>Prepare your materials according to the schedule</li>
+                        <li>Check in at the registration desk 30 minutes before your scheduled time</li>
+                        ${submission.packageLevel === 'diamond' ? '<li>Contact your dedicated partner manager for any special arrangements</li>' : ''}
+                        <li>Review the conference app for any updates</li>
+                    </ul>
+                    
+                    <p>If you have any questions, please contact our partnership team at <a href="mailto:partners@icsc2026.gov.ng">partners@icsc2026.gov.ng</a>.</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>ICSC 2026 Administration Team</strong></p>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
+                        <p>This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                `
+            },
+            
+            rejected: {
+                subject: 'Update on Your ICSC 2026 Submission',
+                body: (submission, reviewData) => `
+                    <h2>Important Update Regarding Your Submission</h2>
+                    <p>Dear ${submission.contactPerson},</p>
+                    
+                    <p>Thank you for your submission <strong>${submission.id}</strong>. After careful review, we regret to inform you that your submission has been <strong style="color: #d32f2f;">NOT APPROVED</strong> at this time.</p>
+                    
+                    <div style="background-color: #ffebee; padding: 20px; border-radius: 8px; border-left: 4px solid #f44336; margin: 20px 0;">
+                        <h3 style="color: #c62828; margin-top: 0;">Submission Details</h3>
+                        <p><strong>Submission ID:</strong> ${submission.id}</p>
+                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
+                        <p><strong>Company:</strong> ${submission.partnerName}</p>
+                        <p><strong>Package Level:</strong> ${submission.packageLevel.toUpperCase()}</p>
+                        
+                        ${reviewData.reviewComments ? `
+                            <p><strong>Feedback from Review Team:</strong><br>
+                            ${reviewData.reviewComments}</p>
+                        ` : ''}
+                        
+                        ${submission.packageLevel === 'diamond' ? `
+                            <div style="background-color: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                <p style="color: #ef6c00; margin: 0;">
+                                    <strong>Note for Diamond Partners:</strong> As a valued Diamond partner, we encourage you to review the feedback and consider resubmitting.
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <p><strong>Possible Reasons for Rejection:</strong></p>
+                    <ul>
+                        <li>Schedule conflict or capacity limitations</li>
+                        <li>Insufficient documentation or information</li>
+                        <li>Does not align with conference themes or objectives</li>
+                        <li>Duplicate or similar submissions already accepted</li>
+                    </ul>
+                    
+                    <p><strong>Next Steps:</strong></p>
+                    <ul>
+                        <li>Review the feedback provided above</li>
+                        <li>Consider alternative participation options</li>
+                        <li>Contact our partnership team if you wish to discuss further</li>
+                        <li>You may submit a revised proposal if applicable</li>
+                    </ul>
+                    
+                    <p>We value your partnership and hope to work with you on future opportunities.</p>
+                    
+                    <p>Sincerely,<br>
+                    <strong>ICSC 2026 Review Committee</strong></p>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
+                        <p>Contact: <a href="mailto:review@icsc2026.gov.ng">review@icsc2026.gov.ng</a></p>
+                    </div>
+                `
+            },
+            
+            pending_changes: {
+                subject: 'Changes Requested for Your ICSC 2026 Submission',
+                body: (submission, reviewData) => `
+                    <h2>📋 Changes Requested for Your Submission</h2>
+                    <p>Dear ${submission.contactPerson},</p>
+                    
+                    <p>Thank you for your submission <strong>${submission.id}</strong>. Our review team has reviewed your submission and requests some changes before we can proceed with approval.</p>
+                    
+                    <div style="background-color: #fff3e0; padding: 20px; border-radius: 8px; border-left: 4px solid #ff9800; margin: 20px 0;">
+                        <h3 style="color: #ef6c00; margin-top: 0;">Submission Details</h3>
+                        <p><strong>Submission ID:</strong> ${submission.id}</p>
+                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
+                        <p><strong>Company:</strong> ${submission.partnerName}</p>
+                        <p><strong>Status:</strong> <span style="color: #ff9800; font-weight: bold;">Changes Requested</span></p>
+                        
+                        <div style="background-color: white; padding: 15px; border-radius: 4px; margin-top: 15px;">
+                            <h4 style="margin-top: 0; color: #555;">📝 Required Changes:</h4>
+                            <p>${reviewData.reviewComments || 'Please review the submission requirements and provide additional information.'}</p>
+                            
+                            ${submission.packageLevel === 'diamond' ? `
+                                <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                    <p style="color: #1976d2; margin: 0;">
+                                        <strong>Diamond Partner Priority:</strong> Your resubmission will be reviewed within 24 hours.
+                                    </p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <p><strong>Action Required:</strong></p>
+                    <ol>
+                        <li>Review the requested changes above</li>
+                        <li>Update your submission in the partner dashboard</li>
+                        <li>Resubmit for review</li>
+                        <li>Our team will re-evaluate your updated submission</li>
+                    </ol>
+                    
+                    <p><strong>Deadline for Resubmission:</strong> 7 days from receipt of this email</p>
+                    
+                    <p><strong>How to Resubmit:</strong></p>
+                    <ul>
+                        <li>Login to your partner dashboard</li>
+                        <li>Navigate to "My Submissions"</li>
+                        <li>Edit the submission with ID: ${submission.id}</li>
+                        <li>Make the necessary changes and resubmit</li>
+                    </ul>
+                    
+                    ${submission.packageLevel === 'diamond' ? `
+                        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                            <h4 style="margin-top: 0; color: #333;">💎 Diamond Partner Support</h4>
+                            <p>As a Diamond partner, you have access to dedicated support:</p>
+                            <ul>
+                                <li><strong>Dedicated Partner Manager:</strong> Alex Morgan</li>
+                                <li><strong>Contact:</strong> <a href="mailto:alex.morgan@icsc2026.gov.ng">alex.morgan@icsc2026.gov.ng</a></li>
+                                <li><strong>Phone:</strong> +234 800 000 0003</li>
+                                <li><strong>Priority Resubmission Review:</strong> 24-hour turnaround</li>
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    <p>We look forward to receiving your updated submission.</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>ICSC 2026 Review Team</strong></p>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
+                        <p>Need help? Contact: <a href="mailto:support@icsc2026.gov.ng">support@icsc2026.gov.ng</a></p>
+                    </div>
+                `
+            }
+        };
+    }
+    
+    bindEvents() {
+        // Filter controls
+        document.getElementById('submissionTypeFilter')?.addEventListener('change', () => {
+            this.renderPendingSubmissions();
+        });
+        
+        document.getElementById('partnerTypeFilter')?.addEventListener('change', () => {
+            this.renderPendingSubmissions();
+        });
+        
+        document.getElementById('historyStatusFilter')?.addEventListener('change', () => {
+            this.renderVerificationHistory();
+        });
+        
+        document.getElementById('searchHistory')?.addEventListener('input', () => {
+            this.renderVerificationHistory();
+        });
+        
+        // Refresh button
+        document.getElementById('refreshPendingBtn')?.addEventListener('click', () => {
+            this.refreshSubmissions();
+        });
+        
+        // Modal controls
+        document.getElementById('reviewStatus')?.addEventListener('change', (e) => {
+            this.toggleScheduleSection(e.target.value);
+        });
+        
+        document.getElementById('verificationForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.submitReview();
+        });
+        
+        document.getElementById('cancelReview')?.addEventListener('click', () => {
+            this.closeVerificationModal();
+        });
+        
+        // Document viewer controls
+        document.getElementById('zoomInBtn')?.addEventListener('click', () => {
+            this.zoomImage(1.2);
+        });
+        
+        document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
+            this.zoomImage(0.8);
+        });
+        
+        document.getElementById('resetZoomBtn')?.addEventListener('click', () => {
+            this.resetImageZoom();
+        });
+        
+        // Test email button (optional - for testing)
+        const testEmailBtn = document.createElement('button');
+        testEmailBtn.className = 'btn btn-sm btn-info';
+        testEmailBtn.innerHTML = '<i class="fas fa-envelope"></i> Test Email';
+        testEmailBtn.style.marginLeft = '10px';
+        testEmailBtn.onclick = () => this.testEmailTemplates();
+        document.querySelector('.section-actions')?.appendChild(testEmailBtn);
+        
+        // Close modals
+        document.querySelectorAll('.close-modal').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            });
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    }
+    
+    renderPendingSubmissions() {
+        const table = document.getElementById('pendingSubmissionsTable');
+        if (!table) return;
+        
+        const typeFilter = document.getElementById('submissionTypeFilter')?.value || 'all';
+        const partnerFilter = document.getElementById('partnerTypeFilter')?.value || 'all';
+        
+        const filteredSubmissions = this.pendingSubmissions.filter(submission => {
+            if (typeFilter !== 'all' && submission.submissionType !== typeFilter) return false;
+            if (partnerFilter !== 'all' && submission.packageLevel !== partnerFilter) return false;
+            return true;
+        });
+        
+        table.innerHTML = filteredSubmissions.map(submission => `
+            <tr>
+                <td>
+                    <strong>${submission.id}</strong>
+                    ${submission.packageLevel === 'diamond' ? '<span style="color: #6dafff; margin-left: 5px;">💎</span>' : ''}
+                </td>
+                <td>
+                    <div>${submission.partnerName}</div>
+                    <small class="text-muted">${submission.contactPerson}</small>
+                    <div>
+                        <span class="package-badge badge-${submission.packageLevel}">
+                            ${submission.packageLevel.toUpperCase()} PARTNER
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <span class="submission-badge badge-${submission.submissionType}">
+                        ${submission.submissionType.toUpperCase()}
+                    </span>
+                </td>
+                <td>
+                    <div><strong>${this.getSubmissionTitle(submission)}</strong></div>
+                    <small class="text-muted">${this.getSubmissionSummary(submission)}</small>
+                    ${submission.packageLevel === 'diamond' ? 
+                        '<div><small style="color: #6dafff;"><i class="fas fa-crown"></i> Diamond Priority</small></div>' : ''}
+                </td>
+                <td>
+                    <div class="document-preview">
+                        ${submission.documents.slice(0, 3).map(doc => `
+                            <div class="document-thumbnail" onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
+                                <img src="${this.getDocumentIcon(doc.type)}" alt="${doc.name}">
+                            </div>
+                        `).join('')}
+                        ${submission.documents.length > 3 ? `
+                            <div class="document-count">+${submission.documents.length - 3} more</div>
+                        ` : ''}
+                    </div>
+                </td>
+                <td>
+                    ${this.formatDate(submission.submittedAt)}
+                    ${submission.packageLevel === 'diamond' ? '<br><small style="color: #6dafff;">Priority Review</small>' : ''}
+                </td>
+                <td>
+                    <span class="package-badge badge-${submission.packageLevel}">
+                        ${submission.packageLevel.charAt(0).toUpperCase() + submission.packageLevel.slice(1)}
+                    </span>
+                </td>
+                <td>
+                    <div class="verification-actions" style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <button class="btn btn-sm btn-primary view-btn" 
+                                onclick="verificationSystem.openVerificationModal('${submission.id}')">
+                            <i class="fas fa-eye"></i> Review
+                        </button>
+                        ${submission.packageLevel === 'diamond' ? 
+                            `<button class="btn btn-sm btn-warning" 
+                                onclick="verificationSystem.priorityReview('${submission.id}')"
+                                title="Priority Review for Diamond Partner">
+                                <i class="fas fa-crown"></i>
+                            </button>` : ''}
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    priorityReview(submissionId) {
+        const submission = this.pendingSubmissions.find(s => s.id === submissionId);
+        if (!submission) return;
+        
+        // Move diamond submission to top for priority review
+        const index = this.pendingSubmissions.findIndex(s => s.id === submissionId);
+        if (index > 0) {
+            this.pendingSubmissions.splice(index, 1);
+            this.pendingSubmissions.unshift(submission);
+            this.renderPendingSubmissions();
+            showNotification(`💎 Diamond partner submission moved to priority review`, 'info');
+        }
+        
+        // Open verification modal
+        this.openVerificationModal(submissionId);
+    }
+    
+    openVerificationModal(submissionId) {
+        this.currentSubmission = this.pendingSubmissions.find(s => s.id === submissionId);
+        if (!this.currentSubmission) return;
+        
+        const modal = document.getElementById('verificationModal');
+        const title = document.getElementById('verificationModalTitle');
+        const detailsContainer = document.querySelector('.submission-details-container');
+        
+        title.textContent = `Verify ${this.currentSubmission.submissionType.toUpperCase()} Submission`;
+        if (this.currentSubmission.packageLevel === 'diamond') {
+            title.innerHTML += ` <span class="package-badge badge-diamond" style="font-size: 0.8rem; margin-left: 10px;">DIAMOND PARTNER</span>`;
+        }
+        
+        // Render submission details
+        detailsContainer.innerHTML = this.renderSubmissionDetails(this.currentSubmission);
+        
+        // Reset form
+        document.getElementById('verificationForm').reset();
+        document.getElementById('scheduleSection').style.display = 'none';
+        
+        // Set default schedule date for Diamond partners
+        if (this.currentSubmission.packageLevel === 'diamond') {
+            const today = new Date();
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+            document.getElementById('scheduledDate').value = nextWeek.toISOString().split('T')[0];
+            document.getElementById('scheduledTime').value = '09:00';
+            document.getElementById('venueLocation').value = 'Prime Location - Main Hall';
+            document.getElementById('sessionDuration').value = this.currentSubmission.submissionType === 'exhibition' ? '480' : '45';
+        }
+        
+        // Show modal
+        modal.style.display = 'flex';
+    }
+    
+    renderSubmissionDetails(submission) {
+        let detailsHTML = `
+            <div class="detail-section">
+                <h5><i class="fas fa-building"></i> Partner Information</h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Company</div>
+                        <div class="detail-value">${submission.partnerName}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contact Person</div>
+                        <div class="detail-value">${submission.contactPerson}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">
+                            <a href="mailto:${submission.email}">${submission.email}</a>
+                            <button class="btn btn-sm btn-outline-primary" style="margin-left: 10px;" 
+                                    onclick="verificationSystem.sendTestEmail('${submission.id}')">
+                                <i class="fas fa-envelope"></i> Test Email
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Package Level</div>
+                        <div class="detail-value">
+                            <span class="package-badge badge-${submission.packageLevel}">
+                                ${submission.packageLevel.toUpperCase()} PARTNER
+                            </span>
+                            ${submission.packageLevel === 'diamond' ? 
+                                '<span style="color: #6dafff; margin-left: 5px;"><i class="fas fa-crown"></i> Premium Benefits</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h5><i class="fas fa-info-circle"></i> Submission Details</h5>
+        `;
+        
+        // Render specific details based on submission type
+        switch(submission.submissionType) {
+            case 'exhibition':
+                detailsHTML += this.renderExhibitionDetails(submission.details, submission.packageLevel);
+                break;
+            case 'speaker':
+                detailsHTML += this.renderSpeakerDetails(submission.details, submission.packageLevel);
+                break;
+            case 'session':
+                detailsHTML += this.renderSessionDetails(submission.details, submission.packageLevel);
+                break;
+            case 'benefit':
+                detailsHTML += this.renderBenefitDetails(submission.details, submission.packageLevel);
+                break;
+        }
+        
+        // Add Diamond Partner specific benefits
+        if (submission.packageLevel === 'diamond') {
+            detailsHTML += `
+                <div class="detail-section">
+                    <h5><i class="fas fa-crown" style="color: #6dafff;"></i> Diamond Partner Benefits</h5>
+                    <div style="background-color: #e3f2fd; padding: 15px; border-radius: 6px; border-left: 4px solid #6dafff;">
+                        <ul style="margin-bottom: 0;">
+                            <li>Priority scheduling and prime locations</li>
+                            <li>Dedicated partner manager support</li>
+                            <li>Enhanced branding opportunities</li>
+                            <li>VIP access and networking privileges</li>
+                            <li>24-hour review turnaround for resubmissions</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Add documents section
+        if (submission.documents && submission.documents.length > 0) {
+            detailsHTML += `
+                <div class="detail-section">
+                    <h5><i class="fas fa-paperclip"></i> Attached Documents (${submission.documents.length})</h5>
+                    <div class="documents-grid">
+                        ${submission.documents.map(doc => `
+                            <div class="document-card">
+                                <div class="document-thumb" onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
+                                    <img src="${this.getDocumentIcon(doc.type)}" alt="${doc.name}">
+                                </div>
+                                <div class="document-info">
+                                    <div class="document-name" title="${doc.name}">${doc.name}</div>
+                                    <div class="document-action">
+                                        <button class="btn btn-sm btn-outline-primary" 
+                                                onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" 
+                                                onclick="verificationSystem.downloadDocument('${doc.name}', '${doc.url}')"
+                                                style="margin-top: 5px;">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        detailsHTML += `
+            <div class="detail-section">
+                <h5><i class="fas fa-clock"></i> Timeline</h5>
+                <div class="status-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">${this.formatDate(submission.submittedAt)}</div>
+                        <div class="timeline-text">
+                            Submission received
+                            ${submission.packageLevel === 'diamond' ? 
+                                '<span style="color: #6dafff;">(Diamond Priority)</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        return detailsHTML;
+    }
+    
+    renderExhibitionDetails(details, packageLevel) {
+        let diamondFeatures = '';
+        if (packageLevel === 'diamond') {
+            diamondFeatures = `
+                <div class="detail-item">
+                    <div class="detail-label">Diamond Benefits Applied</div>
+                    <div class="detail-value">
+                        <span class="badge" style="background-color: #6dafff; color: white; margin-right: 5px;">Prime Location</span>
+                        <span class="badge" style="background-color: #6dafff; color: white; margin-right: 5px;">Enhanced Branding</span>
+                        <span class="badge" style="background-color: #6dafff; color: white;">VIP Access</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        return `
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Exhibition Title</div>
+                    <div class="detail-value">${details.title}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Booth Number</div>
+                    <div class="detail-value">
+                        ${details.boothNumber}
+                        ${packageLevel === 'diamond' ? 
+                            '<span style="color: #6dafff; font-weight: bold;"> (Prime Location)</span>' : ''}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Booth Size</div>
+                    <div class="detail-value">
+                        ${details.boothSize}
+                        ${packageLevel === 'diamond' ? 
+                            '<span style="color: #6dafff; font-weight: bold;"> (Premium Size)</span>' : ''}
+                    </div>
+                </div>
+                ${diamondFeatures}
+                <div class="detail-item">
+                    <div class="detail-label">Setup Requirements</div>
+                    <div class="detail-value detail-text">${details.setupRequirements || 'None specified'}</div>
+                </div>
+                ${details.specialRequests ? `
+                    <div class="detail-item">
+                        <div class="detail-label">Special Requests</div>
+                        <div class="detail-value detail-text">${details.specialRequests}</div>
+                    </div>
+                ` : ''}
+                <div class="detail-item">
+                    <div class="detail-label">Description</div>
+                    <div class="detail-value detail-text">${details.description}</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    submitReview() {
+        const status = document.getElementById('reviewStatus').value;
+        const comments = document.getElementById('reviewComments').value;
+        const sendEmail = document.getElementById('sendEmailNotification').checked;
+        
+        if (!status) {
+            showNotification('Please select a decision.', 'error');
+            return;
+        }
+        // Prepare review data
+        const reviewData = {
+            submissionId: this.currentSubmission.id,
+            status: status,
+            comments: comments,
+            reviewedBy: 'Super Admin', // In real app, get from auth
+            reviewedAt: new Date().toISOString(),
+            sendEmail: sendEmail
+        };
+        
+        // Add schedule if approved
+        if (status === 'approved') {
+            reviewData.schedule = {
+                date: document.getElementById('scheduledDate').value,
+                time: document.getElementById('scheduledTime').value,
+                location: document.getElementById('venueLocation').value,
+                duration: document.getElementById('sessionDuration').value,
+                additionalNotes: document.getElementById('additionalNotes').value
+            };
+        }
+        
+        // Move to verified submissions
+        this.verifiedSubmissions.unshift({
+            ...this.currentSubmission,
+            ...reviewData
+        });
+        
+        // Remove from pending
+        this.pendingSubmissions = this.pendingSubmissions.filter(
+            s => s.id !== this.currentSubmission.id
+        );
+        
+        // Send email notification if requested
+        if (sendEmail) {
+            this.sendEmailNotification(this.currentSubmission, reviewData);
+        }
+        
+        // Close modal
+        this.closeVerificationModal();
+        
+        // Refresh tables
+        this.renderPendingSubmissions();
+        this.renderVerificationHistory();
+        
+        // Show success message
+        showNotification(`Submission ${status === 'approved' ? 'approved' : 'rejected'} successfully!`, 'success');
+    }
+    
+    sendEmailNotification(submission, reviewData) {
+        // This is where you would integrate with your email service
+        console.log('Sending email notification:', {
+            to: submission.email,
+            subject: `Submission ${reviewData.status} - ${submission.id}`,
+            body: this.generateEmailContent(submission, reviewData)
+        });
+        
+        // In a real app, you would call your email API here
+        // Example:
+        /*
+        fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                to: submission.email,
+                subject: `Submission ${reviewData.status} - ${submission.id}`,
+                html: this.generateEmailContent(submission, reviewData)
+            })
+        });
+        */
+    }
+    
+    generateEmailContent(submission, reviewData) {
+        let emailContent = `
+            <h2>Submission Review Update</h2>
+            <p>Dear ${submission.contactPerson},</p>
+            
+            <p>Your submission <strong>${submission.id}</strong> has been reviewed.</p>
+            
+            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <p><strong>Decision:</strong> <span style="color: ${reviewData.status === 'approved' ? '#28a745' : '#dc3545'}">
+                    ${reviewData.status.charAt(0).toUpperCase() + reviewData.status.slice(1)}
+                </span></p>
+                
+                ${reviewData.comments ? `
+                    <p><strong>Comments:</strong> ${reviewData.comments}</p>
+                ` : ''}
+                
+                ${reviewData.schedule ? `
+                    <hr>
+                    <h4>Schedule Details:</h4>
+                    <p><strong>Date:</strong> ${reviewData.schedule.date}</p>
+                    <p><strong>Time:</strong> ${reviewData.schedule.time}</p>
+                    <p><strong>Location:</strong> ${reviewData.schedule.location}</p>
+                    <p><strong>Duration:</strong> ${reviewData.schedule.duration} minutes</p>
+                    ${reviewData.schedule.additionalNotes ? `
+                        <p><strong>Additional Notes:</strong> ${reviewData.schedule.additionalNotes}</p>
+                    ` : ''}
+                ` : ''}
+            </div>
+            
+            <p>If you have any questions, please contact the conference administration team.</p>
+            
+            <p>Best regards,<br>
+            ICSC 2026 Administration Team</p>
+        `;
+        
+        return emailContent;
+    }
+    
+    quickApprove(submissionId) {
+        if (confirm('Are you sure you want to approve this submission?')) {
+            const submission = this.pendingSubmissions.find(s => s.id === submissionId);
+            if (submission) {
+                this.currentSubmission = submission;
+                document.getElementById('reviewStatus').value = 'approved';
+                document.getElementById('reviewComments').value = 'Approved via quick action.';
+                this.submitReview();
+            }
+        }
+    }
+    
+    quickReject(submissionId) {
+        if (confirm('Are you sure you want to reject this submission?')) {
+            const submission = this.pendingSubmissions.find(s => s.id === submissionId);
+            if (submission) {
+                this.currentSubmission = submission;
+                document.getElementById('reviewStatus').value = 'rejected';
+                document.getElementById('reviewComments').value = 'Rejected via quick action.';
+                this.submitReview();
+            }
+        }
+    }
+    
+    viewVerificationDetails(submissionId) {
+        const submission = this.verifiedSubmissions.find(s => s.id === submissionId);
+        if (!submission) return;
+        
+        const modal = document.getElementById('verificationModal');
+        const title = document.getElementById('verificationModalTitle');
+        const detailsContainer = document.querySelector('.submission-details-container');
+        
+        title.textContent = `View Verification - ${submission.id}`;
+        
+        // Render details including review information
+        let detailsHTML = this.renderSubmissionDetails(submission);
+        
+        // Add review section
+        detailsHTML += `
+            <div class="detail-section">
+                <h5><i class="fas fa-clipboard-check"></i> Review Details</h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <span class="status-badge status-${submission.status}">
+                                ${this.getStatusText(submission.status)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Reviewed By</div>
+                        <div class="detail-value">${submission.reviewedBy}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Reviewed Date</div>
+                        <div class="detail-value">${this.formatDate(submission.reviewedAt)}</div>
+                    </div>
+                    ${submission.comments ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Comments</div>
+                            <div class="detail-value detail-text">${submission.comments}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        
+        // Add schedule if exists
+        if (submission.schedule) {
+            detailsHTML += `
+                <div class="detail-section">
+                    <h5><i class="fas fa-calendar-alt"></i> Schedule Details</h5>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Date</div>
+                            <div class="detail-value">${submission.schedule.date}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Time</div>
+                            <div class="detail-value">${submission.schedule.time}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">${submission.schedule.location}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Duration</div>
+                            <div class="detail-value">${submission.schedule.duration} minutes</div>
+                        </div>
+                        ${submission.schedule.additionalNotes ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Additional Notes</div>
+                                <div class="detail-value detail-text">${submission.schedule.additionalNotes}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        detailsContainer.innerHTML = detailsHTML;
+        
+        // Hide form for view-only mode
+        document.querySelector('.review-section').style.display = 'none';
+        
+        modal.style.display = 'flex';
+    }
+    
+    closeVerificationModal() {
+        const modal = document.getElementById('verificationModal');
+        modal.style.display = 'none';
+        
+        // Reset and show form for next use
+        document.querySelector('.review-section').style.display = 'block';
+        this.currentSubmission = null;
+    }
+    
+    refreshSubmissions() {
+        // In a real app, this would fetch from API
+        showNotification('Refreshing submissions...', 'info');
+        
+        setTimeout(() => {
+            this.renderPendingSubmissions();
+            this.renderVerificationHistory();
+            showNotification('Submissions refreshed successfully!', 'success');
+        }, 1000);
+    }
+    
+    // Helper methods
+    getSubmissionTitle(submission) {
+        switch(submission.submissionType) {
+            case 'exhibition': return submission.details.title;
+            case 'speaker': return submission.details.presentationTopic;
+            case 'session': return submission.details.sessionTitle;
+            case 'benefit': return submission.details.benefitType;
+            default: return submission.id;
+        }
+    }
+    
+    getSubmissionSummary(submission) {
+        switch(submission.submissionType) {
+            case 'exhibition': 
+                return `Booth: ${submission.details.boothNumber} • Size: ${submission.details.boothSize}`;
+            case 'speaker': 
+                return `Speaker: ${submission.details.speakerName} • ${submission.details.duration} min`;
+            case 'session': 
+                return `Facilitator: ${submission.details.facilitator} • ${submission.details.duration} min`;
+            case 'benefit': 
+                return `Quantity: ${submission.details.quantity} • Date: ${submission.details.eventDate}`;
+            default: return submission.id;
+        }
+    }
+    
+    getDocumentIcon(docType) {
+        const icons = {
+            'pdf': 'https://cdn-icons-png.flaticon.com/512/337/337946.png',
+            'image': 'https://cdn-icons-png.flaticon.com/512/3767/3767084.png',
+            'archive': 'https://cdn-icons-png.flaticon.com/512/3767/3767094.png',
+            'default': 'https://cdn-icons-png.flaticon.com/512/3767/3767089.png'
+        };
+        return icons[docType] || icons.default;
+    }
+    
+    getStatusText(status) {
+        const statusMap = {
+            'approved': 'Approved',
+            'rejected': 'Rejected',
+            'pending_changes': 'Changes Requested',
+            'pending': 'Pending'
+        };
+        return statusMap[status] || status;
+    }
+    
+    formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     }
 }
+
+// Initialize verification system
+let verificationSystem;
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificationSystem = new VerificationSystem();
+    
+    // Make available globally for onclick events
+    window.verificationSystem = verificationSystem;
+});
+
+// Utility function for notifications
+function showNotification(message, type = 'info') {
+    // Use existing notification system or create a simple one
+    alert(`${type.toUpperCase()}: ${message}`);
+}
+// // // Verification Functions
+// // function approveAttendee(attendeeId) {
+// //     const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
+// //     if (attendeeIndex !== -1) {
+// //         attendees[attendeeIndex].status = 'Approved';
+// //         updateAttendeesTable();
+// //         updatePendingTable();
+// //         updateStats();
+// //         alert('Attendee has been approved!');
+// //     }
+// }
 
 function rejectAttendee(attendeeId) {
     const attendeeIndex = attendees.findIndex(a => a.id === attendeeId);
@@ -5232,6 +6304,442 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Initialize Package Feature Rights
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved package configurations
+    loadPackageConfigurations();
+    
+    // Initialize toggle functionality
+    initializeFeatureToggles();
+    
+    // Initialize benefits tabs
+    initializeBenefitsTabs();
+    
+    // Handle form submission
+    document.getElementById('packageConfigForm').addEventListener('submit', savePackageConfigurations);
+    
+    // Handle refresh stats button
+    document.getElementById('refreshPackageStatsBtn').addEventListener('click', refreshPackageStats);
+    
+    // Handle reset defaults button
+    document.getElementById('resetPackageDefaultsBtn').addEventListener('click', resetPackageDefaults);
+});
+
+function initializeFeatureToggles() {
+    // Get all feature checkboxes
+    const featureCheckboxes = document.querySelectorAll('.feature-checkbox');
+    
+    featureCheckboxes.forEach(checkbox => {
+        // Set initial state
+        const packageType = checkbox.id.replace('ExhibitRights', '').replace('SpeakRights', '');
+        const featureType = checkbox.id.includes('Exhibit') ? 'Exhibit' : 'Speak';
+        const detailsDiv = document.getElementById(`${packageType.toLowerCase()}${featureType}Details`);
+        
+        if (detailsDiv) {
+            detailsDiv.style.display = checkbox.checked ? 'block' : 'none';
+        }
+        
+        // Add change event listener
+        checkbox.addEventListener('change', function() {
+            if (detailsDiv) {
+                detailsDiv.style.display = this.checked ? 'block' : 'none';
+                
+                // If turning off, reset values
+                if (!this.checked) {
+                    resetFeatureDetails(packageType.toLowerCase(), featureType);
+                }
+            }
+        });
+    });
+}
+
+function resetFeatureDetails(packageType, featureType) {
+    const detailsDiv = document.getElementById(`${packageType}${featureType}Details`);
+    if (detailsDiv) {
+        const inputs = detailsDiv.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.type === 'number') {
+                input.value = 0;
+            } else if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            }
+        });
+    }
+}
+
+function initializeBenefitsTabs() {
+    const tabButtons = document.querySelectorAll('.benefits-tab-btn');
+    const tabPanes = document.querySelectorAll('.benefits-tab-pane');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const packageType = this.getAttribute('data-package');
+            
+            // Update active button
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding pane
+            tabPanes.forEach(pane => pane.style.display = 'none');
+            document.getElementById(`${packageType}Benefits`).style.display = 'block';
+        });
+    });
+}
+
+async function loadPackageConfigurations() {
+    try {
+        // BACKEND INTEGRATION: Fetch saved configurations
+        // const response = await fetch('/api/package-configurations');
+        // const data = await response.json();
+        
+        // Sample data for demo
+        const savedConfig = {
+            diamond: {
+                maxRegistrants: 10,
+                currentCount: 3,
+                exhibitRights: true,
+                speakRights: true,
+                boothSlots: 2,
+                boothSize: '6x9m',
+                speakingSlots: 1,
+                sessionType: 'keynote',
+                investment: 5000000
+            },
+            gold: {
+                maxRegistrants: 20,
+                currentCount: 8,
+                exhibitRights: true,
+                speakRights: true,
+                boothSlots: 1,
+                boothSize: '6x6m',
+                speakingSlots: 1,
+                sessionType: 'panel',
+                investment: 3000000
+            },
+            silver: {
+                maxRegistrants: 30,
+                currentCount: 15,
+                exhibitRights: true,
+                speakRights: false,
+                boothSlots: 1,
+                boothSize: '3x6m',
+                speakingSlots: 0,
+                sessionType: 'roundtable',
+                investment: 1500000
+            },
+            bronze: {
+                maxRegistrants: 50,
+                currentCount: 25,
+                exhibitRights: false,
+                speakRights: false,
+                boothSlots: 0,
+                boothSize: '3x3m',
+                speakingSlots: 0,
+                sessionType: 'workshop',
+                investment: 500000
+            }
+        };
+        
+        // Apply configurations to form
+        Object.keys(savedConfig).forEach(packageType => {
+            const config = savedConfig[packageType];
+            
+            // Set capacity
+            document.getElementById(`${packageType}MaxRegistrants`).value = config.maxRegistrants;
+            document.getElementById(`${packageType}CurrentCount`).value = config.currentCount;
+            
+            // Set feature rights
+            document.getElementById(`${packageType}ExhibitRights`).checked = config.exhibitRights;
+            document.getElementById(`${packageType}SpeakRights`).checked = config.speakRights;
+            
+            // Set exhibit details
+            if (config.exhibitRights) {
+                document.getElementById(`${packageType}BoothSlots`).value = config.boothSlots;
+                document.getElementById(`${packageType}BoothSize`).value = config.boothSize;
+            }
+            
+            // Set speak details
+            if (config.speakRights) {
+                document.getElementById(`${packageType}SpeakingSlots`).value = config.speakingSlots;
+                document.getElementById(`${packageType}SessionType`).value = config.sessionType;
+            }
+            
+            // Set investment
+            document.getElementById(`${packageType}Investment`).value = config.investment;
+            
+            // Update status display
+            updatePackageStatus(packageType, config.currentCount, config.maxRegistrants);
+        });
+        
+        // Update utilization stats
+        updateUtilizationStats(savedConfig);
+        
+    } catch (error) {
+        console.error('Error loading package configurations:', error);
+        showNotification('Failed to load package configurations', 'error');
+    }
+}
+
+function updatePackageStatus(packageType, currentCount, maxRegistrants) {
+    const statusElement = document.getElementById(`${packageType}Status`);
+    
+    if (!statusElement) return;
+    
+    if (maxRegistrants === 0) {
+        statusElement.textContent = 'Unlimited';
+        statusElement.className = 'package-status status-available';
+    } else if (currentCount >= maxRegistrants) {
+        statusElement.textContent = 'Full';
+        statusElement.className = 'package-status status-full';
+    } else {
+        statusElement.textContent = 'Available';
+        statusElement.className = 'package-status status-available';
+    }
+}
+
+function updateUtilizationStats(config) {
+    Object.keys(config).forEach(packageType => {
+        const configData = config[packageType];
+        const current = configData.currentCount;
+        const max = configData.maxRegistrants;
+        
+        // Update utilization display
+        document.getElementById(`${packageType}Utilization`).textContent = `${current}/${max}`;
+        
+        // Calculate percentage
+        const percentage = max > 0 ? Math.round((current / max) * 100) : 0;
+        document.getElementById(`${packageType}Percentage`).textContent = `${percentage}%`;
+    });
+}
+
+async function savePackageConfigurations(e) {
+    e.preventDefault();
+    
+    try {
+        const config = {
+            diamond: getPackageConfig('diamond'),
+            gold: getPackageConfig('gold'),
+            silver: getPackageConfig('silver'),
+            bronze: getPackageConfig('bronze'),
+            paymentGracePeriod: document.getElementById('paymentGracePeriod').value,
+            autoReopenEnabled: document.getElementById('autoReopenEnabled').value,
+            paymentReminderTemplate: document.getElementById('paymentReminderTemplate').value
+        };
+        
+        // BACKEND INTEGRATION: Save configurations
+        // const response = await fetch('/api/package-configurations/save', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(config)
+        // });
+        
+        // if (response.ok) {
+            showNotification('Package configurations saved successfully!');
+            
+            // Update partner dashboards in real-time
+            notifyPartnerDashboards(config);
+            
+            // Update status displays
+            updatePackageStatus('diamond', config.diamond.currentCount, config.diamond.maxRegistrants);
+            updatePackageStatus('gold', config.gold.currentCount, config.gold.maxRegistrants);
+            updatePackageStatus('silver', config.silver.currentCount, config.silver.maxRegistrants);
+            updatePackageStatus('bronze', config.bronze.currentCount, config.bronze.maxRegistrants);
+            
+            updateUtilizationStats(config);
+        // } else {
+        //     throw new Error('Failed to save configurations');
+        // }
+        
+    } catch (error) {
+        console.error('Error saving package configurations:', error);
+        showNotification('Failed to save package configurations', 'error');
+    }
+}
+
+function getPackageConfig(packageType) {
+    return {
+        maxRegistrants: parseInt(document.getElementById(`${packageType}MaxRegistrants`).value) || 0,
+        currentCount: parseInt(document.getElementById(`${packageType}CurrentCount`).value) || 0,
+        exhibitRights: document.getElementById(`${packageType}ExhibitRights`).checked,
+        speakRights: document.getElementById(`${packageType}SpeakRights`).checked,
+        boothSlots: document.getElementById(`${packageType}ExhibitRights`).checked ? 
+            parseInt(document.getElementById(`${packageType}BoothSlots`).value) || 0 : 0,
+        boothSize: document.getElementById(`${packageType}ExhibitRights`).checked ? 
+            document.getElementById(`${packageType}BoothSize`).value : '',
+        speakingSlots: document.getElementById(`${packageType}SpeakRights`).checked ? 
+            parseInt(document.getElementById(`${packageType}SpeakingSlots`).value) || 0 : 0,
+        sessionType: document.getElementById(`${packageType}SpeakRights`).checked ? 
+            document.getElementById(`${packageType}SessionType`).value : '',
+        sessionDuration: document.getElementById(`${packageType}SpeakRights`).checked ? 
+            parseInt(document.getElementById(`${packageType}SessionDuration`).value) || 0 : 0,
+        speakerPriority: document.getElementById(`${packageType}SpeakRights`).checked ? 
+            document.getElementById(`${packageType}SpeakerPriority`).value : '3',
+        investment: parseInt(document.getElementById(`${packageType}Investment`).value) || 0,
+        features: document.getElementById(`${packageType}Features`).value,
+        description: document.getElementById(`${packageType}Description`).value,
+        boothLocation: document.getElementById(`${packageType}ExhibitRights`).checked ? 
+            document.getElementById(`${packageType}BoothLocation`).value : '',
+        setupTime: document.getElementById(`${packageType}ExhibitRights`).checked ? 
+            parseInt(document.getElementById(`${packageType}SetupTime`).value) || 0 : 0
+    };
+}
+
+function notifyPartnerDashboards(config) {
+    // This function would send WebSocket or push notifications to partner dashboards
+    // For now, we'll simulate with a console log
+    console.log('Notifying partner dashboards with updated configurations:', config);
+    
+    // In a real implementation:
+    // socket.emit('packageConfigUpdated', config);
+    // or
+    // fetch('/api/notify-partners', { method: 'POST', body: JSON.stringify(config) });
+}
+
+async function refreshPackageStats() {
+    try {
+        showNotification('Refreshing package statistics...', 'info');
+        
+        // BACKEND INTEGRATION: Fetch latest stats
+        // const response = await fetch('/api/package-stats');
+        // const stats = await response.json();
+        
+        // Sample data for demo
+        const stats = {
+            diamond: { current: 3, max: 10 },
+            gold: { current: 8, max: 20 },
+            silver: { current: 15, max: 30 },
+            bronze: { current: 25, max: 50 }
+        };
+        
+        // Update current counts
+        Object.keys(stats).forEach(packageType => {
+            const stat = stats[packageType];
+            document.getElementById(`${packageType}CurrentCount`).value = stat.current;
+            document.getElementById(`${packageType}Utilization`).textContent = `${stat.current}/${stat.max}`;
+            
+            const percentage = stat.max > 0 ? Math.round((stat.current / stat.max) * 100) : 0;
+            document.getElementById(`${packageType}Percentage`).textContent = `${percentage}%`;
+            
+            updatePackageStatus(packageType, stat.current, stat.max);
+        });
+        
+        showNotification('Package statistics refreshed successfully!');
+        
+    } catch (error) {
+        console.error('Error refreshing package stats:', error);
+        showNotification('Failed to refresh package statistics', 'error');
+    }
+}
+
+function resetPackageDefaults() {
+    if (!confirm('Are you sure you want to reset all package configurations to defaults?')) {
+        return;
+    }
+    
+    // Reset Diamond
+    document.getElementById('diamondMaxRegistrants').value = 10;
+    document.getElementById('diamondExhibitRights').checked = true;
+    document.getElementById('diamondSpeakRights').checked = true;
+    document.getElementById('diamondBoothSlots').value = 2;
+    document.getElementById('diamondBoothSize').value = '6x9m';
+    document.getElementById('diamondSpeakingSlots').value = 1;
+    document.getElementById('diamondSessionType').value = 'keynote';
+    document.getElementById('diamondInvestment').value = 5000000;
+    
+    // Reset Gold
+    document.getElementById('goldMaxRegistrants').value = 20;
+    document.getElementById('goldExhibitRights').checked = true;
+    document.getElementById('goldSpeakRights').checked = true;
+    document.getElementById('goldBoothSlots').value = 1;
+    document.getElementById('goldBoothSize').value = '6x6m';
+    document.getElementById('goldSpeakingSlots').value = 1;
+    document.getElementById('goldSessionType').value = 'panel';
+    document.getElementById('goldInvestment').value = 3000000;
+    
+    // Reset Silver
+    document.getElementById('silverMaxRegistrants').value = 30;
+    document.getElementById('silverExhibitRights').checked = true;
+    document.getElementById('silverSpeakRights').checked = false;
+    document.getElementById('silverBoothSlots').value = 1;
+    document.getElementById('silverBoothSize').value = '3x6m';
+    document.getElementById('silverSpeakingSlots').value = 0;
+    document.getElementById('silverSessionType').value = 'roundtable';
+    document.getElementById('silverInvestment').value = 1500000;
+    
+    // Reset Bronze
+    document.getElementById('bronzeMaxRegistrants').value = 50;
+    document.getElementById('bronzeExhibitRights').checked = false;
+    document.getElementById('bronzeSpeakRights').checked = false;
+    document.getElementById('bronzeBoothSlots').value = 0;
+    document.getElementById('bronzeBoothSize').value = '3x3m';
+    document.getElementById('bronzeSpeakingSlots').value = 0;
+    document.getElementById('bronzeSessionType').value = 'workshop';
+    document.getElementById('bronzeInvestment').value = 500000;
+    
+    // Reset payment settings
+    document.getElementById('paymentGracePeriod').value = 48;
+    document.getElementById('autoReopenEnabled').value = 'yes';
+    
+    // Update UI
+    document.querySelectorAll('.feature-details').forEach(details => {
+        const checkbox = details.previousElementSibling.querySelector('.feature-checkbox');
+        details.style.display = checkbox.checked ? 'block' : 'none';
+    });
+    
+    showNotification('Package configurations reset to defaults');
+}
+
+function forcePackageStatus(packageType, action) {
+    const maxInput = document.getElementById(`${packageType}MaxRegistrants`);
+    const currentInput = document.getElementById(`${packageType}CurrentCount`);
+    
+    if (action === 'open') {
+        // Force open by increasing max registrants
+        const currentMax = parseInt(maxInput.value) || 0;
+        maxInput.value = currentMax + 1;
+        
+        // Update status
+        updatePackageStatus(packageType, parseInt(currentInput.value) || 0, maxInput.value);
+        showNotification(`${packageType.charAt(0).toUpperCase() + packageType.slice(1)} package forced open`);
+        
+    } else if (action === 'close') {
+        // Force close by setting current = max
+        const currentCount = parseInt(currentInput.value) || 0;
+        maxInput.value = currentCount;
+        
+        // Update status
+        updatePackageStatus(packageType, currentCount, maxInput.value);
+        showNotification(`${packageType.charAt(0).toUpperCase() + packageType.slice(1)} package forced closed`);
+    }
+}
+
+function adjustCapacity(packageType, change) {
+    const input = document.getElementById(`${packageType}MaxRegistrants`);
+    const currentValue = parseInt(input.value) || 0;
+    const newValue = Math.max(0, currentValue + change);
+    input.value = newValue;
+}
+
+function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
 // Initialize the page to show content
 document.body.style.display = 'block';

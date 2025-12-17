@@ -93,3 +93,9 @@ When backend endpoints are not available, the system uses a mock API client that
 
 ## Contact
 For questions or support, contact: [Your Contact Information]
+
+// API Endpoints needed:
+GET /api/package-configurations      // Load current config
+POST /api/package-configurations/save // Save config
+GET /api/package-stats               // Get current utilization
+POST /api/notify-partners           // Push updates to partners

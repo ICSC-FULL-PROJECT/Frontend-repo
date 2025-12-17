@@ -174,6 +174,421 @@
             font-size: 1.5rem;
         }
 
+        /* Updated Booth Selection Styles with Venue Image */
+        .booth-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .booth-option {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            position: relative;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .booth-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 135, 81, 0.1);
+        }
+
+        .booth-option.selected {
+            border-color: var(--primary);
+            background-color: #e8f5e9;
+            color: var(--primary);
+            border-width: 2px;
+        }
+
+        .booth-option.sold-out {
+            background-color: #ffebee;
+            color: #b71c1c;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .booth-option.your-booth {
+            border-color: #4caf50;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-width: 2px;
+        }
+
+        .booth-option.sold-out::after {
+            content: "✗";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #e53935;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .sold-out-badge {
+            background-color: #ff5252;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .your-booth-badge {
+            background-color: #4caf50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .booth-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #f0f5ff;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .booth-stats > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .booth-stats span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 25px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background-color: #f0f9f0;
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: #666;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .file-upload p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        #file-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.9rem;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 0.85rem;
+            margin-left: 15px;
+        }
+
+        .file-remove {
+            color: #e53935;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* NEW: Venue Image Gallery Styles */
+        .venue-gallery-section {
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .venue-gallery-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .venue-gallery-header h4 {
+            font-size: 1.1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .venue-gallery-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .venue-gallery-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .venue-gallery-controls button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .venue-image-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            background: #f5f5f5;
+            cursor: move;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .venue-image-container:active {
+            cursor: grabbing;
+        }
+
+        .venue-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.1s ease;
+            transform-origin: 0 0;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .zoom-controls button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .zoom-controls button:hover {
+            background: var(--primary-dark);
+        }
+
+        .zoom-level {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .venue-thumbnails {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            overflow-x: auto;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        .venue-thumb {
+            flex: 0 0 auto;
+            width: 80px;
+            height: 60px;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .venue-thumb.active {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .venue-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .venue-info {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .venue-info strong {
+            color: var(--primary);
+        }
+
+        /* Modal content adjustments */
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .booth-grid {
+                grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+                gap: 6px;
+            }
+            
+            .booth-option {
+                padding: 8px 3px;
+                font-size: 0.8rem;
+                min-height: 40px;
+            }
+            
+            .booth-stats {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .booth-stats > div {
+                flex: 1;
+                min-width: 45%;
+            }
+            
+            .venue-image-container {
+                height: 300px;
+            }
+            
+            .zoom-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .zoom-controls button {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .venue-image-container {
+                height: 250px;
+            }
+            
+            .venue-thumb {
+                width: 60px;
+                height: 45px;
+            }
+        }
+
         /* Benefits Section Styles */
         .benefits-section {
             margin-top: 20px;
@@ -1170,6 +1585,112 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
+        /* Add to existing CSS */
+.image-preview-gallery {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview-item {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.image-preview-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.preview-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-preview-info {
+    padding: 8px;
+    background: white;
+    border-top: 1px solid #eee;
+}
+
+.image-preview-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.image-preview-size {
+    font-size: 0.7rem;
+    color: #666;
+}
+
+.image-remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.image-remove-btn:hover {
+    background: #ff0000;
+    transform: scale(1.1);
+}
+
+.file-upload-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Drag and drop styling */
+.file-upload.drag-over {
+    border-color: var(--primary);
+    background-color: #f0f9f0;
+}
+
+.file-upload.drag-over i {
+    color: var(--primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .image-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+    
+    .preview-image {
+        height: 80px;
+    }
+}
 
         /* Resources (Payment Receipts) Styles */
         .partner-resources {
@@ -1660,254 +2181,244 @@
                     </div>
                 </div>
                 
-                <!-- Benefits Tab -->
-                <div class="main-content" id="benefits-tab">
-                    <div class="content-header">
-                        <h2>Package Benefits</h2>
+<!-- Benefits Tab -->
+<div class="main-content" id="benefits-tab">
+    <div class="content-header">
+        <h2>Package Benefits</h2>
+    </div>
+    
+    <div class="benefits-section">
+        <div class="benefits-card">
+            <div class="benefits-header">
+                <h3 id="package-benefits-title">Your Package Benefits</h3>
+                <div class="benefits-count" id="benefits-count">Loading...</div>
+            </div>
+            
+            <!-- Dynamic Benefits will be loaded here -->
+            <div id="dynamic-benefits"></div>
+        </div>
+        
+        <!-- Email Instructions -->
+        <div class="email-instructions">
+            <h4>How to Claim Your Benefits</h4>
+            <p>To claim your benefits or submit requirements, please send the required information to our administration team:</p>
+            
+            <div class="email-box">
+                <div class="email-info">
+                    <div class="email-info-item">
+                        <div class="email-label">Email to:</div>
+                        <div class="email-value">partners@icsc2026.org</div>
                     </div>
-                    
-                    <div class="benefits-section">
-                        <div class="benefits-card">
-                            <div class="benefits-header">
-                                <h3>Your Gold Package Benefits</h3>
-                                <div class="benefits-count">6 Benefits</div>
-                            </div>
-                            
-                            <!-- Benefit 1: Conference Passes -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Conference Passes</div>
-                                    <div class="benefit-status status-available">Available: 6</div>
-                                </div>
-                                <div class="benefit-description">
-                                    You are eligible for 6 conference passes. Please submit the names and email addresses of Participant you wish to register.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitForm('passes')">
-                                        <i class="fas fa-user-plus"></i> Register Participant
-                                    </button>
-                                    <button class="btn btn-outline" onclick="viewRegisteredAttendees()">
-                                        <i class="fas fa-users"></i> View Registered
-                                    </button>
-                                </div>
-                                
-                                <!-- Benefit Form (Hidden by default) -->
-                                <div class="benefit-form" id="passes-form" style="display: none;">
-                                    <h5>Register Participant</h5>
-                                    <form id="attendeesForm">
-                                        <div class="form-group">
-                                            <label>Participant 1</label>
-                                            <input type="text" placeholder="Full Name" required>
-                                            <input type="email" placeholder="Email Address" required style="margin-top: 5px;">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Participant 2</label>
-                                            <input type="text" placeholder="Full Name">
-                                            <input type="email" placeholder="Email Address" style="margin-top: 5px;">
-                                        </div>
-                                        <div class="benefit-actions">
-                                            <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('passes')">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Submit to Admin</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 2: Exhibition Booth -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Exhibition Booth</div>
-                                    <div class="benefit-status status-available">Available: 1</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Standard 6x6m booth location in the main exhibition hall. Submit your booth specifications and requirements.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitForm('booth')">
-                                        <i class="fas fa-map-marker-alt"></i> Submit Requirements
-                                    </button>
-                                </div>
-                                
-                                <!-- Benefit Form -->
-                                <div class="benefit-form" id="booth-form" style="display: none;">
-                                    <h5>Booth Requirements</h5>
-                                    <form id="boothForm">
-                                        <div class="form-group">
-                                            <label>Company Name for Booth</label>
-                                            <input type="text" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Special Requirements</label>
-                                            <textarea placeholder="Power needs, special setup, etc."></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Contact Person</label>
-                                            <input type="text" required>
-                                        </div>
-                                        <div class="benefit-actions">
-                                            <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('booth')">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Submit Requirements</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 3: Speaking Slot -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Panel Speaking Slot</div>
-                                    <div class="benefit-status status-pending">Pending Approval</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Participation in panel discussions. Submit speaker information and presentation topic for approval.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-outline" onclick="openBenefitForm('speaker')">
-                                        <i class="fas fa-user-tie"></i> Submit Speaker Details
-                                    </button>
-                                </div>
-                                
-                                <!-- Benefit Form -->
-                                <div class="benefit-form" id="speaker-form" style="display: none;">
-                                    <h5>Speaker Information</h5>
-                                    <form id="speakerForm">
-                                        <div class="form-group">
-                                            <label>Speaker Name</label>
-                                            <input type="text" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Position/Title</label>
-                                            <input type="text" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Presentation Topic</label>
-                                            <input type="text" required>
-                                        </div>
-                                        <div class="benefit-actions">
-                                            <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('speaker')">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Submit for Approval</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 4: Logo Placement -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Logo Placement</div>
-                                    <div class="benefit-status status-used">Submitted</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Company logo on event website and promotional materials. Logo files have been received.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-outline">
-                                        <i class="fas fa-eye"></i> View Submission
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 5: Networking Reception -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Networking Reception Access</div>
-                                    <div class="benefit-status status-available">Available</div>
-                                </div>
-                                <div class="benefit-description">
-                                    VIP access to all networking events and receptions during the conference.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-outline">
-                                        <i class="fas fa-calendar-check"></i> Add to Schedule
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 6: Conference Brochure Ad -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Conference Brochure Advertisement</div>
-                                    <div class="benefit-status status-pending">Pending Material</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Half-page advertisement in the conference brochure. Submit your ad copy and design by April 30, 2026.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitForm('advertisement')">
-                                        <i class="fas fa-newspaper"></i> Submit Ad Material
-                                    </button>
-                                </div>
-                                
-                                <!-- Benefit Form -->
-                                <div class="benefit-form" id="advertisement-form" style="display: none;">
-                                    <h5>Advertisement Submission</h5>
-                                    <form id="adForm">
-                                        <div class="form-group">
-                                            <label>Ad Copy Text</label>
-                                            <textarea required placeholder="Enter your advertisement text..."></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Upload Ad Design</label>
-                                            <input type="file" accept=".jpg,.png,.pdf,.ai">
-                                        </div>
-                                        <div class="benefit-actions">
-                                            <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('advertisement')">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Submit Ad Material</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Email Instructions -->
-                        <div class="email-instructions">
-                            <h4>How to Claim Your Benefits</h4>
-                            <p>To claim your benefits or submit requirements, please send the required information to our administration team:</p>
-                            
-                            <div class="email-box">
-                                <div class="email-info">
-                                    <div class="email-info-item">
-                                        <div class="email-label">Email to:</div>
-                                        <div class="email-value">partners@icsc2026.org</div>
-                                    </div>
-                                    <div class="email-info-item">
-                                        <div class="email-label">Subject:</div>
-                                        <div class="email-value">Gold Package Benefit Claim - [Your Company Name]</div>
-                                    </div>
-                                    <div class="email-info-item">
-                                        <div class="email-label">CC:</div>
-                                        <div class="email-value">admin@icsc2026.org</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="email-template">
-                                    <strong>Email Template:</strong><br><br>
-                                    To: partners@icsc2026.org<br>
-                                    CC: admin@icsc2026.org<br>
-                                    Subject: Gold Package Benefit Claim - [Your Company Name]<br><br>
-                                    
-                                    Dear ICSC 2026 Team,<br><br>
-                                    
-                                    I am writing to claim the following benefit from our Gold Package:<br><br>
-                                    
-                                    <strong>Benefit:</strong> [e.g., Conference Passes, Exhibition Booth, etc.]<br>
-                                    <strong>Details:</strong> [Provide specific details, names, requirements, etc.]<br>
-                                    <strong>Attachments:</strong> [List any attached files]<br><br>
-                                    
-                                    Please confirm receipt and let me know if any additional information is required.<br><br>
-                                    
-                                    Best regards,<br>
-                                    [Your Name]<br>
-                                    [Your Company Name]
-                                </div>
-                                
-                                <button class="btn btn-primary" style="margin-top: 15px;" onclick="copyEmailTemplate()">
-                                    <i class="fas fa-copy"></i> Copy Email Template
-                                </button>
-                            </div>
-                        </div>
+                    <div class="email-info-item">
+                        <div class="email-label">Subject:</div>
+                        <div class="email-value" id="email-subject">Package Benefit Claim - [Your Company Name]</div>
+                    </div>
+                    <div class="email-info-item">
+                        <div class="email-label">CC:</div>
+                        <div class="email-value">admin@icsc2026.org</div>
                     </div>
                 </div>
+                
+                <div class="email-template" id="email-template">
+                    <strong>Email Template:</strong><br><br>
+                    To: partners@icsc2026.org<br>
+                    CC: admin@icsc2026.org<br>
+                    Subject: Package Benefit Claim - [Your Company Name]<br><br>
+                    
+                    Dear ICSC 2026 Team,<br><br>
+                    
+                    I am writing to claim the following benefit from our Package:<br><br>
+                    
+                    <strong>Benefit:</strong> [e.g., Conference Passes, Exhibition Booth, etc.]<br>
+                    <strong>Details:</strong> [Provide specific details, names, requirements, etc.]<br>
+                    <strong>Attachments:</strong> [List any attached files]<br><br>
+                    
+                    Please confirm receipt and let me know if any additional information is required.<br><br>
+                    
+                    Best regards,<br>
+                    [Your Name]<br>
+                    [Your Company Name]
+                </div>
+                
+                <button class="btn btn-primary" style="margin-top: 15px;" onclick="copyEmailTemplate()">
+                    <i class="fas fa-copy"></i> Copy Email Template
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exhibit Modal -->
+<div class="modal" id="exhibit-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Partner Exhibition Setup</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <!-- BACKEND INTEGRATION: Booth selection without payment -->
+        <div class="api-indicator">
+            <strong>BACKEND INTEGRATION:</strong> Booth data will be fetched from <code>/api/booths</code> endpoint
+        </div>
+        
+        <!-- Venue Image Gallery Section -->
+        <div class="venue-gallery-section" id="venue-gallery-section">
+            <div class="venue-gallery-header">
+                <h4><i class="fas fa-map-marked-alt"></i> Venue Layout & Booth Locations</h4>
+                <div class="venue-gallery-controls">
+                    <button id="prev-image-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button id="next-image-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="venue-image-container" id="venue-image-container">
+                <img src="venue.png" 
+                     alt="ICSC 2026 Venue Layout" 
+                     class="venue-image" 
+                     id="venue-main-image">
+                
+                <div class="zoom-level" id="zoom-level">100%</div>
+                
+                <div class="zoom-controls">
+                    <button id="zoom-in-btn"><i class="fas fa-search-plus"></i></button>
+                    <button id="zoom-out-btn"><i class="fas fa-search-minus"></i></button>
+                    <button id="reset-zoom-btn"><i class="fas fa-expand-arrows-alt"></i></button>
+                </div>
+            </div>
+            
+            <div class="venue-thumbnails" id="venue-thumbnails"></div>
+            
+            <div class="venue-info">
+                <p><strong>Note:</strong> Drag the image to navigate. Use zoom controls to see booth details. Green circles indicate available booths, red circles are taken.</p>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="exhibition-title">Exhibition Title</label>
+            <input type="text" id="exhibition-title" placeholder="Enter your exhibition title">
+        </div>
+        <div class="form-group">
+            <label for="exhibition-description">Description</label>
+            <textarea id="exhibition-description" placeholder="Describe what you'll be exhibiting"></textarea>
+        </div>
+        
+        <div class="form-group" id="booth-selection-section">
+            <label>Booth Selection</label>
+            <div class="booth-stats">
+                <div>Total: <span id="total-booths">200</span></div>
+                <div>Available: <span id="modal-available">200</span></div>
+                <div>Sold Out: <span id="modal-sold-out">0</span></div>
+            </div>
+            <div class="booth-grid" id="booth-grid"></div>
+        </div>
+        
+        <div class="form-group">
+    <label>Upload Exhibition Materials</label>
+    <div class="file-upload" id="file-upload-area">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Drag & drop multiple images here or click to browse</p>
+        <p class="file-upload-hint">Supported: JPG, PNG, GIF, SVG (Max 5MB each)</p>
+        <input type="file" id="exhibition-files" multiple accept=".jpg,.jpeg,.png,.gif,.svg,.webp" style="display: none;">
+        <button class="payment-btn" id="browse-files" style="width: auto; margin-top: 10px;">
+            <i class="fas fa-images"></i> Select Images
+        </button>
+    </div>
+    <div id="file-list"></div>
+    
+    <!-- Add image preview gallery -->
+    <div class="image-preview-gallery" id="image-preview-gallery" style="display: none;">
+        <h4 style="margin-top: 20px; margin-bottom: 15px;">Image Previews</h4>
+        <div class="image-preview-grid" id="image-preview-grid"></div>
+    </div>
+</div>
+        
+        <button class="payment-btn" id="submit-exhibition">Claim Exhibition Booth</button>
+    </div>
+</div>
+
+<!-- Speaker Modal -->
+<div class="modal" id="speaker-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="speaker-modal-title">Speaker Submission</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="api-indicator">
+            <strong>BACKEND INTEGRATION:</strong> Speaker data will be saved to <code>/api/partners/speakers</code> endpoint
+        </div>
+        
+        <form id="speakerForm">
+            <div class="form-group">
+                <label for="speaker-name">Speaker Name</label>
+                <input type="text" id="speaker-name" class="form-control" required placeholder="Enter full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="speaker-title">Position/Title</label>
+                <input type="text" id="speaker-title" class="form-control" required placeholder="e.g., CEO, Director, Manager">
+            </div>
+            
+            <div class="form-group">
+                <label for="speaker-company">Company/Organization</label>
+                <input type="text" id="speaker-company" class="form-control" required placeholder="Your company name">
+            </div>
+            
+            <div class="form-group">
+                <label for="speaker-email">Email Address</label>
+                <input type="email" id="speaker-email" class="form-control" required placeholder="speaker@company.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="speaker-phone">Phone Number</label>
+                <input type="tel" id="speaker-phone" class="form-control" placeholder="+234 800 000 0000">
+            </div>
+            
+            <div class="form-group">
+                <label for="presentation-topic">Presentation Topic</label>
+                <input type="text" id="presentation-topic" class="form-control" required placeholder="Topic of your presentation">
+            </div>
+            
+            <div class="form-group">
+                <label for="presentation-description">Presentation Description</label>
+                <textarea id="presentation-description" class="form-control" rows="4" placeholder="Brief description of what you'll present"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="session-preference">Session Type Preference</label>
+                <select id="session-preference" class="form-control">
+                    <option value="">Select preferred session type</option>
+                    <option value="keynote">Keynote Address</option>
+                    <option value="panel">Panel Discussion</option>
+                    <option value="roundtable">Roundtable</option>
+                    <option value="workshop">Workshop</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="speaker-bio">Speaker Bio (Max 300 words)</label>
+                <textarea id="speaker-bio" class="form-control" rows="5" placeholder="Brief biography of the speaker"></textarea>
+                <small class="text-muted">This bio will be used in conference materials</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Upload Supporting Documents</label>
+                <div class="file-upload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Upload speaker photo, CV, or presentation outline</p>
+                    <input type="file" id="speaker-files" multiple style="display: none;">
+                    <button type="button" class="payment-btn" id="browse-speaker-files" style="width: auto; margin-top: 10px;">Browse Files</button>
+                </div>
+                <div id="speaker-file-list"></div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="modal-btn modal-btn-secondary" id="cancel-speaker">Cancel</button>
+                <button type="submit" class="modal-btn modal-btn-primary">Submit for Approval</button>
+            </div>
+        </form>
+    </div>
+</div>
                 
                 <!-- Resources Tab (Updated like Exhibitor) -->
                 <div class="main-content" id="resources-tab">
@@ -2014,7 +2525,7 @@
                         </div>
                     </div>
                     
-                    <div class="partner-resources">
+                    <!-- <div class="partner-resources">
                         <h3>Partner Resources</h3>
                         <p>Download partnership materials, guidelines, and promotional resources.</p>
                         
@@ -2073,10 +2584,10 @@
                                 <button class="payment-btn" style="margin-top: 10px;">Download Guide</button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 
-                <!-- Settings Tab (Updated like Exhibitor) -->
+                <!-- Settings Tab-->
                 <div class="main-content" id="settings-tab">
                     <div class="content-header">
                         <h2>Account Settings</h2>
@@ -2177,7 +2688,7 @@
                         <button class="payment-btn" id="save-notifications">Save Notification Preferences</button>
                     </div>
                     
-                    <div class="settings-section">
+                    <!-- <div class="settings-section">
                         <h4>Billing Information</h4>
                         <div class="settings-grid">
                             <div class="form-group">
@@ -2202,7 +2713,7 @@
                             </div>
                         </div>
                         <button class="payment-btn" id="save-billing">Save Billing Information</button>
-                    </div>
+                    </div> -->
                     
                     <div class="settings-section">
                         <h4>Help & Support</h4>
@@ -2213,7 +2724,7 @@
                                 </div>
                                 <div class="contact-details">
                                     <h4>Partner Support Hotline</h4>
-                                    <p>+234 800 000 0002</p>
+                                    <p>+234 7066173834</p>
                                     <p>Available 24/7 during the conference</p>
                                 </div>
                             </div>
@@ -2391,7 +2902,7 @@
         // BACKEND API INTEGRATION POINTS
         // =====================================================================
         
-        // API ENDPOINTS - Replace these with actual backend endpoints
+        // API ENDPOINTS - Please Replace these with actual backend endpoints sir
         const API_ENDPOINTS = {
             // Agenda endpoints
             AGENDA: '/api/agenda',
@@ -2450,6 +2961,762 @@
             }
         ];
 
+        // NEW: Venue Image Gallery State
+        let venueImages = [
+            {
+                id: 1,
+                title: "Main Exhibition Hall Layout",
+                url: "images/ex1.jpg",
+                thumbnail: "images/ex1.jpg",
+                description: "Full layout of the main exhibition hall with all booth locations"
+            },
+            {
+                id: 2,
+                title: "Gold Partner Section",
+                url: "images/ex5.jpg",
+                thumbnail: "images/ex5.jpg",
+                description: "Close-up view of the Gold Partner section with premium locations"
+            },
+            {
+                id: 3,
+                title: "Entrance and Registration Area",
+                url: "images/ex3.jpg",
+                thumbnail: "images/ex3.jpg",
+                description: "Entrance area showing booth visibility from main doors"
+            },
+            {
+                id: 4,
+                title: "Networking Zone Layout",
+                url: "images/ex2.jpg",
+                thumbnail: "images/ex2.jpg",
+                description: "Networking areas and high-traffic zones"
+            }
+        ];
+        
+        let currentImageIndex = 0;
+        let currentZoom = 1;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let imageOffsetX = 0;
+        let imageOffsetY = 0;
+
+        // =====================================================================
+// PARTNER BENEFITS MANAGEMENT
+// =====================================================================
+
+// Store partner package configuration
+let partnerPackageConfig = null;
+let userPackageType = null;
+
+// Fetch partner package configuration from Super Admin settings
+async function fetchPartnerPackageConfig() {
+    try {
+        // BACKEND INTEGRATION: Fetch partner's package configuration
+        // const response = await fetch('/api/partner/package-config');
+        // const data = await response.json();
+        // return data;
+        
+        // Sample data - in real app, this comes from Super Admin settings
+        // This simulates a Gold partner with both exhibition and speaking rights
+        return {
+            packageType: 'gold',
+            packageName: 'Gold Knowledge Partner',
+            maxRegistrants: 20,
+            currentCount: 8,
+            investment: 3000000,
+            features: [
+                "Standard booth location (6x6m)",
+                "6 conference passes",
+                "Panel discussion participation",
+                "Company logo on event website",
+                "Networking reception access",
+                "Half-page ad in conference brochure"
+            ],
+            description: "Strategic partnership with strong visibility and networking opportunities.",
+            
+            // Feature rights controlled by Super Admin
+            exhibitRights: true,
+            speakRights: true,
+            
+            // Exhibit details (if enabled)
+            boothSlots: 1,
+            boothSize: '6x6m',
+            boothLocation: 'stage_front',
+            setupTime: 3,
+            
+            // Speak details (if enabled)
+            speakingSlots: 1,
+            sessionType: 'panel',
+            sessionDuration: 30,
+            speakerPriority: 2
+        };
+        
+    } catch (error) {
+        console.error('Error fetching partner package config:', error);
+        return null;
+    }
+}
+
+// Load and display partner benefits
+async function loadPartnerBenefits() {
+    const benefitsContainer = document.getElementById('dynamic-benefits');
+    const benefitsTitle = document.getElementById('package-benefits-title');
+    const benefitsCount = document.getElementById('benefits-count');
+    const emailSubject = document.getElementById('email-subject');
+    
+    // Show loading state
+    benefitsContainer.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i> Loading benefits...</div>';
+    
+    // Fetch package configuration
+    partnerPackageConfig = await fetchPartnerPackageConfig();
+    
+    if (!partnerPackageConfig) {
+        benefitsContainer.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Unable to load benefits. Please try again later.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    userPackageType = partnerPackageConfig.packageType;
+    
+    // Update page title and email subject
+    benefitsTitle.textContent = `Your ${partnerPackageConfig.packageName} Benefits`;
+    emailSubject.textContent = `${partnerPackageConfig.packageName} Benefit Claim - [Your Company Name]`;
+    
+    // Calculate available benefits count
+    let availableBenefits = 0;
+    let benefitItems = [];
+    
+    // Benefit 1: Conference Passes (always available)
+    availableBenefits++;
+    benefitItems.push(createConferencePassesBenefit(partnerPackageConfig));
+    
+    // Benefit 2: Exhibition Booth (if enabled by Super Admin)
+    if (partnerPackageConfig.exhibitRights) {
+        availableBenefits++;
+        benefitItems.push(createExhibitionBoothBenefit(partnerPackageConfig));
+    }
+    
+    // Benefit 3: Speaking Slot (if enabled by Super Admin)
+    if (partnerPackageConfig.speakRights) {
+        availableBenefits++;
+        benefitItems.push(createSpeakingSlotBenefit(partnerPackageConfig));
+    }
+    
+    // Benefit 4: Logo Placement (always available)
+    availableBenefits++;
+    benefitItems.push(createLogoPlacementBenefit());
+    
+    // Benefit 5: Networking Reception (always available)
+    availableBenefits++;
+    benefitItems.push(createNetworkingReceptionBenefit());
+    
+    // Benefit 6: Conference Brochure Ad (always available)
+    availableBenefits++;
+    benefitItems.push(createBrochureAdBenefit());
+    
+    // Update benefits count
+    benefitsCount.textContent = `${availableBenefits} Benefits`;
+    
+    // Render all benefits
+    benefitsContainer.innerHTML = benefitItems.join('');
+    
+    // Initialize event listeners for dynamic benefits
+    initializeBenefitEventListeners();
+}
+
+// Create Conference Passes benefit
+function createConferencePassesBenefit(config) {
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">Conference Passes</div>
+                <div class="benefit-status status-available">Available: 6</div>
+            </div>
+            <div class="benefit-description">
+                You are eligible for 6 conference passes. Please submit the names and email addresses of participants you wish to register.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-primary" onclick="openBenefitForm('passes')">
+                    <i class="fas fa-user-plus"></i> Register Participant
+                </button>
+                <button class="btn btn-outline" onclick="viewRegisteredAttendees()">
+                    <i class="fas fa-users"></i> View Registered
+                </button>
+            </div>
+            
+            <!-- Benefit Form (Hidden by default) -->
+            <div class="benefit-form" id="passes-form" style="display: none;">
+                <h5>Register Participant</h5>
+                <form id="attendeesForm">
+                    <div class="form-group">
+                        <label>Participant 1</label>
+                        <input type="text" placeholder="Full Name" required>
+                        <input type="email" placeholder="Email Address" required style="margin-top: 5px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Participant 2</label>
+                        <input type="text" placeholder="Full Name">
+                        <input type="email" placeholder="Email Address" style="margin-top: 5px;">
+                    </div>
+                    <div class="benefit-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('passes')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit to Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+// Create Exhibition Booth benefit (only if enabled)
+function createExhibitionBoothBenefit(config) {
+    const boothDetails = config.boothSize ? ` (${config.boothSize})` : '';
+    const boothCount = config.boothSlots > 1 ? ` (${config.boothSlots} booths)` : '';
+    
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">Exhibition Booth${boothCount}</div>
+                <div class="benefit-status status-available">Available: ${config.boothSlots || 1}</div>
+            </div>
+            <div class="benefit-description">
+                ${config.boothSize ? config.boothSize + ' ' : ''}booth location in the main exhibition hall. Select your booth from available options.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-primary" id="setup-exhibition-btn">
+                    <i class="fas fa-store"></i> Setup Exhibition Booth
+                </button>
+                <button class="btn btn-outline" onclick="openBenefitForm('booth')">
+                    <i class="fas fa-map-marker-alt"></i> Submit Special Requirements
+                </button>
+            </div>
+            
+            <!-- Benefit Form (Hidden by default) -->
+            <div class="benefit-form" id="booth-form" style="display: none;">
+                <h5>Booth Requirements</h5>
+                <form id="boothForm">
+                    <div class="form-group">
+                        <label>Company Name for Booth</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Special Requirements</label>
+                        <textarea placeholder="Power needs, special setup, etc."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Person</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="benefit-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('booth')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Requirements</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+// Create Speaking Slot benefit (only if enabled)
+function createSpeakingSlotBenefit(config) {
+    const sessionType = config.sessionType ? config.sessionType.charAt(0).toUpperCase() + config.sessionType.slice(1) : 'Panel';
+    const duration = config.sessionDuration ? ` (${config.sessionDuration} minutes)` : '';
+    
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">${sessionType} Speaking Slot${duration}</div>
+                <div class="benefit-status status-available">Available: ${config.speakingSlots || 1}</div>
+            </div>
+            <div class="benefit-description">
+                Participation in ${config.sessionType || 'panel'} discussions. Submit speaker information and presentation topic for approval.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-outline" id="submit-speaker-btn">
+                    <i class="fas fa-user-tie"></i> Submit Speaker Details
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Create Logo Placement benefit
+function createLogoPlacementBenefit() {
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">Logo Placement</div>
+                <div class="benefit-status status-used">Submitted</div>
+            </div>
+            <div class="benefit-description">
+                Company logo on event website and promotional materials. Logo files have been received.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-outline" onclick="viewLogoSubmission()">
+                    <i class="fas fa-eye"></i> View Submission
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Create Networking Reception benefit
+function createNetworkingReceptionBenefit() {
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">Networking Reception Access</div>
+                <div class="benefit-status status-available">Available</div>
+            </div>
+            <div class="benefit-description">
+                VIP access to all networking events and receptions during the conference.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-outline" onclick="addToSchedule()">
+                    <i class="fas fa-calendar-check"></i> Add to Schedule
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Create Conference Brochure Ad benefit
+function createBrochureAdBenefit() {
+    return `
+        <div class="benefit-item">
+            <div class="benefit-header">
+                <div class="benefit-title">Conference Brochure Advertisement</div>
+                <div class="benefit-status status-pending">Pending Material</div>
+            </div>
+            <div class="benefit-description">
+                Half-page advertisement in the conference brochure. Submit your ad copy and design by April 30, 2026.
+            </div>
+            <div class="benefit-actions">
+                <button class="btn btn-primary" onclick="openBenefitForm('advertisement')">
+                    <i class="fas fa-newspaper"></i> Submit Ad Material
+                </button>
+            </div>
+            
+            <!-- Benefit Form (Hidden by default) -->
+            <div class="benefit-form" id="advertisement-form" style="display: none;">
+                <h5>Advertisement Submission</h5>
+                <form id="adForm">
+                    <div class="form-group">
+                        <label>Ad Copy Text</label>
+                        <textarea required placeholder="Enter your advertisement text..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Ad Design</label>
+                        <input type="file" accept=".jpg,.png,.pdf,.ai">
+                    </div>
+                    <div class="benefit-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeBenefitForm('advertisement')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Ad Material</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+// Initialize event listeners for dynamic benefits
+function initializeBenefitEventListeners() {
+    // Setup exhibition button
+    const setupExhibitionBtn = document.getElementById('setup-exhibition-btn');
+    if (setupExhibitionBtn) {
+        setupExhibitionBtn.addEventListener('click', openExhibitModal);
+    }
+    
+    // Submit speaker button
+    const submitSpeakerBtn = document.getElementById('submit-speaker-btn');
+    if (submitSpeakerBtn) {
+        submitSpeakerBtn.addEventListener('click', openSpeakerModal);
+    }
+}
+
+// Open Exhibit Modal
+async function openExhibitModal() {
+    const modal = document.getElementById('exhibit-modal');
+    modal.style.display = 'flex';
+    
+    // Initialize venue gallery
+    setTimeout(initializeVenueGallery, 100);
+    
+    // Render booth grid with partner's allocated slots
+    await renderPartnerBoothGrid();
+    
+    // Set up file upload
+    setupFileUpload();
+}
+
+// Open Speaker Modal
+function openSpeakerModal() {
+    const modal = document.getElementById('speaker-modal');
+    const modalTitle = document.getElementById('speaker-modal-title');
+    
+    // Update modal title with session type
+    if (partnerPackageConfig && partnerPackageConfig.sessionType) {
+        const sessionType = partnerPackageConfig.sessionType.charAt(0).toUpperCase() + partnerPackageConfig.sessionType.slice(1);
+        modalTitle.textContent = `${sessionType} Speaker Submission`;
+    }
+    
+    modal.style.display = 'flex';
+    
+    // Set up speaker file upload
+    setupSpeakerFileUpload();
+    
+    // Initialize speaker form submission
+    document.getElementById('speakerForm').addEventListener('submit', submitSpeakerForm);
+    document.getElementById('cancel-speaker').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
+
+// Setup speaker file upload
+function setupSpeakerFileUpload() {
+    const browseBtn = document.getElementById('browse-speaker-files');
+    const fileInput = document.getElementById('speaker-files');
+    const fileList = document.getElementById('speaker-file-list');
+    
+    browseBtn.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', function() {
+        fileList.innerHTML = '';
+        
+        for (let i = 0; i < this.files.length; i++) {
+            const file = this.files[i];
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span class="file-name">${file.name}</span>
+                <span class="file-size">${(file.size / 1024).toFixed(2)} KB</span>
+                <button class="file-remove" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            fileList.appendChild(fileItem);
+        }
+    });
+}
+
+// Submit speaker form
+async function submitSpeakerForm(e) {
+    e.preventDefault();
+    
+    const formData = {
+        speakerName: document.getElementById('speaker-name').value,
+        speakerTitle: document.getElementById('speaker-title').value,
+        speakerCompany: document.getElementById('speaker-company').value,
+        speakerEmail: document.getElementById('speaker-email').value,
+        speakerPhone: document.getElementById('speaker-phone').value,
+        presentationTopic: document.getElementById('presentation-topic').value,
+        presentationDescription: document.getElementById('presentation-description').value,
+        sessionPreference: document.getElementById('session-preference').value,
+        speakerBio: document.getElementById('speaker-bio').value,
+        packageType: userPackageType,
+        packageName: partnerPackageConfig.packageName
+    };
+    
+    try {
+        // BACKEND INTEGRATION: Submit speaker details
+        // const response = await fetch('/api/partners/speakers/submit', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(formData)
+        // });
+        
+        showNotification('Speaker details submitted for approval!', 'success');
+        
+        // Close modal
+        document.getElementById('speaker-modal').style.display = 'none';
+        
+        // Update benefit status
+        updateSpeakingBenefitStatus('pending');
+        
+    } catch (error) {
+        console.error('Error submitting speaker form:', error);
+        showNotification('Failed to submit speaker details. Please try again.', 'error');
+    }
+}
+
+// Update speaking benefit status
+function updateSpeakingBenefitStatus(status) {
+    const speakingBenefit = document.querySelector('.benefit-item:nth-child(3)'); // Assuming speaking is 3rd benefit
+    if (speakingBenefit) {
+        const statusDiv = speakingBenefit.querySelector('.benefit-status');
+        const actionsDiv = speakingBenefit.querySelector('.benefit-actions');
+        
+        if (status === 'pending') {
+            statusDiv.textContent = 'Pending Approval';
+            statusDiv.className = 'benefit-status status-pending';
+            actionsDiv.innerHTML = `
+                <button class="btn btn-outline" onclick="viewSpeakerSubmission()">
+                    <i class="fas fa-eye"></i> View Submission
+                </button>
+            `;
+        }
+    }
+}
+
+// Render booth grid with partner's allocation
+async function renderPartnerBoothGrid() {
+    const boothData = await fetchPartnerBoothData();
+    const container = document.getElementById('booth-grid');
+    const totalBooths = document.getElementById('total-booths');
+    const modalAvailable = document.getElementById('modal-available');
+    const modalSoldOut = document.getElementById('modal-sold-out');
+    
+    if (!container) return;
+    
+    // Update stats
+    totalBooths.textContent = boothData.total;
+    modalAvailable.textContent = boothData.available;
+    modalSoldOut.textContent = boothData.soldOut;
+    
+    // Get partner's allocated booth slots
+    const allocatedSlots = partnerPackageConfig ? partnerPackageConfig.boothSlots || 1 : 1;
+    const partnerAssignedBooths = boothData.partnerAssignedBooths || [];
+    
+    let html = '';
+    const boothsToShow = Math.min(50, boothData.total);
+    
+    for (let i = 1; i <= boothsToShow; i++) {
+        const boothId = `B${i}`;
+        const isSoldOut = boothData.boothDetails[boothId] && boothData.boothDetails[boothId].soldOut;
+        const isAssignedToPartner = partnerAssignedBooths.includes(boothId);
+        
+        let statusClass = '';
+        let statusText = '';
+        
+        if (isAssignedToPartner) {
+            statusClass = 'selected';
+            selectedPartnerBooth = boothId;
+        } else if (isSoldOut) {
+            statusClass = 'sold-out';
+        }
+        
+        if (isAssignedToPartner) {
+            statusText = '<span style="color: #4caf50; font-size: 0.7rem;">Your Booth</span>';
+        } else if (isSoldOut) {
+            statusText = '<span class="sold-out-badge">Taken</span>';
+        }
+        
+        html += `
+            <div class="booth-option ${statusClass}" data-booth-id="${boothId}" 
+                 ${isSoldOut ? 'style="cursor: not-allowed;"' : ''}>
+                ${boothId}
+                ${statusText}
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+    
+    // Booth selection logic
+    document.querySelectorAll('.booth-option:not(.sold-out)').forEach(option => {
+        option.addEventListener('click', function() {
+            const boothId = this.getAttribute('data-booth-id');
+            
+            // Check if partner has reached allocation limit
+            if (partnerAssignedBooths.length >= allocatedSlots) {
+                showNotification(`You can only claim ${allocatedSlots} booth slot(s).`, 'error');
+                return;
+            }
+            
+            // Check if already selected
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+                selectedPartnerBooth = null;
+                showNotification(`Booth ${boothId} deselected`);
+            } else {
+                // Deselect all booths first
+                document.querySelectorAll('.booth-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Select this booth
+                this.classList.add('selected');
+                selectedPartnerBooth = boothId;
+                showNotification(`Booth ${boothId} selected`);
+            }
+        });
+    });
+}
+
+// Validate and submit exhibition
+async function validateAndSubmitPartnerExhibition() {
+    if (!partnerPackageConfig || !partnerPackageConfig.exhibitRights) {
+        showNotification('Exhibition rights are not available for your package.', 'error');
+        return;
+    }
+    
+    const title = document.getElementById('exhibition-title').value;
+    const description = document.getElementById('exhibition-description').value;
+    
+    if (!title || !description) {
+        showNotification('Please fill in all required fields.', 'error');
+        return;
+    }
+    
+    if (!selectedPartnerBooth) {
+        showNotification('Please select a booth.', 'error');
+        return;
+    }
+    
+    const boothData = await fetchPartnerBoothData();
+    const allocatedSlots = partnerPackageConfig.boothSlots || 1;
+    
+    // Check if partner has already claimed maximum booths
+    if (boothData.partnerAssignedBooths.length >= allocatedSlots) {
+        showNotification(`You have already claimed your maximum of ${allocatedSlots} booth slot(s).`, 'error');
+        return;
+    }
+    
+    showNotification('Claiming booth...', 'info');
+    
+    const result = await updatePartnerBoothStatus(selectedPartnerBooth);
+    
+    if (result.success) {
+        showNotification(`Booth ${selectedPartnerBooth} claimed successfully!`, 'success');
+        
+        // Close modal
+        document.getElementById('exhibit-modal').style.display = 'none';
+        
+        // Reset form
+        document.getElementById('exhibition-title').value = '';
+        document.getElementById('exhibition-description').value = '';
+        document.getElementById('file-list').innerHTML = '';
+        document.getElementById('exhibition-files').value = '';
+        
+        // Update UI to show claimed booth
+        updateExhibitionBenefitDisplay(selectedPartnerBooth);
+        
+        // Notify admin
+        await notifyAdmin({
+            type: 'partner_booth_claimed',
+            package: partnerPackageConfig.packageName,
+            partner: 'Sarah Johnson',
+            company: 'Global Solutions Inc.',
+            booth: selectedPartnerBooth,
+            title: title,
+            timestamp: new Date().toISOString()
+        });
+    } else {
+        showNotification('Failed to claim booth. Please try again.', 'error');
+    }
+}
+
+// Update exhibition benefit display
+function updateExhibitionBenefitDisplay(boothId) {
+    const benefitItem = document.querySelector('.benefit-item:nth-child(2)'); // Exhibition Booth benefit
+    
+    if (benefitItem) {
+        const statusDiv = benefitItem.querySelector('.benefit-status');
+        statusDiv.textContent = `Claimed: Booth ${boothId}`;
+        statusDiv.className = 'benefit-status status-used';
+        
+        const description = benefitItem.querySelector('.benefit-description');
+        description.textContent = `You have claimed Booth ${boothId}. Setup details will be confirmed by the admin team.`;
+        
+        const actionsDiv = benefitItem.querySelector('.benefit-actions');
+        actionsDiv.innerHTML = `
+            <button class="btn btn-outline" onclick="viewBoothDetails('${boothId}')">
+                <i class="fas fa-eye"></i> View Booth Details
+            </button>
+        `;
+    }
+}
+
+// Check package rights when loading the page
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // When benefits tab is opened, load benefits
+    const benefitsTabLink = document.querySelector('a[data-tab="benefits"]');
+    if (benefitsTabLink) {
+        benefitsTabLink.addEventListener('click', function() {
+            // Load benefits after a short delay to ensure tab is visible
+            setTimeout(loadPartnerBenefits, 300);
+        });
+    }
+    
+    // Also load benefits if we're already on benefits tab
+    if (window.location.hash === '#benefits-tab') {
+        setTimeout(loadPartnerBenefits, 500);
+    }
+});
+
+// Update existing functions to work with dynamic benefits
+window.openBenefitForm = function(benefitType) {
+    const form = document.getElementById(`${benefitType}-form`);
+    if (form) {
+        form.style.display = 'block';
+    }
+};
+
+window.closeBenefitForm = function(benefitType) {
+    const form = document.getElementById(`${benefitType}-form`);
+    if (form) {
+        form.style.display = 'none';
+        if (form.querySelector('form')) {
+            form.querySelector('form').reset();
+        }
+    }
+};
+
+// Utility functions
+function viewLogoSubmission() {
+    showNotification('Showing logo submission details...');
+}
+
+function viewSpeakerSubmission() {
+    showNotification('Showing speaker submission details...');
+}
+
+function addToSchedule() {
+    showNotification('Added networking reception to your schedule!');
+}
+
+function viewBoothDetails(boothId) {
+    showNotification(`Showing details for Booth ${boothId}`);
+}
+
+window.viewRegisteredAttendees = function() {
+    showNotification('Showing registered attendees...');
+};
+
+window.copyEmailTemplate = function() {
+    const template = document.querySelector('.email-template').innerText;
+    navigator.clipboard.writeText(template).then(() => {
+        showNotification('Email template copied to clipboard!');
+    });
+};
+
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+});
+
+// Close modals with close buttons
+document.querySelectorAll('.close-modal').forEach(button => {
+    button.addEventListener('click', function() {
+        this.closest('.modal').style.display = 'none';
+    });
+});
+
+// Initialize exhibit modal submit button
+document.addEventListener('DOMContentLoaded', function() {
+    const submitExhibitionBtn = document.getElementById('submit-exhibition');
+    if (submitExhibitionBtn) {
+        submitExhibitionBtn.addEventListener('click', validateAndSubmitPartnerExhibition);
+    }
+});
+        
         // =====================================================================
         // REAL-TIME API FUNCTIONS
         // =====================================================================
@@ -2574,6 +3841,142 @@
                 console.error('Error fetching live stream data:', error);
                 return { isLive: false };
             }
+        }
+
+        // NEW: Initialize Venue Image Gallery
+        function initializeVenueGallery() {
+            const container = document.getElementById('venue-image-container');
+            const mainImage = document.getElementById('venue-main-image');
+            const thumbnailsContainer = document.getElementById('venue-thumbnails');
+            const zoomInBtn = document.getElementById('zoom-in-btn');
+            const zoomOutBtn = document.getElementById('zoom-out-btn');
+            const resetZoomBtn = document.getElementById('reset-zoom-btn');
+            const prevImageBtn = document.getElementById('prev-image-btn');
+            const nextImageBtn = document.getElementById('next-image-btn');
+            const zoomLevel = document.getElementById('zoom-level');
+            
+            // Load thumbnails
+            venueImages.forEach((image, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `venue-thumb ${index === 0 ? 'active' : ''}`;
+                thumb.innerHTML = `<img src="${image.thumbnail}" alt="${image.title}" data-index="${index}">`;
+                thumb.addEventListener('click', () => switchImage(index));
+                thumbnailsContainer.appendChild(thumb);
+            });
+            
+            // Zoom in
+            zoomInBtn.addEventListener('click', () => {
+                if (currentZoom < 3) {
+                    currentZoom += 0.25;
+                    updateZoom();
+                }
+            });
+            
+            // Zoom out
+            zoomOutBtn.addEventListener('click', () => {
+                if (currentZoom > 0.25) {
+                    currentZoom -= 0.25;
+                    updateZoom();
+                }
+            });
+            
+            // Reset zoom
+            resetZoomBtn.addEventListener('click', () => {
+                currentZoom = 1;
+                imageOffsetX = 0;
+                imageOffsetY = 0;
+                updateZoom();
+                updateImagePosition();
+            });
+            
+            // Previous image
+            prevImageBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex - 1 + venueImages.length) % venueImages.length;
+                switchImage(currentImageIndex);
+            });
+            
+            // Next image
+            nextImageBtn.addEventListener('click', () => {
+                currentImageIndex = (currentImageIndex + 1) % venueImages.length;
+                switchImage(currentImageIndex);
+            });
+            
+            // Drag functionality
+            container.addEventListener('mousedown', startDrag);
+            container.addEventListener('touchstart', startDragTouch);
+            container.addEventListener('mousemove', drag);
+            container.addEventListener('touchmove', dragTouch);
+            container.addEventListener('mouseup', stopDrag);
+            container.addEventListener('touchend', stopDrag);
+            container.addEventListener('mouseleave', stopDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                dragStartX = e.clientX - imageOffsetX;
+                dragStartY = e.clientY - imageOffsetY;
+                container.style.cursor = 'grabbing';
+            }
+            
+            function startDragTouch(e) {
+                if (e.touches.length === 1) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX - imageOffsetX;
+                    dragStartY = e.touches[0].clientY - imageOffsetY;
+                    container.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                imageOffsetX = e.clientX - dragStartX;
+                imageOffsetY = e.clientY - dragStartY;
+                updateImagePosition();
+            }
+            
+            function dragTouch(e) {
+                if (!isDragging || e.touches.length !== 1) return;
+                imageOffsetX = e.touches[0].clientX - dragStartX;
+                imageOffsetY = e.touches[0].clientY - dragStartY;
+                updateImagePosition();
+                e.preventDefault();
+            }
+            
+            function stopDrag() {
+                isDragging = false;
+                container.style.cursor = 'grab';
+            }
+            
+            function updateZoom() {
+                mainImage.style.transform = `scale(${currentZoom}) translate(${imageOffsetX}px, ${imageOffsetY}px)`;
+                zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+            }
+            
+            function updateImagePosition() {
+                mainImage.style.transform = `scale(${currentZoom}) translate(${imageOffsetX}px, ${imageOffsetY}px)`;
+            }
+            
+            function switchImage(index) {
+                currentImageIndex = index;
+                const image = venueImages[index];
+                mainImage.src = image.url;
+                mainImage.alt = image.title;
+                
+                // Update active thumbnail
+                document.querySelectorAll('.venue-thumb').forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === index);
+                });
+                
+                // Reset zoom and position
+                currentZoom = 1;
+                imageOffsetX = 0;
+                imageOffsetY = 0;
+                updateZoom();
+                updateImagePosition();
+            }
+            
+            // Initial zoom update
+            updateZoom();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -3146,6 +4549,33 @@
             
             // Initialize selected events display
             updateSelectedEventsDisplay();
+            
+            // NEW: Initialize venue gallery when modal opens
+            const exhibitModal = document.getElementById('exhibit-modal');
+            const setupExhibitionBtn = document.getElementById('setup-exhibition-btn');
+            
+            if (setupExhibitionBtn && exhibitModal) {
+                setupExhibitionBtn.addEventListener('click', function() {
+                    // Open modal
+                    exhibitModal.style.display = 'flex';
+                    // Initialize gallery after a short delay to ensure DOM is ready
+                    setTimeout(initializeVenueGallery, 100);
+                });
+            }
+            
+            // Close modal when clicking outside or on close button
+            const closeButtons = exhibitModal.querySelectorAll('.close-modal');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    exhibitModal.style.display = 'none';
+                });
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === exhibitModal) {
+                    exhibitModal.style.display = 'none';
+                }
+            });
         });
         
         // Utility functions for receipts and resources
@@ -3167,6 +4597,750 @@
             showNotification('Downloading resource...');
             // In a real application, this would trigger a download from the backend
         }
+        // Global state for booth management
+        let globalPartnerBooths = {
+            total: 200,
+            available: 200,
+            soldOut: 0,
+            boothDetails: {}
+        };
+
+        let selectedPartnerBooth = null;
+        let currentExhibitDay = {
+            id: 'conference',
+            title: 'ICSC 2026 Conference'
+        };
+
+        // Add this function to fetch booth data for partners this can come from the booths tab in the super admin
+        async function fetchPartnerBoothData() {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch('/api/partner/booths');
+                // const data = await response.json();
+                // return data;
+                
+                // Sample data - in real app, this comes from backend
+                return {
+                    total: 200,
+                    available: 180,
+                    soldOut: 20,
+                    boothDetails: {
+                        "B1": { soldOut: false },
+                        "B2": { soldOut: true },
+                        "B3": { soldOut: false },
+                        "B4": { soldOut: false },
+                        "B5": { soldOut: true },
+                        // ... other booths
+                    },
+                    partnerAllocation: 1, // Number of booths allocated to this partner
+                    partnerAssignedBooths: [] // Booths already assigned to this partner
+                };
+            } catch (error) {
+                console.error('Error fetching partner booth data:', error);
+                return globalPartnerBooths;
+            }
+        }
+
+        // Add this function to update booth status for partners
+        async function updatePartnerBoothStatus(boothId) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                // const response = await fetch('/api/partner/booths/claim', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ boothId })
+                // });
+                // return await response.json();
+                
+                console.log('Partner booth claimed:', boothId);
+                return { success: true, boothId };
+            } catch (error) {
+                console.error('Error claiming partner booth:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Add this function to render booth grid for partners
+        async function renderPartnerBoothGrid() {
+            const boothData = await fetchPartnerBoothData();
+            const container = document.getElementById('booth-grid');
+            
+            // Update global state
+            globalPartnerBooths = boothData;
+            
+            // Update stats
+            document.getElementById('modal-available').textContent = boothData.available;
+            document.getElementById('modal-sold-out').textContent = boothData.soldOut;
+            
+            let html = '';
+            
+            // Generate booth grid - limited to partner's allocation
+            const boothsToShow = Math.min(50, boothData.total); // Show first 50 booths for demo
+            
+            for (let i = 1; i <= boothsToShow; i++) {
+                const boothId = `B${i}`;
+                const isSoldOut = boothData.boothDetails[boothId] && boothData.boothDetails[boothId].soldOut;
+                const isAssignedToPartner = boothData.partnerAssignedBooths && 
+                                           boothData.partnerAssignedBooths.includes(boothId);
+                
+                // Determine booth status
+                let statusClass = '';
+                let statusText = '';
+                
+                if (isAssignedToPartner) {
+                    statusClass = 'selected';
+                    selectedPartnerBooth = boothId;
+                } else if (isSoldOut) {
+                    statusClass = 'sold-out';
+                }
+                
+                if (isAssignedToPartner) {
+                    statusText = '<span style="color: #4caf50; font-size: 0.7rem;">Your Booth</span>';
+                } else if (isSoldOut) {
+                    statusText = '<span class="sold-out-badge">Taken</span>';
+                }
+                
+                html += `
+                    <div class="booth-option ${statusClass}" data-booth-id="${boothId}">
+                        ${boothId}
+                        ${statusText}
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // Booth selection logic
+            document.querySelectorAll('.booth-option:not(.sold-out)').forEach(option => {
+                option.addEventListener('click', function() {
+                    const boothId = this.getAttribute('data-booth-id');
+                    
+                    // Check if partner has reached allocation limit
+                    if (boothData.partnerAssignedBooths.length >= boothData.partnerAllocation) {
+                        showNotification(`You can only claim ${boothData.partnerAllocation} booth(s).`, 'error');
+                        return;
+                    }
+                    
+                    // Deselect all booths
+                    document.querySelectorAll('.booth-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Select this booth
+                    this.classList.add('selected');
+                    selectedPartnerBooth = boothId;
+                    
+                    showNotification(`Booth ${boothId} selected`);
+                });
+            });
+        }
+
+        // Add this function to set up file upload
+        function setupFileUpload() {
+            const browseBtn = document.getElementById('browse-files');
+            const fileInput = document.getElementById('exhibition-files');
+            const fileList = document.getElementById('file-list');
+            
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                fileList.innerHTML = '';
+                
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-size">${(file.size / 1024).toFixed(2)} KB</span>
+                        <button class="file-remove" onclick="this.parentElement.remove()">&times;</button>
+                    `;
+                    fileList.appendChild(fileItem);
+                }
+            });
+            
+            // Set up submit button
+            const submitBtn = document.getElementById('submit-exhibition');
+            submitBtn.onclick = validateAndSubmitPartnerExhibition;
+        }
+
+        // Add this function to validate and submit exhibition
+        async function validateAndSubmitPartnerExhibition() {
+            const title = document.getElementById('exhibition-title').value;
+            const description = document.getElementById('exhibition-description').value;
+            
+            if (!title || !description) {
+                showNotification('Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            if (!selectedPartnerBooth) {
+                showNotification('Please select a booth.', 'error');
+                return;
+            }
+            
+            // Get booth data
+            const boothData = await fetchPartnerBoothData();
+            
+            // Check if partner has already claimed maximum booths
+            if (boothData.partnerAssignedBooths.length >= boothData.partnerAllocation) {
+                showNotification(`You have already claimed your maximum of ${boothData.partnerAllocation} booth(s).`, 'error');
+                return;
+            }
+            
+            // Show processing message
+            showNotification('Claiming booth...', 'info');
+            
+            // Claim booth in backend
+            const result = await updatePartnerBoothStatus(selectedPartnerBooth);
+            
+            if (result.success) {
+                showNotification(`Booth ${selectedPartnerBooth} claimed successfully!`);
+                
+                // Close modal
+                document.getElementById('exhibit-modal').style.display = 'none';
+                
+                // Reset form
+                document.getElementById('exhibition-title').value = '';
+                document.getElementById('exhibition-description').value = '';
+                document.getElementById('file-list').innerHTML = '';
+                document.getElementById('exhibition-files').value = '';
+                
+                // Update UI to show claimed booth
+                updatePartnerBenefitsDisplay(selectedPartnerBooth);
+                
+                // Notify admin
+                await notifyAdmin({
+                    type: 'partner_booth_claimed',
+                    partner: 'Sarah Johnson',
+                    company: 'Global Solutions Inc.',
+                    booth: selectedPartnerBooth,
+                    title: title,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                showNotification('Failed to claim booth. Please try again.', 'error');
+            }
+        }
+
+        // Add this function to update benefits display
+        function updatePartnerBenefitsDisplay(boothId) {
+            const benefitItem = document.querySelector('.benefit-item:nth-child(2)'); // Exhibition Booth benefit
+            
+            if (benefitItem) {
+                const statusDiv = benefitItem.querySelector('.benefit-status');
+                statusDiv.textContent = `Claimed: Booth ${boothId}`;
+                statusDiv.className = 'benefit-status status-used';
+                
+                const description = benefitItem.querySelector('.benefit-description');
+                description.textContent = `You have claimed Booth ${boothId}. Setup details will be confirmed by the admin team.`;
+                
+                const actionsDiv = benefitItem.querySelector('.benefit-actions');
+                actionsDiv.innerHTML = `
+                    <button class="btn btn-outline" onclick="viewBoothDetails('${boothId}')">
+                        <i class="fas fa-eye"></i> View Booth Details
+                    </button>
+                `;
+            }
+        }
+
+        // Add this function to view booth details
+        window.viewBoothDetails = function(boothId) {
+            showNotification(`Showing details for Booth ${boothId}`);
+        };
+
+        // Add this function to notify admin
+        async function notifyAdmin(notificationData) {
+            try {
+                // BACKEND INTEGRATION: Replace with actual API call
+                console.log('Admin notified:', notificationData);
+                return { success: true };
+            } catch (error) {
+                console.error('Error notifying admin:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Add this to DOMContentLoaded event listener to ensure proper initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Add event listener for the exhibit button in benefits tab
+            const setupExhibitionBtn = document.getElementById('setup-exhibition-btn');
+            if (setupExhibitionBtn) {
+                setupExhibitionBtn.addEventListener('click', async function() {
+                    // Open modal
+                    const modal = document.getElementById('exhibit-modal');
+                    modal.style.display = 'flex';
+                    
+                    // Initialize gallery
+                    setTimeout(initializeVenueGallery, 100);
+                    
+                    // Render booth grid
+                    await renderPartnerBoothGrid();
+                    
+                    // Set up file upload
+                    setupFileUpload();
+                });
+            }
+            
+            // Close exhibit modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            // Ensure booth grid renders when modal opens
+            const exhibitModal = document.getElementById('exhibit-modal');
+            if (exhibitModal) {
+                const closeButtons = exhibitModal.querySelectorAll('.close-modal');
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        exhibitModal.style.display = 'none';
+                    });
+                });
+            }
+        });
+        
+        // Show notification function (update to handle different types)
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+            
+            // Update icon based on type
+            const icon = notification.querySelector('i');
+            if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+                notification.style.backgroundColor = '#e53935';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+                notification.style.backgroundColor = '#2196f3';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+                notification.style.backgroundColor = '#ff9800';
+            } else {
+                icon.className = 'fas fa-check-circle';
+                notification.style.backgroundColor = 'var(--primary)';
+            }
+            
+            notification.querySelector('.notification-text').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        // =====================================================================
+// MULTIPLE IMAGE UPLOAD FUNCTIONALITY
+// =====================================================================
+
+let uploadedImages = [];
+
+function setupMultipleImageUpload() {
+    const fileUploadArea = document.getElementById('file-upload-area');
+    const fileInput = document.getElementById('exhibition-files');
+    const browseBtn = document.getElementById('browse-files');
+    const fileList = document.getElementById('file-list');
+    const imagePreviewGallery = document.getElementById('image-preview-gallery');
+    const imagePreviewGrid = document.getElementById('image-preview-grid');
+
+    // Open file browser when clicking the upload area
+    fileUploadArea.addEventListener('click', function(e) {
+        if (e.target !== browseBtn) {
+            fileInput.click();
+        }
+    });
+
+    // Open file browser when clicking browse button
+    browseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.click();
+    });
+
+    // Drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileUploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+        fileUploadArea.classList.add('drag-over');
+    }
+
+    function unhighlight() {
+        fileUploadArea.classList.remove('drag-over');
+    }
+
+    // Handle dropped files
+    fileUploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    // Handle file input change
+    fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
+
+    function handleFiles(files) {
+        const validFiles = Array.from(files).filter(file => {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                showNotification(`File type not supported: ${file.name}`, 'error');
+                return false;
+            }
+            
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification(`File too large (max 5MB): ${file.name}`, 'error');
+                return false;
+            }
+            
+            return true;
+        });
+
+        // Add to uploaded images
+        validFiles.forEach(file => {
+            // Create unique ID for the file
+            const fileId = Date.now() + Math.random().toString(36).substr(2, 9);
+            
+            uploadedImages.push({
+                id: fileId,
+                file: file,
+                previewUrl: URL.createObjectURL(file)
+            });
+        });
+
+        // Update UI
+        updateFileList();
+        updateImagePreviews();
+        
+        // Show notification
+        if (validFiles.length > 0) {
+            showNotification(`Added ${validFiles.length} image(s)`, 'success');
+        }
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        
+        if (uploadedImages.length === 0) {
+            fileList.innerHTML = '<p style="color: #666; font-style: italic;">No images uploaded yet</p>';
+            return;
+        }
+        
+        uploadedImages.forEach((image, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span class="file-name">${image.file.name}</span>
+                <span class="file-size">${formatFileSize(image.file.size)}</span>
+                <button class="file-remove" onclick="removeImage('${image.id}')">&times;</button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+    }
+
+    function updateImagePreviews() {
+        imagePreviewGrid.innerHTML = '';
+        
+        if (uploadedImages.length === 0) {
+            imagePreviewGallery.style.display = 'none';
+            return;
+        }
+        
+        imagePreviewGallery.style.display = 'block';
+        
+        uploadedImages.forEach(image => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'image-preview-item';
+            previewItem.innerHTML = `
+                <button class="image-remove-btn" onclick="removeImage('${image.id}')">&times;</button>
+                <img src="${image.previewUrl}" alt="${image.file.name}" class="preview-image">
+                <div class="image-preview-info">
+                    <div class="image-preview-name">${image.file.name}</div>
+                    <div class="image-preview-size">${formatFileSize(image.file.size)}</div>
+                </div>
+            `;
+            imagePreviewGrid.appendChild(previewItem);
+        });
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+}
+
+// Remove image from uploaded images
+window.removeImage = function(imageId) {
+    const imageIndex = uploadedImages.findIndex(img => img.id === imageId);
+    
+    if (imageIndex !== -1) {
+        // Revoke object URL to prevent memory leaks
+        URL.revokeObjectURL(uploadedImages[imageIndex].previewUrl);
+        
+        // Remove from array
+        uploadedImages.splice(imageIndex, 1);
+        
+        // Update UI
+        updateFileList();
+        updateImagePreviews();
+        
+        showNotification('Image removed', 'info');
+    }
+};
+
+// Update validation function to handle multiple images
+async function validateAndSubmitExhibition() {
+    const title = document.getElementById('exhibition-title').value;
+    const description = document.getElementById('exhibition-description').value;
+    
+    if (!title || !description) {
+        showNotification('Please fill in all required fields.', 'error');
+        return;
+    }
+    
+    if (!selectedPartnerBooth && !partnerAssignedBooth) {
+        showNotification('Please select a booth.', 'error');
+        return;
+    }
+    
+    // Check if images are uploaded (optional, remove if not required)
+    if (uploadedImages.length === 0) {
+        const confirmUpload = confirm('No images uploaded. Are you sure you want to continue without images?');
+        if (!confirmUpload) {
+            return;
+        }
+    }
+    
+    const boothToClaim = selectedPartnerBooth || partnerAssignedBooth;
+    
+    // Check if booth is already assigned
+    if (globalPartnerBooths.boothDetails[boothToClaim]?.soldOut) {
+        showNotification('This booth is no longer available. Please select another.', 'error');
+        return;
+    }
+    
+    showNotification('Setting up exhibition with images...', 'info');
+    
+    // Prepare form data for image upload
+    const formData = new FormData();
+    formData.append('boothId', boothToClaim);
+    formData.append('title', title);
+    formData.append('description', description);
+    
+    // Add all uploaded images
+    uploadedImages.forEach((image, index) => {
+        formData.append(`images[${index}]`, image.file);
+    });
+    
+    const result = await claimPartnerBoothWithImages(formData);
+    
+    if (result.success) {
+        partnerAssignedBooth = boothToClaim;
+        localStorage.setItem('partnerAssignedBooth', boothToClaim);
+        
+        showNotification(`Booth ${boothToClaim} claimed with ${uploadedImages.length} image(s)!`, 'success');
+        
+        // Close modal
+        document.getElementById('exhibit-modal').style.display = 'none';
+        
+        // Clear uploaded images
+        clearUploadedImages();
+        
+        // Update UI
+        updateBoothDisplay(boothToClaim);
+        updateBenefitsTab(boothToClaim);
+        
+        // Reset form
+        document.getElementById('exhibition-title').value = '';
+        document.getElementById('exhibition-description').value = '';
+    } else {
+        showNotification('Failed to claim booth. Please try again.', 'error');
+    }
+}
+
+// Clear uploaded images
+function clearUploadedImages() {
+    // Revoke all object URLs to prevent memory leaks
+    uploadedImages.forEach(image => {
+        URL.revokeObjectURL(image.previewUrl);
+    });
+    
+    uploadedImages = [];
+    
+    // Update UI
+    const fileList = document.getElementById('file-list');
+    const imagePreviewGallery = document.getElementById('image-preview-gallery');
+    const imagePreviewGrid = document.getElementById('image-preview-grid');
+    
+    if (fileList) fileList.innerHTML = '<p style="color: #666; font-style: italic;">No images uploaded yet</p>';
+    if (imagePreviewGallery) imagePreviewGallery.style.display = 'none';
+    if (imagePreviewGrid) imagePreviewGrid.innerHTML = '';
+    
+    // Reset file input
+    const fileInput = document.getElementById('exhibition-files');
+    if (fileInput) fileInput.value = '';
+}
+
+// Update booth claim function to handle images
+async function claimPartnerBoothWithImages(formData) {
+    try {
+        // BACKEND INTEGRATION: Replace with actual API call
+        // const response = await fetch('/api/partner/booths/claim-with-images', {
+        //     method: 'POST',
+        //     body: formData
+        // });
+        // return await response.json();
+        
+        // Simulate upload with progress
+        showNotification(`Uploading ${formData.getAll('images').length} image(s)...`, 'info');
+        
+        // Simulate progress
+        for (let i = 0; i <= 100; i += 20) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+        
+        return { success: true, boothId: formData.get('boothId') };
+    } catch (error) {
+        console.error('Error claiming booth with images:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function openExhibitModal() {
+    const modal = document.getElementById('exhibit-modal');
+    modal.style.display = 'flex';
+    
+    // Initialize venue gallery
+    setTimeout(initializeVenueGallery, 100);
+    
+    // Initialize multiple image upload
+    setTimeout(setupMultipleImageUpload, 100);
+    
+    // Render booth grid - USE THE PARTNER-SPECIFIC VERSION
+    await renderPartnerBoothGrid(); // <-- FIXED: Changed to renderPartnerBoothGrid()
+    
+    // Clear any previous images
+    clearUploadedImages();
+    
+    // Pre-select previously selected booth
+    if (partnerAssignedBooth) {
+        setTimeout(() => {
+            const boothOption = document.querySelector(`.booth-option[data-booth-id="${partnerAssignedBooth}"]`);
+            if (boothOption) {
+                boothOption.classList.add('selected');
+                selectedPartnerBooth = partnerAssignedBooth;
+            }
+        }, 200);
+    }
+}
+
+// Add to DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing initialization code ...
+    
+    // Initialize multiple image upload when modal opens
+    const setupExhibitionBtn = document.getElementById('setup-exhibition-btn-benefits');
+    if (setupExhibitionBtn) {
+        setupExhibitionBtn.addEventListener('click', function() {
+            openExhibitModal();
+        });
+    }
+});
+// Example of how the backend API might look
+app.post('/api/partner/booths/claim-with-images', upload.array('images', 10), async (req, res) => {
+    try {
+        const { boothId, title, description } = req.body;
+        const images = req.files; // Array of uploaded images
+        
+        // Validate booth availability
+        const booth = await Booth.findById(boothId);
+        if (!booth || booth.status === 'sold') {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Booth no longer available' 
+            });
+        }
+        
+        // Process images
+        const imageUrls = [];
+        for (const file of images) {
+            // Upload to cloud storage or save locally
+            const imageUrl = await uploadToCloudStorage(file);
+            imageUrls.push(imageUrl);
+        }
+        
+        // Save exhibition data
+        const exhibition = new Exhibition({
+            boothId,
+            title,
+            description,
+            images: imageUrls,
+            partnerId: req.user.id,
+            status: 'pending'
+        });
+        
+        await exhibition.save();
+        
+        // Update booth status
+        booth.status = 'reserved';
+        booth.partnerId = req.user.id;
+        await booth.save();
+        
+        res.json({ 
+            success: true, 
+            boothId,
+            exhibitionId: exhibition._id,
+            imageCount: imageUrls.length
+        });
+        
+    } catch (error) {
+        console.error('Error claiming booth:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Failed to claim booth' 
+        });
+    }
+});
+
+        // Check if package has exhibition rights
+if (userPackage.exhibit_enabled) {
+    showExhibitionButton();
+} else {
+    hideExhibitionButton();
+}
+
+// Check if package has speaking rights
+if (userPackage.speak_enabled) {
+    showSpeakingButton();
+} else {
+    hideSpeakingButton();
+}
     </script>
 </body>
 </html>

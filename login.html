@@ -313,7 +313,7 @@
                                 <option value="">Select Who You`re Logging In As</option>
                                 <option value="Attendee">Participant</option>
                                 <option value="Event Partner">Event Partner</option>
-                                <option value="Speaker">Speaker</option>
+                                <!-- <option value="Speaker">Speaker</option> -->
                             </select>
                         </div>
 
@@ -379,9 +379,9 @@
             // Role -> default redirect (relative files in same directory as login.html)
             const redirects = {
                 'Attendee': 'attendee-dash.html',
-                'Event Partner': 'partners-dash.html',
-                'Exhibitor': 'exhibitors-dash.html',
-                'Speaker': 'speakers-dash.html'
+                'Event Partner': 'partners-dash.html'
+                // 'Exhibitor': 'exhibitors-dash.html',
+                // 'Speaker': 'speakers-dash.html'
             };
 
             // Login form submission - calls role-specific backend endpoint
