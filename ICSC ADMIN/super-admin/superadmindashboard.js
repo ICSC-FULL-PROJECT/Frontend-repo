@@ -1270,1073 +1270,905 @@ function viewPartner(partnerId) {
     
     modal.style.display = 'flex';
 }
-// Verification System for Admin Dashboard - COMPLETE WITH DIAMOND PARTNER & EMAIL
-class VerificationSystem {
+// Verification System for Admin Dashboard
+// AUTO-APPROVAL NOTIFICATION SYSTEM
+
+class AutoApprovalNotificationSystem {
     constructor() {
-        this.pendingSubmissions = [];
-        this.verifiedSubmissions = [];
-        this.currentSubmission = null;
-        this.emailTemplates = {};
-        
+        this.notifications = [];
+        this.unreadCount = 0;
+        this.currentFilter = 'all';
         this.initialize();
     }
-    
-    initialize() {
-        // Load sample data including Diamond Partner
-        this.loadSampleData();
-        
-        // Load email templates
-        this.loadEmailTemplates();
-        
-        // Bind event listeners
-        this.bindEvents();
-        
-        // Render tables
-        this.renderPendingSubmissions();
-        this.renderVerificationHistory();
+
+    async initialize() {
+        await this.loadNotifications();
+        this.setupEventListeners();
+        this.startPolling();
+        this.updateNotificationBadge();
     }
-    
-    loadSampleData() {
-        // Sample pending submissions - INCLUDING DIAMOND PARTNER
-        this.pendingSubmissions = [
-            // DIAMOND PARTNER SUBMISSION
-            {
-                id: 'SUB-2026-001',
-                partnerId: 'PART-001',
-                partnerName: 'Tech Innovations Ltd',
-                contactPerson: 'Michael Chen',
-                email: 'michael@techinnovations.com',
-                packageLevel: 'diamond',
-                submissionType: 'exhibition',
-                submissionDate: '2026-06-15',
-                details: {
-                    title: 'AI Solutions for Government',
-                    description: 'Premium exhibition showcasing AI-driven solutions for public sector efficiency',
-                    boothNumber: 'A01, A02', // Diamond gets 2 booths
-                    boothSize: '8x8m each',
-                    setupRequirements: 'Premium power outlets, dedicated wifi, custom branding, VIP lounge, 4K displays',
-                    materials: ['Company brochures', 'Product samples', 'Demo equipment', 'VR setup', 'Interactive displays'],
-                    specialRequests: 'Early setup access, VIP parking, private meeting room'
-                },
-                documents: [
-                    { name: 'exhibition_layout_diamond.pdf', type: 'pdf', url: '#' },
-                    { name: 'company_logo.png', type: 'image', url: '#' },
-                    { name: 'premium_branding_kit.zip', type: 'archive', url: '#' },
-                    { name: 'booth_design_3d.jpg', type: 'image', url: '#' }
-                ],
-                status: 'pending',
-                submittedAt: '2026-06-15 10:30:00'
-            },
-            // GOLD PARTNER SPEAKER SUBMISSION
-            {
-                id: 'SUB-2026-002',
-                partnerId: 'PART-002',
-                partnerName: 'Global Solutions Inc',
-                contactPerson: 'Sarah Johnson',
-                email: 'sarah@globalsolutions.com',
-                packageLevel: 'gold',
-                submissionType: 'speaker',
-                submissionDate: '2026-06-16',
-                details: {
-                    speakerName: 'Dr. Robert Kim',
-                    speakerTitle: 'Chief Technology Officer',
-                    presentationTopic: 'Digital Transformation in Public Sector',
-                    presentationDescription: 'How emerging technologies are reshaping government services',
-                    duration: 45,
-                    sessionType: 'keynote',
-                    targetAudience: 'Government executives, IT directors, Policy makers',
-                    specialRequirements: 'Projector, microphone, recording equipment, live streaming setup'
-                },
-                documents: [
-                    { name: 'speaker_bio.pdf', type: 'pdf', url: '#' },
-                    { name: 'presentation_outline.pdf', type: 'pdf', url: '#' },
-                    { name: 'speaker_photo.jpg', type: 'image', url: '#' },
-                    { name: 'company_profile.pdf', type: 'pdf', url: '#' }
-                ],
-                status: 'pending',
-                submittedAt: '2026-06-16 14:15:00'
-            },
-            // SILVER PARTNER SESSION SUBMISSION
-            {
-                id: 'SUB-2026-003',
-                partnerId: 'PART-003',
-                partnerName: 'Data Analytics Corp',
-                contactPerson: 'James Wilson',
-                email: 'james@datacorp.com',
-                packageLevel: 'silver',
-                submissionType: 'session',
-                submissionDate: '2026-06-17',
-                details: {
-                    sessionTitle: 'Data-Driven Decision Making Workshop',
-                    sessionDescription: 'Hands-on workshop on using data analytics for policy decisions',
-                    facilitator: 'Jane Smith, Senior Data Scientist',
-                    duration: 90,
-                    maxParticipants: 30,
-                    equipmentNeeded: 'Projector, whiteboard, wifi, charging stations, laptops',
-                    materials: ['Workbooks', 'Case studies', 'Software demos', 'Hands-on exercises']
-                },
-                documents: [
-                    { name: 'session_plan.pdf', type: 'pdf', url: '#' },
-                    { name: 'facilitator_cv.pdf', type: 'pdf', url: '#' },
-                    { name: 'workshop_materials.zip', type: 'archive', url: '#' }
-                ],
-                status: 'pending',
-                submittedAt: '2026-06-17 09:45:00'
-            },
-            // DIAMOND PARTNER BENEFIT CLAIM
-            {
-                id: 'SUB-2026-004',
-                partnerId: 'PART-001',
-                partnerName: 'Tech Innovations Ltd',
-                contactPerson: 'Michael Chen',
-                email: 'michael@techinnovations.com',
-                packageLevel: 'diamond',
-                submissionType: 'benefit',
-                submissionDate: '2026-06-18',
-                details: {
-                    benefitType: 'VIP Networking Reception Hosting',
-                    description: 'Request to co-host VIP networking reception',
-                    quantity: 'Full hosting rights',
-                    attendees: ['John Doe (CEO)', 'Jane Smith (CTO)', 'Bob Johnson (COO)'],
-                    justification: 'Strategic partnership opportunity with key government stakeholders',
-                    eventDate: '2026-06-26',
-                    specialRequests: 'Branding opportunities, speaking slot, media coverage'
-                },
-                documents: [
-                    { name: 'hosting_proposal.pdf', type: 'pdf', url: '#' },
-                    { name: 'attendee_profiles.pdf', type: 'pdf', url: '#' },
-                    { name: 'company_letterhead.pdf', type: 'pdf', url: '#' }
-                ],
-                status: 'pending',
-                submittedAt: '2026-06-18 16:20:00'
-            }
-        ];
+
+    setupEventListeners() {
+        // Notification bell click
+        const bell = document.getElementById('notificationBell');
+        const dropdown = document.getElementById('notificationDropdown');
         
-        // Sample verified submissions
-        this.verifiedSubmissions = [
-            {
-                id: 'SUB-2026-000',
-                partnerId: 'PART-004',
-                partnerName: 'Cloud Systems Ltd',
-                contactPerson: 'Emma Davis',
-                email: 'emma@cloudsystems.com',
-                packageLevel: 'diamond',
-                submissionType: 'exhibition',
-                submissionDate: '2026-06-14',
-                details: {
-                    title: 'Cloud Infrastructure Solutions',
-                    description: 'Enterprise cloud solutions for government digital transformation',
-                    boothNumber: 'A03',
-                    boothSize: '8x8m',
-                    setupRequirements: 'Premium power, dedicated internet, large display monitor, VIP area'
-                },
-                documents: [],
-                status: 'approved',
-                reviewedBy: 'Super Admin',
-                reviewedAt: '2026-06-14 15:30:00',
-                reviewComments: 'Approved for prime location in main exhibition hall. Diamond partner benefits applied.',
-                sendEmail: true,
-                schedule: {
-                    date: '2026-06-25',
-                    time: '09:00',
-                    location: 'Booth A03, Main Hall (Prime Location)',
-                    duration: 480,
-                    additionalNotes: 'VIP access granted. Early setup from 7:00 AM.'
-                },
-                emailSent: true,
-                emailSentAt: '2026-06-14 16:00:00'
-            }
-        ];
-    }
-    
-    loadEmailTemplates() {
-        this.emailTemplates = {
-            approved: {
-                subject: 'Your ICSC 2026 Submission Has Been Approved!',
-                body: (submission, reviewData) => `
-                    <h2>🎉 Submission Approved!</h2>
-                    <p>Dear ${submission.contactPerson},</p>
-                    
-                    <p>Great news! Your submission <strong>${submission.id}</strong> has been <strong>APPROVED</strong> by our review team.</p>
-                    
-                    <div style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #4caf50; margin: 20px 0;">
-                        <h3 style="color: #2e7d32; margin-top: 0;">Submission Details</h3>
-                        <p><strong>Submission ID:</strong> ${submission.id}</p>
-                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
-                        <p><strong>Company:</strong> ${submission.partnerName}</p>
-                        <p><strong>Package Level:</strong> <span style="color: #6dafff; font-weight: bold;">${submission.packageLevel.toUpperCase()}</span></p>
-                        
-                        ${reviewData.reviewComments ? `
-                            <p><strong>Review Comments:</strong> ${reviewData.reviewComments}</p>
-                        ` : ''}
-                        
-                        ${reviewData.schedule ? `
-                            <hr style="border-color: #c8e6c9;">
-                            <h3 style="color: #2e7d32;">📅 Schedule Details</h3>
-                            ${reviewData.schedule.date ? `<p><strong>Date:</strong> ${reviewData.schedule.date}</p>` : ''}
-                            ${reviewData.schedule.time ? `<p><strong>Time:</strong> ${reviewData.schedule.time}</p>` : ''}
-                            ${reviewData.schedule.location ? `<p><strong>Location:</strong> ${reviewData.schedule.location}</p>` : ''}
-                            ${reviewData.schedule.duration ? `<p><strong>Duration:</strong> ${reviewData.schedule.duration} minutes</p>` : ''}
-                            ${reviewData.schedule.additionalNotes ? `<p><strong>Additional Notes:</strong> ${reviewData.schedule.additionalNotes}</p>` : ''}
-                            
-                            ${submission.packageLevel === 'diamond' ? `
-                                <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                                    <p style="color: #1976d2; margin: 0;">
-                                        <strong>⭐ Diamond Partner Benefit:</strong> Your premium status provides priority access and enhanced visibility.
-                                    </p>
-                                </div>
-                            ` : ''}
-                        ` : ''}
-                    </div>
-                    
-                    <p><strong>Next Steps:</strong></p>
-                    <ul>
-                        <li>Prepare your materials according to the schedule</li>
-                        <li>Check in at the registration desk 30 minutes before your scheduled time</li>
-                        ${submission.packageLevel === 'diamond' ? '<li>Contact your dedicated partner manager for any special arrangements</li>' : ''}
-                        <li>Review the conference app for any updates</li>
-                    </ul>
-                    
-                    <p>If you have any questions, please contact our partnership team at <a href="mailto:partners@icsc2026.gov.ng">partners@icsc2026.gov.ng</a>.</p>
-                    
-                    <p>Best regards,<br>
-                    <strong>ICSC 2026 Administration Team</strong></p>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
-                        <p>This is an automated message. Please do not reply to this email.</p>
-                    </div>
-                `
-            },
-            
-            rejected: {
-                subject: 'Update on Your ICSC 2026 Submission',
-                body: (submission, reviewData) => `
-                    <h2>Important Update Regarding Your Submission</h2>
-                    <p>Dear ${submission.contactPerson},</p>
-                    
-                    <p>Thank you for your submission <strong>${submission.id}</strong>. After careful review, we regret to inform you that your submission has been <strong style="color: #d32f2f;">NOT APPROVED</strong> at this time.</p>
-                    
-                    <div style="background-color: #ffebee; padding: 20px; border-radius: 8px; border-left: 4px solid #f44336; margin: 20px 0;">
-                        <h3 style="color: #c62828; margin-top: 0;">Submission Details</h3>
-                        <p><strong>Submission ID:</strong> ${submission.id}</p>
-                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
-                        <p><strong>Company:</strong> ${submission.partnerName}</p>
-                        <p><strong>Package Level:</strong> ${submission.packageLevel.toUpperCase()}</p>
-                        
-                        ${reviewData.reviewComments ? `
-                            <p><strong>Feedback from Review Team:</strong><br>
-                            ${reviewData.reviewComments}</p>
-                        ` : ''}
-                        
-                        ${submission.packageLevel === 'diamond' ? `
-                            <div style="background-color: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                                <p style="color: #ef6c00; margin: 0;">
-                                    <strong>Note for Diamond Partners:</strong> As a valued Diamond partner, we encourage you to review the feedback and consider resubmitting.
-                                </p>
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <p><strong>Possible Reasons for Rejection:</strong></p>
-                    <ul>
-                        <li>Schedule conflict or capacity limitations</li>
-                        <li>Insufficient documentation or information</li>
-                        <li>Does not align with conference themes or objectives</li>
-                        <li>Duplicate or similar submissions already accepted</li>
-                    </ul>
-                    
-                    <p><strong>Next Steps:</strong></p>
-                    <ul>
-                        <li>Review the feedback provided above</li>
-                        <li>Consider alternative participation options</li>
-                        <li>Contact our partnership team if you wish to discuss further</li>
-                        <li>You may submit a revised proposal if applicable</li>
-                    </ul>
-                    
-                    <p>We value your partnership and hope to work with you on future opportunities.</p>
-                    
-                    <p>Sincerely,<br>
-                    <strong>ICSC 2026 Review Committee</strong></p>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
-                        <p>Contact: <a href="mailto:review@icsc2026.gov.ng">review@icsc2026.gov.ng</a></p>
-                    </div>
-                `
-            },
-            
-            pending_changes: {
-                subject: 'Changes Requested for Your ICSC 2026 Submission',
-                body: (submission, reviewData) => `
-                    <h2>📋 Changes Requested for Your Submission</h2>
-                    <p>Dear ${submission.contactPerson},</p>
-                    
-                    <p>Thank you for your submission <strong>${submission.id}</strong>. Our review team has reviewed your submission and requests some changes before we can proceed with approval.</p>
-                    
-                    <div style="background-color: #fff3e0; padding: 20px; border-radius: 8px; border-left: 4px solid #ff9800; margin: 20px 0;">
-                        <h3 style="color: #ef6c00; margin-top: 0;">Submission Details</h3>
-                        <p><strong>Submission ID:</strong> ${submission.id}</p>
-                        <p><strong>Type:</strong> ${submission.submissionType.charAt(0).toUpperCase() + submission.submissionType.slice(1)}</p>
-                        <p><strong>Company:</strong> ${submission.partnerName}</p>
-                        <p><strong>Status:</strong> <span style="color: #ff9800; font-weight: bold;">Changes Requested</span></p>
-                        
-                        <div style="background-color: white; padding: 15px; border-radius: 4px; margin-top: 15px;">
-                            <h4 style="margin-top: 0; color: #555;">📝 Required Changes:</h4>
-                            <p>${reviewData.reviewComments || 'Please review the submission requirements and provide additional information.'}</p>
-                            
-                            ${submission.packageLevel === 'diamond' ? `
-                                <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                                    <p style="color: #1976d2; margin: 0;">
-                                        <strong>Diamond Partner Priority:</strong> Your resubmission will be reviewed within 24 hours.
-                                    </p>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                    
-                    <p><strong>Action Required:</strong></p>
-                    <ol>
-                        <li>Review the requested changes above</li>
-                        <li>Update your submission in the partner dashboard</li>
-                        <li>Resubmit for review</li>
-                        <li>Our team will re-evaluate your updated submission</li>
-                    </ol>
-                    
-                    <p><strong>Deadline for Resubmission:</strong> 7 days from receipt of this email</p>
-                    
-                    <p><strong>How to Resubmit:</strong></p>
-                    <ul>
-                        <li>Login to your partner dashboard</li>
-                        <li>Navigate to "My Submissions"</li>
-                        <li>Edit the submission with ID: ${submission.id}</li>
-                        <li>Make the necessary changes and resubmit</li>
-                    </ul>
-                    
-                    ${submission.packageLevel === 'diamond' ? `
-                        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                            <h4 style="margin-top: 0; color: #333;">💎 Diamond Partner Support</h4>
-                            <p>As a Diamond partner, you have access to dedicated support:</p>
-                            <ul>
-                                <li><strong>Dedicated Partner Manager:</strong> Alex Morgan</li>
-                                <li><strong>Contact:</strong> <a href="mailto:alex.morgan@icsc2026.gov.ng">alex.morgan@icsc2026.gov.ng</a></li>
-                                <li><strong>Phone:</strong> +234 800 000 0003</li>
-                                <li><strong>Priority Resubmission Review:</strong> 24-hour turnaround</li>
-                            </ul>
-                        </div>
-                    ` : ''}
-                    
-                    <p>We look forward to receiving your updated submission.</p>
-                    
-                    <p>Best regards,<br>
-                    <strong>ICSC 2026 Review Team</strong></p>
-                    
-                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.9rem;">
-                        <p>Need help? Contact: <a href="mailto:support@icsc2026.gov.ng">support@icsc2026.gov.ng</a></p>
-                    </div>
-                `
-            }
-        };
-    }
-    
-    bindEvents() {
-        // Filter controls
-        document.getElementById('submissionTypeFilter')?.addEventListener('change', () => {
-            this.renderPendingSubmissions();
-        });
-        
-        document.getElementById('partnerTypeFilter')?.addEventListener('change', () => {
-            this.renderPendingSubmissions();
-        });
-        
-        document.getElementById('historyStatusFilter')?.addEventListener('change', () => {
-            this.renderVerificationHistory();
-        });
-        
-        document.getElementById('searchHistory')?.addEventListener('input', () => {
-            this.renderVerificationHistory();
-        });
-        
-        // Refresh button
-        document.getElementById('refreshPendingBtn')?.addEventListener('click', () => {
-            this.refreshSubmissions();
-        });
-        
-        // Modal controls
-        document.getElementById('reviewStatus')?.addEventListener('change', (e) => {
-            this.toggleScheduleSection(e.target.value);
-        });
-        
-        document.getElementById('verificationForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitReview();
-        });
-        
-        document.getElementById('cancelReview')?.addEventListener('click', () => {
-            this.closeVerificationModal();
-        });
-        
-        // Document viewer controls
-        document.getElementById('zoomInBtn')?.addEventListener('click', () => {
-            this.zoomImage(1.2);
-        });
-        
-        document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
-            this.zoomImage(0.8);
-        });
-        
-        document.getElementById('resetZoomBtn')?.addEventListener('click', () => {
-            this.resetImageZoom();
-        });
-        
-        // Test email button (optional - for testing)
-        const testEmailBtn = document.createElement('button');
-        testEmailBtn.className = 'btn btn-sm btn-info';
-        testEmailBtn.innerHTML = '<i class="fas fa-envelope"></i> Test Email';
-        testEmailBtn.style.marginLeft = '10px';
-        testEmailBtn.onclick = () => this.testEmailTemplates();
-        document.querySelector('.section-actions')?.appendChild(testEmailBtn);
-        
-        // Close modals
-        document.querySelectorAll('.close-modal').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    modal.style.display = 'none';
-                });
+        if (bell) {
+            bell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+                if (dropdown.classList.contains('show')) {
+                    this.loadNotifications();
+                }
             });
-        });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!bell?.contains(e.target) && !dropdown?.contains(e.target)) {
+                dropdown?.classList.remove('show');
             }
         });
-    }
-    
-    renderPendingSubmissions() {
-        const table = document.getElementById('pendingSubmissionsTable');
-        if (!table) return;
-        
-        const typeFilter = document.getElementById('submissionTypeFilter')?.value || 'all';
-        const partnerFilter = document.getElementById('partnerTypeFilter')?.value || 'all';
-        
-        const filteredSubmissions = this.pendingSubmissions.filter(submission => {
-            if (typeFilter !== 'all' && submission.submissionType !== typeFilter) return false;
-            if (partnerFilter !== 'all' && submission.packageLevel !== partnerFilter) return false;
-            return true;
+
+        // Mark all as read
+        document.getElementById('markAllReadBtn')?.addEventListener('click', () => {
+            this.markAllAsRead();
         });
-        
-        table.innerHTML = filteredSubmissions.map(submission => `
-            <tr>
-                <td>
-                    <strong>${submission.id}</strong>
-                    ${submission.packageLevel === 'diamond' ? '<span style="color: #6dafff; margin-left: 5px;">💎</span>' : ''}
-                </td>
-                <td>
-                    <div>${submission.partnerName}</div>
-                    <small class="text-muted">${submission.contactPerson}</small>
-                    <div>
-                        <span class="package-badge badge-${submission.packageLevel}">
-                            ${submission.packageLevel.toUpperCase()} PARTNER
-                        </span>
-                    </div>
-                </td>
-                <td>
-                    <span class="submission-badge badge-${submission.submissionType}">
-                        ${submission.submissionType.toUpperCase()}
-                    </span>
-                </td>
-                <td>
-                    <div><strong>${this.getSubmissionTitle(submission)}</strong></div>
-                    <small class="text-muted">${this.getSubmissionSummary(submission)}</small>
-                    ${submission.packageLevel === 'diamond' ? 
-                        '<div><small style="color: #6dafff;"><i class="fas fa-crown"></i> Diamond Priority</small></div>' : ''}
-                </td>
-                <td>
-                    <div class="document-preview">
-                        ${submission.documents.slice(0, 3).map(doc => `
-                            <div class="document-thumbnail" onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
-                                <img src="${this.getDocumentIcon(doc.type)}" alt="${doc.name}">
-                            </div>
-                        `).join('')}
-                        ${submission.documents.length > 3 ? `
-                            <div class="document-count">+${submission.documents.length - 3} more</div>
-                        ` : ''}
-                    </div>
-                </td>
-                <td>
-                    ${this.formatDate(submission.submittedAt)}
-                    ${submission.packageLevel === 'diamond' ? '<br><small style="color: #6dafff;">Priority Review</small>' : ''}
-                </td>
-                <td>
-                    <span class="package-badge badge-${submission.packageLevel}">
-                        ${submission.packageLevel.charAt(0).toUpperCase() + submission.packageLevel.slice(1)}
-                    </span>
-                </td>
-                <td>
-                    <div class="verification-actions" style="display: flex; gap: 5px; flex-wrap: wrap;">
-                        <button class="btn btn-sm btn-primary view-btn" 
-                                onclick="verificationSystem.openVerificationModal('${submission.id}')">
-                            <i class="fas fa-eye"></i> Review
-                        </button>
-                        ${submission.packageLevel === 'diamond' ? 
-                            `<button class="btn btn-sm btn-warning" 
-                                onclick="verificationSystem.priorityReview('${submission.id}')"
-                                title="Priority Review for Diamond Partner">
-                                <i class="fas fa-crown"></i>
-                            </button>` : ''}
-                    </div>
-                </td>
-            </tr>
-        `).join('');
+
+        // Refresh notifications
+        document.getElementById('refreshNotificationsBtn')?.addEventListener('click', () => {
+            this.loadNotifications();
+        });
+
+        // View all notifications
+        document.getElementById('viewAllNotificationsBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showAllNotificationsModal();
+        });
     }
-    
-    priorityReview(submissionId) {
-        const submission = this.pendingSubmissions.find(s => s.id === submissionId);
-        if (!submission) return;
-        
-        // Move diamond submission to top for priority review
-        const index = this.pendingSubmissions.findIndex(s => s.id === submissionId);
-        if (index > 0) {
-            this.pendingSubmissions.splice(index, 1);
-            this.pendingSubmissions.unshift(submission);
-            this.renderPendingSubmissions();
-            showNotification(`💎 Diamond partner submission moved to priority review`, 'info');
+
+    async loadNotifications() {
+        try {
+            const mockNotifications = await this.fetchMockNotifications();
+            this.notifications = mockNotifications;
+            this.unreadCount = mockNotifications.filter(n => n.status === 'approved' && n.notificationStatus === 'unread').length;
+            this.renderNotifications();
+            this.updateNotificationBadge();
+        } catch (error) {
+            console.error('Error loading notifications:', error);
         }
-        
-        // Open verification modal
-        this.openVerificationModal(submissionId);
     }
-    
-    openVerificationModal(submissionId) {
-        this.currentSubmission = this.pendingSubmissions.find(s => s.id === submissionId);
-        if (!this.currentSubmission) return;
-        
-        const modal = document.getElementById('verificationModal');
-        const title = document.getElementById('verificationModalTitle');
-        const detailsContainer = document.querySelector('.submission-details-container');
-        
-        title.textContent = `Verify ${this.currentSubmission.submissionType.toUpperCase()} Submission`;
-        if (this.currentSubmission.packageLevel === 'diamond') {
-            title.innerHTML += ` <span class="package-badge badge-diamond" style="font-size: 0.8rem; margin-left: 10px;">DIAMOND PARTNER</span>`;
-        }
-        
-        // Render submission details
-        detailsContainer.innerHTML = this.renderSubmissionDetails(this.currentSubmission);
-        
-        // Reset form
-        document.getElementById('verificationForm').reset();
-        document.getElementById('scheduleSection').style.display = 'none';
-        
-        // Set default schedule date for Diamond partners
-        if (this.currentSubmission.packageLevel === 'diamond') {
-            const today = new Date();
-            const nextWeek = new Date(today);
-            nextWeek.setDate(today.getDate() + 7);
-            document.getElementById('scheduledDate').value = nextWeek.toISOString().split('T')[0];
-            document.getElementById('scheduledTime').value = '09:00';
-            document.getElementById('venueLocation').value = 'Prime Location - Main Hall';
-            document.getElementById('sessionDuration').value = this.currentSubmission.submissionType === 'exhibition' ? '480' : '45';
-        }
-        
-        // Show modal
-        modal.style.display = 'flex';
+
+    async fetchMockNotifications() {
+        return [
+            {
+                id: 1,
+                type: 'attendee',
+                userId: 101,
+                userName: 'John Doe',
+                userEmail: 'john.doe@finance.gov.ng',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'approved',
+                notificationStatus: 'read',
+                approvedBy: 'Auto-approval System',
+                approvedAt: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                type: 'speaker',
+                userId: 201,
+                userName: 'Dr. Elizabeth Williams',
+                userEmail: 'elizabeth@university.edu',
+                eventId: 'A002',
+                eventTitle: 'Opening Ceremony & Keynote Address',
+                eventDate: '2026-06-25',
+                eventTime: '09:00',
+                eventDay: 'Wednesday',
+                status: 'approved',
+                notificationStatus: 'unread',
+                approvedBy: 'Auto-approval System',
+                approvedAt: new Date(Date.now() - 3600000).toISOString(),
+                createdAt: new Date(Date.now() - 3600000).toISOString()
+            },
+            {
+                id: 3,
+                type: 'exhibitor',
+                userId: 301,
+                userName: 'Tech Innovations Ltd',
+                userEmail: 'exhibitor@techinnovations.com',
+                eventId: 'A004',
+                eventTitle: 'Digital Transformation in Public Service',
+                eventDate: '2026-06-26',
+                eventTime: '08:30',
+                eventDay: 'Thursday',
+                status: 'approved',
+                notificationStatus: 'unread',
+                approvedBy: 'Auto-approval System',
+                approvedAt: new Date(Date.now() - 7200000).toISOString(),
+                createdAt: new Date(Date.now() - 7200000).toISOString()
+            },
+            {
+                id: 4,
+                type: 'partner',
+                userId: 401,
+                userName: 'Global Solutions Inc',
+                userEmail: 'partner@globalsolutions.com',
+                eventId: 'A005',
+                eventTitle: 'Leadership Workshop',
+                eventDate: '2026-06-26',
+                eventTime: '10:00',
+                eventDay: 'Thursday',
+                status: 'approved',
+                notificationStatus: 'read',
+                approvedBy: 'Auto-approval System',
+                approvedAt: new Date(Date.now() - 10800000).toISOString(),
+                createdAt: new Date(Date.now() - 10800000).toISOString()
+            }
+        ];
     }
-    
-    renderSubmissionDetails(submission) {
-        let detailsHTML = `
-            <div class="detail-section">
-                <h5><i class="fas fa-building"></i> Partner Information</h5>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <div class="detail-label">Company</div>
-                        <div class="detail-value">${submission.partnerName}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Contact Person</div>
-                        <div class="detail-value">${submission.contactPerson}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Email</div>
-                        <div class="detail-value">
-                            <a href="mailto:${submission.email}">${submission.email}</a>
-                            <button class="btn btn-sm btn-outline-primary" style="margin-left: 10px;" 
-                                    onclick="verificationSystem.sendTestEmail('${submission.id}')">
-                                <i class="fas fa-envelope"></i> Test Email
-                            </button>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Package Level</div>
-                        <div class="detail-value">
-                            <span class="package-badge badge-${submission.packageLevel}">
-                                ${submission.packageLevel.toUpperCase()} PARTNER
-                            </span>
-                            ${submission.packageLevel === 'diamond' ? 
-                                '<span style="color: #6dafff; margin-left: 5px;"><i class="fas fa-crown"></i> Premium Benefits</span>' : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="detail-section">
-                <h5><i class="fas fa-info-circle"></i> Submission Details</h5>
-        `;
-        
-        // Render specific details based on submission type
-        switch(submission.submissionType) {
-            case 'exhibition':
-                detailsHTML += this.renderExhibitionDetails(submission.details, submission.packageLevel);
-                break;
-            case 'speaker':
-                detailsHTML += this.renderSpeakerDetails(submission.details, submission.packageLevel);
-                break;
-            case 'session':
-                detailsHTML += this.renderSessionDetails(submission.details, submission.packageLevel);
-                break;
-            case 'benefit':
-                detailsHTML += this.renderBenefitDetails(submission.details, submission.packageLevel);
-                break;
-        }
-        
-        // Add Diamond Partner specific benefits
-        if (submission.packageLevel === 'diamond') {
-            detailsHTML += `
-                <div class="detail-section">
-                    <h5><i class="fas fa-crown" style="color: #6dafff;"></i> Diamond Partner Benefits</h5>
-                    <div style="background-color: #e3f2fd; padding: 15px; border-radius: 6px; border-left: 4px solid #6dafff;">
-                        <ul style="margin-bottom: 0;">
-                            <li>Priority scheduling and prime locations</li>
-                            <li>Dedicated partner manager support</li>
-                            <li>Enhanced branding opportunities</li>
-                            <li>VIP access and networking privileges</li>
-                            <li>24-hour review turnaround for resubmissions</li>
-                        </ul>
-                    </div>
+
+    renderNotifications() {
+        const container = document.getElementById('notificationList');
+        if (!container) return;
+
+        const filteredNotifications = this.currentFilter === 'all' 
+            ? this.notifications 
+            : this.notifications.filter(n => n.status === this.currentFilter);
+
+        if (filteredNotifications.length === 0) {
+            container.innerHTML = `
+                <div class="empty-notifications">
+                    <i class="fas fa-bell-slash fa-2x" style="margin-bottom: 10px;"></i>
+                    <p>No notifications to display</p>
                 </div>
             `;
-        }
-        
-        // Add documents section
-        if (submission.documents && submission.documents.length > 0) {
-            detailsHTML += `
-                <div class="detail-section">
-                    <h5><i class="fas fa-paperclip"></i> Attached Documents (${submission.documents.length})</h5>
-                    <div class="documents-grid">
-                        ${submission.documents.map(doc => `
-                            <div class="document-card">
-                                <div class="document-thumb" onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
-                                    <img src="${this.getDocumentIcon(doc.type)}" alt="${doc.name}">
-                                </div>
-                                <div class="document-info">
-                                    <div class="document-name" title="${doc.name}">${doc.name}</div>
-                                    <div class="document-action">
-                                        <button class="btn btn-sm btn-outline-primary" 
-                                                onclick="verificationSystem.viewDocument('${doc.name}', '${doc.type}', '${doc.url}')">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary" 
-                                                onclick="verificationSystem.downloadDocument('${doc.name}', '${doc.url}')"
-                                                style="margin-top: 5px;">
-                                            <i class="fas fa-download"></i> Download
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-        
-        detailsHTML += `
-            <div class="detail-section">
-                <h5><i class="fas fa-clock"></i> Timeline</h5>
-                <div class="status-timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">${this.formatDate(submission.submittedAt)}</div>
-                        <div class="timeline-text">
-                            Submission received
-                            ${submission.packageLevel === 'diamond' ? 
-                                '<span style="color: #6dafff;">(Diamond Priority)</span>' : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        return detailsHTML;
-    }
-    
-    renderExhibitionDetails(details, packageLevel) {
-        let diamondFeatures = '';
-        if (packageLevel === 'diamond') {
-            diamondFeatures = `
-                <div class="detail-item">
-                    <div class="detail-label">Diamond Benefits Applied</div>
-                    <div class="detail-value">
-                        <span class="badge" style="background-color: #6dafff; color: white; margin-right: 5px;">Prime Location</span>
-                        <span class="badge" style="background-color: #6dafff; color: white; margin-right: 5px;">Enhanced Branding</span>
-                        <span class="badge" style="background-color: #6dafff; color: white;">VIP Access</span>
-                    </div>
-                </div>
-            `;
-        }
-        
-        return `
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Exhibition Title</div>
-                    <div class="detail-value">${details.title}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Booth Number</div>
-                    <div class="detail-value">
-                        ${details.boothNumber}
-                        ${packageLevel === 'diamond' ? 
-                            '<span style="color: #6dafff; font-weight: bold;"> (Prime Location)</span>' : ''}
-                    </div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Booth Size</div>
-                    <div class="detail-value">
-                        ${details.boothSize}
-                        ${packageLevel === 'diamond' ? 
-                            '<span style="color: #6dafff; font-weight: bold;"> (Premium Size)</span>' : ''}
-                    </div>
-                </div>
-                ${diamondFeatures}
-                <div class="detail-item">
-                    <div class="detail-label">Setup Requirements</div>
-                    <div class="detail-value detail-text">${details.setupRequirements || 'None specified'}</div>
-                </div>
-                ${details.specialRequests ? `
-                    <div class="detail-item">
-                        <div class="detail-label">Special Requests</div>
-                        <div class="detail-value detail-text">${details.specialRequests}</div>
-                    </div>
-                ` : ''}
-                <div class="detail-item">
-                    <div class="detail-label">Description</div>
-                    <div class="detail-value detail-text">${details.description}</div>
-                </div>
-            </div>
-        `;
-    }
-    
-    submitReview() {
-        const status = document.getElementById('reviewStatus').value;
-        const comments = document.getElementById('reviewComments').value;
-        const sendEmail = document.getElementById('sendEmailNotification').checked;
-        
-        if (!status) {
-            showNotification('Please select a decision.', 'error');
             return;
         }
-        // Prepare review data
-        const reviewData = {
-            submissionId: this.currentSubmission.id,
-            status: status,
-            comments: comments,
-            reviewedBy: 'Super Admin', // In real app, get from auth
-            reviewedAt: new Date().toISOString(),
-            sendEmail: sendEmail
-        };
-        
-        // Add schedule if approved
-        if (status === 'approved') {
-            reviewData.schedule = {
-                date: document.getElementById('scheduledDate').value,
-                time: document.getElementById('scheduledTime').value,
-                location: document.getElementById('venueLocation').value,
-                duration: document.getElementById('sessionDuration').value,
-                additionalNotes: document.getElementById('additionalNotes').value
-            };
-        }
-        
-        // Move to verified submissions
-        this.verifiedSubmissions.unshift({
-            ...this.currentSubmission,
-            ...reviewData
-        });
-        
-        // Remove from pending
-        this.pendingSubmissions = this.pendingSubmissions.filter(
-            s => s.id !== this.currentSubmission.id
-        );
-        
-        // Send email notification if requested
-        if (sendEmail) {
-            this.sendEmailNotification(this.currentSubmission, reviewData);
-        }
-        
-        // Close modal
-        this.closeVerificationModal();
-        
-        // Refresh tables
-        this.renderPendingSubmissions();
-        this.renderVerificationHistory();
-        
-        // Show success message
-        showNotification(`Submission ${status === 'approved' ? 'approved' : 'rejected'} successfully!`, 'success');
-    }
-    
-    sendEmailNotification(submission, reviewData) {
-        // This is where you would integrate with your email service
-        console.log('Sending email notification:', {
-            to: submission.email,
-            subject: `Submission ${reviewData.status} - ${submission.id}`,
-            body: this.generateEmailContent(submission, reviewData)
-        });
-        
-        // In a real app, you would call your email API here
-        // Example:
-        /*
-        fetch('/api/send-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                to: submission.email,
-                subject: `Submission ${reviewData.status} - ${submission.id}`,
-                html: this.generateEmailContent(submission, reviewData)
-            })
-        });
-        */
-    }
-    
-    generateEmailContent(submission, reviewData) {
-        let emailContent = `
-            <h2>Submission Review Update</h2>
-            <p>Dear ${submission.contactPerson},</p>
-            
-            <p>Your submission <strong>${submission.id}</strong> has been reviewed.</p>
-            
-            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
-                <p><strong>Decision:</strong> <span style="color: ${reviewData.status === 'approved' ? '#28a745' : '#dc3545'}">
-                    ${reviewData.status.charAt(0).toUpperCase() + reviewData.status.slice(1)}
-                </span></p>
-                
-                ${reviewData.comments ? `
-                    <p><strong>Comments:</strong> ${reviewData.comments}</p>
-                ` : ''}
-                
-                ${reviewData.schedule ? `
-                    <hr>
-                    <h4>Schedule Details:</h4>
-                    <p><strong>Date:</strong> ${reviewData.schedule.date}</p>
-                    <p><strong>Time:</strong> ${reviewData.schedule.time}</p>
-                    <p><strong>Location:</strong> ${reviewData.schedule.location}</p>
-                    <p><strong>Duration:</strong> ${reviewData.schedule.duration} minutes</p>
-                    ${reviewData.schedule.additionalNotes ? `
-                        <p><strong>Additional Notes:</strong> ${reviewData.schedule.additionalNotes}</p>
-                    ` : ''}
-                ` : ''}
-            </div>
-            
-            <p>If you have any questions, please contact the conference administration team.</p>
-            
-            <p>Best regards,<br>
-            ICSC 2026 Administration Team</p>
-        `;
-        
-        return emailContent;
-    }
-    
-    quickApprove(submissionId) {
-        if (confirm('Are you sure you want to approve this submission?')) {
-            const submission = this.pendingSubmissions.find(s => s.id === submissionId);
-            if (submission) {
-                this.currentSubmission = submission;
-                document.getElementById('reviewStatus').value = 'approved';
-                document.getElementById('reviewComments').value = 'Approved via quick action.';
-                this.submitReview();
-            }
-        }
-    }
-    
-    quickReject(submissionId) {
-        if (confirm('Are you sure you want to reject this submission?')) {
-            const submission = this.pendingSubmissions.find(s => s.id === submissionId);
-            if (submission) {
-                this.currentSubmission = submission;
-                document.getElementById('reviewStatus').value = 'rejected';
-                document.getElementById('reviewComments').value = 'Rejected via quick action.';
-                this.submitReview();
-            }
-        }
-    }
-    
-    viewVerificationDetails(submissionId) {
-        const submission = this.verifiedSubmissions.find(s => s.id === submissionId);
-        if (!submission) return;
-        
-        const modal = document.getElementById('verificationModal');
-        const title = document.getElementById('verificationModalTitle');
-        const detailsContainer = document.querySelector('.submission-details-container');
-        
-        title.textContent = `View Verification - ${submission.id}`;
-        
-        // Render details including review information
-        let detailsHTML = this.renderSubmissionDetails(submission);
-        
-        // Add review section
-        detailsHTML += `
-            <div class="detail-section">
-                <h5><i class="fas fa-clipboard-check"></i> Review Details</h5>
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <div class="detail-label">Status</div>
-                        <div class="detail-value">
-                            <span class="status-badge status-${submission.status}">
-                                ${this.getStatusText(submission.status)}
+
+        container.innerHTML = filteredNotifications.map(notification => `
+            <div class="notification-item ${notification.status}" data-id="${notification.id}">
+                <div class="notification-content">
+                    <div class="notification-icon icon-${notification.type} ${notification.status}">
+                        <i class="fas ${this.getTypeIcon(notification.type)}"></i>
+                    </div>
+                    <div class="notification-details">
+                        <div class="notification-title">
+                            <span>${notification.userName}</span>
+                            <span class="status-badge status-${notification.status}">
+                                ${notification.status === 'approved' ? 'AUTO-APPROVED' : notification.status.toUpperCase()}
                             </span>
                         </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Reviewed By</div>
-                        <div class="detail-value">${submission.reviewedBy}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Reviewed Date</div>
-                        <div class="detail-value">${this.formatDate(submission.reviewedAt)}</div>
-                    </div>
-                    ${submission.comments ? `
-                        <div class="detail-item">
-                            <div class="detail-label">Comments</div>
-                            <div class="detail-value detail-text">${submission.comments}</div>
+                        <div class="notification-message">
+                            Automatically attended ${notification.eventDay} event
                         </div>
-                    ` : ''}
+                        <div class="notification-event">
+                            <div class="event-title">${notification.eventTitle}</div>
+                            <div class="event-details">
+                                <span><i class="far fa-calendar"></i> ${notification.eventDate}</span>
+                                <span><i class="far fa-clock"></i> ${notification.eventTime}</span>
+                            </div>
+                        </div>
+                        <div class="notification-actions-bottom">
+                            <button class="btn-sm btn-view-details" onclick="window.autoApprovalSystem.viewDetails(${notification.id})">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                        </div>
+                        <div class="notification-time">
+                            <i class="far fa-clock"></i> ${this.formatTimeAgo(notification.createdAt)}
+                            ${notification.approvedBy === 'Auto-approval System' ? 
+                              '<span style="margin-left: 10px; color: #4CAF50;"><i class="fas fa-robot"></i> Auto-approved</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    getTypeIcon(type) {
+        const icons = {
+            'attendee': 'fa-user',
+            'speaker': 'fa-microphone',
+            'exhibitor': 'fa-store',
+            'partner': 'fa-handshake'
+        };
+        return icons[type] || 'fa-user';
+    }
+
+    async handleNewSubmission(notificationData) {
+        try {
+            // Automatically approve the submission
+            const approvedNotification = {
+                ...notificationData,
+                id: Date.now(),
+                status: 'approved',
+                notificationStatus: 'unread',
+                approvedBy: 'Auto-approval System',
+                approvedAt: new Date().toISOString()
+            };
+            
+            // Add to notifications list (at the beginning)
+            this.notifications.unshift(approvedNotification);
+            
+            // Record attendance automatically
+            await this.recordAttendance(approvedNotification);
+            
+            // Send confirmation to user
+            await this.sendAutoApprovalNotification(approvedNotification);
+
+                    if (window.attendanceReportManager) {
+            window.attendanceReportManager.refreshData();
+        }
+            
+            // Update UI
+            this.unreadCount++;
+            this.renderNotifications();
+            this.updateNotificationBadge();
+            
+            // Show success message
+            this.showToast(`Submission from ${notificationData.userName} automatically approved!`, 'success');
+            
+            // Play notification sound
+            this.playNotificationSound();
+            
+            // Update attendance reports
+            if (window.attendanceReportManager) {
+                window.attendanceReportManager.refreshData();
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Error handling auto-approval:', error);
+            this.showToast('Error processing submission', 'error');
+            return false;
+        }
+    }
+
+    async recordAttendance(notification) {
+        const attendanceRecord = {
+            id: Date.now(),
+        userId: notification.userId,
+        userName: notification.userName,
+        userType: notification.type,
+        userEmail: notification.userEmail,
+        eventId: notification.eventId,
+        eventTitle: notification.eventTitle,
+        eventDate: notification.eventDate,
+        eventTime: notification.eventTime,
+        eventDay: notification.eventDay,
+        status: 'attended',
+        approvedBy: 'Auto-approval System',
+        approvedAt: new Date().toISOString()
+        };
+
+        // Save to localStorage for demo
+        let attendanceRecords = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
+        attendanceRecords.push(attendanceRecord);
+        localStorage.setItem('icsc_attendance_records', JSON.stringify(attendanceRecords));
+
+        document.dispatchEvent(new CustomEvent('attendanceRecorded', {
+        detail: attendanceRecord
+         }));
+        
+        return attendanceRecord;
+    }
+
+    async sendAutoApprovalNotification(notification) {
+        // Mock email/notification API call
+        console.log(`Auto-approval confirmation sent to ${notification.userEmail}`);
+        
+        // In a real app, you would send this via your email API:
+        // await fetch('/api/send-email', { 
+        //     method: 'POST', 
+        //     body: JSON.stringify({
+        //         to: notification.userEmail,
+        //         subject: `Schedule Confirmation - ${notification.eventTitle}`,
+        //         body: `Your attendance for ${notification.eventTitle} has been automatically confirmed.`
+        //     }) 
+        // });
+        
+        return true;
+    }
+
+    viewDetails(notificationId) {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (!notification) return;
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>Attendance Details</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label>Name</label>
+                            <p>${notification.userName}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Email</label>
+                            <p>${notification.userEmail}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Type</label>
+                            <p><span class="badge badge-${notification.type}">${notification.type.toUpperCase()}</span></p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Event</label>
+                            <p>${notification.eventTitle}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Date & Time</label>
+                            <p>${notification.eventDate} at ${notification.eventTime}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Day</label>
+                            <p>${notification.eventDay}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Status</label>
+                            <p><span class="badge badge-success">AUTO-APPROVED</span></p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Approved By</label>
+                            <p>${notification.approvedBy || 'System'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <label>Approved At</label>
+                            <p>${new Date(notification.approvedAt).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Close</button>
                 </div>
             </div>
         `;
         
-        // Add schedule if exists
-        if (submission.schedule) {
-            detailsHTML += `
-                <div class="detail-section">
-                    <h5><i class="fas fa-calendar-alt"></i> Schedule Details</h5>
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <div class="detail-label">Date</div>
-                            <div class="detail-value">${submission.schedule.date}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Time</div>
-                            <div class="detail-value">${submission.schedule.time}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Location</div>
-                            <div class="detail-value">${submission.schedule.location}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Duration</div>
-                            <div class="detail-value">${submission.schedule.duration} minutes</div>
-                        </div>
-                        ${submission.schedule.additionalNotes ? `
-                            <div class="detail-item">
-                                <div class="detail-label">Additional Notes</div>
-                                <div class="detail-value detail-text">${submission.schedule.additionalNotes}</div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-        }
+        document.body.appendChild(modal);
         
-        detailsContainer.innerHTML = detailsHTML;
-        
-        // Hide form for view-only mode
-        document.querySelector('.review-section').style.display = 'none';
-        
-        modal.style.display = 'flex';
-    }
-    
-    closeVerificationModal() {
-        const modal = document.getElementById('verificationModal');
-        modal.style.display = 'none';
-        
-        // Reset and show form for next use
-        document.querySelector('.review-section').style.display = 'block';
-        this.currentSubmission = null;
-    }
-    
-    refreshSubmissions() {
-        // In a real app, this would fetch from API
-        showNotification('Refreshing submissions...', 'info');
-        
-        setTimeout(() => {
-            this.renderPendingSubmissions();
-            this.renderVerificationHistory();
-            showNotification('Submissions refreshed successfully!', 'success');
-        }, 1000);
-    }
-    
-    // Helper methods
-    getSubmissionTitle(submission) {
-        switch(submission.submissionType) {
-            case 'exhibition': return submission.details.title;
-            case 'speaker': return submission.details.presentationTopic;
-            case 'session': return submission.details.sessionTitle;
-            case 'benefit': return submission.details.benefitType;
-            default: return submission.id;
-        }
-    }
-    
-    getSubmissionSummary(submission) {
-        switch(submission.submissionType) {
-            case 'exhibition': 
-                return `Booth: ${submission.details.boothNumber} • Size: ${submission.details.boothSize}`;
-            case 'speaker': 
-                return `Speaker: ${submission.details.speakerName} • ${submission.details.duration} min`;
-            case 'session': 
-                return `Facilitator: ${submission.details.facilitator} • ${submission.details.duration} min`;
-            case 'benefit': 
-                return `Quantity: ${submission.details.quantity} • Date: ${submission.details.eventDate}`;
-            default: return submission.id;
-        }
-    }
-    
-    getDocumentIcon(docType) {
-        const icons = {
-            'pdf': 'https://cdn-icons-png.flaticon.com/512/337/337946.png',
-            'image': 'https://cdn-icons-png.flaticon.com/512/3767/3767084.png',
-            'archive': 'https://cdn-icons-png.flaticon.com/512/3767/3767094.png',
-            'default': 'https://cdn-icons-png.flaticon.com/512/3767/3767089.png'
-        };
-        return icons[docType] || icons.default;
-    }
-    
-    getStatusText(status) {
-        const statusMap = {
-            'approved': 'Approved',
-            'rejected': 'Rejected',
-            'pending_changes': 'Changes Requested',
-            'pending': 'Pending'
-        };
-        return statusMap[status] || status;
-    }
-    
-    formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        // Close modal
+        modal.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => modal.remove());
         });
+        
+        modal.style.display = 'block';
+    }
+
+    async markAllAsRead() {
+        this.notifications.forEach(n => {
+            if (n.notificationStatus === 'unread') {
+                n.notificationStatus = 'read';
+            }
+        });
+        this.unreadCount = 0;
+        this.renderNotifications();
+        this.updateNotificationBadge();
+        this.showToast('All notifications marked as read', 'info');
+    }
+
+    updateNotificationBadge() {
+        const badge = document.getElementById('notificationCount');
+        if (badge) {
+            badge.textContent = this.unreadCount;
+            badge.style.display = this.unreadCount > 0 ? 'flex' : 'none';
+        }
+    }
+
+    showAllNotificationsModal() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'block';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 700px;">
+                <div class="modal-header">
+                    <h2>All Auto-Approved Submissions</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="notification-summary">
+                        <div class="summary-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>${this.notifications.length}</h3>
+                                    <p>Total Submissions</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>${this.notifications.filter(n => n.status === 'approved').length}</h3>
+                                    <p>Auto-Approved</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-controls" style="margin: 15px 0;">
+                        <select class="form-control" id="allNotificationsFilter" style="width: 200px; margin-right: 10px;">
+                            <option value="all">All Submissions</option>
+                            <option value="approved">Approved Only</option>
+                            <option value="attendee">Attendees</option>
+                            <option value="speaker">Speakers</option>
+                            <option value="exhibitor">Exhibitors</option>
+                            <option value="partner">Partners</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" id="exportAttendanceBtn">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                    </div>
+                    
+                    <div class="notification-list-full" id="allNotificationsList" style="max-height: 400px; overflow-y: auto; padding: 10px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Close</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Close modal
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        // Filter change
+        modal.querySelector('#allNotificationsFilter').addEventListener('change', (e) => {
+            this.renderAllNotifications(e.target.value);
+        });
+        
+        // Export button
+        modal.querySelector('#exportAttendanceBtn').addEventListener('click', () => {
+            this.exportAttendanceCSV();
+        });
+        
+        // Initial render
+        this.renderAllNotifications('all');
+    }
+
+    renderAllNotifications(filter) {
+        const container = document.getElementById('allNotificationsList');
+        if (!container) return;
+        
+        let filtered = this.notifications;
+        if (filter === 'approved') {
+            filtered = this.notifications.filter(n => n.status === 'approved');
+        } else if (['attendee', 'speaker', 'exhibitor', 'partner'].includes(filter)) {
+            filtered = this.notifications.filter(n => n.type === filter);
+        }
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-notifications">No submissions found</div>';
+            return;
+        }
+        
+        container.innerHTML = `
+            <table class="data-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filtered.map(notification => `
+                        <tr>
+                            <td>${notification.userName}</td>
+                            <td><span class="badge badge-${notification.type}">${notification.type.toUpperCase()}</span></td>
+                            <td>${notification.eventTitle}</td>
+                            <td>${notification.eventDate}</td>
+                            <td>${notification.eventTime}</td>
+                            <td><span class="badge badge-success">AUTO-APPROVED</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-info" onclick="window.autoApprovalSystem.viewDetails(${notification.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    exportAttendanceCSV() {
+        const headers = ['Name', 'Email', 'Type', 'Event', 'Date', 'Time', 'Day', 'Approved At'];
+        const data = this.notifications.map(n => [
+            n.userName,
+            n.userEmail,
+            n.type,
+            n.eventTitle,
+            n.eventDate,
+            n.eventTime,
+            n.eventDay,
+            new Date(n.approvedAt).toLocaleString()
+        ]);
+        
+        const csvContent = [
+            headers.join(','),
+            ...data.map(row => row.map(cell => `"${cell}"`).join(','))
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `attendance-export-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showToast('Attendance data exported to CSV', 'success');
+    }
+
+    startPolling() {
+        // Check for new submissions every 30 seconds
+        setInterval(() => {
+            this.checkForNewSubmissions();
+        }, 30000);
+    }
+
+    async checkForNewSubmissions() {
+        // In a real app, this would poll your API for new submissions
+        console.log('Checking for new submissions...');
+    }
+
+    formatTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        
+        if (seconds < 60) return 'just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+        return `${Math.floor(seconds / 86400)} days ago`;
+    }
+
+    showToast(message, type = 'info') {
+    document.querySelectorAll('.app-toast').forEach(t => t.remove());
+
+    const toast = document.createElement('div');
+    toast.className = `app-toast app-toast-${type}`;
+    toast.innerHTML = `
+        <div class="app-toast-content">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+
+    playNotificationSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
     }
 }
 
-// Initialize verification system
-let verificationSystem;
-
-document.addEventListener('DOMContentLoaded', function() {
-    verificationSystem = new VerificationSystem();
+// SIMULATION FUNCTIONS (for testing)
+function simulateUserSubmission() {
+    const userTypes = ['attendee', 'speaker', 'exhibitor', 'partner'];
+    const events = [
+        { id: 'A002', title: 'Opening Ceremony & Keynote Address', day: 'Wednesday', date: '2026-06-25', time: '09:00' },
+        { id: 'A004', title: 'Digital Transformation in Public Service', day: 'Thursday', date: '2026-06-26', time: '08:30' },
+        { id: 'A005', title: 'Leadership Workshop', day: 'Thursday', date: '2026-06-26', time: '10:00' }
+    ];
     
-    // Make available globally for onclick events
-    window.verificationSystem = verificationSystem;
+    const names = [
+        'Michael Chen', 'Sarah Johnson', 'Robert Kim', 'Emma Davis',
+        'James Wilson', 'Alice Brown', 'David Miller', 'Olivia Taylor',
+        'William Garcia', 'Sophia Martinez', 'Daniel Anderson', 'Isabella Thomas'
+    ];
+    
+    const randomEvent = events[Math.floor(Math.random() * events.length)];
+    const randomType = userTypes[Math.floor(Math.random() * userTypes.length)];
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    
+    const submission = {
+        type: randomType,
+        userId: Math.floor(Math.random() * 1000) + 100,
+        userName: randomName,
+        userEmail: `${randomName.toLowerCase().replace(/ /g, '.')}@example.com`,
+        eventId: randomEvent.id,
+        eventTitle: randomEvent.title,
+        eventDate: randomEvent.date,
+        eventTime: randomEvent.time,
+        eventDay: randomEvent.day,
+        status: 'pending',
+        notificationStatus: 'unread',
+        createdAt: new Date().toISOString()
+    };
+    
+    // Handle the submission with auto-approval
+    if (window.autoApprovalSystem) {
+        window.autoApprovalSystem.handleNewSubmission(submission);
+    }
+    
+    return submission;
+}
+
+function addSimulationButton() {
+    const headerActions = document.querySelector('.header-actions');
+    if (headerActions && !document.getElementById('simulateBtn')) {
+        const simBtn = document.createElement('button');
+        simBtn.id = 'simulateBtn';
+        simBtn.className = 'btn btn-sm btn-warning';
+        simBtn.innerHTML = '<i class="fas fa-user-plus"></i> Simulate Submission';
+        simBtn.style.marginLeft = '10px';
+        simBtn.onclick = () => {
+            const submission = simulateUserSubmission();
+            console.log('Simulated submission:', submission);
+        };
+        headerActions.appendChild(simBtn);
+    }
+}
+
+// SIMPLE ATTENDANCE REPORT MANAGER
+class SimpleAttendanceManager {
+    constructor() {
+        this.attendanceData = [];
+        this.initialize();
+    }
+
+    async initialize() {
+        await this.loadAttendanceData();
+        console.log('Attendance Manager: Loaded', this.attendanceData.length, 'records');
+    }
+
+    async loadAttendanceData() {
+        // Load from localStorage
+        this.attendanceData = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
+    }
+
+    refreshData() {
+        this.loadAttendanceData();
+        console.log('Attendance Manager: Refreshed data');
+    }
+
+    getStats() {
+        const total = this.attendanceData.length;
+        const byType = this.attendanceData.reduce((acc, record) => {
+            acc[record.userType] = (acc[record.userType] || 0) + 1;
+            return acc;
+        }, {});
+        
+        const byEvent = this.attendanceData.reduce((acc, record) => {
+            acc[record.eventTitle] = (acc[record.eventTitle] || 0) + 1;
+            return acc;
+        }, {});
+        
+        return { total, byType, byEvent };
+    }
+}
+
+// CSS STYLES FOR AUTO-APPROVAL
+const autoApprovalStyles = `
+    <style>
+        /* Auto-approval Notification Styles */
+        .notification-item.approved {
+            border-left-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        
+        .notification-icon.approved {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-sm.btn-view-details {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .btn-sm.btn-view-details:hover {
+            background-color: #1976D2;
+        }
+        
+        .badge.badge-success {
+            background-color: #4CAF50;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge.badge-attendee { background-color: #008751; color: white; }
+        .badge.badge-speaker { background-color: #00c974; color: white; }
+        .badge.badge-exhibitor { background-color: #f39c12; color: white; }
+        .badge.badge-partner { background-color: #3498db; color: white; }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-item label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-item p {
+            margin: 0;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .summary-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #008751;
+        }
+        
+        .stat-icon {
+            background: #008751;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .stat-info h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .stat-info p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-success {
+            background-color: #4CAF50;
+        }
+        
+        .toast-info {
+            background-color: #2196F3;
+        }
+        
+        .toast-error {
+            background-color: #f44336;
+        }
+    </style>
+`;
+
+// INITIALIZATION
+document.addEventListener('DOMContentLoaded', function() {
+    // Add styles
+    document.head.insertAdjacentHTML('beforeend', autoApprovalStyles);
+    
+    // Initialize auto-approval system
+    window.autoApprovalSystem = new AutoApprovalNotificationSystem();
+    
+    // Initialize attendance manager
+    window.attendanceReportManager = new SimpleAttendanceManager();
+
+    window.autoApprovalSystem.onAttendanceRecorded = (record) => {
+        window.attendanceReportManager.refreshData();
+           };
+    
+    // Add simulation button for testing
+    setTimeout(addSimulationButton, 1000);
+    
+    // Simulate some initial submissions
+    setTimeout(() => simulateUserSubmission(), 2000);
+    setTimeout(() => simulateUserSubmission(), 4000);
+    setTimeout(() => simulateUserSubmission(), 6000);
+    
+    // Auto-simulate every 10 seconds (for demo purposes)
+    setInterval(() => {
+        if (Math.random() > 0.7) { // 30% chance every 10 seconds
+            simulateUserSubmission();
+        }
+    }, 10000);
+    
+    console.log('Auto-approval notification system initialized');
 });
+
+// EXPORT FOR USE IN OTHER FILES
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        AutoApprovalNotificationSystem,
+        SimpleAttendanceManager,
+        simulateUserSubmission
+    };
+}
+
 
 // Utility function for notifications
 function showNotification(message, type = 'info') {
@@ -5791,6 +5623,8 @@ class AttendanceReportManager {
             event: 'all'
         };
         this.initialize();
+
+        this.setupEventListeners();
     }
 
     async initialize() {
@@ -5883,6 +5717,10 @@ class AttendanceReportManager {
         });
 
         document.getElementById('refreshAttendanceBtn')?.addEventListener('click', () => {
+            this.refreshData();
+        });
+
+         document.addEventListener('attendanceRecorded', (e) => {
             this.refreshData();
         });
 
@@ -6044,7 +5882,7 @@ class AttendanceReportManager {
         await this.loadAttendanceData();
         this.renderAttendanceTable();
         this.updateAttendanceStats();
-        this.showToast('Attendance data refreshed', 'success');
+        this.showToast('Participants data refreshed', 'success');
     }
 
     exportToExcel() {
@@ -6182,55 +6020,6 @@ class AttendanceReportManager {
     }
 }
 
-// Initialize systems when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if we're on super admin dashboard
-    const isSuperAdmin = document.body.getAttribute('data-protected') === 'super_admin';
-    
-    if (isSuperAdmin) {
-        // Initialize Notification System
-        window.notificationSystem = new NotificationSystem();
-        
-        // Initialize Attendance Report System
-        window.attendanceReportManager = new AttendanceReportManager();
-        
-        // Load attendance data when reports tab is clicked
-        const reportsTabLink = document.querySelector('a[data-tab="reports"]');
-        if (reportsTabLink) {
-            reportsTabLink.addEventListener('click', function() {
-                setTimeout(() => {
-                    if (window.attendanceReportManager) {
-                        window.attendanceReportManager.refreshData();
-                    }
-                }, 100);
-            });
-        }
-        
-        // Request notification permission
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-        
-        // Add export button styling
-        const exportBtn = document.getElementById('exportAttendanceBtn');
-        if (exportBtn) {
-            exportBtn.innerHTML = '<i class="fas fa-file-excel"></i> Export to Excel';
-        }
-    }
-});
-
-// Make functions available globally for onclick attributes
-window.approveSchedule = function(notificationId) {
-    if (window.notificationSystem) {
-        window.notificationSystem.approveSchedule(notificationId);
-    }
-};
-
-window.rejectSchedule = function(notificationId) {
-    if (window.notificationSystem) {
-        window.notificationSystem.rejectSchedule(notificationId);
-    }
-};
 
 // Add inline styles for toast notifications
 const style = document.createElement('style');

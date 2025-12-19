@@ -3681,3 +3681,46 @@ flex-wrap: wrap;
         min-width: 100%;
     }
 }
+.app-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    background: #fff;
+    border-left: 4px solid #4CAF50;
+    border-radius: 6px;
+
+    padding: 12px 14px;
+    max-width: 320px;
+    width: fit-content;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100000;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.app-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.app-toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.app-toast i {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.app-toast span {
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+}

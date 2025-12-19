@@ -791,14 +791,14 @@
 
         <!-- Job Title field (constant for all countries) -->
         <div class="form-group" id="jobTitle-group">
-            <label class="has-star" for="jobTitle">Job Title</label>
+            <label for="jobTitle">Job Title</label>
             <input type="text" id="jobTitle" name="jobTitle" class="form-control">
             <div class="help-block-error" id="jobTitle-error"></div>
         </div>
 
         <!-- Ministry field (only shown for Nigeria) -->
         <div class="form-group" id="ministry-group" style="display: none;">
-            <label class="has-star" for="ministry">Ministry (Select One)</label>
+            <label  for="ministry">Federal Ministry</label>
             <select id="ministry" name="ministry" class="form-control">
                 <option value="">Select Ministry</option>
                 <option>Federal Ministry of Agriculture and Rural Development</option>
@@ -836,7 +836,7 @@
 
         <!-- Organization field (only shown for non-Nigeria) -->
         <div class="form-group" id="organization-group" style="display: none;">
-            <label class="has-star" for="organization">Organization/Department</label>
+            <label for="organization">Organization/Department</label>
             <input type="text" id="organization" name="organization" class="form-control">
             <div class="help-block-error" id="organization-error"></div>
         </div>
@@ -1169,9 +1169,9 @@
                 if (ministryGroup) ministryGroup.style.display = 'block';
                 if (organizationGroup) organizationGroup.style.display = 'none';
                 
-                // Show email hint conditionally
+                // Show email hint only if ministry is selected (not empty and not "Other")
                 const ministry = document.getElementById('ministry')?.value || '';
-                if (ministry && ministry !== '') {
+                if (ministry && ministry !== '' && ministry !== 'Other') {
                     if (emailHint) {
                         emailHint.textContent = 'For Nigerian government officials, email must end with .gov.ng';
                         emailHint.style.display = 'block';
@@ -1217,8 +1217,8 @@
             const email = document.getElementById('email')?.value || '';
             const emailHint = document.getElementById('email-hint');
             
-            // Only validate .gov.ng if Nigeria is selected AND a ministry is selected
-            if (country === 'Nigeria' && ministry && ministry !== '') {
+            // Only validate .gov.ng if Nigeria is selected AND a ministry is selected (not "Other" and not empty)
+            if (country === 'Nigeria' && ministry && ministry !== '' && ministry !== 'Other') {
                 // Update hint
                 if (emailHint) {
                     emailHint.textContent = 'For Nigerian government officials, email must end with .gov.ng';
@@ -1227,14 +1227,17 @@
                 
                 // Validate email if entered
                 if (email && !email.toLowerCase().endsWith('.gov.ng')) {
-                    showError('email-error', 'For Nigerian government officials, email must end with .gov.ng');
+                    showError('email-error', 'For Nigerian government officials with ministry selection, email must end with .gov.ng');
                     return false;
                 } else {
                     hideError('email-error');
                     return true;
                 }
             } else {
-                // Clear hint and error if conditions not met
+                // Clear hint and error if:
+                // 1. Not Nigeria
+                // 2. No ministry selected (ministry is optional)
+                // 3. Ministry is "Other"
                 if (emailHint) {
                     emailHint.textContent = '';
                     emailHint.style.display = 'none';
@@ -1262,7 +1265,7 @@
                 isValid = false;
             }
             
-            // Validate email for ministry (only if Nigeria and ministry selected)
+            // Validate email for ministry (only if Nigeria and specific ministry selected)
             if (!validateEmailForMinistry()) {
                 isValid = false;
             }
@@ -1298,14 +1301,10 @@
             // Get country value
             const country = document.getElementById('country')?.value || '';
             
-            // Special validation for Nigeria
+            // Special validation for Nigeria - ministry is OPTIONAL
             if (country === 'Nigeria') {
-                // Validate ministry field
-                const ministryField = document.getElementById('ministry');
-                if (!ministryField || !ministryField.value.trim()) {
-                    showError('ministry-error', 'Ministry is required for Nigerian participants');
-                    isValid = false;
-                }
+                // Ministry is optional - no validation needed
+                // Just validate email based on ministry selection (handled in validateEmailForMinistry)
             } else if (country) {
                 // For non-Nigeria, validate organization
                 const organizationField = document.getElementById('organization');
@@ -1365,7 +1364,13 @@
                 
                 // Add organization based on country
                 if (country === 'Nigeria') {
-                    payload.organization = document.getElementById('ministry')?.value || '';
+                    // Use ministry if selected, otherwise use jobTitle
+                    const ministry = document.getElementById('ministry')?.value || '';
+                    if (ministry && ministry.trim() !== '') {
+                        payload.organization = ministry;
+                    } else {
+                        payload.organization = document.getElementById('jobTitle')?.value || '';
+                    }
                 } else {
                     payload.organization = document.getElementById('organization')?.value || '';
                 }

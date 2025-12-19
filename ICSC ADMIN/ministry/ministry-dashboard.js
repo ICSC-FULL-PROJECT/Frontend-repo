@@ -1362,3 +1362,905 @@ function showSuccessMessage(message) {
         alert(message);
     }
 }
+// ministry-dashboard.js - Updated with simplified Settings tab functionality
+
+// Global variables
+let currentMinistryData = {};
+let currentEditingId = null;
+let allAttendees = [];
+
+// Tab switching functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the dashboard
+    initMinistryDashboard();
+    
+    // Load initial data
+    loadMinistryData();
+    loadAttendees();
+    
+    // Tab switching for main navigation
+    const tabLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabId = this.getAttribute('data-tab');
+            switchTab(tabId);
+            
+            // Update active state in sidebar
+            tabLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update page title
+            document.getElementById('pageTitle').textContent = this.textContent.trim() + ' - Ministry Dashboard';
+        });
+    });
+    
+    // Settings tab switching
+    const settingsTabs = document.querySelectorAll('.settings-tab-btn');
+    settingsTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all settings tabs
+            settingsTabs.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+    
+    // Add Attendee Form Submission
+    document.getElementById('addMinistryAttendeeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        addMinistryAttendee();
+    });
+    
+    // Search functionality for attendees
+    document.getElementById('searchMinistryAttendees').addEventListener('input', function() {
+        filterAttendees();
+    });
+    
+    // Filter functionality
+    document.getElementById('filterMinistryStatus').addEventListener('change', filterAttendees);
+    document.getElementById('filterMinistryDepartment').addEventListener('change', filterAttendees);
+    
+    // Clear filters
+    document.getElementById('clearMinistryFiltersBtn').addEventListener('click', function() {
+        document.getElementById('searchMinistryAttendees').value = '';
+        document.getElementById('filterMinistryStatus').value = '';
+        document.getElementById('filterMinistryDepartment').value = '';
+        filterAttendees();
+    });
+    
+    // Export attendees
+    document.getElementById('exportMinistryAttendeesBtn').addEventListener('click', exportAttendees);
+    
+    // Excel upload functionality
+    document.getElementById('ministryUploadExcelBtn').addEventListener('click', handleExcelUpload);
+    document.getElementById('ministryDownloadTemplateBtn').addEventListener('click', downloadExcelTemplate);
+    
+    // Edit and Delete buttons (event delegation)
+    document.getElementById('ministryAttendeesTable').addEventListener('click', function(e) {
+        if (e.target.closest('.edit-ministry-attendee-btn')) {
+            const row = e.target.closest('tr');
+            const attendeeId = row.getAttribute('data-id');
+            editAttendee(attendeeId);
+        }
+        
+        if (e.target.closest('.delete-ministry-attendee-btn')) {
+            const row = e.target.closest('tr');
+            const attendeeId = row.getAttribute('data-id');
+            const attendeeName = row.querySelector('td:first-child').textContent;
+            confirmDeleteAttendee(attendeeId, attendeeName);
+        }
+    });
+    
+    // Edit Attendee Form Submission
+    document.getElementById('editMinistryAttendeeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateAttendee();
+    });
+    
+    // Cancel Edit
+    document.getElementById('cancelMinistryEditBtn').addEventListener('click', function() {
+        closeModal('editMinistryAttendeeModal');
+    });
+    
+    // Delete Attendee Modal Actions
+    document.getElementById('cancelMinistryDeleteBtn').addEventListener('click', function() {
+        closeModal('deleteMinistryModal');
+    });
+    
+    document.getElementById('confirmMinistryDeleteBtn').addEventListener('click', function() {
+        deleteAttendee();
+    });
+    
+    // Save General Settings
+    document.getElementById('saveMinistrySettingsBtn').addEventListener('click', function() {
+        saveGeneralSettings();
+    });
+    
+    // Password Change Form
+    document.getElementById('ministryPasswordSettingsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        changePassword();
+    });
+    
+    // Cancel Password Change
+    document.getElementById('cancelPasswordChangeBtn').addEventListener('click', function() {
+        resetPasswordForm();
+    });
+    
+    // Password strength and match validation
+    document.getElementById('newPassword').addEventListener('input', checkPasswordStrength);
+    document.getElementById('confirmPassword').addEventListener('input', checkPasswordMatch);
+    
+    // Logout
+    document.getElementById('ministryLogoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        logout();
+    });
+    
+    // Success Modal - Add Another
+    document.getElementById('addAnotherBtn').addEventListener('click', function() {
+        closeModal('successModal');
+        document.getElementById('addMinistryAttendeeForm').reset();
+        document.getElementById('ministryAttendeeMinistry').value = currentMinistryData.name || 'Ministry of Finance';
+        switchTab('add-attendee');
+    });
+    
+    // Modal close buttons
+    document.querySelectorAll('.close-modal').forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            closeModal(modal.id);
+        });
+    });
+    
+    // Close modal on outside click
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal(this.id);
+            }
+        });
+    });
+});
+
+// Initialize dashboard
+function initMinistryDashboard() {
+    // Set current ministry info from localStorage or default
+    const ministryInfo = JSON.parse(localStorage.getItem('currentMinistry')) || {
+        name: 'Ministry of Finance',
+        code: 'MOF',
+        contactPerson: 'Permanent Secretary Finance'
+    };
+    
+    currentMinistryData = ministryInfo;
+    
+    // Display ministry info
+    document.getElementById('currentMinistryName').textContent = ministryInfo.name;
+    document.getElementById('currentMinistryCode').textContent = ministryInfo.code;
+    document.getElementById('currentContactPerson').textContent = ministryInfo.contactPerson;
+    document.getElementById('ministryNameDisplay').textContent = ministryInfo.name;
+    document.getElementById('ministryAvatar').textContent = ministryInfo.code.substring(0, 2);
+    
+    // Set ministry field in forms
+    document.getElementById('ministryAttendeeMinistry').value = ministryInfo.name;
+    document.getElementById('editMinistryAttendeeMinistry').value = ministryInfo.name;
+    
+    // Set General Settings form values
+    document.getElementById('ministryDisplayName').value = ministryInfo.name;
+    document.getElementById('ministryCode').value = ministryInfo.code;
+    document.getElementById('primaryContactName').value = ministryInfo.contactPerson;
+    document.getElementById('primaryContactEmail').value = ministryInfo.contactEmail || 'permanent.secretary@finance.gov.ng';
+}
+
+// Load ministry data
+function loadMinistryData() {
+    // In a real app, this would be an API call
+    const mockData = {
+        pending: 3,
+        approved: 42,
+        total: 45
+    };
+    
+    // Update counts
+    document.getElementById('ministryPendingCount').textContent = mockData.pending;
+    document.getElementById('ministryApprovedCount').textContent = mockData.approved;
+    document.getElementById('ministryTotalCount').textContent = mockData.total;
+}
+
+// Load attendees
+function loadAttendees() {
+    // In a real app, this would be an API call
+    const mockAttendees = [
+        {
+            id: 1,
+            name: 'Samuel Johnson',
+            email: 's.johnson@finance.gov.ng',
+            nin: '12345678901',
+            position: 'Assistant Director',
+            department: 'Audit',
+            agency: 'Office of the Accountant General',
+            status: 'Pending'
+        },
+        {
+            id: 2,
+            name: 'Fatima Bello',
+            email: 'f.bello@finance.gov.ng',
+            nin: '23456789012',
+            position: 'Chief Officer',
+            department: 'Treasury',
+            agency: 'National Treasury',
+            status: 'Approved'
+        },
+        {
+            id: 3,
+            name: 'Michael Adekunle',
+            email: 'm.adekunle@finance.gov.ng',
+            nin: '34567890123',
+            position: 'Senior Officer',
+            department: 'Budget & Planning',
+            agency: 'Budget Office of the Federation',
+            status: 'Approved'
+        }
+    ];
+    
+    allAttendees = mockAttendees;
+    renderAttendeesTable(mockAttendees);
+}
+
+// Render attendees table
+function renderAttendeesTable(attendees) {
+    const tbody = document.getElementById('ministryAttendeesTable');
+    tbody.innerHTML = '';
+    
+    attendees.forEach(attendee => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', attendee.id);
+        
+        const statusClass = attendee.status === 'Approved' ? 'status-approved' : 
+                          attendee.status === 'Pending' ? 'status-pending' : 'status-rejected';
+        
+        row.innerHTML = `
+            <td>${attendee.name}</td>
+            <td>${attendee.email}</td>
+            <td>${attendee.nin}</td>
+            <td>${attendee.position}</td>
+            <td>${attendee.department}</td>
+            <td>${attendee.agency}</td>
+            <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
+                </div>
+            </td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+// Switch between tabs
+function switchTab(tabId) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const selectedTab = document.getElementById(tabId);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+    
+    // If switching to dashboard, refresh data
+    if (tabId === 'dashboard') {
+        loadMinistryData();
+    }
+}
+
+// Add new attendee
+function addMinistryAttendee() {
+    const form = document.getElementById('addMinistryAttendeeForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Collect form data
+    const attendeeData = {
+        prefix: document.getElementById('ministryAttendeePrefix').value,
+        firstName: document.getElementById('ministryAttendeeFirstName').value,
+        lastName: document.getElementById('ministryAttendeeLastName').value,
+        email: document.getElementById('ministryAttendeeEmail').value,
+        jobTitle: document.getElementById('ministryAttendeeJobTitle').value,
+        organization: document.getElementById('ministryAttendeeOrganization').value,
+        workPhone: document.getElementById('ministryAttendeeWorkPhone').value,
+        phone: document.getElementById('ministryAttendeePhone').value,
+        position: document.getElementById('ministryAttendeePosition').value,
+        gradeLevel: document.getElementById('ministryAttendeeGradeLevel').value,
+        ministry: document.getElementById('ministryAttendeeMinistry').value,
+        department: document.getElementById('ministryAttendeeDepartment').value,
+        agency: document.getElementById('ministryAttendeeAgency').value,
+        staffId: document.getElementById('ministryAttendeeStaffId').value,
+        office: document.getElementById('ministryAttendeeOffice').value,
+        remarks: document.getElementById('ministryAttendeeRemarks').value,
+        status: 'Pending',
+        addedBy: currentMinistryData.name,
+        addedDate: new Date().toISOString()
+    };
+    
+    // In a real app, this would be an API call
+    console.log('Adding attendee:', attendeeData);
+    
+    // Show success modal
+    document.getElementById('successMessage').textContent = `Participant ${attendeeData.firstName} ${attendeeData.lastName} has been successfully added!`;
+    openModal('successModal');
+    
+    // Reset form
+    form.reset();
+    document.getElementById('ministryAttendeeMinistry').value = currentMinistryData.name;
+    
+    // Update counts
+    const pendingCount = parseInt(document.getElementById('ministryPendingCount').textContent) + 1;
+    const totalCount = parseInt(document.getElementById('ministryTotalCount').textContent) + 1;
+    
+    document.getElementById('ministryPendingCount').textContent = pendingCount;
+    document.getElementById('ministryTotalCount').textContent = totalCount;
+    
+    // Add to recent activity
+    addToRecentActivity(attendeeData);
+}
+
+// Filter attendees
+function filterAttendees() {
+    const searchTerm = document.getElementById('searchMinistryAttendees').value.toLowerCase();
+    const statusFilter = document.getElementById('filterMinistryStatus').value;
+    const departmentFilter = document.getElementById('filterMinistryDepartment').value;
+    
+    const filtered = allAttendees.filter(attendee => {
+        const matchesSearch = 
+            attendee.name.toLowerCase().includes(searchTerm) ||
+            attendee.email.toLowerCase().includes(searchTerm) ||
+            attendee.nin.includes(searchTerm) ||
+            attendee.position.toLowerCase().includes(searchTerm);
+        
+        const matchesStatus = !statusFilter || attendee.status === statusFilter;
+        const matchesDepartment = !departmentFilter || attendee.department === departmentFilter;
+        
+        return matchesSearch && matchesStatus && matchesDepartment;
+    });
+    
+    renderAttendeesTable(filtered);
+}
+
+// Export attendees
+function exportAttendees() {
+    const data = allAttendees.map(attendee => ({
+        Name: attendee.name,
+        Email: attendee.email,
+        NIN: attendee.nin,
+        Position: attendee.position,
+        Department: attendee.department,
+        Agency: attendee.agency,
+        Status: attendee.status
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Participants");
+    
+    const fileName = `Ministry_Participants_${currentMinistryData.code}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+}
+
+// Edit attendee
+function editAttendee(attendeeId) {
+    const attendee = allAttendees.find(a => a.id == attendeeId);
+    if (!attendee) return;
+    
+    currentEditingId = attendeeId;
+    
+    // Populate edit form
+    document.getElementById('editMinistryAttendeePrefix').value = attendee.prefix || 'Mr';
+    document.getElementById('editMinistryAttendeeFirstName').value = attendee.firstName || attendee.name.split(' ')[0];
+    document.getElementById('editMinistryAttendeeLastName').value = attendee.lastName || attendee.name.split(' ').slice(1).join(' ');
+    document.getElementById('editMinistryAttendeeEmail').value = attendee.email;
+    document.getElementById('editMinistryAttendeeJobTitle').value = attendee.jobTitle || attendee.position;
+    document.getElementById('editMinistryAttendeeWorkPhone').value = attendee.workPhone || '';
+    document.getElementById('editMinistryAttendeePhone').value = attendee.phone || '';
+    document.getElementById('editMinistryAttendeePosition').value = attendee.position;
+    document.getElementById('editMinistryAttendeeGradeLevel').value = attendee.gradeLevel || '';
+    document.getElementById('editMinistryAttendeeDepartment').value = attendee.department;
+    document.getElementById('editMinistryAttendeeAgency').value = attendee.agency;
+    document.getElementById('editMinistryAttendeeStaffId').value = attendee.staffId || '';
+    document.getElementById('editMinistryAttendeeOffice').value = attendee.office || '';
+    document.getElementById('editMinistryAttendeeRemarks').value = attendee.remarks || '';
+    document.getElementById('editMinistryAttendeeStatus').value = attendee.status;
+    
+    openModal('editMinistryAttendeeModal');
+}
+
+// Update attendee
+function updateAttendee() {
+    const form = document.getElementById('editMinistryAttendeeForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Find and update attendee
+    const index = allAttendees.findIndex(a => a.id == currentEditingId);
+    if (index !== -1) {
+        allAttendees[index] = {
+            ...allAttendees[index],
+            name: `${document.getElementById('editMinistryAttendeeFirstName').value} ${document.getElementById('editMinistryAttendeeLastName').value}`,
+            email: document.getElementById('editMinistryAttendeeEmail').value,
+            position: document.getElementById('editMinistryAttendeePosition').value,
+            department: document.getElementById('editMinistryAttendeeDepartment').value,
+            agency: document.getElementById('editMinistryAttendeeAgency').value,
+            status: document.getElementById('editMinistryAttendeeStatus').value
+        };
+        
+        renderAttendeesTable(allAttendees);
+        closeModal('editMinistryAttendeeModal');
+        showSuccessMessage('Participant updated successfully!');
+    }
+}
+
+// Confirm delete attendee
+function confirmDeleteAttendee(attendeeId, attendeeName) {
+    currentEditingId = attendeeId;
+    document.getElementById('deleteMinistryAttendeeName').textContent = attendeeName;
+    openModal('deleteMinistryModal');
+}
+
+// Delete attendee
+function deleteAttendee() {
+    allAttendees = allAttendees.filter(a => a.id != currentEditingId);
+    renderAttendeesTable(allAttendees);
+    
+    closeModal('deleteMinistryModal');
+    showSuccessMessage('Participant deleted successfully!');
+    
+    // Update counts
+    const totalCount = allAttendees.length;
+    const pendingCount = allAttendees.filter(a => a.status === 'Pending').length;
+    const approvedCount = allAttendees.filter(a => a.status === 'Approved').length;
+    
+    document.getElementById('ministryPendingCount').textContent = pendingCount;
+    document.getElementById('ministryApprovedCount').textContent = approvedCount;
+    document.getElementById('ministryTotalCount').textContent = totalCount;
+}
+
+// Add to recent activity
+function addToRecentActivity(attendeeData) {
+    const table = document.getElementById('ministryActivityTable');
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>Added</td>
+        <td>${attendeeData.firstName} ${attendeeData.lastName}</td>
+        <td>${attendeeData.position}</td>
+        <td>${dateStr} ${timeStr}</td>
+        <td><span class="status-badge status-pending">Pending</span></td>
+    `;
+    
+    table.insertBefore(row, table.firstChild);
+    
+    // Keep only last 10 activities
+    if (table.children.length > 10) {
+        table.removeChild(table.lastChild);
+    }
+}
+
+// Excel upload functionality
+function handleExcelUpload() {
+    const fileInput = document.getElementById('ministryExcelFile');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Please select an Excel file to upload');
+        return;
+    }
+    
+    // Simulate upload process
+    const uploadStatus = document.getElementById('ministryExcelUploadStatus');
+    const progressBar = document.getElementById('ministryExcelProgressFill');
+    const progressText = document.getElementById('ministryExcelProgressText');
+    
+    uploadStatus.style.display = 'block';
+    
+    // Simulate progress
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 10;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${progress}%`;
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+            progressText.textContent = 'Processing data...';
+            
+            setTimeout(() => {
+                // Show success
+                progressBar.style.background = '#28a745';
+                progressText.textContent = 'Upload complete!';
+                
+                // Show preview (simulated)
+                setTimeout(() => {
+                    showExcelPreview();
+                }, 500);
+            }, 1000);
+        }
+    }, 200);
+}
+
+function downloadExcelTemplate() {
+    // Create template data
+    const templateData = [
+        {
+            'Full Name': 'John Doe',
+            'Email': 'john.doe@example.com',
+            'Phone': '+2348012345678',
+            'Position': 'Director',
+            'Grade Level': 'Director',
+            'Department': 'Budget & Planning',
+            'Agency': 'Budget Office',
+            'Staff ID': 'EMP001'
+        }
+    ];
+    
+    const ws = XLSX.utils.json_to_sheet(templateData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Template");
+    
+    XLSX.writeFile(wb, `Ministry_Participant_Template_${currentMinistryData.code}.xlsx`);
+}
+
+function showExcelPreview() {
+    const preview = document.getElementById('ministryExcelPreview');
+    preview.style.display = 'block';
+    
+    // Simulate preview data
+    const previewBody = document.getElementById('ministryExcelPreviewBody');
+    previewBody.innerHTML = `
+        <tr>
+            <td>1</td>
+            <td>Samuel Johnson</td>
+            <td>s.johnson@finance.gov.ng</td>
+            <td>Audit</td>
+            <td><span class="status-badge status-pending">Pending</span></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Fatima Bello</td>
+            <td>f.bello@finance.gov.ng</td>
+            <td>Treasury</td>
+            <td><span class="status-badge status-pending">Pending</span></td>
+        </tr>
+    `;
+    
+    document.getElementById('ministryTotalRecordsCount').textContent = 'Total: 2 records';
+    document.getElementById('ministryValidRecordsCount').textContent = 'Valid: 2';
+    document.getElementById('ministryErrorRecordsCount').textContent = 'Errors: 0';
+}
+
+// Save General Settings
+function saveGeneralSettings() {
+    const form = document.getElementById('ministryGeneralSettingsForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Collect settings
+    const settings = {
+        name: document.getElementById('ministryDisplayName').value,
+        contactPerson: document.getElementById('primaryContactName').value,
+        contactEmail: document.getElementById('primaryContactEmail').value,
+        phone: document.getElementById('ministryPhone').value,
+        address: document.getElementById('ministryAddress').value,
+        defaultDepartment: document.getElementById('defaultDepartment').value,
+        timezone: document.getElementById('timezone').value,
+        autoSaveForms: document.getElementById('autoSaveForms').checked,
+        showConfirmationDialogs: document.getElementById('showConfirmationDialogs').checked,
+        emailNotifications: document.getElementById('emailNotifications').checked,
+        showHelpTooltips: document.getElementById('showHelpTooltips').checked
+    };
+    
+    // Save to localStorage (in real app, API call)
+    localStorage.setItem('ministrySettings', JSON.stringify(settings));
+    
+    // Update current ministry data
+    currentMinistryData.name = settings.name;
+    currentMinistryData.contactPerson = settings.contactPerson;
+    
+    // Update UI
+    initMinistryDashboard();
+    
+    showSuccessMessage('Settings saved successfully!');
+}
+
+// Change password
+function changePassword() {
+    const form = document.getElementById('ministryPasswordSettingsForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+        showErrorMessage('New passwords do not match!');
+        return;
+    }
+    
+    // Validate password strength
+    if (!isStrongPassword(newPassword)) {
+        showErrorMessage('Password does not meet strength requirements!');
+        return;
+    }
+    
+    // In a real app, this would be an API call
+    console.log('Changing password...');
+    
+    // Simulate API call
+    setTimeout(() => {
+        resetPasswordForm();
+        showSuccessMessage('Password changed successfully!');
+        
+        // If logout all devices is checked
+        if (document.getElementById('logoutAllDevices').checked) {
+            setTimeout(() => {
+                logout();
+            }, 2000);
+        }
+    }, 1000);
+}
+
+// Check password strength
+function checkPasswordStrength() {
+    const password = document.getElementById('newPassword').value;
+    const strengthText = document.getElementById('passwordStrengthText');
+    const segments = document.querySelectorAll('.strength-segment');
+    
+    // Reset segments
+    segments.forEach(segment => {
+        segment.style.background = '#e0e0e0';
+    });
+    
+    let strength = 0;
+    let text = 'Very Weak';
+    let color = '#dc3545';
+    
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    // Update segments
+    for (let i = 0; i < strength; i++) {
+        segments[i].style.background = color;
+    }
+    
+    // Update text and color based on strength
+    switch(strength) {
+        case 1:
+            text = 'Weak';
+            color = '#dc3545';
+            break;
+        case 2:
+            text = 'Fair';
+            color = '#ffc107';
+            break;
+        case 3:
+            text = 'Good';
+            color = '#17a2b8';
+            break;
+        case 4:
+            text = 'Strong';
+            color = '#28a745';
+            break;
+    }
+    
+    strengthText.textContent = text;
+    strengthText.style.color = color;
+    
+    // Update segments color
+    for (let i = 0; i < strength; i++) {
+        segments[i].style.background = color;
+    }
+}
+
+// Check password match
+function checkPasswordMatch() {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const matchDiv = document.getElementById('passwordMatch');
+    
+    if (!confirmPassword) {
+        matchDiv.innerHTML = '';
+        return;
+    }
+    
+    if (newPassword === confirmPassword) {
+        matchDiv.innerHTML = '<small style="color: #28a745;"><i class="fas fa-check-circle"></i> Passwords match</small>';
+    } else {
+        matchDiv.innerHTML = '<small style="color: #dc3545;"><i class="fas fa-times-circle"></i> Passwords do not match</small>';
+    }
+}
+
+// Check if password is strong
+function isStrongPassword(password) {
+    return password.length >= 8 &&
+           /[A-Z]/.test(password) &&
+           /[0-9]/.test(password) &&
+           /[^A-Za-z0-9]/.test(password);
+}
+
+// Reset password form
+function resetPasswordForm() {
+    document.getElementById('ministryPasswordSettingsForm').reset();
+    document.getElementById('passwordStrengthText').textContent = '';
+    document.getElementById('passwordMatch').innerHTML = '';
+    
+    // Reset strength segments
+    document.querySelectorAll('.strength-segment').forEach(segment => {
+        segment.style.background = '#e0e0e0';
+    });
+}
+
+// Modal functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+// Save General Settings
+document.getElementById('saveMinistrySettingsBtn').addEventListener('click', function() {
+    saveGeneralSettings();
+});
+
+function saveGeneralSettings() {
+    const form = document.getElementById('ministryGeneralSettingsForm');
+    
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Show loading state
+    const originalText = this.innerHTML;
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    this.disabled = true;
+    
+    // Collect settings
+    const settings = {
+        name: document.getElementById('ministryDisplayName').value,
+        contactPerson: document.getElementById('primaryContactName').value,
+        contactEmail: document.getElementById('primaryContactEmail').value,
+        phone: document.getElementById('ministryPhone').value,
+        address: document.getElementById('ministryAddress').value,
+        timezone: document.getElementById('timezone').value,
+        autoSaveForms: document.getElementById('autoSaveForms').checked,
+        showConfirmationDialogs: document.getElementById('showConfirmationDialogs').checked,
+        emailNotifications: document.getElementById('emailNotifications').checked,
+        showHelpTooltips: document.getElementById('showHelpTooltips').checked
+    };
+    
+    // Simulate API call (in real app, this would be an actual API call)
+    setTimeout(() => {
+        // Save to localStorage (in real app, API call)
+        localStorage.setItem('ministrySettings', JSON.stringify(settings));
+        
+        // Update current ministry data
+        currentMinistryData.name = settings.name;
+        currentMinistryData.contactPerson = settings.contactPerson;
+        
+        // Update UI
+        updateMinistryDisplay();
+        
+        // Reset button state
+        this.innerHTML = originalText;
+        this.disabled = false;
+        
+        // Show success modal
+        openModal('settingsSuccessModal');
+        
+    }, 1000);
+}
+
+// Update ministry display function
+function updateMinistryDisplay() {
+    // Update dashboard display
+    document.getElementById('currentMinistryName').textContent = currentMinistryData.name;
+    document.getElementById('currentContactPerson').textContent = currentMinistryData.contactPerson;
+    document.getElementById('ministryNameDisplay').textContent = currentMinistryData.name;
+    
+    // Update form fields
+    document.getElementById('ministryAttendeeMinistry').value = currentMinistryData.name;
+    document.getElementById('editMinistryAttendeeMinistry').value = currentMinistryData.name;
+}
+
+// Close settings success modal
+document.getElementById('closeSettingsSuccessBtn').addEventListener('click', function() {
+    closeModal('settingsSuccessModal');
+});
+
+// Also add this to your existing modal close event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Settings success modal close button
+    document.querySelectorAll('.close-modal').forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            closeModal(modal.id);
+        });
+    });
+});
+
+// Toggle password visibility
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Show success message
+function showSuccessMessage(message) {
+    // In a real app, use a toast notification
+    alert('Success: ' + message);
+}
+
+// Show error message
+function showErrorMessage(message) {
+    // In a real app, use a toast notification
+    alert('Error: ' + message);
+}
+
+// Logout
+function logout() {
+    // Clear session data
+    localStorage.removeItem('currentMinistry');
+    localStorage.removeItem('ministryToken');
+    
+    // Redirect to login page
+    window.location.href = '../index.html';
+}

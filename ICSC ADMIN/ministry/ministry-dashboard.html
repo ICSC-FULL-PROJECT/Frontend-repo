@@ -25,7 +25,6 @@
                 <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="#" data-tab="attendees"><i class="fas fa-users"></i> My Participant</a></li>
                 <li><a href="#" data-tab="add-attendee"><i class="fas fa-user-plus"></i> Add Participant</a></li>
-                <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
                 <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
                 <!-- change href to '#' so the page doesn't navigate before JS attaches -->
                 <li><a href="#" id="ministryLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -505,34 +504,136 @@
     </div>
 </div>
 
-            <!-- Reports Tab -->
-            <div id="reports" class="tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h2>Reports & Analytics</h2>
-                        <div class="section-actions">
-                            <button class="btn">Generate Report</button>
-                        </div>
-                    </div>
-                    <div style="padding: 20px;">
-                        <p>Ministry-specific reports and analytics will be implemented here.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Tab -->
-            <div id="settings" class="tab-content">
-                <div class="dashboard-section">
-                    <div class="section-header">
-                        <h2>Ministry Settings</h2>
-                    </div>
-                    <div style="padding: 20px;">
-                        <p>Ministry settings and configuration options will be implemented here.</p>
-                    </div>
-                </div>
+<!-- Settings Tab - Simplified with Success Modal -->
+<div id="settings" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Ministry Settings</h2>
+            <div class="section-actions">
+                <button class="btn" id="saveMinistrySettingsBtn">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
             </div>
         </div>
+
+        <!-- General Settings Only (No inner tabs) -->
+        <div class="settings-content">
+            <form id="ministryGeneralSettingsForm">
+                <h3 style="margin-bottom: 20px; color: var(--primary-color);">Ministry Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryDisplayName">Ministry Display Name *</label>
+                        <input type="text" id="ministryDisplayName" class="form-control" value="Ministry of Finance" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryCode">Ministry Code *</label>
+                        <input type="text" id="ministryCode" class="form-control" value="MOF" readonly>
+                        <small class="form-text text-muted">Ministry code cannot be changed</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="primaryContactName">Primary Contact Person *</label>
+                        <input type="text" id="primaryContactName" class="form-control" value="Permanent Secretary Finance" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="primaryContactEmail">Contact Email *</label>
+                        <input type="email" id="primaryContactEmail" class="form-control" value="permanent.secretary@finance.gov.ng" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ministryPhone">Office Phone *</label>
+                        <input type="tel" id="ministryPhone" class="form-control" value="+234-1-2345678" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ministryAddress">Office Address</label>
+                        <textarea id="ministryAddress" class="form-control" rows="2">Federal Secretariat, Abuja</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timezone">Timezone *</label>
+                        <select id="timezone" class="form-control" required>
+                            <option value="Africa/Lagos" selected>West Africa Time (WAT)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Africa/Abidjan">GMT (Abidjan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0; color: var(--primary-color);">System Preferences</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="autoSaveForms" class="form-check-input" checked>
+                            <label class="form-check-label" for="autoSaveForms">
+                                Auto-save forms while editing
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="showConfirmationDialogs" class="form-check-input" checked>
+                            <label class="form-check-label" for="showConfirmationDialogs">
+                                Show confirmation dialogs for deletions
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="emailNotifications" class="form-check-input" checked>
+                            <label class="form-check-label" for="emailNotifications">
+                                Enable email notifications
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="showHelpTooltips" class="form-check-input" checked>
+                            <label class="form-check-label" for="showHelpTooltips">
+                                Show help tooltips
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
+
+<!-- Settings Success Modal -->
+<div id="settingsSuccessModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Success!</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="success-message">
+                <i class="fas fa-check-circle" style="color: #28a745; font-size: 48px; margin-bottom: 15px;"></i>
+                <p id="settingsSuccessMessage">Settings have been successfully saved!</p>
+                <p style="font-size: 0.9rem; color: var(--text-medium);">Your ministry settings have been updated.</p>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn" id="closeSettingsSuccessBtn">Close</button>
+        </div>
+    </div>
+</div>
 
     <!-- Success Modal -->
     <div id="successModal" class="modal">
