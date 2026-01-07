@@ -521,6 +521,36 @@
             background-color: var(--gray-light);
             padding-left: 10px;
         }
+        .read-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid var(--primary-color);
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+
+.read-more-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.read-more-btn i {
+    margin-left: 6px;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.speaker-card:hover .read-more-btn i {
+    transform: translateX(4px);
+}
 
         /* Social Media Links in Header */
         .social-media {
@@ -1276,6 +1306,8 @@
                     <div class="speaker-info">
                         <h3>Bola Ahmed Tinubu (GCFR)</h3>
                         <div class="speaker-title">President, Federal Republic of Nigeria</div>
+
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1291,6 +1323,7 @@
                     <div class="speaker-info">
                         <h3>Kashim Shettima (GCON)</h3>
                         <div class="speaker-title">Vice President of Nigeria</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1306,6 +1339,7 @@
                     <div class="speaker-info">
                         <h3>Mrs. Didi Esther Walson-Jack</h3>
                         <div class="speaker-title">Head of the Civil Service of the Federation</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1321,6 +1355,7 @@
                     <div class="speaker-info">
                         <h3>Olawale Edun</h3>
                         <div class="speaker-title">Minister of Finance, Budget and National Planning</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1336,6 +1371,7 @@
                     <div class="speaker-info">
                         <h3>Gunu Usman</h3>
                         <div class="speaker-title">CEO, Techpreneur</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1352,6 +1388,7 @@
                     <div class="speaker-info">
                         <h3>Dr Olayemi Michael Cardoso</h3>
                         <div class="speaker-title">Governor, Central Bank of Nigeria</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1367,6 +1404,7 @@
                     <div class="speaker-info">
                         <h3>Mohammed Fall</h3>
                         <div class="speaker-title">UN Resident Coordinator for Nigeria</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1382,6 +1420,7 @@
                     <div class="speaker-info">
                         <h3>Shubham Chaudhuri</h3>
                         <div class="speaker-title">Country Director, World Bank Nigeria</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1397,6 +1436,7 @@
                     <div class="speaker-info">
                         <h3>Dr. Bosun Tijani</h3>
                         <div class="speaker-title">Minister of Communications and Digital Economy</div>
+                        <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
                         <div class="speaker-social">
                             <a href="#"><i class="fab fa-twitter"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -1727,6 +1767,7 @@
             <div class="speaker-info">
               <h3>${speaker.name}</h3>
               <div class="speaker-title">${speaker.title || ''}</div>
+              <div class="read-more-btn">Read More <i class="fas fa-arrow-right"></i></div>
               <div class="speaker-social">
                 ${speaker.twitter ? `<a href="${speaker.twitter}"><i class="fab fa-twitter"></i></a>` : ''}
                 ${speaker.linkedin ? `<a href="${speaker.linkedin}"><i class="fab fa-linkedin-in"></i></a>` : ''}

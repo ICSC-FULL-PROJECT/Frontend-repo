@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Civil Service Conference - Rejuvenate, Innovate & Accelerate!</title>
+    <title>International Civil Service Conference - Reform, Resilience & Results </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1514,61 +1514,94 @@
 
 /* Section */
 .leaders {
-    text-align: center;
-    background: var(--secondary-color);
+    background-color: var(--secondary-color);
+    padding: 80px 0;
 }
 
-/* Grid */
+.leaders .section-header h2 {
+    /* Responsive font size */
+    font-size: clamp(2rem, 5vw, 3.2rem); 
+    max-width: 90%;
+    margin: 0 auto 40px auto;
+}
+
+/* GRID SETUP */
 .leaders-grid {
     display: grid;
-    grid-template-columns: repeat(2, 320px);
-    justify-content: center;
-    gap: 46px 30px;
+    grid-template-columns: 1fr 1fr; /* Two Equal Columns */
+    gap: 40px;
+    max-width: 900px; /* Limits width so photos don't get too huge */
+    margin: 0 auto;
+    align-items: center; /* Vertically centers the shorter VP */
 }
 
-/* Card */
-.leader {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    background: #fff;
-}
-
-/* Image */
+/* GLOBAL IMAGE STYLES */
 .leader img {
     width: 100%;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
+    height: auto;
     display: block;
+    aspect-ratio: 3 / 4; /* Enforces portrait shape */
+    object-fit: cover;
 }
 
-/* Hierarchy */
+/* 1. PRESIDENT STYLING (The "Grand" Look) */
 .leader.president {
-    transform: translateY(-6px);
+    background-color: #ffffff;
+    padding: 3%; /* Creates the white frame */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    width: 100%;
+    margin: 0;
+    border-radius: 4px; /* Slight rounded corners for frame */
 }
 
+/* 2. VICE PRESIDENT STYLING (The "Shorter" Look) */
+.leader.vice-president {
+    background-color: white;
+    padding: 15; 
+    border: none; /* Thin dark border */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border-radius: 4;
+    width: 90%; 
+    margin: 0 auto; /* Centers him in his grid cell */
+}
+
+/* 3. HEAD OF SERVICE STYLING (Centered Below) */
 .leader.head-of-service {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: 320px;
-}
-.leaders .section-header h2 {
-    font-size: clamp(2.4rem, 4vw, 3.2rem);
-    max-width: 100%;
-    white-space: normal;
+    grid-column: 1 / -1; /* Spans across both columns */
+    justify-self: center; /* Centers horizontally */
+    
+    background-color: #ffffff;
+    padding: 10px; /* Matches President's frame style */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    
+    /* Size logic: 50% of the container minus half the gap 
+       makes it visually align with the columns above */
+    width: calc(44% - 30px); 
+    margin-top: 20px;
 }
 
-/* Responsive */
+/* ========== RESPONSIVE DESIGN (MOBILE) ========== */
 @media (max-width: 768px) {
     .leaders-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Switch to single column */
+        gap: 40px;
+        padding: 0 20px;
     }
 
+    /* Reset everyone to look uniform on mobile */
+    .leader.president, 
+    .leader.vice-president, 
     .leader.head-of-service {
-        width: 100%;
+        width: 100%; /* Full width */
+        padding: 10px; /* Uniform frame */
+        border: none;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        grid-column: auto; /* Reset Head of Service span */
+        margin: 0;
     }
 }
-
 /* ========== END LEADERS SECTION ========== */
 
 .partners-slider-section {
@@ -2432,10 +2465,11 @@
 
     <!-- Hero Section -->
     <section class="hero-slider">
-        <div class="slide-overlay"></div>
+        
         <div class="hero-content">
             <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE</h1>
-            <h2><em>Rejuvenate, Innovate & Accelerate!</em></h2>
+            <h2><em>Reform, Resilience & Results!
+            </em></h2>
             
             
             
@@ -2451,33 +2485,31 @@
                 <a href="login.html" class="btn login-btn">Login</a>
             </div> -->
         </div>
-        <!-- Background video -->
-<!-- <video autoplay muted loop playsinline id="heroVideo" class="hero-video">
-  <source src="#g" type="video/mp4">
-  Your browser does not support the video tag.
-</video> -->
-
-
         
     </section>
         <!-- Leaders Section -->
-    <section id="leaders">
-    <div class="section-header">
-    <h2>Our Leaders</h2>
-</div>
+    <section id="leaders" class="leaders">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Leaders</h2>
+        </div>
 
-    <div class="leaders-grid">
-        <figure class="leader president">
-            <img src="images/President-Bola-Ahmed-Tinubu-1024x1536.jpeg" alt="President of Nigeria">
-        </figure>
+        <div class="leaders-grid">
+            <!-- President: Full width of column, White Frame -->
+            <figure class="leader president">
+                <img src="images/President-Bola-Ahmed-Tinubu-1024x1536.jpeg" alt="President of Nigeria">
+            </figure>
 
-        <figure class="leader vice-president">
-            <img src="images/VP-Kashim-Shettima.jpeg" alt="Vice President of Nigeria">
-        </figure>
+            <!-- VP: 92% width (looks shorter), Thin Border, No Frame -->
+            <figure class="leader vice-president">
+                <img src="images/VP-Kashim-Shettima.jpeg" alt="Vice President of Nigeria">
+            </figure>
 
-        <figure class="leader head-of-service">
-            <img src="images/HCSF-Didi-Esther-Walson-Jack.jpeg" alt="Head of Service of the Federation">
-        </figure>
+            <!-- HCSF: Centered below -->
+            <figure class="leader head-of-service">
+                <img src="images/HCSF-Didi-Esther-Walson-Jack.jpeg" alt="Head of Service of the Federation">
+            </figure>
+        </div>
     </div>
 </section>
 
