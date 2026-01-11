@@ -739,7 +739,7 @@
             </div>
             
             <div class="text-center mb-4">
-                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
+                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="https://icsc2026.ohcsf.gov.ng" target="_blank">here</a>.</strong></p>
             </div>
 
             <!-- Registration Form Sections -->
@@ -791,8 +791,8 @@
 
         <!-- Job Title field (constant for all countries) -->
         <div class="form-group" id="jobTitle-group">
-            <label for="jobTitle">Job Title</label>
-            <input type="text" id="jobTitle" name="jobTitle" class="form-control">
+            <label class='has-star' for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
             <div class="help-block-error" id="jobTitle-error"></div>
         </div>
 
@@ -801,34 +801,52 @@
             <label  for="ministry">Federal Ministry</label>
             <select id="ministry" name="ministry" class="form-control">
                 <option value="">Select Ministry</option>
-                <option>Federal Ministry of Agriculture and Rural Development</option>
-                <option>Federal Ministry of Aviation</option>
-                <option>Federal Ministry of Budget and National Planning</option>
-                <option>Federal Ministry of Communications and Digital Economy</option>
-                <option>Federal Ministry of Defence</option>
-                <option>Federal Ministry of Environment</option>
-                <option>Federal Ministry of Foreign Affairs</option>
-                <option>Federal Ministry of Industry, Trade and Investment</option>
-                <option>Federal Ministry of Finance</option>
-                <option>Federal Ministry of Labour and Employment</option>
-                <option>Federal Ministry of Mines and Steel Development</option>
-                <option>Federal Ministry of Niger Delta Affairs</option>
-                <option>Federal Ministry of Petroleum Resources</option>
-                <option>Federal Ministry of Education</option>
-                <option>Federal Ministry of Police Affairs</option>
-                <option>Federal Ministry of Science, Technology and Innovation</option>
-                <option>Federal Ministry of Health</option>
-                <option>Federal Ministry of Water Resources</option>
-                <option>Federal Ministry of Special Duties and Inter-Governmental Affairs</option>
-                <option>Federal Ministry of Information and Culture</option>
-                <option>Federal Ministry of Interior</option>
-                <option>Federal Ministry of Justice</option>
-                <option>Federal Ministry of Humanitarian Affairs, Disaster Management and Social Development</option>
-                <option>Federal Ministry of Power</option>
-                <option>Federal Ministry of Transportation</option>
-                <option>Federal Ministry of Works and Housing</option>
-                <option>Federal Ministry of Women Affairs</option>
-                <option>Federal Ministry of Youth and Sports Development</option>
+                <option>FEDERAL MINISTRY OF JUSTICE</option>
+<option>MINISTRY OF DEFENCE</option>
+<option>FEDERAL MINISTRY OF EDUCATION</option>
+<option>MINISTRY OF  INTERIOR</option>
+<option>FEDERAL MINISTRY OF POWER</option>
+<option>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+<option>FEDERAL MINISTRY OF WORKS</option>
+<option>FEDERAL MINISTRY OF AVIATION &amp; AEROSPACE DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+<option>FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF FINANCE</option>
+<option>FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION  &amp; DIGITAL ECONOMY</option>
+<option>FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+<option>FEDERAL MINISTRY OF INNOVATION, SCIENCE &amp; TECHNOLOGY</option>
+<option>FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+<option>FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+<option>FEDERAL MINISTRY OF ENVIRONMENT</option>
+<option>MINISTRY OF REGIONAL DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+<option>MINISTRY OF PETROLEUM RESOURCES</option>
+<option>FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+<option>MINISTRY OF FOREIGN AFFAIRS</option>
+<option>FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+<option>FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+<option>FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+<option>FEDERAL MINISTRY OF TRANSPORTATION</option>
+<option>FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+<option>FEDERAL MINISTRY OF LABOUR &amp; EMPLOYMENT</option>
+<option>FEDERAL MINISTRY OF SPECIAL DUTIES &amp; INTER-GOVERNMENTAL AFFAIRS</option>
+<option>FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM &amp; CREATIVE ECONOMY</option>
+<option>FEDERAL MINISTRY OF INFORMATION &amp; NATIONAL ORIENTATION</option>
+<option>ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+<option>CABINET AFFAIRS OFFICE (OSGF)</option>
+<option>GENERAL SERVICES OFFICE (OSGF)</option>
+<option>ECONOMIC  &amp; POLITICAL AFFAIRS OFFICE (OSGF)</option>
+<option>SPECIAL SERVICE OFFICE (OSGF)</option>
+<option>SERVICE POLICIES &amp; STRATEGIES OFFICE (OHCSF)</option>
+<option>CAREER MANAGEMENT OFFICE (OHCSF)</option>
+<option>SPECIAL DUTIES OFFICE (OHCSF)</option>
+<option>COMMON SERVICE OFFICE(OHCSF)</option>
+<option>SERVICE WELFARE OFFICE (OHCSF)</option>
+<option>FEDERAL CIVIL SERVICE COMMISSION</option>
+<option>STATE HOUSE</option>
+
                 <option>Other</option>
             </select>
             <div class="help-block-error" id="ministry-error"></div>
@@ -1286,7 +1304,7 @@
             
             // Basic required fields
             const basicRequiredFields = [
-                'prefix', 'firstName', 'lastName', 'attendeePhone', 'country',
+                'prefix', 'firstName', 'lastName', 'attendeePhone', 'country','jobTitle'
             ];
             
             // Validate basic fields

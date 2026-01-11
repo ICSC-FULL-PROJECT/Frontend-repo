@@ -154,7 +154,7 @@
         }
          /* Mobile Menu Watch on Demand Button Styling */
 .mobile-demand-btn {
-    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+    background-color: var(--primary-color);
     color: var(--text-light) !important;
     border-radius: 30px;
     margin: 10px 0;
@@ -167,7 +167,7 @@
 }
 
 .mobile-demand-btn:hover {
-    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    background-color: var(--primary);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
 }
@@ -373,7 +373,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            background-color: var(--primary-color);
             color: var(--text-light);
             padding: 10px 20px;
             border-radius: 30px;
@@ -427,7 +427,7 @@
             background-color: rgba(0, 135, 81, 0.1);
         }
 
-        /* Mobile Menu */
+          /* Mobile Menu */
         .mobile-menu {
             position: fixed;
             top: 80px;
@@ -440,8 +440,6 @@
             opacity: 0;
             transition: var(--transition);
             z-index: 999;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
         }
 
         .mobile-menu.active {
@@ -453,7 +451,6 @@
         .mobile-menu ul {
             display: flex;
             flex-direction: column;
-            list-style: none;
         }
 
         .mobile-menu ul li {
@@ -470,48 +467,114 @@
             border-bottom: 1px solid var(--gray-light);
         }
 
-        .mobile-submenu {
-            display: none;
-            padding-left: 20px;
-            margin-top: 10px;
-        }
+        .mobile-menu ul li ul {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    padding-left: 20px;
+    background: transparent;
+    margin-top: 10px;
+    width: 100%; /* ADDED: Full width */
+}
 
-        .mobile-submenu.active {
-            display: block;
-        }
+.mobile-menu ul li ul li {
+    margin: 5px 0;
+    background: transparent; /* ADDED: Transparent background */
+}
 
-        .mobile-submenu li {
-            margin: 5px 0;
-        }
+.mobile-menu ul li ul li a {
+    font-size: 14px;
+    padding: 10px 0;
+    border-bottom: none;
+    color: var(--text-medium);
+    background: transparent; /* ADDED: Transparent background */
+    width: 100%; /* ADDED: Full width */
+}
 
-        .mobile-submenu li a {
-            font-size: 14px;
-            padding: 10px 0;
-            border-bottom: none;
-            color: var(--text-medium);
-        }
+.mobile-menu ul li ul li a:hover {
+    color: var(--primary-color);
+    background-color: var(--gray-light);
+    padding-left: 10px; /* ADDED: Hover effect */
+}
+/* Mobile Menu Watch on Demand Button Styling */
+.mobile-demand-btn {
+    background-color: var(--primary-color);
+    color: var(--text-light) !important;
+    border-radius: 30px;
+    margin: 10px 0;
+    text-align: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+}
 
-        .mobile-submenu li a:hover {
-            color: var(--primary-color);
-            background-color: var(--gray-light);
-            padding-left: 10px;
-        }
+.mobile-demand-btn:hover {
+    background-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
+}
 
-        .has-submenu > a {
-            position: relative;
-        }
+/* Mobile Menu Auth Buttons */
+.mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-light);
+}
 
-        .has-submenu > a:after {
-            content: '\f078';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            margin-left: auto;
-            transition: var(--transition);
-        }
+.mobile-register-btn,
+.mobile-login-btn {
+    background-color: var(--primary-color);
+    color: var(--text-light) !important;
+    border-radius: 30px;
+    padding: 12px 20px;
+    text-align: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 135, 81, 0.3);
+    margin: 5px 0;
+}
 
-        .has-submenu.active > a:after {
-            transform: rotate(180deg);
-        }
+.mobile-register-btn:hover,
+.mobile-login-btn:hover {
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 135, 81, 0.4);
+}
+
+/* Ensure mobile menu is scrollable */
+.mobile-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 80px);
+    background-color: var(--text-light);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 999;
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    display: block;
+    animation: slideDown 0.4s ease-out;
+}
 
         /* Social Media Links in Header */
         .social-media {
@@ -1170,7 +1233,7 @@
                     <li><a href="index.html" ><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="live-stream.html" id="liveStreamNav"><i class="fas fa-broadcast-tower"></i>Live</a></li>
                      <li><a href="gallery.html"><i class="fas fa-images"></i> Gallery</a></li>
-                    <li><a href="agenda.html"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                    <li><a href="agenda.html" class="active" ><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                     <li><a href="speakers.html"><i class="fas fa-microphone"></i> Speakers</a></li>
                     <li>
                 <a href="partners.html"><i class="fas fa-handshake"></i> Partners</a>
@@ -1193,11 +1256,11 @@
     
 
     <a href="login.html" class="cta-btn">
-        <i class="fas fa-user-plus"></i>
+        <i class="fas fa-sign-in-alt"></i>
         <span>Login</span>
     </a>
         <a href="register.html" class="cta-btn">
-        <i class="fa-sign-in-alt"></i>
+        <i class="fas fa-user-plus"></i>
         <span>Register</span>
     </a>
     <button class="mobile-menu-btn">
@@ -1232,7 +1295,7 @@
         <!-- Add Register/Login buttons to mobile menu -->
         <li class="mobile-auth-buttons">
             <a href="register.html" class="mobile-register-btn"><i class="fas fa-user-plus"></i> Register</a>
-            <a href="login.html" class="mobile-login-btn"><i class="fas fa-gem"></i>Login</a>
+            <a href="login.html" class="mobile-login-btn"><i class="fas fa-sign-in-alt"></i>Login</a>
             
         </li>
     </ul>
