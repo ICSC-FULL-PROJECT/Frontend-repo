@@ -1041,6 +1041,8 @@
             color: white;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/apiClient.js"></script>
 </head>
 <body>
     <div class="container">
@@ -1432,6 +1434,59 @@
     </div>
 
     <script>
+        // Enforce token-based authentication before page loads
+        (function enforceAuth() {
+            try {
+                // Check multiple possible storage locations / keys used across the app
+                let token = null;
+
+                // Direct keys
+                token = localStorage.getItem('token') || sessionStorage.getItem('token') || token;
+                token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || token;
+                token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken') || token;
+
+                // authUser may be an object containing token
+                const rawAuthUser = localStorage.getItem('authUser') || sessionStorage.getItem('authUser') || localStorage.getItem('user') || sessionStorage.getItem('user');
+                if (!token && rawAuthUser) {
+                    try {
+                        const parsed = JSON.parse(rawAuthUser);
+                        if (parsed && parsed.token) token = parsed.token;
+                    } catch (e) {
+                        // ignore parse errors
+                    }
+                }
+
+                // Also check cookies (legacy)
+                if (!token) {
+                    token = (document.cookie.match(/(^|;)\s*(?:authToken|accessToken|token)=([^;]+)/)?.[2]) || null;
+                }
+
+                if (!token) {
+                    // No token: redirect to login
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Expose token for other scripts if needed
+                window.__authToken = token;
+
+                // If an API client exists and supports setting a token, attach it
+                try {
+                    if (window.apiClient && typeof window.apiClient.setToken === 'function') {
+                        window.apiClient.setToken(token);
+                    } else if (window.API_CLIENT && typeof window.API_CLIENT.setToken === 'function') {
+                        window.API_CLIENT.setToken(token);
+                    }
+                } catch (e) {
+                    console.warn('Could not attach token to api client', e);
+                }
+            } catch (err) {
+                console.error('Authentication check failed', err);
+                // On any error, redirect to login as a safe default
+                window.location.replace('login.html');
+            }
+        })();
+
         // Sample data
         const SAMPLE_AGENDA_DATA = {
             "wednesday": [
@@ -1547,7 +1602,124 @@
         
         let youtubePlayer = null;
 
+        // Start background fetch for agenda from API; fall back to SAMPLE_AGENDA_DATA on error.
+        window._agendaFetchPromise = (async function() {
+            try {
+                const apiPath = '/misc/agenda/event-agendas';
+                console.log(window.apiClient);
+
+                // Try the public route first using fetch without Authorization to avoid CORS preflight.
+                let json = null;
+                // Construct fetch URL from axios baseURL if available, otherwise use path (browser will resolve relative to page)
+                let fetchUrl = apiPath;
+                if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
+                    fetchUrl = window.apiClient.defaults.baseURL.replace(/\/$/, '') + apiPath;
+                }
+
+                try {
+                    const resp = await fetch(fetchUrl, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+                    if (!resp.ok) throw new Error('Network response was not ok: ' + resp.status);
+                    json = await resp.json();
+                } catch (fetchErr) {
+                    // If the simple fetch failed (network or CORS), try axios apiClient as a fallback
+                    if (window.apiClient && typeof window.apiClient.get === 'function') {
+                        const resp = await window.apiClient.get(apiPath);
+                        json = resp?.data ?? resp;
+                    } else {
+                        throw fetchErr;
+                    }
+                }
+
+                const data = json?.data;
+                if (!data) return SAMPLE_AGENDA_DATA;
+
+                // `data` may be either:
+                //  - an array of events (each with event_date/start_time/end_time), or
+                //  - an object keyed by day (e.g. { friday: [ ...events ] })
+                const grouped = {};
+
+                if (Array.isArray(data)) {
+                    // Original shape: list of events with event_date
+                    data.forEach(ev => {
+                        const dateKey = ev.event_date || 'unknown';
+                        if (!grouped[dateKey]) grouped[dateKey] = [];
+                        const time = (ev.start_time || '') + (ev.end_time ? '-' + ev.end_time : '');
+                        grouped[dateKey].push({
+                            id: ev.id ?? ev.slug ?? `${dateKey}-${ev.title}`,
+                            time,
+                            title: ev.title || '',
+                            location: ev.location || '',
+                            description: ev.description || '',
+                            event_date: ev.event_date || ev.eventDate || null,
+                            day: ev.day || null,
+                            shortDay: ev.shortDay || null,
+                            hasLiveStream: !!ev.hasLiveStream,
+                            liveStreamUrl: ev.liveStreamUrl || null,
+                            isKeynote: !!ev.isKeynote,
+                            speakers: ev.speakers || null,
+                            track: ev.track || null,
+                            raw: ev
+                        });
+                    });
+                } else if (typeof data === 'object') {
+                    // New shape: already grouped by day names (e.g. { friday: [...] })
+                    Object.keys(data).forEach(dayKey => {
+                        const events = Array.isArray(data[dayKey]) ? data[dayKey] : [];
+                        grouped[dayKey] = events.map(ev => {
+                            const time = ev.time || ((ev.start_time || '') + (ev.end_time ? '-' + ev.end_time : ''));
+                            return {
+                                id: ev.id ?? ev.slug ?? `${dayKey}-${ev.title}`,
+                                time,
+                                title: ev.title || '',
+                                location: ev.location || '',
+                                description: ev.description || '',
+                                event_date: ev.event_date || ev.eventDate || null,
+                                day: ev.day || null,
+                                shortDay: ev.shortDay || null,
+                                hasLiveStream: !!ev.hasLiveStream,
+                                liveStreamUrl: ev.liveStreamUrl || null,
+                                isKeynote: !!ev.isKeynote,
+                                speakers: ev.speakers || null,
+                                track: ev.track || null,
+                                raw: ev
+                            };
+                        });
+                    });
+                } else {
+                    return SAMPLE_AGENDA_DATA;
+                }
+
+                // Convert date keys to weekday names when possible so existing UI labels remain friendly
+                const transformed = {};
+                Object.keys(grouped).forEach(dateKey => {
+                    let dayKey = dateKey;
+                    try {
+                        const d = new Date(dateKey);
+                        if (!isNaN(d)) {
+                            const weekday = d.toLocaleDateString(undefined, { weekday: 'long' }).toLowerCase();
+                            dayKey = weekday;
+                        }
+                    } catch (e) {
+                        // keep original dateKey
+                    }
+                    transformed[dayKey] = grouped[dateKey];
+                });
+
+                return transformed;
+            } catch (err) {
+                console.warn('Agenda fetch failed, using sample data', err);
+                return SAMPLE_AGENDA_DATA;
+            }
+        })();
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Log the API base URL from js/apiClient.js for debugging
+            try {
+                const baseUrl = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) || 'not available';
+                console.log('apiClient baseURL:', baseUrl);
+            } catch (e) {
+                console.log('apiClient baseURL: error reading value', e);
+            }
             // Mobile menu functionality
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
             const sidebar = document.getElementById('sidebar');
@@ -1631,21 +1803,34 @@
             
             // Load initial data
             async function loadInitialData() {
-                // Load agenda data
-                agendaData = SAMPLE_AGENDA_DATA;
+                // Await background agenda fetch started on script load so network starts on page load.
+                try {
+                    const fetched = (window._agendaFetchPromise) ? await window._agendaFetchPromise : null;
+                    if (fetched && Object.keys(fetched).length > 0) {
+                        agendaData = fetched;
+                    } else {
+                        // Leave agendaData empty if server returned nothing or fetch failed.
+                        agendaData = {};
+                    }
+                } catch (err) {
+                    console.error('Error awaiting agenda fetch', err);
+                    agendaData = {};
+                }
+
+                // Render agenda/UI
                 renderDashboardAgenda(agendaData);
                 renderFullAgenda(agendaData);
-                
+
                 // Load agenda stats
                 const statsData = SAMPLE_AGENDA_STATS;
                 renderAgendaStats(statsData);
-                
+
                 // Load featured sessions
                 renderFeaturedSessions();
-                
+
                 // Initialize user profile
                 initializeUserProfile();
-                
+
                 // Initialize YouTube player
                 initializeYouTubePlayer();
             }
@@ -1657,14 +1842,57 @@
                 document.getElementById('organization').value = userProfile.organization;
                 document.getElementById('position').value = userProfile.position;
             }
+
+            // Helper: determine a display title for a day using backend-provided values if available
+            function getDayTitle(dayKey, events) {
+                function capitalize(s) {
+                    return typeof s === 'string' && s.length
+                        ? s.charAt(0).toUpperCase() + s.slice(1)
+                        : s;
+                }
+
+                if (events && events.length > 0) {
+                    const ev = events[0];
+                    console.log('Parsing event_date for day title:', ev.event_date);
+
+                    if (ev.event_date) {
+                        console.log('Parsing event_date for day title:', ev.event_date);
+                        const date = new Date(ev.event_date);
+
+                        if (!isNaN(date)) {
+                            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+                            const formattedDate = date.toLocaleDateString(undefined, {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric'
+                            });
+
+                            return `${weekday} ${formattedDate}`;
+                        }
+
+                        // If backend already sends formatted date string
+                        if (typeof ev.event_date === 'string') {
+                            const wk = ev.day ? capitalize(ev.day) : capitalize(dayKey);
+                            return `${wk} ${ev.event_date}`;
+                        }
+                    }
+                }
+
+                return typeof dayKey === 'string' ? capitalize(dayKey) : 'Schedule';
+            }
             
             // Render agenda for dashboard
             function renderDashboardAgenda(agendaData) {
                 const container = document.getElementById('dashboard-agenda');
+                // If no agenda data, show friendly message and return
+                if (!agendaData || Object.keys(agendaData).length === 0) {
+                    container.innerHTML = '<p class="no-agenda">No agenda available. Please try again later.</p>';
+                    return;
+                }
                 let html = '';
                 
                 for (const [day, events] of Object.entries(agendaData)) {
-                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    const dayTitle = getDayTitle(day, events);
                     const dayId = day;
                     
                     // Check if day is already selected
@@ -1741,10 +1969,15 @@
             // Render full agenda for agenda tab
             function renderFullAgenda(agendaData) {
                 const container = document.getElementById('full-agenda');
+                // If no agenda data, show friendly message and return
+                if (!agendaData || Object.keys(agendaData).length === 0) {
+                    container.innerHTML = '<p class="no-agenda">Full agenda not available. Please try again later.</p>';
+                    return;
+                }
                 let html = '';
                 
                 for (const [day, events] of Object.entries(agendaData)) {
-                    const dayTitle = day === 'wednesday' ? 'Wednesday 25 June 2026' : 'Thursday 26 June 2026';
+                    const dayTitle = getDayTitle(day, events);
                     
                     html += `
                         <div class="agenda-day">
