@@ -2898,6 +2898,59 @@
     </div>
 
     <script>
+        // Enforce token-based authentication before page loads
+        (function enforceAuth() {
+            try {
+                // Check multiple possible storage locations / keys used across the app
+                let token = null;
+
+                // Direct keys
+                token = localStorage.getItem('token') || sessionStorage.getItem('token') || token;
+                token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || token;
+                token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken') || token;
+
+                // authUser may be an object containing token
+                const rawAuthUser = localStorage.getItem('authUser') || sessionStorage.getItem('authUser') || localStorage.getItem('user') || sessionStorage.getItem('user');
+                if (!token && rawAuthUser) {
+                    try {
+                        const parsed = JSON.parse(rawAuthUser);
+                        if (parsed && parsed.token) token = parsed.token;
+                    } catch (e) {
+                        // ignore parse errors
+                    }
+                }
+
+                // Also check cookies (legacy)
+                if (!token) {
+                    token = (document.cookie.match(/(^|;)\s*(?:authToken|accessToken|token)=([^;]+)/)?.[2]) || null;
+                }
+
+                if (!token) {
+                    // No token: redirect to login
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                // Expose token for other scripts if needed
+                window.__authToken = token;
+
+                // If an API client exists and supports setting a token, attach it
+                try {
+                    if (window.apiClient && typeof window.apiClient.setToken === 'function') {
+                        window.apiClient.setToken(token);
+                    } else if (window.API_CLIENT && typeof window.API_CLIENT.setToken === 'function') {
+                        window.API_CLIENT.setToken(token);
+                    }
+                } catch (e) {
+                    console.warn('Could not attach token to api client', e);
+                }
+            } catch (err) {
+                console.error('Authentication check failed', err);
+                // On any error, redirect to login as a safe default
+                window.location.replace('login.html');
+            }
+        })();
+
         // =====================================================================
         // BACKEND API INTEGRATION POINTS
         // =====================================================================
@@ -5341,6 +5394,88 @@ if (userPackage.speak_enabled) {
 } else {
     hideSpeakingButton();
 }
+
+// =====================================================================
+// AGENDA: Fetch and render conference agendas from backend
+// Endpoint: /misc/agenda/event-agendas
+// =====================================================================
+
+function escapeHtml(str) {
+    if (!str && str !== 0) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+async function fetchAndRenderAgendas() {
+    try {
+        const res = await fetch('/misc/agenda/event-agendas');
+        if (!res.ok) throw new Error('Failed to fetch agendas');
+        const payload = await res.json();
+        const data = payload.data || {};
+
+        Object.keys(data).forEach(dayKey => {
+            const events = data[dayKey] || [];
+
+            // Try multiple id patterns used in the markup
+            let container = document.getElementById(`agenda-${dayKey}`) || document.getElementById(`${dayKey}-agenda`);
+            if (!container) return;
+
+            // Preserve header (h3) if present
+            const header = container.querySelector('h3');
+            container.innerHTML = header ? header.outerHTML : '';
+
+            events.forEach(ev => {
+                const item = document.createElement('div');
+                item.className = 'event-item';
+
+                const liveBadge = ev.hasLiveStream ? ' <span class="event-live" style="color:#e53935;font-weight:700;margin-left:6px;">LIVE</span>' : '';
+                const desc = ev.description ? `<p>${escapeHtml(ev.description)}</p>` : '';
+
+                item.innerHTML = `
+                    <div class="event-info">
+                        <h4>${escapeHtml(ev.title)}${liveBadge}</h4>
+                        <p><i class="far fa-clock"></i> ${escapeHtml(ev.time)} | <i class="fas fa-map-marker-alt"></i> ${escapeHtml(ev.location)}</p>
+                        ${desc}
+                    </div>
+                    <div class="event-actions">
+                        <button class="attend-btn" data-event-id="${escapeHtml(ev.id)}">Add to Schedule</button>
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+        });
+
+        // Bind attend buttons created dynamically
+        document.querySelectorAll('.attend-btn[data-event-id]').forEach(btn => {
+            btn.removeEventListener('click', handleAddToSchedule);
+            btn.addEventListener('click', handleAddToSchedule);
+        });
+
+    } catch (error) {
+        console.error('Error loading agendas:', error);
+    }
+}
+
+function handleAddToSchedule(e) {
+    const btn = e.currentTarget;
+    const eventId = btn.getAttribute('data-event-id');
+    if (!eventId) return;
+    // Provided helper adds to schedule; keep using it for UX
+    addToSchedule();
+    // Optionally, mark button as added
+    btn.textContent = 'Added';
+    btn.disabled = true;
+}
+
+// Load agendas on page ready
+document.addEventListener('DOMContentLoaded', function() {
+    fetchAndRenderAgendas();
+});
     </script>
 </body>
 </html>

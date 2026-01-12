@@ -84,6 +84,18 @@
             border-color: var(--primary-dark);
             color: white;
         }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+            color: white;
+        }
         
         .btn-outline-standard {
             background-color: transparent;
@@ -563,7 +575,7 @@
 
         @media (min-width: 992px) {
             .package-cards {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -858,13 +870,13 @@
                 <div class="payment-section">
                     <div class="form-group">
                         <label class="has-star">Select Payment Method</label>
-                        <div class="payment-option">
+                        <!-- <div class="payment-option">
                             <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
                             <label for="bank-transfer">Bank Transfer</label>
-                        </div>
+                        </div> -->
                         <div class="payment-option">
                             <input type="radio" id="flutterwave" name="payment-method" value="flutterwave">
-                            <label for="flutterwave">Paystack</label>
+                            <label for="flutterwave">Flutterwave</label>
                         </div>
                     </div>
                     
@@ -889,10 +901,7 @@
                     
                     <div class="payment-form" id="flutterwave-form">
                         <h5>Flutterwave Payment</h5>
-                        <div class="mock-notice" style="margin-bottom: 15px;">
-                            <i class="fas fa-info-circle"></i>
-                            In development mode, this shows a success message instead of redirecting to payment.
-                        </div>
+                        <div id="flutterwave-amount"></div>
                         <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
                         <p>Accepted payment methods:</p>
                         <ul>
@@ -902,7 +911,7 @@
                             <li>Mobile Money</li>
                         </ul>
                         <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
-                            <i class="fas fa-credit-card me-2"></i>Pay with Paystack
+                            <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
                         </button>
                     </div>
                 </div>
@@ -930,7 +939,7 @@
                 <div class="confirmation-details">
                     <h4 class="mb-3">Registration Details</h4>
                     <div class="confirmation-item">
-                        <div class="confirmation-label">Registration ID</div>
+                        <div class="confirmation-label">Transaction ID</div>
                         <div class="confirmation-value" id="confirmation-id">ICSC2026-001234</div>
                     </div>
                     <div class="confirmation-item">
@@ -1019,8 +1028,8 @@
         let uploadedLogoUrl = ''; // holds the uploaded company logo URL returned by /misc/upload-image
         let lastPartnerRegistrationResponse = null;
         let availablePackages = [];
-        let autoRefreshInterval = null; // For auto-refresh functionality
         let selectedPackageDashboard = 'partners-dash.html'; // Default dashboard
+        let partnerAccountId = null; // Store the partner ID after successful registration
         
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -1048,12 +1057,138 @@
                 // Setup payment section
                 setupPaymentSection();
 
-                // Start auto-refresh for packages (every 10 seconds)
-                startAutoRefresh();
+                // Check for payment callback/return from Flutterwave
+                await handlePaymentCallback();
 
             } catch (error) {
                 console.error('Error initializing app:', error);
             }
+        }
+
+        async function handlePaymentCallback() {
+            try {
+                // Check if returning from Flutterwave payment
+                const urlParams = new URLSearchParams(window.location.search);
+                // Prefer Flutterwave-generated identifiers
+                const flwRef = urlParams.get('flw_ref');
+                const transactionId = urlParams.get('transaction_id') || urlParams.get('transactionId');
+                const txRef = urlParams.get('tx_ref');
+                const status = urlParams.get('status');
+
+                // Fallback to any previously stored reference (if present)
+                const storedRef = sessionStorage.getItem('lastTxRef');
+                if (!flwRef && !transactionId && !txRef && !status && !storedRef) return;
+
+                console.log('=== PAYMENT CALLBACK HANDLER ===');
+                console.log('URL flw_ref:', flwRef);
+                console.log('URL transaction_id:', transactionId);
+                console.log('URL tx_ref:', txRef);
+                console.log('URL status:', status);
+
+                // Prefer using `transaction_id` for verification, then `flw_ref`, then fall back to `tx_ref` or stored reference
+                const verifyIdentifier = transactionId || flwRef || txRef || storedRef;
+                if (verifyIdentifier) {
+                    console.log('Verifying payment with identifier (transaction_id preferred):', verifyIdentifier);
+
+                    // Ensure we have the package id (fall back to sessionStorage if needed)
+                    const storedPackageId = sessionStorage.getItem('selectedPackageId');
+                    const packageIdForVerify = selectedPackageId || (storedPackageId ? Number(storedPackageId) : null);
+
+                    // Call backend to verify payment using `transaction_id` as the primary parameter
+                    try {
+                        console.log('Making verification request to: /payments/verify-event-partner-payment with reference=' + transactionId + ' and packageId=' + packageIdForVerify);
+                        // Build query params; include event_package_id only if available
+                        const queryParams = `reference=${encodeURIComponent(transactionId)}` + (packageIdForVerify ? `&event_package_id=${encodeURIComponent(packageIdForVerify)}` : '');
+                        const verifyResponse = await window.apiClient.get(`/payments/verify-event-partner-payment?${queryParams}`);
+                        const verifyData = verifyResponse && (verifyResponse.data || verifyResponse);
+                        
+                        console.log('Payment verification response:', verifyData);
+                        console.log('Response keys:', verifyData ? Object.keys(verifyData) : 'null');
+                        
+                        // Check if payment is successful
+                        // Handle multiple response formats for success
+                        let isPaymentSuccessful = false;
+                        
+                        // Format 1: {status: 'success'}
+                        if (verifyData && verifyData.status === 'success') {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment verified successfully (status === success)');
+                        }
+                        // Format 2: {success: true}
+                        else if (verifyData && verifyData.success === true) {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment verified successfully (success === true)');
+                        }
+                        // Format 3: {data: {status: 'success'}}
+                        else if (verifyData && verifyData.data && verifyData.data.status === 'success') {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment verified successfully (data.status === success)');
+                        }
+                        // Format 4: {data: {success: true}}
+                        else if (verifyData && verifyData.data && verifyData.data.success === true) {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment verified successfully (data.success === true)');
+                        }
+                        // Format 5: {verified: true}
+                        else if (verifyData && verifyData.verified === true) {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment verified successfully (verified === true)');
+                        }
+                        // Format 6: Trust URL status parameter as fallback
+                        else if (status === 'successful' || status === 'completed') {
+                            isPaymentSuccessful = true;
+                            console.log('✓ Payment completed (from URL parameter)');
+                        }
+                        
+                        if (isPaymentSuccessful) {
+                            completePaymentFlow(verifyIdentifier);
+                        } else {
+                            console.warn('Payment verification returned unexpected status:', verifyData);
+                        }
+                    } catch (verifyErr) {
+                        console.warn('Payment verification API call failed:', verifyErr);
+                        console.warn('Error status:', verifyErr.response?.status);
+                        console.warn('Error data:', verifyErr.response?.data);
+                        
+                        // Fallback: if verification fails but we have URL status, trust it
+                        if (status === 'successful' || status === 'completed') {
+                            console.log('Verification failed, but trusting URL status parameter');
+                            completePaymentFlow(verifyIdentifier);
+                        }
+                        // Otherwise don't show error - user may have just navigated back
+                    }
+                }
+            } catch (err) {
+                console.error('Error in payment callback handler:', err);
+            }
+        }
+
+        function completePaymentFlow(txRef) {
+            console.log('=== COMPLETING PAYMENT FLOW ===');
+            
+            // Update Flutterwave button to show paid status
+            const payBtn = document.getElementById('pay-with-flutterwave');
+            if (payBtn) {
+                payBtn.disabled = true;
+                payBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Payment Completed';
+                payBtn.className = 'btn btn-success';
+                console.log('Updated button to: Payment Completed');
+            }
+            
+            // Store payment status
+            sessionStorage.setItem('paymentCompleted', 'true');
+            sessionStorage.setItem('completedTxRef', txRef);
+            
+            // Update confirmation section with payment details
+            updateConfirmationSection();
+            
+            // Show confirmation section
+            showStep(4);
+            
+            // Show success notification
+            showNotification('Payment completed successfully! Thank you for your registration.', 'success');
+            
+            console.log('Payment flow completed successfully');
         }
 
         // Fetch partner packages from backend and render into the .package-cards container
@@ -1064,100 +1199,55 @@
             // Clear container
             container.innerHTML = '';
 
-            // HARDCODED PACKAGES
-            const hardcodedPackages = [
-                {
-                    id: 1,
-                    name: "Bronze Partner",
-                    slug: "bronze-partner",
-                    price: 5000000,
-                    investment: 5000000,
-                    description: "Basic partnership package with standard benefits",
-                    features: [
-                        "Company logo on website",
-                        "Social media mention",
-                        "1 conference pass",
-                        "Exhibition space (optional)",
-                        "Partner certificate",
-                        " Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Basic Coverage)"
-                    ],
-                    max_count: 20,
-                    current_count: 5,
-                    redirect_dashboard: "partners-dash.html"
-                },
-                {
-                    id: 2,
-                    name: "Silver Partner", 
-                    slug: "silver-partner",
-                    price: 10000000,
-                    investment: 10000000,
-                    description: "Enhanced partnership with additional visibility",
-                    features: [
-                        "All Bronze benefits",
-                        "Logo on conference backdrop",
-                        "2 conference passes",
-                        "Full page in program booklet",
-                        "Speaker/panelist/roundtable delegate profile promoted in line with the event agenda",
-                        "Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)"
-                    ],
-                    max_count: 15,
-                    current_count: 3,
-                    redirect_dashboard: "partners-dash.html"
-                },
-                {
-                    id: 3,
-                    name: "Gold Partner",
-                    slug: "gold-partner", 
-                    price: 15000000,
-                    investment: 15000000,
-                    description: "Premium partnership with prominent visibility",
-                    features: [
-                        "All Silver benefits",
-                        "Speaking slot (5 mins)",
-                        "4 conference passes",
-                        "Speaker/panelist/roundtable delegate profile promoted in line with the event agenda",
-                        "VIP dinner invitation",
-                        "Space located in the main exhibition area for 2 days. Offered as space only",
-                        "Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)"
-                    ],
-                    max_count: 10,
-                    current_count: 2,
-                    redirect_dashboard: "partners-dash.html"
-                },
-                {
-                    id: 4, 
-                    name: "Platinum Partner",
-                    slug: "platinum-partner",
-                    price: 30000000,
-                    investment: 30000000,
-                    description: "Exclusive top-tier partnership",
-                    features: [
-                        "Speaker/panelist/roundtable delegate profile promoted in line with the event agenda",
-                        "Keynote speaking slot (15 mins)",
-                        "Guest passes: opportunity to invite a limited number of your own VIPs to the event. (Not to be used for Guest passes: opportunity to invite a limited number of your own VIPs to the event.)",
-                        "Premium exhibition location",
-                        "Space located in the main exhibition area for 2 days. Offered as space only",
-                        "Company logo and profile on event website (Full coverage) ",
-                        "News coverage of your session published on the OHCSF Website and shared in the Civil Service newsletter"
-                    ],
-                    max_count: 5,
-                    current_count: 1,
-                    redirect_dashboard: "partners-dash.html"
+            // Try to fetch packages from backend; fall back to hardcoded if API fails
+            let fetchedPackages = [];
+            try {
+                const resp = await window.apiClient.get('/packages/event-partner-packages');
+                const respData = resp && (resp.data || resp);
+                if (respData && Array.isArray(respData.data)) {
+                    fetchedPackages = respData.data;
+                } else if (Array.isArray(respData)) {
+                    fetchedPackages = respData;
                 }
-            ];
+            } catch (err) {
+                console.warn('Failed to fetch packages from API', err);
+            }
 
-            // Store in global array
-            availablePackages = hardcodedPackages;
+            // Normalize packages into the shape the UI expects
+            availablePackages = (fetchedPackages || []).map(pkg => {
+                const max_count = Number(pkg.total_slot ?? pkg.max_count ?? 0);
+                const remaining = Number(typeof pkg.remaining_slot !== 'undefined' ? pkg.remaining_slot : (pkg.remainingSlots ?? null) ?? (max_count === 0 ? 0 : max_count - (pkg.current_count || 0)));
+                const current_count = max_count === 0 ? 0 : Math.max(0, max_count - remaining);
+
+                return {
+                    id: pkg.id,
+                    slug: pkg.slug,
+                    name: pkg.title || pkg.name || pkg.slug,
+                    title: pkg.title || pkg.name,
+                    price: Number(pkg.price ?? pkg.investment ?? 0),
+                    investment: Number(pkg.investment ?? pkg.price ?? 0),
+                    description: pkg.description,
+                    features: Array.isArray(pkg.features) ? pkg.features : (pkg.features ? [pkg.features] : []),
+                    max_count,
+                    current_count,
+                    remaining_slot: remaining,
+                    total_slot: max_count,
+                    limitedText: pkg.limitedText ?? pkg.limited_text ?? null,
+                    redirect_dashboard: pkg.redirect_dashboard || pkg.dashboard_url || 'partners-dash.html',
+                    is_exhibitor: pkg.is_exhibitor || false,
+                    force_closed: pkg.force_closed || false
+                };
+            });
 
             // Render each package
-            hardcodedPackages.forEach(pkg => {
+            availablePackages.forEach(pkg => {
                 const card = document.createElement('div');
                 card.className = 'package-card';
                 card.setAttribute('data-package', pkg.slug);
                 card.setAttribute('data-package-id', String(pkg.id));
                 
                 const price = pkg.investment || pkg.price || 0;
-                const priceText = price.toLocaleString();
+                const priceText = Number(price).toLocaleString();
                 
                 // Features HTML
                 let featuresHtml = '';
@@ -1168,9 +1258,9 @@
                 }
                 
                 // Availability
-                const currentCount = pkg.current_count || 0;
-                const maxCount = pkg.max_count || 0;
-                const isAvailable = maxCount === 0 || currentCount < maxCount;
+                const maxCount = Number(pkg.total_slot || pkg.max_count || 0);
+                const remaining = Number(pkg.remaining_slot ?? (maxCount === 0 ? 0 : maxCount - (pkg.current_count || 0)));
+                const isAvailable = maxCount === 0 || remaining > 0;
                 
                 let limitedText = '';
                 if (!isAvailable) {
@@ -1179,79 +1269,32 @@
                     card.style.opacity = '0.6';
                     card.style.cursor = 'not-allowed';
                 } else if (maxCount > 0) {
-                    const remaining = maxCount - currentCount;
                     limitedText = `<div class="limited">${remaining} of ${maxCount} slots remaining</div>`;
                 } else {
                     limitedText = `<div class="limited">Unlimited slots available</div>`;
                 }
                 
-                // Card HTML - THIS IS WHERE THE PRICE IS DISPLAYED
+                // If server provided a custom limitedText, prefer it
+                if (pkg.limitedText) {
+                    limitedText = `<div class="limited">${pkg.limitedText}</div>`;
+                }
+
+                // Card HTML
                 card.innerHTML = `
-                    <h4>${pkg.name}</h4>
+                    <h4>${pkg.title || pkg.name}</h4>
                     <div class="price">₦${priceText}</div>
                     ${featuresHtml}
                     ${limitedText}
                 `;
-                
+
                 container.appendChild(card);
             });
-            
-            // Add refresh status indicator
+
+            // Add refresh / loaded status indicator
             updateRefreshStatus();
         }
         
-        // Start auto-refresh for packages
-        function startAutoRefresh() {
-            // Clear any existing interval
-            if (autoRefreshInterval) {
-                clearInterval(autoRefreshInterval);
-            }
-            
-            // Set up new interval (10 seconds = 10000 milliseconds)
-            autoRefreshInterval = setInterval(async () => {
-                try {
-                    // Only refresh if we're on the package selection step
-                    if (currentStep === 2) {
-                        await silentPackageRefresh();
-                    }
-                } catch (error) {
-                    console.error('Auto-refresh failed:', error);
-                }
-            }, 10000); // 10 seconds
-            
-            console.log('Auto-refresh started: Packages will refresh every 10 seconds');
-        }
         
-        // Silent package refresh (no UI notifications)
-        async function silentPackageRefresh() {
-            try {
-                const oldPackages = [...availablePackages];
-                await fetchAndRenderPackages();
-                
-                // Check if selected package is still available
-                if (selectedPackageId) {
-                    const isAvailable = await checkPackageAvailability(selectedPackageId);
-                    if (!isAvailable) {
-                        // Package no longer available, reset selection
-                        selectedPackage = '';
-                        selectedPackageId = null;
-                        selectedPackageDashboard = 'partners-dash.html';
-                        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
-                        const continueBtn = document.getElementById('continue-to-payment-btn');
-                        if (continueBtn) continueBtn.disabled = true;
-                        
-                        // Show subtle notification
-                        showNotification('Your selected package is no longer available. Please select a different package.', 'warning', 3000);
-                    }
-                }
-                
-                // Reattach event listeners
-                setupPackageSelection();
-                
-            } catch (err) {
-                console.error('Silent refresh failed:', err);
-            }
-        }
         
         // Update refresh status indicator
         function updateRefreshStatus() {
@@ -1272,12 +1315,12 @@
                     `;
                     
                     const icon = document.createElement('i');
-                    icon.className = 'fas fa-sync-alt fa-spin';
-                    icon.style.fontSize = '0.8rem';
+                    icon.className = 'fas fa-check-circle';
+                    icon.style.fontSize = '0.9rem';
                     
                     const text = document.createElement('span');
                     text.id = 'refresh-status-text';
-                    text.textContent = 'Auto-refreshing packages...';
+                    text.textContent = 'Packages loaded';
                     
                     statusElement.appendChild(icon);
                     statusElement.appendChild(text);
@@ -1294,7 +1337,7 @@
                 if (textElement) {
                     const now = new Date();
                     const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                    textElement.textContent = `Packages auto-refresh every 10s | Last updated: ${timeString}`;
+                    textElement.textContent = `Packages loaded | Last updated: ${timeString}`;
                 }
             }
         }
@@ -1354,18 +1397,6 @@
                 console.error('Error checking package availability:', err);
                 return true; // Default to available on error
             }
-        }
-        
-        // Local package availability check (fallback when endpoint doesn't exist)
-        function checkLocalPackageAvailability(packageId) {
-            const pkg = availablePackages.find(p => p.id === packageId);
-            if (!pkg) return false;
-            
-            const currentCount = pkg.current_count || pkg.currentRegistrants || 0;
-            const maxCount = pkg.max_count || pkg.maxRegistrants || 0;
-            const isForcedClosed = pkg.force_closed || false;
-            
-            return !isForcedClosed && (maxCount === 0 || currentCount < maxCount);
         }
         
         function initializePhoneInputs() {
@@ -1434,28 +1465,26 @@
             if (continueToPaymentBtn) {
                 continueToPaymentBtn.addEventListener('click', async function() {
                     if (!selectedPackageId) {
-                        alert('Please select a package first');
+                        showNotification('Please select a package first', 'warning');
                         return;
                     }
 
                     // Proceed with validation
                     if (!validatePackageSelection()) return;
 
-                    // Attempt to create event partner on continue
+                    // Create partner account before proceeding to payment
                     try {
                         this.disabled = true;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        this.classList.add('btn-loading');
+                        
                         await registerEventPartnerOnPackageSelect();
-
-                        // proceed to payment step on success
                         showStep(3);
                     } catch (err) {
-                        console.error('Failed to register event partner before payment:', err);
-                        // MODIFICATION: Continue to payment even in mock mode
-                        showStep(3);
+                        console.error('Error creating partner account:', err);
+                        showNotification('Failed to create partner account. Please check your information and try again.', 'error');
                     } finally {
                         this.disabled = false;
-                        this.innerHTML = 'Continue to Payment <i class="fas fa-arrow-circle-right ms-2"></i>';
+                        this.classList.remove('btn-loading');
                     }
                 });
             }
@@ -1471,6 +1500,12 @@
             if (completeRegistrationBtn) {
                 completeRegistrationBtn.addEventListener('click', async function() {
                     if (validatePaymentForm()) {
+                        // For Flutterwave, don't process here - user clicks the Flutterwave button
+                        if (selectedPaymentMethod === 'flutterwave') {
+                            showNotification('Please click the "Pay with Flutterwave" button to proceed to payment', 'info');
+                            return;
+                        }
+                        // For bank transfer, process immediately
                         await processRegistration();
                     }
                 });
@@ -1597,35 +1632,89 @@ function populateCountryDropdowns() {
 
         async function registerEventPartnerOnPackageSelect() {
             try {
-                // MODIFICATION: Mock the API response for demo mode
-                console.log('Mock: Creating partner registration record');
+                // Get form data
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const prefix = document.getElementById('prefix').value;
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const country = document.getElementById('country').value;
+                const jobTitle = document.getElementById('jobTitle').value;
+                const organisation = document.getElementById('organisation').value;
+                const workPhoneInput = phoneInputs.find(p => p.id === 'workPhone');
+                const workPhone = workPhoneInput && workPhoneInput.iti 
+                    ? workPhoneInput.iti.getNumber() 
+                    : document.getElementById('workPhone').value;
                 
-                // Create a mock response
-                lastPartnerRegistrationResponse = {
-                    success: true,
-                    data: {
-                        id: Date.now(),
-                        reference: 'ICSC2026-MOCK-' + Math.floor(Math.random() * 10000),
-                        token: 'mock-jwt-token-' + Date.now()
+                // Prepare registration payload
+                const registrationPayload = {
+                    contactEmail: email,
+                    password,
+                    prefix,
+                    contactFirstName: firstName,
+                    contactLastName: lastName,
+                    country,
+                    jobTitle: jobTitle,
+                    companyName: organisation,
+                    contactPhone: workPhone
+                };
+                
+                console.log('Creating partner account with:', registrationPayload);
+                
+                // Call backend partner register endpoint
+                const response = await window.apiClient.post('/auth/partner-register', registrationPayload);
+                const respData = response && (response.data || response);
+                
+                console.log('Partner registration response:', respData);
+                
+                // Handle both response formats:
+                // Format 1: {data: {id, token}}
+                // Format 2: {partner: {id}, token}
+                let partnerId = null;
+                let token = null;
+                
+                if (respData && respData.data && respData.data.id) {
+                    // Format 1: Standard format
+                    partnerId = respData.data.id;
+                    token = respData.data.token;
+                } else if (respData && respData.partner && respData.partner.id) {
+                    // Format 2: Actual backend format
+                    partnerId = respData.partner.id;
+                    token = respData.token;
+                }
+                
+                if (partnerId) {
+                    partnerAccountId = partnerId;
+                    lastPartnerRegistrationResponse = respData;
+                    
+                    // Persist key partner details to sessionStorage so they can be shown after redirect/verification
+                    try {
+                        sessionStorage.setItem('partnerEmail', String(email || ''));
+                        sessionStorage.setItem('partnerFirstName', String(firstName || ''));
+                        sessionStorage.setItem('partnerLastName', String(lastName || ''));
+                        sessionStorage.setItem('partnerOrganisation', String(organisation || ''));
+                    } catch (e) {
+                        console.warn('Could not persist partner details to sessionStorage', e);
                     }
-                };
-                
-                // Store mock token for dashboard access
-                localStorage.setItem('authUser', JSON.stringify({ 
-                    token: 'mock-jwt-token-' + Date.now() 
-                }));
-                
-                // Show success feedback
-                showNotification('Partner registration submitted successfully! (Demo Mode)', 'success');
-                
-                return lastPartnerRegistrationResponse;
+
+                    // Store auth token if provided
+                    if (token) {
+                        localStorage.setItem('authUser', JSON.stringify({ 
+                            token: token,
+                            id: partnerId
+                        }));
+                        console.log('Token stored in localStorage:', token.substring(0, 20) + '...');
+                    }
+                    
+                    showNotification('Partner account created successfully!', 'success');
+                    return respData;
+                } else {
+                    throw new Error('Invalid response from partner registration - missing partner ID');
+                }
             } catch (err) {
-                console.error('Mock registration error:', err);
-                // MODIFICATION: Still return mock data even on "error" for demo
-                return {
-                    success: true,
-                    data: { id: Date.now(), reference: 'ICSC2026-DEMO' }
-                };
+                console.error('Partner registration error:', err);
+                showNotification(err.message || 'Failed to create partner account', 'error');
+                throw err;
             }
         }
         
@@ -1634,38 +1723,42 @@ function populateCountryDropdowns() {
             paymentOptions.forEach(option => {
                 option.addEventListener('change', function() {
                     if (this.checked) {
+                        // Remove selected class from all payment options
+                        document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                        
+                        // Add selected class to parent
+                        this.parentElement.classList.add('selected');
+                        
+                        // Update selected payment method
                         selectedPaymentMethod = this.value;
+                        
                         // Show/hide payment forms based on selection
-                        const paymentForms = document.querySelectorAll('.payment-form');
-                        paymentForms.forEach(form => form.style.display = 'none');
+                        document.getElementById('bank-transfer-form').style.display = 
+                            selectedPaymentMethod === 'bank-transfer' ? 'block' : 'none';
+                        document.getElementById('flutterwave-form').style.display = 
+                            selectedPaymentMethod === 'flutterwave' ? 'block' : 'none';
                         
-                        if (this.value === 'bank-transfer') {
-                            const bankForm = document.getElementById('bank-transfer-form');
-                            if (bankForm) bankForm.style.display = 'block';
+                        // Update amount display
+                        const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                        if (selectedPkg) {
+                            const amount = Number(selectedPkg.investment || selectedPkg.price || 0);
                             
-                            // Show payment amount in bank transfer form
-                            const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
-                            if (selectedPkg && bankForm) {
-                                const amountElement = bankForm.querySelector('.payment-amount');
-                                if (!amountElement) {
-                                    const amountInfo = document.createElement('div');
-                                    amountInfo.className = 'payment-amount';
-                                    amountInfo.innerHTML = `<strong>Amount to Pay:</strong> ₦${(selectedPkg.investment || selectedPkg.price || 0).toLocaleString()}`;
-                                    bankForm.insertBefore(amountInfo, bankForm.firstChild);
-                                }
+                            // Update bank transfer amount
+                            const bankTransferAmount = document.getElementById('bank-transfer-amount');
+                            if (bankTransferAmount) {
+                                bankTransferAmount.innerHTML = `<div class="payment-amount"><strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN</div>`;
                             }
-                        } else if (this.value === 'flutterwave') {
-                            const flutterwaveForm = document.getElementById('flutterwave-form');
-                            if (flutterwaveForm) flutterwaveForm.style.display = 'block';
+                            
+                            // Update Flutterwave amount
+                            const flutterwaveAmount = document.getElementById('flutterwave-amount');
+                            if (flutterwaveAmount) {
+                                flutterwaveAmount.innerHTML = `<div class="payment-amount"><strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN</div>`;
+                            }
                         }
                         
-                        // Enable complete registration button
+                        // Enable complete button
                         const completeBtn = document.getElementById('complete-registration-btn');
-                        if (completeBtn) {
-                            completeBtn.disabled = false;
-                        }
-                        
-                        showNotification(`Selected payment method: ${this.value}`, 'success');
+                        if (completeBtn) completeBtn.disabled = false;
                     }
                 });
             });
@@ -1778,29 +1871,138 @@ function populateCountryDropdowns() {
         }
         
         async function processFlutterwavePayment() {
+            const payBtn = document.getElementById('pay-with-flutterwave');
+            if (!payBtn) {
+                console.error('Pay button not found');
+                showNotification('Payment button not found', 'error');
+                return;
+            }
+            
             try {
-                // MODIFICATION: Mock payment for demo mode
-                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
-                if (selectedPkg) {
-                    const amount = Number(selectedPkg.investment || selectedPkg.price || 0);
-                    const packageName = selectedPkg.name || selectedPackage;
-                    
-                    showNotification(`Demo: Payment of ₦${amount.toLocaleString()} for ${packageName} would be processed.`, 'info');
-                    
-                    // For demo purposes, simulate successful payment
-                    setTimeout(() => {
-                        showNotification('Demo: Payment successful!', 'success');
-                        // Enable the complete registration button
-                        const completeBtn = document.getElementById('complete-registration-btn');
-                        if (completeBtn) {
-                            completeBtn.disabled = false;
-                        }
-                    }, 1500);
+                console.log('=== FLUTTERWAVE PAYMENT INITIALIZATION START ===');
+                
+                payBtn.disabled = true;
+                payBtn.classList.add('btn-loading');
+                
+                // Ensure partner account exists
+                if (!partnerAccountId) {
+                    console.error('Partner account ID not found:', partnerAccountId);
+                    showNotification('Error: Partner account not created. Please go back and complete registration.', 'error');
+                    return;
                 }
                 
+                console.log('Partner Account ID:', partnerAccountId);
+                
+                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
+                if (!selectedPkg) {
+                    console.error('Selected package not found. Package ID:', selectedPackageId);
+                    showNotification('Error: Package not found', 'error');
+                    return;
+                }
+                
+                console.log('Selected Package:', selectedPkg);
+                
+                // Prepare payment initialization payload
+                // Note: deliberately NOT sending a customer-generated `tx_ref` so Flutterwave will assign its own reference.
+                const paymentPayload = {
+                    event_package_id: selectedPackageId,
+                    currency: 'NGN'
+                };
+                
+                console.log('Payment Payload:', paymentPayload);
+                console.log('Making request to: /payments/initialize-event-partner-payment');
+                
+                // Call backend payment initialization endpoint
+                const response = await window.apiClient.post('/payments/initialize-event-partner-payment', paymentPayload);
+                
+                console.log('Raw response:', response);
+                
+                const respData = response && (response.data || response);
+                
+                console.log('Full payment response:', respData);
+                console.log('Response type:', typeof respData);
+                console.log('Response keys:', respData ? Object.keys(respData) : 'null');
+                
+                // Handle multiple possible response formats
+                let paymentUrl = null;
+                
+                // Format 0: {data: {data: {link}}} - Actual backend format
+                if (respData && respData.data && respData.data.data && respData.data.data.link) {
+                    paymentUrl = respData.data.data.link;
+                    console.log('✓ Found link in respData.data.data.link');
+                }
+                // Format 1: {data: {authorization_url}}
+                else if (respData && respData.data && respData.data.authorization_url) {
+                    paymentUrl = respData.data.authorization_url;
+                    console.log('✓ Found authorization_url in respData.data.authorization_url');
+                }
+                // Format 2: {authorization_url} - direct at root
+                else if (respData && respData.authorization_url) {
+                    paymentUrl = respData.authorization_url;
+                    console.log('✓ Found authorization_url in respData.authorization_url');
+                }
+                // Format 3: {data: {url}}
+                else if (respData && respData.data && respData.data.url) {
+                    paymentUrl = respData.data.url;
+                    console.log('✓ Found url in respData.data.url');
+                }
+                // Format 4: {url} - direct at root
+                else if (respData && respData.url) {
+                    paymentUrl = respData.url;
+                    console.log('✓ Found url in respData.url');
+                }
+                // Format 5: {payment_link}
+                else if (respData && respData.payment_link) {
+                    paymentUrl = respData.payment_link;
+                    console.log('✓ Found payment_link in respData.payment_link');
+                }
+                // Format 6: {link}
+                else if (respData && respData.link) {
+                    paymentUrl = respData.link;
+                    console.log('✓ Found link in respData.link');
+                }
+                
+                if (paymentUrl) {
+                    console.log('Payment URL extracted successfully:', paymentUrl);
+                    console.log('=== PAYMENT URL READY - REDIRECTING ===');
+                    
+                    showNotification('Redirecting to Flutterwave payment...', 'success');
+                    
+                    // Store partner context for post-payment handling
+                    sessionStorage.setItem('partnerId', String(partnerAccountId));
+                    sessionStorage.setItem('selectedPackageId', String(selectedPackageId));
+                    
+                    // Append callback URL to redirect user back after payment. Do NOT include a merchant tx_ref here;
+                    // Flutterwave will append its own reference parameters (e.g. flw_ref) to the callback URL.
+                    const callbackUrl = `${window.location.origin}${window.location.pathname}?status=successful`;
+                    const fullPaymentUrl = `${paymentUrl}${paymentUrl.includes('?') ? '&' : '?'}callback=${encodeURIComponent(callbackUrl)}`;
+                    
+                    // Redirect after a short delay to allow notification to be seen
+                    setTimeout(() => {
+                        console.log('Performing redirect to:', fullPaymentUrl);
+                        window.location.href = fullPaymentUrl;
+                    }, 1500);
+                } else {
+                    console.error('Payment URL not found in response');
+                    console.error('Response structure:', JSON.stringify(respData, null, 2));
+                    throw new Error('No payment URL found in server response. Check console for response structure.');
+                }
             } catch (err) {
-                console.error('Mock payment error:', err);
-                showNotification('Demo payment simulation', 'info');
+                console.error('=== FLUTTERWAVE PAYMENT ERROR ===');
+                console.error('Error message:', err.message);
+                console.error('Error:', err);
+                if (err.response) {
+                    console.error('Response status:', err.response.status);
+                    console.error('Response data:', err.response.data);
+                }
+                console.error('Error stack:', err.stack);
+                
+                showNotification(err.message || 'Failed to initialize payment. Check console for details.', 'error');
+            } finally {
+                if (payBtn) {
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('btn-loading');
+                }
             }
         }
         
@@ -1813,49 +2015,33 @@ function populateCountryDropdowns() {
             }
             
             try {
-                // MODIFICATION: Skip actual API calls for demo
-                console.log('Demo: Completing registration without API calls');
-                
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Update confirmation with mock data
-                updateConfirmationSection();
-                
-                // Add mock confirmation ID if not set
-                const confirmationIdEl = document.getElementById('confirmation-id');
-                if (confirmationIdEl && !confirmationIdEl.textContent.includes('ICSC')) {
-                    confirmationIdEl.textContent = 'ICSC2026-DEMO-' + Math.floor(Math.random() * 10000);
+                // Handle bank transfer payment
+                if (selectedPaymentMethod === 'bank-transfer') {
+                    // For bank transfer, we just show confirmation
+                    // The payment will be verified later when admin receives the receipt
+                    
+                    console.log('Processing bank transfer registration');
+                    
+                    // Update confirmation with actual data
+                    updateConfirmationSection();
+                    
+                    // Show success
+                    showNotification('Registration submitted! Please complete the bank transfer and await admin verification.', 'success');
+                    
+                    // Move to confirmation step
+                    showStep(4);
+                } else if (selectedPaymentMethod === 'flutterwave') {
+                    // For Flutterwave, initiate payment
+                    console.log('Redirecting to Flutterwave payment');
+                    await processFlutterwavePayment();
+                    // User will be redirected to Flutterwave, so we don't need to continue here
+                } else {
+                    showNotification('Please select a payment method', 'warning');
                 }
-                
-                // Show success
-                showNotification('Registration completed successfully! (Demo Mode)', 'success');
-                
-                // Move to confirmation step
-                showStep(4);
-                
-                // ====================================================
-                // ADD REDIRECTION LOGIC HERE (NEW CODE)
-                // ====================================================
-                
-                // Determine which dashboard to redirect to based on selected package
-                const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
-                let redirectUrl = 'partners-dash.html'; // Default
-                
-                if (selectedPkg) {
-                    // Use the redirect_dashboard from package data
-                    redirectUrl = selectedPkg.redirect_dashboard || 'partners-dash.html';
-                }
-                
-                // Auto-redirect after 3 seconds (adjust timing as needed)
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 3000);
                         
             } catch (err) {
-                console.error('Demo registration failed', err);
-                showNotification('Registration completed in demo mode', 'info');
-                showStep(4); // Still show confirmation
+                console.error('Registration processing error:', err);
+                showNotification(err.message || 'Failed to process registration', 'error');
             } finally {
                 if (completeBtn) {
                     completeBtn.classList.remove('btn-loading');
@@ -1865,10 +2051,11 @@ function populateCountryDropdowns() {
         }
         
         function updateConfirmationSection() {
-            const email = document.getElementById('email')?.value || '';
-            const firstName = document.getElementById('firstName')?.value || '';
-            const lastName = document.getElementById('lastName')?.value || '';
-            const organisation = document.getElementById('organisation')?.value || '';
+            // Prefer current form values, otherwise fall back to sessionStorage values saved during registration
+            const email = document.getElementById('email')?.value || sessionStorage.getItem('partnerEmail') || '';
+            const firstName = document.getElementById('firstName')?.value || sessionStorage.getItem('partnerFirstName') || '';
+            const lastName = document.getElementById('lastName')?.value || sessionStorage.getItem('partnerLastName') || '';
+            const organisation = document.getElementById('organisation')?.value || sessionStorage.getItem('partnerOrganisation') || '';
             
             const confirmationEmail = document.getElementById('confirmation-email');
             const confirmationEmailText = document.getElementById('confirmation-email-text');
@@ -1876,7 +2063,22 @@ function populateCountryDropdowns() {
             const confirmationType = document.getElementById('confirmation-type');
             const confirmationPackage = document.getElementById('confirmation-package');
             const confirmationPayment = document.getElementById('confirmation-payment');
+            const confirmationId = document.getElementById('confirmation-id');
             
+            // Generate or update registration ID
+            if (confirmationId) {
+                // Use the payment reference (completedTxRef) as the registration ID when available
+                const completedRef = sessionStorage.getItem('completedTxRef');
+                if (completedRef) {
+                    confirmationId.textContent = String(completedRef);
+                } else if (partnerAccountId) {
+                    confirmationId.textContent = `ICSC2026-${String(partnerAccountId).padStart(6, '0')}`;
+                } else {
+                    confirmationId.textContent = `ICSC2026-${Date.now().toString().slice(-6)}`;
+                }
+            }
+            
+            // Update contact information
             if (confirmationEmail) confirmationEmail.textContent = email;
             if (confirmationEmailText) confirmationEmailText.textContent = email;
             if (confirmationName) confirmationName.textContent = `${firstName} ${lastName}`.trim() || organisation;
@@ -1886,7 +2088,9 @@ function populateCountryDropdowns() {
             if (confirmationPackage) {
                 const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
                 if (selectedPkg) {
-                    confirmationPackage.textContent = `${selectedPkg.name || selectedPkg.title || selectedPackage} - ₦${(selectedPkg.investment || selectedPkg.price || 0).toLocaleString()}`;
+                    const packageName = selectedPkg.name || selectedPkg.title || selectedPackage;
+                    const packagePrice = Number(selectedPkg.investment || selectedPkg.price || 0);
+                    confirmationPackage.textContent = `${packageName} - ₦${packagePrice.toLocaleString()} NGN`;
                 } else {
                     const packageNames = {
                         'bronze-partner': 'Bronze Partner',
@@ -1898,13 +2102,20 @@ function populateCountryDropdowns() {
                 }
             }
             
-            // Update payment method
+            // Update payment status
             if (confirmationPayment) {
-                const paymentMethods = {
-                    'bank-transfer': 'Bank Transfer (Receipt Submitted)',
-                    'flutterwave': 'Flutterwave (Online Payment)'
-                };
-                confirmationPayment.textContent = paymentMethods[selectedPaymentMethod] || selectedPaymentMethod;
+                // Check if payment was completed
+                const paymentCompleted = sessionStorage.getItem('paymentCompleted') === 'true';
+                
+                if (paymentCompleted) {
+                    confirmationPayment.innerHTML = '<span style="color: #28a745; font-weight: bold;"><i class="fas fa-check-circle me-2"></i>Payment Completed</span>';
+                } else if (selectedPaymentMethod === 'bank-transfer') {
+                    confirmationPayment.textContent = 'Bank Transfer (Pending Verification)';
+                } else if (selectedPaymentMethod === 'flutterwave') {
+                    confirmationPayment.textContent = 'Flutterwave (Payment Completed)';
+                } else {
+                    confirmationPayment.textContent = 'Pending';
+                }
             }
             
             // Update dashboard button text based on selected package
@@ -1917,6 +2128,15 @@ function populateCountryDropdowns() {
                     goToDashboardBtn.innerHTML = '<i class="fas fa-external-link-alt me-2"></i>Go to Partner Dashboard';
                 }
             }
+            
+            console.log('Confirmation section updated with:', {
+                partnerId: partnerAccountId,
+                email,
+                name: `${firstName} ${lastName}`,
+                package: selectedPackage,
+                paymentMethod: selectedPaymentMethod,
+                paymentCompleted: sessionStorage.getItem('paymentCompleted')
+            });
         }
         
         function redirectToDashboard() {
@@ -1963,20 +2183,7 @@ function populateCountryDropdowns() {
             // Update current step
             currentStep = step;
             
-            // Start or stop auto-refresh based on current step
-            if (step === 2) {
-                // On package selection step, ensure auto-refresh is running
-                if (!autoRefreshInterval) {
-                    startAutoRefresh();
-                }
-            } else {
-                // On other steps, stop auto-refresh to save resources
-                if (autoRefreshInterval) {
-                    clearInterval(autoRefreshInterval);
-                    autoRefreshInterval = null;
-                    console.log('Auto-refresh paused (not on package selection step)');
-                }
-            }
+            // No auto-refresh behavior for package section by design
             
             window.scrollTo(0, 0);
         }

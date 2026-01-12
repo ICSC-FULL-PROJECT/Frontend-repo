@@ -34,7 +34,8 @@ const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 const addMinistryBtn = document.getElementById('addMinistryBtn');
 
 // API Configuration
-const API_BASE_URL = 'https://icsc-backend-api-code.onrender.com/api/v1';
+const API_BASE_URL = 'http://localhost:9100/api/v1';
+// const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
 const CREATE_MINISTRY_URL = `${API_BASE_URL}/admin/create-user`;
 
 // Tab Navigation
@@ -6532,3 +6533,918 @@ function showNotification(message, type = 'success') {
 
 // Initialize the page to show content
 document.body.style.display = 'block';
+
+// Booth Management Functionality
+(function () {
+    const boothsBody = document.getElementById('exhibitorsTableBody');
+    const totalEl = document.getElementById('totalBooths');
+    const availableEl = document.getElementById('availableBooths');
+    const soldOutEl = document.getElementById('soldOutBooths');
+    const refreshBtn = document.getElementById('refreshBoothsBtn');
+
+    function safeText(v) {
+        return (v === null || v === undefined || v === '') ? '-' : String(v);
+    }
+
+    function formatPrice(v) {
+        if (v === null || v === undefined || v === '') return '-';
+        const n = Number(String(v).replace(/[^0-9.-]+/g, ''));
+        if (Number.isFinite(n)) return n.toLocaleString();
+        return String(v);
+    }
+
+    function statusClassFrom(status) {
+        if (!status) return 'status-pending';
+        const s = String(status).toLowerCase();
+        if (s === 'available' || s === 'approved' || s === 'active') return 'status-approved';
+        if (s === 'sold' || s === 'sold out' || s === 'reserved') return 'status-pending';
+        return 'status-rejected';
+    }
+
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (err) { /* ignore */ }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    function renderBooths(list) {
+        if (!boothsBody) return;
+        boothsBody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            boothsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booths found.</td></tr>';
+            return;
+        }
+        list.forEach(booth => {
+            const tr = document.createElement('tr');
+            if (booth.id !== undefined) tr.setAttribute('data-id', booth.id);
+            const boothId = safeText(booth.booth_id || booth.id || '-');
+            const location = safeText(booth.location || '-');
+            const price = formatPrice(booth.price || booth.cost || '-');
+            const status = safeText(booth.status || '-');
+            const exhibitor = safeText(booth.exhibitor || booth.exhibitor_name || '-');
+            const company = safeText(booth.company || booth.company_name || '-');
+
+            const statusClass = statusClassFrom(status);
+
+            tr.innerHTML = `
+                <td>${boothId}</td>
+                <td>${location}</td>
+                <td>${price}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td>${exhibitor}</td>
+                <td>${company}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-success btn-sm view-booth-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-booth-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-booth-btn">Delete</button>
+                    </div>
+                </td>
+            `;
+            boothsBody.appendChild(tr);
+        });
+    }
+
+    function updateStats(list) {
+        const arr = Array.isArray(list) ? list : [];
+        if (totalEl) totalEl.textContent = arr.length;
+        if (availableEl) availableEl.textContent = arr.filter(b => (b.status || '').toString().toLowerCase() === 'available').length;
+        if (soldOutEl) soldOutEl.textContent = arr.filter(b => (b.status || '').toString().toLowerCase() === 'sold' || (b.status || '').toString().toLowerCase() === 'sold out').length;
+    }
+
+    async function fetchBooths() {
+        try {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.get(`${API_BASE_URL}/admin/get-booths`, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            renderBooths(list);
+            updateStats(list);
+        } catch (err) {
+            console.error('Error fetching booths:', err);
+            if (boothsBody) boothsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#c00;">Failed to load booths.</td></tr>';
+        }
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetchBooths();
+        });
+    }
+
+    // Fetch once DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchBooths);
+    } else {
+        fetchBooths();
+    }
+})();
+
+// Download attendees template button handler
+(function() {
+    const downloadTemplateBtn = document.getElementById('downloadTemplateBtn');
+    if (!downloadTemplateBtn) return;
+
+    function getAuthToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (e) { /* ignore */ }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    downloadTemplateBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        try {
+            const token = getAuthToken();
+            const headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            const res = await axios.get(`${API_BASE_URL}/admin/attendees/template`, {
+                headers,
+                responseType: 'blob'
+            });
+
+            // Try to infer filename from Content-Disposition
+            const disposition = res.headers && (res.headers['content-disposition'] || res.headers['Content-Disposition']) || '';
+            let filename = 'attendees_template.csv';
+            const match = /filename\*?=([^;]+)/i.exec(disposition);
+            if (match) {
+                filename = match[1].replace(/UTF-8''/, '').replace(/"/g, '').trim();
+            }
+
+            const blob = new Blob([res.data]);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            if (typeof showNotification === 'function') showNotification('Template download started', 'success');
+        } catch (err) {
+            console.error('Error downloading template:', err);
+            if (typeof showNotification === 'function') showNotification(err.response?.data?.message || 'Failed to download template', 'error');
+        }
+    });
+})();
+
+// ==================== AGENDA MANAGEMENT ====================
+(function() {
+    let agendaList = [];
+    const agendaTimeline = document.querySelector('.agenda-timeline');
+    const agendaTableBody = document.getElementById('agendaTableBody');
+    const refreshAgendaBtn = document.getElementById('refreshAgendaBtn');
+    const addAgendaBtn = document.getElementById('addAgendaBtn');
+    const searchAgenda = document.getElementById('searchAgenda');
+    const filterAgendaTrack = document.getElementById('filterAgendaTrack');
+    const filterAgendaVenue = document.getElementById('filterAgendaVenue');
+    const clearAgendaFiltersBtn = document.getElementById('clearAgendaFiltersBtn');
+    const toggleAgendaViewBtn = document.getElementById('toggleAgendaViewBtn');
+    const agendaTableView = document.getElementById('agendaTableView');
+    const dayBtns = document.querySelectorAll('.day-btn');
+
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (err) { /* ignore */ }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    // Helpers to convert date/time formats to backend expectations
+    function formatDayToISO(dayValue) {
+        if (!dayValue) return '';
+        // Try to parse ISO-like strings first
+        try {
+            // If already YYYY-MM-DD
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dayValue)) return dayValue;
+            // Try Date parsing
+            const d = new Date(dayValue);
+            if (!isNaN(d.getTime())) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            }
+        } catch (e) { /* ignore */ }
+        // Known mapping fallback for the two event days
+        const map = {
+            'Wednesday, June 25, 2026': '2026-06-25',
+            'Thursday, June 26, 2026': '2026-06-26'
+        };
+        return map[dayValue] || '';
+    }
+
+    function time24ToAmPm(t) {
+        if (!t) return '';
+        // t expected like "HH:MM" or already like "hh:mmAM/PM"
+        if (/[AP]M$/i.test(t)) return t.toUpperCase();
+        const parts = String(t).split(':');
+        if (parts.length < 2) return t;
+        let hh = parseInt(parts[0], 10);
+        const mm = parts[1].slice(0,2);
+        const ampm = hh >= 12 ? 'PM' : 'AM';
+        hh = hh % 12;
+        if (hh === 0) hh = 12;
+        return `${String(hh).padStart(2,'0')}:${mm}${ampm}`;
+    }
+
+    function ampmTo24(t) {
+        if (!t) return '';
+        // Accept formats like "08:00AM", "8:00 AM", "08:00AM"
+        const m = String(t).trim().match(/^(\d{1,2}):(\d{2})\s*([AP]M)?$/i);
+        if (!m) return t;
+        let hh = parseInt(m[1], 10);
+        const mm = m[2];
+        const suffix = (m[3] || '').toUpperCase();
+        if (suffix === 'AM') {
+            if (hh === 12) hh = 0;
+        } else if (suffix === 'PM') {
+            if (hh !== 12) hh += 12;
+        }
+        return `${String(hh).padStart(2,'0')}:${mm}`;
+    }
+
+    // Fetch all agenda items
+    async function fetchAgendaItems() {
+        try {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            const res = await axios.get(`${API_BASE_URL}/admin/agenda/event-agendas`, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            
+            agendaList = list.map(item => {
+                const rawDate = item.event_date || item.day || item.date || '';
+                const iso = formatDayToISO(rawDate);
+                const displayDay = iso ? new Date(iso).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : rawDate;
+
+                const rawStart = item.start_time || item.startTime || '';
+                const rawEnd = item.end_time || item.endTime || '';
+                const displayStart = /[AP]M$/i.test(rawStart) ? rawStart : time24ToAmPm(rawStart);
+                const displayEnd = /[AP]M$/i.test(rawEnd) ? rawEnd : time24ToAmPm(rawEnd);
+                const inputStart = /[AP]M$/i.test(rawStart) ? ampmTo24(rawStart) : rawStart;
+                const inputEnd = /[AP]M$/i.test(rawEnd) ? ampmTo24(rawEnd) : rawEnd;
+
+                return {
+                    id: item.id || item._id || item.agendaId,
+                    title: item.title || item.session_title || '',
+                    description: item.description || '',
+                    track: item.track || item.category || '',
+                    venue: item.location || item.venue || '',
+                    speakers: item.speakers || item.speaker || '',
+                    day: displayDay,
+                    event_date: iso || rawDate,
+                    startTime: displayStart,
+                    endTime: displayEnd,
+                    startInput: inputStart,
+                    endInput: inputEnd,
+                    status: item.status || 'Pending'
+                };
+            });
+
+            renderAgendaTimeline(agendaList);
+            updateAgendaStats(agendaList);
+            console.log(`Fetched ${agendaList.length} agenda items`);
+        } catch (err) {
+            console.error('Error fetching agenda items:', err);
+            showNotification('Failed to load agenda items', 'error');
+        }
+    }
+
+    // Render agenda timeline view
+    function renderAgendaTimeline(items) {
+        if (!agendaTimeline) return;
+
+        const wednesdayDiv = document.getElementById('day-wednesday');
+        const thursdayDiv = document.getElementById('day-thursday');
+        
+        if (wednesdayDiv) {
+            const header = wednesdayDiv.querySelector('.day-header');
+            const sessions = wednesdayDiv.querySelectorAll('.timeline-session');
+            sessions.forEach(s => s.remove());
+            
+            const wednesdayItems = items.filter(item => 
+                item.day?.toLowerCase().includes('wednesday') || 
+                item.day?.toLowerCase().includes('25')
+            );
+
+            wednesdayItems.forEach(item => {
+                const sessionDiv = createSessionElement(item);
+                wednesdayDiv.appendChild(sessionDiv);
+            });
+        }
+
+        if (thursdayDiv) {
+            const header = thursdayDiv.querySelector('.day-header');
+            const sessions = thursdayDiv.querySelectorAll('.timeline-session');
+            sessions.forEach(s => s.remove());
+            
+            const thursdayItems = items.filter(item => 
+                item.day?.toLowerCase().includes('thursday') || 
+                item.day?.toLowerCase().includes('26')
+            );
+
+            thursdayItems.forEach(item => {
+                const sessionDiv = createSessionElement(item);
+                thursdayDiv.appendChild(sessionDiv);
+            });
+        }
+    }
+
+    // Create session element
+    function createSessionElement(item) {
+        const div = document.createElement('div');
+        div.className = 'timeline-session';
+        div.setAttribute('data-id', item.id);
+
+        const timeStr = item.startTime && item.endTime ? `${item.startTime} - ${item.endTime}` : 'TBA';
+        
+        div.innerHTML = `
+            <div class="session-time">
+                <span class="time">${timeStr}</span>
+            </div>
+            <div class="session-details">
+                <h4 class="session-title">${item.title || 'Untitled Session'}</h4>
+                <p class="session-track">${item.track || 'N/A'}</p>
+                <p class="session-venue">${item.venue || 'N/A'}</p>
+                <p class="session-speakers">${item.speakers || 'N/A'}</p>
+                ${item.description ? `<p class="session-description">${item.description}</p>` : ''}
+            </div>
+            <div class="session-actions">
+                <button class="btn btn-info btn-sm view-agenda-btn">View</button>
+                <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
+                <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
+            </div>
+        `;
+
+        // Attach event listeners
+        div.querySelector('.view-agenda-btn').addEventListener('click', () => viewAgendaItem(item));
+        div.querySelector('.edit-agenda-btn').addEventListener('click', () => editAgendaItem(item));
+        div.querySelector('.delete-agenda-btn').addEventListener('click', () => deleteAgendaItem(item.id));
+
+        return div;
+    }
+
+    // Render agenda table view
+    function renderAgendaTable(items) {
+        if (!agendaTableBody) return;
+
+        agendaTableBody.innerHTML = '';
+        
+        if (!Array.isArray(items) || items.length === 0) {
+            agendaTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No agenda items found.</td></tr>';
+            return;
+        }
+
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            const timeStr = item.startTime && item.endTime ? `${item.startTime} - ${item.endTime}` : 'TBA';
+            
+            tr.innerHTML = `
+                <td>${item.title || 'N/A'}</td>
+                <td>${item.day || 'N/A'}</td>
+                <td>${timeStr}</td>
+                <td>${item.track || 'N/A'}</td>
+                <td>${item.venue || 'N/A'}</td>
+                <td>${item.speakers || 'N/A'}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-info btn-sm view-table-agenda-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-table-agenda-btn">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-table-agenda-btn">Delete</button>
+                    </div>
+                </td>
+            `;
+
+            tr.querySelector('.view-table-agenda-btn').addEventListener('click', () => viewAgendaItem(item));
+            tr.querySelector('.edit-table-agenda-btn').addEventListener('click', () => editAgendaItem(item));
+            tr.querySelector('.delete-table-agenda-btn').addEventListener('click', () => deleteAgendaItem(item.id));
+
+            agendaTableBody.appendChild(tr);
+        });
+    }
+
+    // View agenda item
+    function viewAgendaItem(item) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2>View Agenda Item</h2>
+                    <button type="button" class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <p>${item.title || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Day</label>
+                            <p>${item.day || 'N/A'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Track</label>
+                            <p>${item.track || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <p>${item.startTime || 'N/A'}</p>
+                        </div>
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <p>${item.endTime || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Venue</label>
+                            <p>${item.venue || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Speakers</label>
+                            <p>${item.speakers || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <p>${item.description || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Close</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        modal.style.display = 'flex';
+
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+    }
+
+    // Edit agenda item
+    function editAgendaItem(item) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 700px;">
+                <div class="modal-header">
+                    <h2>Edit Agenda Item</h2>
+                    <button type="button" class="close-modal">&times;</button>
+                </div>
+                <form id="editAgendaForm">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaTitle">Title</label>
+                                <input type="text" id="editAgendaTitle" class="form-control" value="${item.title || ''}" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaDay">Day</label>
+                                <select id="editAgendaDay" class="form-control" required>
+                                    <option value="">Select Day</option>
+                                    <option value="Wednesday, June 25, 2026" ${item.event_date?.includes('2026-06-25') || item.day?.includes('Wednesday') ? 'selected' : ''}>Wednesday, June 25, 2026</option>
+                                    <option value="Thursday, June 26, 2026" ${item.event_date?.includes('2026-06-26') || item.day?.includes('Thursday') ? 'selected' : ''}>Thursday, June 26, 2026</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editAgendaTrack">Track</label>
+                                <select id="editAgendaTrack" class="form-control" required>
+                                    <option value="">Select Track</option>
+                                    <option value="Keynote" ${item.track === 'Keynote' ? 'selected' : ''}>Keynote</option>
+                                    <option value="Panel Discussion" ${item.track === 'Panel Discussion' ? 'selected' : ''}>Panel Discussion</option>
+                                    <option value="Workshop" ${item.track === 'Workshop' ? 'selected' : ''}>Workshop</option>
+                                    <option value="Networking" ${item.track === 'Networking' ? 'selected' : ''}>Networking</option>
+                                    <option value="Breakout Session" ${item.track === 'Breakout Session' ? 'selected' : ''}>Breakout Session</option>
+                                    <option value="Registration" ${item.track === 'Registration' ? 'selected' : ''}>Registration</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaStartTime">Start Time</label>
+                                <input type="time" id="editAgendaStartTime" class="form-control" value="${item.startInput || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editAgendaEndTime">End Time</label>
+                                <input type="time" id="editAgendaEndTime" class="form-control" value="${item.endInput || ''}" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaVenue">Venue</label>
+                                <select id="editAgendaVenue" class="form-control" required>
+                                    <option value="">Select Venue</option>
+                                    <option value="Main Hall" ${item.venue === 'Main Hall' ? 'selected' : ''}>Main Hall</option>
+                                    <option value="Conference Room A" ${item.venue === 'Conference Room A' ? 'selected' : ''}>Conference Room A</option>
+                                    <option value="Conference Room B" ${item.venue === 'Conference Room B' ? 'selected' : ''}>Conference Room B</option>
+                                    <option value="Exhibition Hall" ${item.venue === 'Exhibition Hall' ? 'selected' : ''}>Exhibition Hall</option>
+                                    <option value="Networking Zone" ${item.venue === 'Networking Zone' ? 'selected' : ''}>Networking Zone</option>
+                                    <option value="Main Lobby" ${item.venue === 'Main Lobby' ? 'selected' : ''}>Main Lobby</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaSpeakers">Speakers</label>
+                                <input type="text" id="editAgendaSpeakers" class="form-control" value="${item.speakers || ''}" placeholder="Comma-separated speaker names">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editAgendaDescription">Description</label>
+                                <textarea id="editAgendaDescription" class="form-control" rows="4">${item.description || ''}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                        <button type="submit" class="btn">Update Agenda</button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        modal.style.display = 'flex';
+
+        const form = modal.querySelector('#editAgendaForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const rawDay = document.getElementById('editAgendaDay').value;
+            const rawStart = document.getElementById('editAgendaStartTime').value;
+            const rawEnd = document.getElementById('editAgendaEndTime').value;
+            const payload = {
+                title: document.getElementById('editAgendaTitle').value,
+                event_date: formatDayToISO(rawDay),
+                track: document.getElementById('editAgendaTrack').value,
+                start_time: time24ToAmPm(rawStart),
+                end_time: time24ToAmPm(rawEnd),
+                location: document.getElementById('editAgendaVenue').value,
+                speakers: document.getElementById('editAgendaSpeakers').value,
+                description: document.getElementById('editAgendaDescription').value
+            };
+
+            try {
+                const token = getToken();
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+
+                const res = await axios.put(`${API_BASE_URL}/admin/agendas/${item.id}`, payload, { headers });
+                
+                if (res.status === 200 || res.status === 201) {
+                    showNotification('Agenda item updated successfully', 'success');
+                    modal.remove();
+                    fetchAgendaItems();
+                } else {
+                    showNotification('Failed to update agenda item', 'error');
+                }
+            } catch (err) {
+                console.error('Error updating agenda:', err);
+                showNotification(err.response?.data?.message || 'Error updating agenda item', 'error');
+            }
+        });
+
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+    }
+
+    // Delete agenda item
+    async function deleteAgendaItem(agendaId) {
+        if (!confirm('Are you sure you want to delete this agenda item?')) return;
+
+        try {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            const res = await axios.delete(`${API_BASE_URL}/admin/agendas/${agendaId}`, { headers });
+            
+            if (res.status === 200 || res.status === 204) {
+                showNotification('Agenda item deleted successfully', 'success');
+                fetchAgendaItems();
+            } else {
+                showNotification('Failed to delete agenda item', 'error');
+            }
+        } catch (err) {
+            console.error('Error deleting agenda:', err);
+            showNotification(err.response?.data?.message || 'Error deleting agenda item', 'error');
+        }
+    }
+
+    // Update agenda statistics
+    function updateAgendaStats(items) {
+        const totalEl = document.getElementById('totalAgendaItems');
+        const day1El = document.getElementById('day1Sessions');
+        const day2El = document.getElementById('day2Sessions');
+
+        const total = items.length;
+        const day1 = items.filter(i => i.day?.toLowerCase().includes('wednesday') || i.day?.toLowerCase().includes('25')).length;
+        const day2 = items.filter(i => i.day?.toLowerCase().includes('thursday') || i.day?.toLowerCase().includes('26')).length;
+
+        if (totalEl) totalEl.textContent = total;
+        if (day1El) day1El.textContent = day1;
+        if (day2El) day2El.textContent = day2;
+    }
+
+    // Search and filter agenda
+    function filterAndRenderAgenda() {
+        let filtered = [...agendaList];
+
+        if (searchAgenda && searchAgenda.value) {
+            const query = searchAgenda.value.toLowerCase();
+            filtered = filtered.filter(item => 
+                item.title?.toLowerCase().includes(query) ||
+                item.speakers?.toLowerCase().includes(query) ||
+                item.track?.toLowerCase().includes(query)
+            );
+        }
+
+        if (filterAgendaTrack && filterAgendaTrack.value) {
+            filtered = filtered.filter(item => item.track === filterAgendaTrack.value);
+        }
+
+        if (filterAgendaVenue && filterAgendaVenue.value) {
+            filtered = filtered.filter(item => item.venue === filterAgendaVenue.value);
+        }
+
+        renderAgendaTimeline(filtered);
+        renderAgendaTable(filtered);
+    }
+
+    // Event listeners
+    if (addAgendaBtn) {
+        addAgendaBtn.addEventListener('click', () => {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2>Add New Agenda Item</h2>
+                        <button type="button" class="close-modal">&times;</button>
+                    </div>
+                    <form id="newAgendaForm">
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaTitle">Title <span style="color:red;">*</span></label>
+                                    <input type="text" id="newAgendaTitle" name="title" class="form-control" placeholder="Session title" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaDay">Day <span style="color:red;">*</span></label>
+                                    <input type="date" id="newAgendaDay" name="event_day" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newAgendaTrack">Track <span style="color:red;">*</span></label>
+                                    <select id="newAgendaTrack" name="track" class="form-control" required>
+                                        <option value="">Select Track</option>
+                                        <option value="Keynote">Keynote</option>
+                                        <option value="Panel Discussion">Panel Discussion</option>
+                                        <option value="Workshop">Workshop</option>
+                                        <option value="Networking">Networking</option>
+                                        <option value="Breakout Session">Breakout Session</option>
+                                        <option value="Registration">Registration</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaStartTime">Start Time <span style="color:red;">*</span></label>
+                                    <input type="time" id="newAgendaStartTime" name="start_time" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newAgendaEndTime">End Time <span style="color:red;">*</span></label>
+                                    <input type="time" id="newAgendaEndTime" name="end_time" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaVenue">Venue <span style="color:red;">*</span></label>
+                                    <select id="newAgendaVenue" name="location" class="form-control" required>
+                                        <option value="">Select Venue</option>
+                                        <option value="Main Hall">Main Hall</option>
+                                        <option value="Conference Room A">Conference Room A</option>
+                                        <option value="Conference Room B">Conference Room B</option>
+                                        <option value="Exhibition Hall">Exhibition Hall</option>
+                                        <option value="Networking Zone">Networking Zone</option>
+                                        <option value="Main Lobby">Main Lobby</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaSpeakers">Speakers</label>
+                                    <input type="text" id="newAgendaSpeakers" name="speakers" class="form-control" placeholder="Comma-separated speaker names">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newAgendaDescription">Description</label>
+                                    <textarea id="newAgendaDescription" name="description" class="form-control" rows="4" placeholder="Session description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                            <button type="submit" class="btn">Create Agenda Item</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+
+            const form = modal.querySelector('#newAgendaForm');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const newRawDay = document.getElementById('newAgendaDay').value;
+                const newRawStart = document.getElementById('newAgendaStartTime').value;
+                const newRawEnd = document.getElementById('newAgendaEndTime').value;
+                const payload = {
+                    title: document.getElementById('newAgendaTitle').value,
+                    event_date: formatDayToISO(newRawDay),
+                    track: document.getElementById('newAgendaTrack').value,
+                    start_time: time24ToAmPm(newRawStart),
+                    end_time: time24ToAmPm(newRawEnd),
+                    location: document.getElementById('newAgendaVenue').value,
+                    speakers: document.getElementById('newAgendaSpeakers').value,
+                    description: document.getElementById('newAgendaDescription').value
+                };
+
+                try {
+                    const token = getToken();
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (token) headers['Authorization'] = 'Bearer ' + token;
+
+                    const res = await axios.post(`${API_BASE_URL}/admin/agenda/create-event-agenda`, payload, { headers });
+                    
+                    if (res.status === 200 || res.status === 201) {
+                        showNotification('Agenda item created successfully', 'success');
+                        modal.remove();
+                        fetchAgendaItems();
+                    } else {
+                        showNotification('Failed to create agenda item', 'error');
+                    }
+                } catch (err) {
+                    console.error('Error creating agenda:', err);
+                    showNotification(err.response?.data?.message || 'Error creating agenda item', 'error');
+                }
+            });
+
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                modal.remove();
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        });
+    }
+
+    if (refreshAgendaBtn) {
+        refreshAgendaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchAgendaItems();
+        });
+    }
+
+    if (searchAgenda) {
+        searchAgenda.addEventListener('input', filterAndRenderAgenda);
+    }
+
+    if (filterAgendaTrack) {
+        filterAgendaTrack.addEventListener('change', filterAndRenderAgenda);
+    }
+
+    if (filterAgendaVenue) {
+        filterAgendaVenue.addEventListener('change', filterAndRenderAgenda);
+    }
+
+    if (clearAgendaFiltersBtn) {
+        clearAgendaFiltersBtn.addEventListener('click', () => {
+            if (searchAgenda) searchAgenda.value = '';
+            if (filterAgendaTrack) filterAgendaTrack.value = '';
+            if (filterAgendaVenue) filterAgendaVenue.value = '';
+            renderAgendaTimeline(agendaList);
+            renderAgendaTable(agendaList);
+        });
+    }
+
+    if (toggleAgendaViewBtn) {
+        toggleAgendaViewBtn.addEventListener('click', () => {
+            const timelineVisible = agendaTimeline?.style.display !== 'none';
+            
+            if (timelineVisible) {
+                if (agendaTimeline) agendaTimeline.style.display = 'none';
+                if (agendaTableView) agendaTableView.style.display = 'block';
+                toggleAgendaViewBtn.innerHTML = '<i class="fas fa-map"></i> Switch to Timeline View';
+                renderAgendaTable(agendaList);
+            } else {
+                if (agendaTimeline) agendaTimeline.style.display = 'block';
+                if (agendaTableView) agendaTableView.style.display = 'none';
+                toggleAgendaViewBtn.innerHTML = '<i class="fas fa-list"></i> Switch to Table View';
+                renderAgendaTimeline(agendaList);
+            }
+        });
+    }
+
+    // Day filter toggle
+    dayBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            dayBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const day = btn.getAttribute('data-day');
+            const wednesdayDiv = document.getElementById('day-wednesday');
+            const thursdayDiv = document.getElementById('day-thursday');
+
+            if (day === 'all') {
+                if (wednesdayDiv) wednesdayDiv.style.display = 'block';
+                if (thursdayDiv) thursdayDiv.style.display = 'block';
+            } else if (day === 'wednesday') {
+                if (wednesdayDiv) wednesdayDiv.style.display = 'block';
+                if (thursdayDiv) thursdayDiv.style.display = 'none';
+            } else if (day === 'thursday') {
+                if (wednesdayDiv) wednesdayDiv.style.display = 'none';
+                if (thursdayDiv) thursdayDiv.style.display = 'block';
+            }
+        });
+    });
+
+    // Helper function to show notifications
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+            color: white;
+            border-radius: 4px;
+            z-index: 10000;
+            font-weight: 500;
+            max-width: 400px;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchAgendaItems);
+    } else {
+        fetchAgendaItems();
+    }
+})();
