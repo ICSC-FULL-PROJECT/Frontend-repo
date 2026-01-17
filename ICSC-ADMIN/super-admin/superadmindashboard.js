@@ -6,6 +6,7 @@ const addAttendeeForm = document.getElementById('addAttendeeForm');
 const editAttendeeForm = document.getElementById('editAttendeeForm');
 const addMinistryForm = document.getElementById('addMinistryForm');
 const editMinistryForm = document.getElementById('editMinistryForm');
+const addSpeakerForm = document.getElementById('addSpeakerForm');
 const successModal = document.getElementById('successModal');
 const editAttendeeModal = document.getElementById('editAttendeeModal');
 const deleteModal = document.getElementById('deleteModal');
@@ -36,6 +37,7 @@ const addMinistryBtn = document.getElementById('addMinistryBtn');
 // API Configuration
 const API_BASE_URL = 'http://localhost:9100/api/v1';
 // const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
+window.API_BASE_URL = API_BASE_URL;
 const CREATE_MINISTRY_URL = `${API_BASE_URL}/admin/create-user`;
 
 // Tab Navigation
@@ -78,6 +80,11 @@ function initializeTabs() {
             
             // Update page title
             pageTitle.textContent = getTabTitle(tabId);
+            
+            // Load tab-specific data
+            if (tabId === 'exhibitors' && typeof window.fetchExhibitors === 'function') {
+                window.fetchExhibitors();
+            }
         });
     });
 
@@ -94,6 +101,11 @@ function initializeTabs() {
                 document.getElementById(tabId).classList.add('active');
                 
                 pageTitle.textContent = getTabTitle(tabId);
+                
+                // Load tab-specific data
+                if (tabId === 'exhibitors' && typeof window.fetchExhibitors === 'function') {
+                    window.fetchExhibitors();
+                }
             }
         });
     });
@@ -211,9 +223,7 @@ function initializeModalManager() {
     });
     
     // Add form submission handlers
-    setupFormHandler('addExhibitorForm', 'addExhibitorModal', 'Exhibitor');
     setupFormHandler('addPartnerForm', 'addPartnerModal', 'Partner');
-    setupFormHandler('addSpeakerForm', 'addSpeakerModal', 'Speaker');
     setupFormHandler('addBoothForm', 'addBoothModal', 'Booth');
     setupFormHandler('addAgendaItemForm', 'addAgendaItemModal', 'Agenda item');
     
@@ -225,8 +235,7 @@ function initializeModalManager() {
                 console.log(`${itemName} form submitted`);
                 
                 // Show success message
-                document.getElementById('successMessage').textContent = `${itemName} has been successfully added!`;
-                document.getElementById('successModal').style.display = 'flex';
+                toastr.success(`${itemName} has been successfully added!`);
                 
                 // Close the modal
                 const modal = document.getElementById(modalId);
@@ -267,6 +276,8 @@ function initializeEventListeners() {
     if (editAttendeeForm) editAttendeeForm.addEventListener('submit', handleEditAttendee);
     if (addMinistryForm) addMinistryForm.addEventListener('submit', handleAddMinistry);
     if (editMinistryForm) editMinistryForm.addEventListener('submit', handleEditMinistry);
+    if (addSpeakerForm) addSpeakerForm.addEventListener('submit', handleAddSpeaker);
+    if (document.getElementById('addExhibitorForm')) document.getElementById('addExhibitorForm').addEventListener('submit', handleAddExhibitor);
     
     // Modal close buttons (simplified)
     if (addAnotherBtn) addAnotherBtn.addEventListener('click', function() {
@@ -422,48 +433,52 @@ function initializeEventListeners() {
 // Form Handlers
 async function handleAddAttendee(e) {
     e.preventDefault();
-    
+
+    // Collect values from form (safe access)
     const values = {
-        prefix: document.getElementById('attendeePrefix').value.trim(),
-        firstName: document.getElementById('attendeeFirstName').value.trim(),
-        lastName: document.getElementById('attendeeLastName').value.trim(),
-        email: document.getElementById('attendeeEmail').value.trim(),
-        // password: document.getElementById('attendeePassword').value.trim(),
-        country: document.getElementById('attendeeCountry').value.trim(),
-        jobTitle: document.getElementById('attendeeJobTitle').value.trim(),
-        organization: document.getElementById('attendeeOrganization').value.trim(),
-        phone: document.getElementById('attendeePhone').value.trim(),
-        // position: document.getElementById('attendeePosition').value.trim(),
-        // gradeLevel: document.getElementById('attendeeGradeLevel').value,
-        ministry: document.getElementById('attendeeMinistry')?.value || '',
-        // department: document.getElementById('attendeeDepartment')?.value.trim() || '',
-        // agency: document.getElementById('attendeeAgency')?.value.trim() || '',
-        // staffId: document.getElementById('attendeeStaffId')?.value.trim() || '',
-        // office: document.getElementById('attendeeOffice')?.value.trim() || '',
-        // status: document.getElementById('attendeeStatus')?.value || 'Pending',
-        // remarks: document.getElementById('attendeeRemarks')?.value.trim() || ''
+        prefix: (document.getElementById('attendeePrefix')?.value || '').trim(),
+        firstName: (document.getElementById('attendeeFirstName')?.value || '').trim(),
+        lastName: (document.getElementById('attendeeLastName')?.value || '').trim(),
+        email: (document.getElementById('attendeeEmail')?.value || '').trim(),
+        jobTitle: (document.getElementById('attendeeJobTitle')?.value || '').trim(),
+        organization: (document.getElementById('attendeeOrganization')?.value || '').trim(),
+        phone: (document.getElementById('attendeePhone')?.value || '').trim(),
+        ministry: (document.getElementById('attendeeMinistry')?.value || '').trim()
     };
 
     const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
 
-    const required = ['prefix', 'firstName', 'lastName', 'email', 'password', 'jobTitle', 'organization', 'phone', 'position', 'gradeLevel'];
+    // Validate required fields that exist in the form
+    const required = ['prefix', 'firstName', 'lastName', 'email', 'phone', 'ministry'];
     for (const field of required) {
         if (!values[field]) {
-            alert(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+            toastr.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
             return;
         }
     }
 
+    // Helper: generate a temporary password for the attendee
+    function generateRandomPassword(length = 10) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+        let pw = '';
+        for (let i = 0; i < length; i++) {
+            pw += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return pw;
+    }
+
+    const tempPassword = generateRandomPassword(10);
+
+    // Prepare payload using snake_case keys commonly expected by backend
     const payload = {
-        fullname: fullName,
+        firstName: values.firstName,
+        lastName: values.lastName,
         email: values.email,
-        
+        password: tempPassword,
         phone_number: values.phone,
-        
         jobTitle: values.jobTitle,
-        
         organization: values.organization,
-        ministry:values.ministry
+        ministry: values.ministry
     };
 
     const submitBtn = addAttendeeForm.querySelector('button[type="submit"]');
@@ -487,6 +502,7 @@ async function handleAddAttendee(e) {
     try {
         let res;
         if (window.apiClient) {
+            // apiClient should handle base path already
             res = await window.apiClient.post('/admin/create-attendee', payload);
         } else {
             const token = getToken();
@@ -498,22 +514,20 @@ async function handleAddAttendee(e) {
         if (res && (res.status === 200 || res.status === 201)) {
             const created = res.data?.data || res.data || payload;
 
-            const newId = created.id || (attendees.length > 0 ? Math.max(...attendees.map(a=>a.id))+1 : 1);
+            const newId = created.id || created._id || (attendees.length > 0 ? Math.max(...attendees.map(a => a.id || 0)) + 1 : 1);
             const newAttendee = {
                 id: newId,
-                name: created.full_name || created.name || payload.full_name,
+                name: created.fullname || created.full_name || created.name || fullName,
                 email: created.email || payload.email,
-                phone: created.phone || payload.phone,
-                position: created.position || payload.position,
-                gradeLevel: created.grade_level || payload.grade_level,
-                ministry: created.ministry || payload.ministry,
-                department: created.department || payload.department,
-                agency: created.agency || payload.agency,
-                staffId: created.staff_id || payload.staff_id || '',
-                office: created.office_location || payload.office_location || '',
-                status: created.status || payload.status || 'Pending',
-                remarks: created.remarks || payload.remarks || '',
-                dateAdded: created.dateAdded || (new Date().toISOString().split('T')[0]),
+                phone: created.phone_number || created.phone || payload.phone_number,
+                jobTitle: created.job_title || payload.job_title || values.jobTitle,
+                organization: created.organization || payload.organization || values.organization,
+                ministry: created.ministry || payload.ministry || values.ministry,
+                jobTitle: created.job_title || payload.job_title || values.jobTitle || '',
+                position: created.position || created.job_title || '',
+                department: created.department || created.department_agency || '',
+                status: created.status || 'Pending',
+                dateAdded: created.createdAt || created.created_at || created.registeredAt || created.dateAdded || (new Date().toISOString().split('T')[0]),
                 addedBy: 'Super Admin'
             };
 
@@ -522,8 +536,9 @@ async function handleAddAttendee(e) {
             updatePendingTable();
             updateStats();
 
-            document.getElementById('successMessage').textContent = 'Attendee has been successfully added!';
-            successModal.style.display = 'flex';
+            // Show generated password in the success message so admin can communicate it
+            const displayedPassword = created.password || payload.password || tempPassword;
+            toastr.success(`Participant has been successfully added`);
             addAttendeeForm.reset();
         } else {
             const msg = res?.data?.message || 'Failed to add attendee';
@@ -531,12 +546,112 @@ async function handleAddAttendee(e) {
         }
     } catch (err) {
         const msg = err?.response?.data?.message || err.message || 'Add attendee failed';
-        alert(msg);
+        toastr.error(msg);
         console.error('Add attendee error:', err);
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = origText || 'Add Attendee';
+        }
+    }
+}
+
+async function handleAddSpeaker(e) {
+    e.preventDefault();
+
+    // Collect values from form (safe access)
+    const values = {
+        prefix: (document.getElementById('speakerPrefix')?.value || '').trim(),
+        firstName: (document.getElementById('speakerFirstName')?.value || '').trim(),
+        lastName: (document.getElementById('speakerLastName')?.value || '').trim(),
+        email: (document.getElementById('speakerEmail')?.value || '').trim(),
+        experience: (document.getElementById('speakerExperience')?.value || '').trim(),
+        country: (document.getElementById('speakerCountry')?.value || '').trim(),
+        description: (document.getElementById('speakerDescription')?.value || '').trim(),
+        topic: (document.getElementById('speakerTopic')?.value || '').trim(),
+        affiliation: (document.getElementById('speakerAffiliation')?.value || '').trim(),
+        links: (document.getElementById('speakerLinks')?.value || '').trim(),
+        jobTitle: (document.getElementById('speakerJobTitle')?.value || '').trim(),
+        phone: (document.getElementById('speakerPhone')?.value || '').trim()
+    };
+
+    const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
+
+    // Validate required fields
+    const required = ['prefix', 'firstName', 'lastName', 'email', 'country'];
+    for (const field of required) {
+        if (!values[field]) {
+            toastr.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+            return;
+        }
+    }
+
+    // Prepare payload
+    const payload = {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        work_email: values.email,
+        prefix: values.prefix,
+        experience: values.experience,
+        country: values.country,
+        bio: values.description,
+        topic: values.topic,
+        organization: values.affiliation,
+        socialMediaLinks: values.links,
+        job_title: values.jobTitle,
+        phone: values.phone
+    };
+
+    const submitBtn = addSpeakerForm.querySelector('button[type="submit"]');
+    const origText = submitBtn ? submitBtn.textContent : null;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Adding...';
+    }
+
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (err) { /* ignore */ }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    try {
+        let res;
+        if (window.apiClient) {
+            res = await window.apiClient.post('/admin/create-speaker', payload);
+        } else {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            res = await axios.post(`${API_BASE_URL}/admin/create-speaker`, payload, { headers });
+        }
+
+        if (res && (res.status === 200 || res.status === 201)) {
+            // Show success message
+            toastr.success(`Speaker has been successfully added!`);
+            addSpeakerForm.reset();
+            // Close the add speaker modal
+            const addSpeakerModal = document.getElementById('addSpeakerModal');
+            if (addSpeakerModal) addSpeakerModal.style.display = 'none';
+            // Optionally refresh the speakers list
+            // fetchSpeakers();
+        } else {
+            const msg = res?.data?.message || 'Failed to add speaker';
+            throw new Error(msg);
+        }
+    } catch (err) {
+        const msg = err?.response?.data?.message || err.message || 'Add speaker failed';
+        toastr.error(msg);
+        console.error('Add speaker error:', err);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = origText || 'Add Speaker';
         }
     }
 }
@@ -598,8 +713,7 @@ async function handleEditAttendee(e) {
                 updatePendingTable();
                 updateStats();
                 
-                document.getElementById('successMessage').textContent = 'Attendee has been successfully updated!';
-                successModal.style.display = 'flex';
+                toastr.success('Attendee has been successfully updated!');
                 editAttendeeModal.style.display = 'none';
             }
         } else {
@@ -607,7 +721,7 @@ async function handleEditAttendee(e) {
         }
     } catch (err) {
         const msg = err?.response?.data?.message || err.message || 'Update failed';
-        alert(msg);
+        toastr.error(msg);
         console.error('Edit attendee error:', err);
     } finally {
         if (submitBtn) {
@@ -619,7 +733,7 @@ async function handleEditAttendee(e) {
 
 async function handleDeleteAttendee() {
     if (!currentAttendeeId) {
-        alert('No attendee selected.');
+        toastr.error('No attendee selected.');
         return;
     }
 
@@ -660,8 +774,7 @@ async function handleDeleteAttendee() {
             updatePendingTable();
             updateStats();
 
-            document.getElementById('successMessage').textContent = 'Attendee has been successfully deleted!';
-            successModal.style.display = 'flex';
+            toastr.success('Attendee has been successfully deleted!');
             deleteModal.style.display = 'none';
             currentAttendeeId = null;
         } else {
@@ -670,7 +783,7 @@ async function handleDeleteAttendee() {
         }
     } catch (err) {
         const message = err?.response?.data?.message || err.message || 'Delete failed';
-        alert(message);
+        toastr.error(message);
         console.error('Delete attendee error:', err);
     } finally {
         if (confirmBtn) {
@@ -682,7 +795,7 @@ async function handleDeleteAttendee() {
 
 async function handleDeleteMinistry() {
     if (!currentMinistryId) {
-        alert('No ministry selected.');
+        toastr.error('No ministry selected.');
         return;
     }
 
@@ -722,8 +835,7 @@ async function handleDeleteMinistry() {
             renderMinistriesTable(ministries);
             updateStats();
 
-            document.getElementById('successMessage').textContent = 'Ministry has been successfully deleted!';
-            successModal.style.display = 'flex';
+            toastr.success('Ministry has been successfully deleted!');
             deleteMinistryModal.style.display = 'none';
             currentMinistryId = null;
         } else {
@@ -732,7 +844,7 @@ async function handleDeleteMinistry() {
         }
     } catch (err) {
         const message = err?.response?.data?.message || err.message || 'Delete failed';
-        alert(message);
+        toastr.error(message);
         console.error('Delete attendee error:', err);
     } finally {
         if (confirmBtn) {
@@ -753,7 +865,7 @@ async function handleAddMinistry(e) {
     const password = document.getElementById('generatedPassword').textContent.trim();
 
     if (!organization || !organization_short_code || !contact_person || !contact_person_email || !username || !password) {
-        alert('Please fill all required ministry fields.');
+        toastr.error('Please fill all required ministry fields.');
         return;
     }
 
@@ -815,8 +927,7 @@ async function handleAddMinistry(e) {
             renderMinistriesTable();
             updateStats();
 
-            document.getElementById('successMessage').textContent = 'Ministry has been successfully created!';
-            successModal.style.display = 'flex';
+            toastr.success('Ministry has been successfully created!');
 
             addMinistryForm.reset();
             addMinistryModal.style.display = 'none';
@@ -826,12 +937,103 @@ async function handleAddMinistry(e) {
         }
     } catch (err) {
         const message = err?.response?.data?.message || err.message || 'Create ministry failed';
-        alert(message);
+        toastr.error(message);
         console.error('Create ministry error:', err);
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = origText || 'Add Ministry';
+        }
+    }
+}
+
+async function handleAddExhibitor(e) {
+    e.preventDefault();
+
+    const category = document.getElementById('exhibitorPrefix').value.trim();
+    const company_name = document.getElementById('exhibitorCompanyName').value.trim();
+    const contact_person = document.getElementById('exhibitorContactName').value.trim();
+    const contact_email = document.getElementById('exhibitorContactEmail').value.trim();
+    const contact_phone = document.getElementById('exhibitorContactPhone').value.trim();
+    const exhibition_title = document.getElementById('exhibitionTitle').value.trim();
+    const description = document.getElementById('exhibitionDescription').value.trim();
+
+    console.log('Adding exhibitor with data:', {
+        category,
+        companyName: company_name,
+        contactPerson: contact_person,
+        contactEmail: contact_email,
+        contactPhone: contact_phone,
+        exhibitionTitle: exhibition_title,
+        description
+    });
+
+    if (!category || !contact_person || !contact_email || !exhibition_title) {
+        toastr.error('Please fill all required exhibitor fields.');
+        return;
+    }
+
+    const payload = {
+        category,
+        company_name: company_name,
+        contact_person: contact_person,
+        contact_email: contact_email,
+        contact_phone: contact_phone,
+        exhibition_title: exhibition_title,
+        description
+    };
+
+    const submitBtn = document.getElementById('addExhibitorForm').querySelector('button[type="submit"]');
+    const origText = submitBtn ? submitBtn.textContent : null;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating...';
+    }
+
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (err) { /* ignore */ }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    try {
+        let res;
+        if (window.apiClient) {
+            res = await window.apiClient.post('/admin/create-exhibitor', payload);
+        } else {
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            res = await axios.post(`${API_BASE_URL}/admin/create-exhibitor`, payload, { headers });
+        }
+
+        if (res && (res.status === 200 || res.status === 201)) {
+            document.getElementById('addExhibitorForm').reset();
+            document.getElementById('addExhibitorModal').style.display = 'none';
+
+            // Refresh exhibitors list if there's a function to do so
+            if (typeof window.fetchExhibitors === 'function') {
+                window.fetchExhibitors();
+            }
+
+            toastr.success('Exhibitor has been successfully created!');
+        } else {
+            const msg = res?.data?.message || 'Failed to create exhibitor';
+            throw new Error(msg);
+        }
+    } catch (err) {
+        const message = err?.response?.data?.message || err.message || 'Create exhibitor failed';
+        toastr.error(message);
+        console.error('Create exhibitor error:', err);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = origText || 'Add Exhibitor';
         }
     }
 }
@@ -930,6 +1132,7 @@ async function fetchAttendees() {
                 phone: item.phone || item.phone_number || '',
                 ministry: item.ministry || item.organization_name || item.organization || '',
                 department: item.department || '',
+                jobTitle: item.job_title || '',
                 status: (item.status || 'Pending'),
                 remarks: item.remark || '',
                 dateAdded: item.created_at || item.dateAdded || item.date || (new Date().toISOString().split('T')[0])
@@ -968,8 +1171,7 @@ function handleEditMinistry(e) {
         
         renderMinistriesTable();
         
-        document.getElementById('successMessage').textContent = 'Ministry has been successfully updated!';
-        successModal.style.display = 'flex';
+        toastr.success('Ministry has been successfully updated!');
         
         editMinistryModal.style.display = 'none';
     }
@@ -1495,9 +1697,6 @@ class AutoApprovalNotificationSystem {
             // Add to notifications list (at the beginning)
             this.notifications.unshift(approvedNotification);
             
-            // Record attendance automatically
-            await this.recordAttendance(approvedNotification);
-            
             // Send confirmation to user
             await this.sendAutoApprovalNotification(approvedNotification);
 
@@ -1527,35 +1726,6 @@ class AutoApprovalNotificationSystem {
             this.showToast('Error processing submission', 'error');
             return false;
         }
-    }
-
-    async recordAttendance(notification) {
-        const attendanceRecord = {
-            id: Date.now(),
-        userId: notification.userId,
-        userName: notification.userName,
-        userType: notification.type,
-        userEmail: notification.userEmail,
-        eventId: notification.eventId,
-        eventTitle: notification.eventTitle,
-        eventDate: notification.eventDate,
-        eventTime: notification.eventTime,
-        eventDay: notification.eventDay,
-        status: 'attended',
-        approvedBy: 'Auto-approval System',
-        approvedAt: new Date().toISOString()
-        };
-
-        // Save to localStorage for demo
-        let attendanceRecords = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
-        attendanceRecords.push(attendanceRecord);
-        localStorage.setItem('icsc_attendance_records', JSON.stringify(attendanceRecords));
-
-        document.dispatchEvent(new CustomEvent('attendanceRecorded', {
-        detail: attendanceRecord
-         }));
-        
-        return attendanceRecord;
     }
 
     async sendAutoApprovalNotification(notification) {
@@ -2256,11 +2426,16 @@ function updateStats() {
     const approvedCount = attendees.filter(a => a.status === 'Approved').length;
     const totalCount = attendees.length;
     const ministriesCount = ministries.length;
-    
-    document.getElementById('pendingCount').textContent = pendingCount;
-    document.getElementById('approvedCount').textContent = approvedCount;
-    document.getElementById('totalCount').textContent = totalCount;
-    document.getElementById('ministriesCount').textContent = ministriesCount;
+
+    const pendingEl = document.getElementById('pendingCount');
+    const approvedEl = document.getElementById('approvedCount');
+    const totalEl = document.getElementById('totalCount');
+    const ministriesEl = document.getElementById('ministriesCount');
+
+    if (pendingEl) pendingEl.textContent = pendingCount;
+    if (approvedEl) approvedEl.textContent = approvedCount;
+    if (totalEl) totalEl.textContent = totalCount;
+    if (ministriesEl) ministriesEl.textContent = ministriesCount;
 }
 
 function updateAttendeesTable() {
@@ -2273,18 +2448,23 @@ function updatePendingTable() {
 }
 
 function renderMinistriesTable() {
+    if (!ministriesTable) {
+        console.warn('renderMinistriesTable: #ministriesTable element not found in DOM');
+        return;
+    }
+
     let html = '';
-    
+
     ministries.forEach(ministry => {
         html += `
             <tr data-id="${ministry.id}">
-                <td>${ministry.name}</td>
-                <td>${ministry.code}</td>
-                <td>${ministry.attendeesCount}</td>
-                <td>${ministry.pendingCount}</td>
-                <td>${ministry.approvedCount}</td>
-                <td>${ministry.contactPerson}</td>
-                <td>${ministry.contactPersonEmail}</td>
+                <td>${ministry.name || ''}</td>
+                <td>${ministry.code || ''}</td>
+                <td>${ministry.attendeesCount || 0}</td>
+                <td>${ministry.pendingCount || 0}</td>
+                <td>${ministry.approvedCount || 0}</td>
+                <td>${ministry.contactPerson || ''}</td>
+                <td>${ministry.contactPersonEmail || ''}</td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-success btn-sm view-ministry-btn">View</button>
@@ -2294,25 +2474,29 @@ function renderMinistriesTable() {
             </tr>
         `;
     });
-    
+
     ministriesTable.innerHTML = html;
 }
 
 function renderAttendeesTable(attendeesList) {
+    if (!allAttendeesTable) {
+        console.warn('renderAttendeesTable: #allAttendeesTable element not found in DOM');
+        return;
+    }
+
     let html = '';
-    
+
     attendeesList.forEach(attendee => {
-        const statusClass = `status-${attendee.status.toLowerCase()}`;
-        
+        const statusVal = (attendee.status || '').toLowerCase();
+        const statusClass = statusVal ? `status-${statusVal}` : '';
+
         html += `
             <tr data-id="${attendee.id}">
-                <td>${attendee.name}</td>
-                <td>${attendee.email}</td>
-                <td>${attendee.jobTitle}</td>
-                <td>${attendee.ministry}</td>
-                <td>${attendee.department}</td>
-                <td>${attendee.country}</td>
-                <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+                <td>${attendee.name || ''}</td>
+                <td>${attendee.email || ''}</td>
+                <td>${attendee.ministry || ''}</td>
+                <td>${attendee.jobTitle || ''}</td>
+                <td><span class="status-badge ${statusClass}">${attendee.status || ''}</span></td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-info btn-sm view-btn">View</button>
@@ -2322,22 +2506,32 @@ function renderAttendeesTable(attendeesList) {
             </tr>
         `;
     });
-    
+
     allAttendeesTable.innerHTML = html;
 }
 
 function renderPendingTable(pendingAttendees) {
+    if (!pendingAttendeesTable) {
+        console.warn('renderPendingTable: #pendingAttendeesTable element not found in DOM');
+        return;
+    }
+
     let html = '';
-    
+
+    if (pendingAttendees.length === 0) {
+        pendingAttendeesTable.innerHTML = '<tr><td colspan="7" style="text-align:center;">No pending attendees</td></tr>';
+        return;
+    }
+
     pendingAttendees.forEach(attendee => {
         html += `
             <tr data-id="${attendee.id}">
-                <td>${attendee.name}</td>
-                <td>${attendee.email}</td>
-                <td>${attendee.position}</td>
-                <td>${attendee.department}</td>
-                <td>${attendee.ministry}</td>
-                <td>${attendee.dateAdded}</td>
+                <td>${attendee.name || ''}</td>
+                <td>${attendee.email || ''}</td>
+                <td>${attendee.position || ''}</td>
+                <td>${attendee.department || ''}</td>
+                <td>${attendee.ministry || ''}</td>
+                <td>${attendee.dateAdded || ''}</td>
                 <td>
                     <div class="verification-actions">
                         <button class="btn btn-success approve-btn">Approve</button>
@@ -2347,7 +2541,7 @@ function renderPendingTable(pendingAttendees) {
             </tr>
         `;
     });
-    
+
     pendingAttendeesTable.innerHTML = html;
 }
 
@@ -5339,9 +5533,6 @@ class NotificationSystem {
                 // Update notification status
                 notification.status = 'approved';
                 
-                // Record attendance in reports system
-                await this.recordAttendance(notification);
-                
                 // Send approval notification to user
                 await this.sendApprovalNotification(notification);
                 
@@ -5389,31 +5580,6 @@ class NotificationSystem {
             console.error('Error rejecting schedule:', error);
             this.showToast('Error rejecting schedule', 'error');
         }
-    }
-
-    async recordAttendance(notification) {
-        const attendanceRecord = {
-            id: Date.now(),
-            userId: notification.userId,
-            userName: notification.userName,
-            userType: notification.type,
-            userEmail: notification.userEmail,
-            eventId: notification.eventId,
-            eventTitle: notification.eventTitle,
-            eventDate: notification.eventDate,
-            eventTime: notification.eventTime,
-            eventDay: notification.eventDay,
-            status: 'attended',
-            approvedBy: 'Super Admin',
-            approvedAt: new Date().toISOString()
-        };
-
-        // Save to localStorage for demo
-        let attendanceRecords = JSON.parse(localStorage.getItem('icsc_attendance_records') || '[]');
-        attendanceRecords.push(attendanceRecord);
-        localStorage.setItem('icsc_attendance_records', JSON.stringify(attendanceRecords));
-        
-        return attendanceRecord;
     }
 
     async sendApprovalNotification(notification) {
@@ -6536,7 +6702,7 @@ document.body.style.display = 'block';
 
 // Booth Management Functionality
 (function () {
-    const boothsBody = document.getElementById('exhibitorsTableBody');
+    const boothsBody = document.getElementById('boothsTableBody');
     const totalEl = document.getElementById('totalBooths');
     const availableEl = document.getElementById('availableBooths');
     const soldOutEl = document.getElementById('soldOutBooths');
@@ -6582,12 +6748,13 @@ document.body.style.display = 'block';
         list.forEach(booth => {
             const tr = document.createElement('tr');
             if (booth.id !== undefined) tr.setAttribute('data-id', booth.id);
-            const boothId = safeText(booth.booth_id || booth.id || '-');
+            const boothId = safeText(booth.booth_number || booth.booth_id || booth.id || '-');
             const location = safeText(booth.location || '-');
             const price = formatPrice(booth.price || booth.cost || '-');
+            const size = safeText(booth.booth_size || booth.size || '-');
             const status = safeText(booth.status || '-');
-            const exhibitor = safeText(booth.exhibitor || booth.exhibitor_name || '-');
-            const company = safeText(booth.company || booth.company_name || '-');
+            const exhibitor = safeText(booth.exhibitor_name || booth.exhibitor || '-');
+            const company = safeText(booth.company_name || booth.company || '-');
 
             const statusClass = statusClassFrom(status);
 
@@ -6595,6 +6762,7 @@ document.body.style.display = 'block';
                 <td>${boothId}</td>
                 <td>${location}</td>
                 <td>${price}</td>
+                <td>${size}</td>
                 <td><span class="status-badge ${statusClass}">${status}</span></td>
                 <td>${exhibitor}</td>
                 <td>${company}</td>
@@ -6606,6 +6774,7 @@ document.body.style.display = 'block';
                     </div>
                 </td>
             `;
+            tr.dataset.features = JSON.stringify(booth.features || []);
             boothsBody.appendChild(tr);
         });
     }
@@ -6704,7 +6873,8 @@ document.body.style.display = 'block';
 
 // ==================== AGENDA MANAGEMENT ====================
 (function() {
-    let agendaList = [];
+    let agendaData = { wednesday: [], thursday: [] };
+    let agendaList = []; // flat list for search/filter
     const agendaTimeline = document.querySelector('.agenda-timeline');
     const agendaTableBody = document.getElementById('agendaTableBody');
     const refreshAgendaBtn = document.getElementById('refreshAgendaBtn');
@@ -6790,15 +6960,21 @@ document.body.style.display = 'block';
             if (token) headers['Authorization'] = 'Bearer ' + token;
 
             const res = await axios.get(`${API_BASE_URL}/admin/agenda/event-agendas`, { headers });
-            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            const data = res.data.data || {};
             
-            agendaList = list.map(item => {
+            // Transform and group items by day
+            agendaData = { wednesday: [], thursday: [] };
+            agendaList = [];
+            
+            function transformItem(item) {
                 const rawDate = item.event_date || item.day || item.date || '';
                 const iso = formatDayToISO(rawDate);
                 const displayDay = iso ? new Date(iso).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : rawDate;
 
-                const rawStart = item.start_time || item.startTime || '';
-                const rawEnd = item.end_time || item.endTime || '';
+                // Handle time format like "08:30-09:00"
+                const timeParts = (item.time || '').split('-');
+                const rawStart = timeParts[0] || '';
+                const rawEnd = timeParts[1] || '';
                 const displayStart = /[AP]M$/i.test(rawStart) ? rawStart : time24ToAmPm(rawStart);
                 const displayEnd = /[AP]M$/i.test(rawEnd) ? rawEnd : time24ToAmPm(rawEnd);
                 const inputStart = /[AP]M$/i.test(rawStart) ? ampmTo24(rawStart) : rawStart;
@@ -6819,10 +6995,20 @@ document.body.style.display = 'block';
                     endInput: inputEnd,
                     status: item.status || 'Pending'
                 };
-            });
+            }
+            
+            if (data.wednesday && Array.isArray(data.wednesday)) {
+                agendaData.wednesday = data.wednesday.map(transformItem);
+            }
+            if (data.thursday && Array.isArray(data.thursday)) {
+                agendaData.thursday = data.thursday.map(transformItem);
+            }
+            
+            // Create flat list for search/filter
+            agendaList = [...agendaData.wednesday, ...agendaData.thursday];
 
-            renderAgendaTimeline(agendaList);
-            updateAgendaStats(agendaList);
+            renderAgendaTimeline(agendaData);
+            updateAgendaStats(agendaData);
             console.log(`Fetched ${agendaList.length} agenda items`);
         } catch (err) {
             console.error('Error fetching agenda items:', err);
@@ -6831,22 +7017,20 @@ document.body.style.display = 'block';
     }
 
     // Render agenda timeline view
-    function renderAgendaTimeline(items) {
+    function renderAgendaTimeline(data) {
         if (!agendaTimeline) return;
 
         const wednesdayDiv = document.getElementById('day-wednesday');
         const thursdayDiv = document.getElementById('day-thursday');
         
         if (wednesdayDiv) {
-            const header = wednesdayDiv.querySelector('.day-header');
+            // Remove existing sessions and loading containers
             const sessions = wednesdayDiv.querySelectorAll('.timeline-session');
             sessions.forEach(s => s.remove());
+            const loadingContainers = wednesdayDiv.querySelectorAll('.loading-container');
+            loadingContainers.forEach(c => c.remove());
             
-            const wednesdayItems = items.filter(item => 
-                item.day?.toLowerCase().includes('wednesday') || 
-                item.day?.toLowerCase().includes('25')
-            );
-
+            const wednesdayItems = data.wednesday || [];
             wednesdayItems.forEach(item => {
                 const sessionDiv = createSessionElement(item);
                 wednesdayDiv.appendChild(sessionDiv);
@@ -6854,15 +7038,13 @@ document.body.style.display = 'block';
         }
 
         if (thursdayDiv) {
-            const header = thursdayDiv.querySelector('.day-header');
+            // Remove existing sessions and loading containers
             const sessions = thursdayDiv.querySelectorAll('.timeline-session');
             sessions.forEach(s => s.remove());
+            const loadingContainers = thursdayDiv.querySelectorAll('.loading-container');
+            loadingContainers.forEach(c => c.remove());
             
-            const thursdayItems = items.filter(item => 
-                item.day?.toLowerCase().includes('thursday') || 
-                item.day?.toLowerCase().includes('26')
-            );
-
+            const thursdayItems = data.thursday || [];
             thursdayItems.forEach(item => {
                 const sessionDiv = createSessionElement(item);
                 thursdayDiv.appendChild(sessionDiv);
@@ -7176,14 +7358,14 @@ document.body.style.display = 'block';
     }
 
     // Update agenda statistics
-    function updateAgendaStats(items) {
+    function updateAgendaStats(data) {
         const totalEl = document.getElementById('totalAgendaItems');
         const day1El = document.getElementById('day1Sessions');
         const day2El = document.getElementById('day2Sessions');
 
-        const total = items.length;
-        const day1 = items.filter(i => i.day?.toLowerCase().includes('wednesday') || i.day?.toLowerCase().includes('25')).length;
-        const day2 = items.filter(i => i.day?.toLowerCase().includes('thursday') || i.day?.toLowerCase().includes('26')).length;
+        const total = (data.wednesday?.length || 0) + (data.thursday?.length || 0);
+        const day1 = data.wednesday?.length || 0;
+        const day2 = data.thursday?.length || 0;
 
         if (totalEl) totalEl.textContent = total;
         if (day1El) day1El.textContent = day1;
@@ -7211,7 +7393,17 @@ document.body.style.display = 'block';
             filtered = filtered.filter(item => item.venue === filterAgendaVenue.value);
         }
 
-        renderAgendaTimeline(filtered);
+        // Group filtered items back by day for timeline
+        const filteredData = { wednesday: [], thursday: [] };
+        filtered.forEach(item => {
+            if (item.day?.toLowerCase().includes('wednesday')) {
+                filteredData.wednesday.push(item);
+            } else if (item.day?.toLowerCase().includes('thursday')) {
+                filteredData.thursday.push(item);
+            }
+        });
+
+        renderAgendaTimeline(filteredData);
         renderAgendaTable(filtered);
     }
 
@@ -7372,7 +7564,7 @@ document.body.style.display = 'block';
             if (searchAgenda) searchAgenda.value = '';
             if (filterAgendaTrack) filterAgendaTrack.value = '';
             if (filterAgendaVenue) filterAgendaVenue.value = '';
-            renderAgendaTimeline(agendaList);
+            renderAgendaTimeline(agendaData);
             renderAgendaTable(agendaList);
         });
     }
@@ -7390,7 +7582,7 @@ document.body.style.display = 'block';
                 if (agendaTimeline) agendaTimeline.style.display = 'block';
                 if (agendaTableView) agendaTableView.style.display = 'none';
                 toggleAgendaViewBtn.innerHTML = '<i class="fas fa-list"></i> Switch to Table View';
-                renderAgendaTimeline(agendaList);
+                renderAgendaTimeline(agendaData);
             }
         });
     }

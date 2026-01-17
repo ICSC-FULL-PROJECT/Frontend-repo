@@ -1,11 +1,6 @@
 <!-- Fetch exhibitors and update stats from backend -->
 <script>
 (function () {
-    const exhibitorsBody = document.getElementById('exhibitorsTableBody');
-    const totalEl = document.getElementById('totalExhibitors');
-    const confirmedEl = document.getElementById('confirmedExhibitors');
-    const pendingEl = document.getElementById('pendingExhibitors');
-    const refreshBtn = document.getElementById('refreshExhibitorsBtn');
 
     function safeText(v) {
         return (v === null || v === undefined || v === '') ? '-' : String(v);
@@ -28,35 +23,32 @@
     }
 
     function renderExhibitors(list) {
+        const exhibitorsBody = document.getElementById('exhibitors-table-body');
         if (!exhibitorsBody) return;
         exhibitorsBody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
-            exhibitorsBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No exhibitors found.</td></tr>';
+            exhibitorsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No exhibitors found.</td></tr>';
             return;
         }
         list.forEach(ex => {
             const tr = document.createElement('tr');
             if (ex.id !== undefined) tr.setAttribute('data-id', ex.id);
-            const name = safeText(ex.contact_person || ex.company_name || ex.name || '-');
-            const company = safeText(ex.company_name || ex.company || '-');
-            // Fields that may not exist in response
-            const booth = safeText(ex.booth || '-');
-            const day = safeText(ex.day || ex.exhibition_day || '-');
-            const budget = formatBudget(ex.budget || ex.estimated_budget || ex.budget_naira || '-');
+            const name = safeText(ex.contact_person || '-');
+            const company = safeText(ex.company_name || '-');
+            const email = safeText(ex.contact_email || '-');
+            const phone = safeText(ex.contact_phone || '-');
             const status = safeText(ex.status || '-');
-            const payment = safeText(ex.payment_status || ex.payment || '-');
+            const registeredAt = ex.registeredAt ? new Date(ex.registeredAt).toLocaleDateString() : '-';
 
             const statusClass = statusClassFrom(status);
-            const paymentClass = statusClassFrom(payment);
 
             tr.innerHTML = `
                 <td>${name}</td>
                 <td>${company}</td>
-                <td>${booth}</td>
-                <td>${day}</td>
-                <td>${budget}</td>
+                <td>${email}</td>
+                <td>${phone}</td>
                 <td><span class="status-badge ${statusClass}">${status}</span></td>
-                <td><span class="status-badge ${paymentClass}">${payment}</span></td>
+                <td>${registeredAt}</td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
@@ -69,37 +61,109 @@
     }
 
     function updateStats(list) {
+        const totalEl = document.getElementById('total-exhibitors');
+        const confirmedEl = document.getElementById('confirmed-exhibitors');
+        const pendingEl = document.getElementById('pending-exhibitors');
         const arr = Array.isArray(list) ? list : [];
         if (totalEl) totalEl.textContent = arr.length;
         if (confirmedEl) confirmedEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'confirmed').length;
         if (pendingEl) pendingEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'pending').length;
     }
 
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (e) { }
+        return localStorage.getItem('accessToken') || null;
+    }
+
     async function fetchExhibitors() {
         try {
-            const res = await axios.get('/admin/exhibitors');
+            console.log('Fetching exhibitors...');
+            const endpoint = `${window.API_BASE_URL || 'http://localhost:9100/api/v1'}/admin/exhibitors`;
+            const token = getToken();
+            const headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.get(endpoint, { headers });
             const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            console.log('Fetched data:', list);
             renderExhibitors(list);
             updateStats(list);
         } catch (err) {
             console.error('Error fetching exhibitors:', err);
-            if (exhibitorsBody) exhibitorsBody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#c00;">Failed to load exhibitors.</td></tr>';
+            const exhibitorsBody = document.getElementById('exhibitors-table-body');
+            if (exhibitorsBody) exhibitorsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#c00;">Failed to load exhibitors.</td></tr>';
         }
     }
 
+    function openAddExhibitorModal() {
+        const modal = document.getElementById('addExhibitorModal');
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.classList.remove('active');
+    }
+
+    async function addExhibitor(data) {
+        try {
+            const endpoint = `${window.API_BASE_URL || 'http://localhost:9100/api/v1'}/admin/exhibitors`;
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.post(endpoint, data, { headers });
+            console.log('Added exhibitor:', res.data);
+            fetchExhibitors(); // Refresh the list
+            closeModal('addExhibitorModal');
+            // Reset form
+            document.getElementById('addExhibitorForm').reset();
+        } catch (err) {
+            console.error('Error adding exhibitor:', err);
+            alert('Failed to add exhibitor. Please try again.');
+        }
+    }
+
+   document.addEventListener('DOMContentLoaded', () => {
+    fetchExhibitors();
+    const refreshBtn = document.getElementById('refresh-exhibitors-btn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', function (e) {
             e.preventDefault();
             fetchExhibitors();
         });
     }
-
-    // Fetch once DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', fetchExhibitors);
-    } else {
-        fetchExhibitors();
+    const addBtn = document.getElementById('add-exhibitor-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            openAddExhibitorModal();
+        });
     }
+    const form = document.getElementById('addExhibitorForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            addExhibitor(data);
+        });
+    }
+    // Close modal on close button
+    const closeBtn = document.querySelector('#addExhibitorModal .close-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => closeModal('addExhibitorModal'));
+    }
+    });
+
+    // Expose fetchExhibitors globally for use by other scripts
+    window.fetchExhibitors = fetchExhibitors;
 })();
 </script>
 
@@ -119,6 +183,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="path/to/chart.min.js"></script>
     <script src="path/to/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="notification-attendance-system.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -263,38 +329,129 @@
                                 </tr>
                             </thead>
                             <tbody id="recentActivityTable">
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Samuel Johnson</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>2023-10-25 14:30</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Verified</td>
-                                    <td>Aisha Mohammed</td>
-                                    <td>Ministry of Education</td>
-                                    <td>2023-10-25 13:15</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>James Okoro</td>
-                                    <td>Ministry of Health</td>
-                                    <td>2023-10-25 11:45</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Rejected</td>
-                                    <td>Grace Williams</td>
-                                    <td>Ministry of Transport</td>
-                                    <td>2023-10-25 10:20</td>
-                                    <td><span class="status-badge status-rejected">Rejected</span></td>
+                                <tr class="loading-row">
+                                    <td colspan="5" style="text-align:center;">
+                                        <span class="spinner" style="display:inline-block;width:18px;height:18px;border:3px solid rgba(0,0,0,0.15);border-top-color:var(--primary-color,#333);border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span>
+                                        Loading...
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <script>
+                (function() {
+                    const recentBody = document.getElementById('recentActivityTable');
+                    const refreshBtn = document.getElementById('refreshActivityBtn');
+                    const DEFAULT_LIMIT = 5;
+
+                    function safeText(v) {
+                        return (v === null || v === undefined || v === '') ? '-' : String(v);
+                    }
+
+                    function statusClassFrom(status) {
+                        if (!status) return 'status-pending';
+                        const s = String(status).toLowerCase();
+                        if (s === 'approved' || s === 'confirmed' || s === 'active') return 'status-approved';
+                        if (s === 'pending' || s === 'reserved') return 'status-pending';
+                        return 'status-rejected';
+                    }
+
+                    function formatDateTime(dateStr) {
+                        if (!dateStr) return '-';
+                        const d = new Date(dateStr);
+                        if (isNaN(d.getTime())) {
+                            // Try replace space with T for date strings like "YYYY-MM-DD HH:mm"
+                            const d2 = new Date(dateStr.replace(' ', 'T'));
+                            if (!isNaN(d2.getTime())) return `${d2.getFullYear()}-${String(d2.getMonth()+1).padStart(2,'0')}-${String(d2.getDate()).padStart(2,'0')} ${String(d2.getHours()).padStart(2,'0')}:${String(d2.getMinutes()).padStart(2,'0')}`;
+                            return safeText(dateStr);
+                        }
+                        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                    }
+
+                    function renderRecentActivity(list, limit = DEFAULT_LIMIT) {
+                        if (!recentBody) return;
+                        recentBody.innerHTML = '';
+                        if (!Array.isArray(list) || list.length === 0) {
+                            recentBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent activity.</td></tr>';
+                            return;
+                        }
+
+                        // sort by dateAdded/created_at descending
+                        const sorted = list.slice().sort((a, b) => {
+                            const da = new Date(a.dateAdded || a.created_at || a.date || null);
+                            const db = new Date(b.dateAdded || b.created_at || b.date || null);
+                            return (db.getTime() || 0) - (da.getTime() || 0);
+                        }).slice(0, limit);
+
+                        sorted.forEach(item => {
+                            const action = 'Added';
+                            const name = safeText(item.name || item.full_name || item.fullName || item.email || '-');
+                            const ministry = safeText(item.ministry || item.organization_name || item.organization || '-');
+                            const dateTime = formatDateTime(item.dateAdded || item.created_at || item.date || '-');
+                            const status = safeText(item.status || 'Pending');
+                            const statusClass = statusClassFrom(status);
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${action}</td>
+                                <td>${name}</td>
+                                <td>${ministry}</td>
+                                <td>${dateTime}</td>
+                                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                            `;
+                            recentBody.appendChild(tr);
+                        });
+                    }
+
+                    async function updateRecentActivity() {
+                        // Show loading state, then rely on the centralized fetchAttendees() to populate global `attendees`
+                        try {
+                            if (!document.getElementById('recent-activity-spinner-style')) {
+                                const s = document.createElement('style');
+                                s.id = 'recent-activity-spinner-style';
+                                s.innerHTML = '@keyframes spin { to { transform: rotate(360deg); } }';
+                                document.head.appendChild(s);
+                            }
+
+                            if (recentBody) {
+                                recentBody.innerHTML = `<tr class="loading-row"><td colspan="5" style="text-align:center;"><span class="spinner" style="display:inline-block;width:18px;height:18px;border:3px solid rgba(0,0,0,0.15);border-top-color:var(--primary-color,#333);border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;vertical-align:middle;"></span> Loading...</td></tr>`;
+                            }
+                            if (refreshBtn) refreshBtn.disabled = true;
+
+                            // Use the single shared fetch function to refresh attendees
+                            if (typeof fetchAttendees === 'function') {
+                                await fetchAttendees();
+                            } else {
+                                console.warn('fetchAttendees() not available on page — cannot refresh attendees via centralized function.');
+                            }
+
+                            const list = Array.isArray(window.attendees) ? window.attendees : [];
+                            renderRecentActivity(list);
+                        } catch (err) {
+                            console.error('Failed to update recent attendees via fetchAttendees():', err);
+                            renderRecentActivity([]);
+                        } finally {
+                            if (refreshBtn) refreshBtn.disabled = false;
+                        }
+                    }
+
+                    if (refreshBtn) {
+                        refreshBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            updateRecentActivity();
+                        });
+                    }
+
+                    // Initial render
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', updateRecentActivity);
+                    } else {
+                        updateRecentActivity();
+                    }
+                })();
+                </script>
             </div>
 
             <!-- Verification Tab - UPDATED FOR PARTNER SUBMISSIONS -->
@@ -314,10 +471,10 @@
                                 </select>
                                 <select id="partnerTypeFilter" class="form-control-sm">
                                     <option value="all">All Partners</option>
-                                    <option value="diamond">Diamond Partners</option>
-                                    <option value="gold">Gold Partners</option>
-                                    <option value="silver">Silver Partners</option>
-                                    <option value="bronze">Bronze Partners</option>
+                                    <option value="Platinum">Platinum Partners</option>
+                                    <option value="Gold">Gold Partners</option>
+                                    <option value="Silver">Silver Partners</option>
+                                    <option value="Bronze">Bronze Partners</option>
                                 </select>
                             </div>
                             <button class="btn btn-secondary" id="refreshPendingBtn">
@@ -635,58 +792,58 @@
                 </div>
 
         
-                    <div class="form-row">
-    <div class="form-group">
-        <label for="AttendeeCountry">Country</label>
-        <label for=""></label>
-        <select class="form-control" required>
-            <option>Select country</option>
-            <option>Nigeria</option>
-            <option>Afghanistan</option>
-            <option>Albania</option>
-            <option>Algeria</option>
-            <option>American Samoa</option>
-            <option>Andorra</option>
-            <option>Angola</option>
-            <option>Anguilla</option>
-            <option>Antarctica</option>
-            <option>Antigua and Barbuda</option>
-            <option>Argentina</option>
-            <option>Armenia</option>
-            <option>Aruba</option>
-            <option>Australia</option>
-            <option>Austria</option>
-            <option>Azerbaijan</option>
-            <option>Bahamas</option>
-            <option>Bahrain</option>
-            <option>Bangladesh</option>
-            <option>Barbados</option>
-            <option>Belarus</option>
-            <option>Belgium</option>
-            <option>Belize</option>
-            <option>Benin</option>
-            <option>Bermuda</option>
-            <option>Bhutan</option>
-            <option>Bolivia</option>
-            <option>Bonaire, Sint Eustatius and Saba</option>
-            <option>Bosnia and Herzegovina</option>
-            <option>Botswana</option>
-            <option>Bouvet Island</option>
-            <option>Brazil</option>
-            <option>British Indian Ocean Territory</option>
-            <option>Brunei Darussalam</option>
-            <option>Bulgaria</option>
-            <option>Burkina Faso</option>
-            <option>Burundi</option>
-            <option>Cabo Verde</option>
-            <option>Cambodia</option>
-            <option>Cameroon</option>
-            <option>Canada</option>
-            <option>Zimbabwe</option>
-        </select>
-    </div>
-</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="AttendeeCountry">Country</label>
+                        <select class="form-control" required>
+                            <option>Select country</option>
+                            <option>Nigeria</option>
+                            <option>Afghanistan</option>
+                            <option>Albania</option>
+                            <option>Algeria</option>
+                            <option>American Samoa</option>
+                            <option>Andorra</option>
+                            <option>Angola</option>
+                            <option>Anguilla</option>
+                            <option>Antarctica</option>
+                            <option>Antigua and Barbuda</option>
+                            <option>Argentina</option>
+                            <option>Armenia</option>
+                            <option>Aruba</option>
+                            <option>Australia</option>
+                            <option>Austria</option>
+                            <option>Azerbaijan</option>
+                            <option>Bahamas</option>
+                            <option>Bahrain</option>
+                            <option>Bangladesh</option>
+                            <option>Barbados</option>
+                            <option>Belarus</option>
+                            <option>Belgium</option>
+                            <option>Belize</option>
+                            <option>Benin</option>
+                            <option>Bermuda</option>
+                            <option>Bhutan</option>
+                            <option>Bolivia</option>
+                            <option>Bonaire, Sint Eustatius and Saba</option>
+                            <option>Bosnia and Herzegovina</option>
+                            <option>Botswana</option>
+                            <option>Bouvet Island</option>
+                            <option>Brazil</option>
+                            <option>British Indian Ocean Territory</option>
+                            <option>Brunei Darussalam</option>
+                            <option>Bulgaria</option>
+                            <option>Burkina Faso</option>
+                            <option>Burundi</option>
+                            <option>Cabo Verde</option>
+                            <option>Cambodia</option>
+                            <option>Cameroon</option>
+                            <option>Canada</option>
+                            <option>Zimbabwe</option>
+                        </select>
+                    </div>
+                </div>
 
+                <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeJobTitle">Job Title</label>
                         <input type="text" id="attendeeJobTitle" class="form-control" placeholder="Enter job title">
@@ -745,41 +902,8 @@
                             <option value="Ministry of Youth Development">Ministry of Youth Development</option>
                         </select>
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="attendeeDepartment">Department</label>
-                        <input type="text" id="attendeeDepartment" class="form-control" placeholder="Enter department" required>
-                    </div>
-                </div> -->
-                <!-- <div class="form-row">
-                    <div class="form-group">
-                        <label for="attendeeAgency">Department Agency</label>
-                        <input type="text" id="attendeeAgency" class="form-control" placeholder="Enter department agency" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="attendeeStaffId">Staff ID</label>
-                        <input type="text" id="attendeeStaffId" class="form-control" placeholder="Enter staff ID">
-                    </div>
-                </div> -->
-                <!-- <div class="form-row">
-                    <div class="form-group">
-                        <label for="attendeeOffice">Office Location</label>
-                        <input type="text" id="attendeeOffice" class="form-control" placeholder="Enter office location">
-                    </div>
-                    <div class="form-group">
-                        <label for="attendeeStatus">Status</label>
-                        <select id="attendeeStatus" class="form-control">
-                            <option value="Approved" selected>Approved</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                    </div>
-                </div> -->
-                <!-- <div class="form-row">
-                    <div class="form-group">
-                        <label for="attendeeRemarks">Remarks</label>
-                        <textarea id="attendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
-                    </div>
-                </div> -->
+                </div>
+                    
                 <div class="form-actions">
                     <button type="reset" class="btn btn-secondary">Reset Form</button>
                     <button type="submit" class="btn">Add Participant</button>
@@ -884,8 +1008,9 @@
                                     <th>Name</th>
                                     <th>Email</th>    
                                     <th>Ministry</th>
-                                    <th>Department</th>
-                                <th>Actions</th>
+                                    <th>Job Title</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="allAttendeesTable">
@@ -1081,14 +1206,15 @@
                         <th>Booth ID</th>
                         <th>Location</th>
                         <th>Price (₦)</th>
+                        <th>Size</th>
                         <th>Status</th>
                         <th>Exhibitor</th>
                         <th>Company</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="exhibitorsTableBody">
-                    <!-- Exhibitors will be populated here from /admin/exhibitors -->
+                <tbody id="boothsTableBody">
+                    <!-- Booths will be populated here from /admin/booths -->
                 </tbody>
             </table>
         </div>
@@ -1173,11 +1299,7 @@
                         <th>Name</th>
                         <th>Topic</th>
                         <th>Affiliation</th>
-                        <th>Package</th>
-                        <th>Day</th>
-                        <th>Session</th>
                         <th>Status</th>
-                        <th>Payment</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -1213,7 +1335,7 @@
         if (!speakersBody) return;
         speakersBody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
-            speakersBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">No speakers found.</td></tr>';
+            speakersBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No speakers found.</td></tr>';
             return;
         }
         list.forEach(speaker => {
@@ -1222,24 +1344,15 @@
             const name = safeText(speaker.name || speaker.fullName || '-');
             const topic = safeText(speaker.topic || speaker.title || '-');
             const affiliation = safeText(speaker.affiliation || speaker.organization || '-');
-            const packageLevel = safeText(speaker.package || speaker.level || '-');
-            const day = safeText(speaker.day || speaker.date || '-');
-            const session = safeText(speaker.session || '-');
             const status = safeText(speaker.status || '-');
-            const payment = safeText(speaker.payment_status || speaker.payment || '-');
 
             const statusClass = statusClassFrom(status);
-            const paymentClass = statusClassFrom(payment);
 
             tr.innerHTML = `
                 <td>${name}</td>
                 <td>${topic}</td>
                 <td>${affiliation}</td>
-                <td><span class="status-badge ${statusClassFrom(packageLevel)}">${packageLevel}</span></td>
-                <td>${day}</td>
-                <td>${session}</td>
                 <td><span class="status-badge ${statusClass}">${status}</span></td>
-                <td><span class="status-badge ${paymentClass}">${payment}</span></td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-info btn-sm view-speaker-btn">View</button>
@@ -1267,7 +1380,7 @@
             updateStats(list);
         } catch (err) {
             console.error('Error fetching speakers:', err);
-            if (speakersBody) speakersBody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#c00;">Failed to load speakers.</td></tr>';
+            if (speakersBody) speakersBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c00;">Failed to load speakers.</td></tr>';
         }
     }
 
@@ -1293,8 +1406,8 @@
         <div class="section-header">
             <h2>Exhibitor Management</h2>
             <div class="section-actions">
-                <button class="btn btn-secondary" id="refreshExhibitorsBtn">Refresh</button>
-                <button class="btn" id="addExhibitorBtn">Add Exhibitor</button>
+                <button class="btn btn-secondary" id="refresh-exhibitors-btn">Refresh</button>
+                <button class="btn" id="add-exhibitor-btn">Add Exhibitor</button>
             </div>
         </div>
 
@@ -1305,7 +1418,7 @@
                     <i class="fas fa-store"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalExhibitors">0</h3>
+                    <h3 id="total-exhibitors">0</h3>
                     <p>Total Exhibitors</p>
                 </div>
             </div>
@@ -1314,7 +1427,7 @@
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="confirmedExhibitors">0</h3>
+                    <h3 id="confirmed-exhibitors">0</h3>
                     <p>Confirmed</p>
                 </div>
             </div>
@@ -1323,7 +1436,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="pendingExhibitors">0</h3>
+                    <h3 id="pending-exhibitors">0</h3>
                     <p>Pending</p>
                 </div>
             </div>
@@ -1333,89 +1446,157 @@
         <div class="search-filter-container">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchExhibitors" class="form-control" placeholder="Search by name, company, or booth...">
+                <input type="text" id="search-exhibitors" class="form-control" placeholder="Search by name, company, email, or phone...">
             </div>
             <div class="filter-group">
-                <select id="filterExhibitorStatus" class="form-control filter-select">
+                <select id="filter-exhibitor-status" class="form-control filter-select">
                     <option value="">All Statuses</option>
                     <option value="confirmed">Confirmed</option>
                     <option value="pending">Pending</option>
                     <option value="rejected">Rejected</option>
                 </select>
-                <select id="filterExhibitorDay" class="form-control filter-select">
-                    <option value="">All Days</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                </select>
-                <button class="btn btn-secondary" id="clearExhibitorFiltersBtn">Clear Filters</button>
+                <button class="btn btn-secondary" id="clear-exhibitor-filters-btn">Clear Filters</button>
             </div>
         </div>
 
         <div class="table-responsive">
-            <table class="data-table" id="exhibitorsTable">
+            
+            <table class="data-table" id="exhibitors-data-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Contact Person</th>
                         <th>Company</th>
-                        <th>Booth</th>
-                        <th>Day</th>
-                        <th>Budget (₦)</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Status</th>
-                        <th>Payment</th>
+                        <th>Registered At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr data-id="EX001">
-                        <td>Michael Chen</td>
-                        <td>Tech Innovations Ltd</td>
-                        <td>B002</td>
-                        <td>Wednesday</td>
-                        <td>500,000</td>
-                        <td><span class="status-badge status-approved">Confirmed</span></td>
-                        <td><span class="status-badge status-approved">Paid</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
-                                <button class="btn btn-success btn-sm approve-exhibitor-btn">Approve</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="EX002">
-                        <td>Sarah Johnson</td>
-                        <td>Global Solutions Inc</td>
-                        <td>B003</td>
-                        <td>Wednesday</td>
-                        <td>300,000</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
-                                <button class="btn btn-success btn-sm approve-exhibitor-btn">Approve</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="EX003">
-                        <td>David Wilson</td>
-                        <td>Innovate Africa Ltd</td>
-                        <td>B005</td>
-                        <td>Thursday</td>
-                        <td>400,000</td>
-                        <td><span class="status-badge status-approved">Confirmed</span></td>
-                        <td><span class="status-badge status-approved">Paid</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
-                                <button class="btn btn-danger btn-sm reject-exhibitor-btn">Reject</button>
-                            </div>
-                        </td>
+                <tbody id="exhibitors-table-body">
+                    <tr>
+                        <td colspan="7">Loading exhibitors...</td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Exhibitor Modal -->
+<div class="modal" id="addExhibitorModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Exhibitor</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addExhibitorForm">
+               <div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorPrefix">Category *</label>
+        <select id="exhibitorPrefix" class="form-control" required>
+            <option value="">Select Type</option>
+            <option>Company</option>
+            <option>Organization</option>
+            <option>Institution</option>
+            <option>Agency</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exhibitorName">Company / Organisation Name</label>
+        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter name" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorContactName">Contact Person Name </label>
+        <input type="text" id="exhibitorContactName" class="form-control" placeholder="Enter contact name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="exhibitorContactEmail">Contact Email</label>
+        <input type="email" id="exhibitorContactEmail" class="form-control" placeholder="Enter contact email" required>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="exhibitorContactPhone">Contact Phone Number</label>
+        <input type="tel" id="exhibitorContactPhone" class="form-control" placeholder="Enter contact phone" >
+    </div>
+
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitionTitle">Exhibition Title *</label>
+                        <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title">
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitionDescription">Description</label>
+                        <textarea id="exhibitionDescription" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitorBooth">Booth Assignment </label>
+                        <select id="exhibitorBooth" class="form-control">
+                            <option value="">Select Booth</option>
+                            <option value="B001">B001 - Main Hall A1</option>
+                            <option value="B002">B002 - Main Hall A2</option>
+                            <option value="B003">B003 - Exhibition Area B1</option>
+                            <option value="B004">B004 - Exhibition Area B2</option>
+                            <option value="B005">B005 - Networking Zone C1</option>
+                            <option value="B006">B006 - Networking Zone C2</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitionDay">Exhibition Day *</label>
+                        <select id="exhibitionDay" class="form-control">
+                            <option value="">Select Day</option>
+                            <option value="wednesday">Wednesday 25 June 2026</option>
+                            <option value="thursday">Thursday 26 June 2026</option>
+                            <option value="both">Both Days</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exhibitorStatus">Status</label>
+                        <select id="exhibitorStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed" selected>Confirmed</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="paymentStatus">Payment Status</label>
+                        <select id="paymentStatus" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="paid" selected>Paid</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exhibitorRemarks">Remarks</label>
+                        <textarea id="exhibitorRemarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelAddExhibitorBtn">Cancel</button>
+                    <button type="submit" class="btn-accept">Add Exhibitor</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1448,7 +1629,7 @@
                 </div>
                 <div class="stat-info">
                     <h3 id="diamondPartners">0</h3>
-                    <p>Diamond Partners</p>
+                    <p>Platinum Partners</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -1467,6 +1648,15 @@
                 <div class="stat-info">
                     <h3 id="silverPartners">0</h3>
                     <p>Silver Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ministries">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="bronzePartners">0</h3>
+                    <p>Bronze Partners</p>
                 </div>
             </div>
         </div>
@@ -1511,59 +1701,11 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr data-id="P001">
-                        <td>Tech Solutions Ltd</td>
-                        <td>John Smith</td>
-                        <td>john@techsolutions.com</td>
-                        <td><span class="status-badge status-approved">Diamond</span></td>
-                        <td>5,000,000</td>
-                        <td><span class="status-badge status-approved">Active</span></td>
-                        <td><span class="status-badge status-approved">Paid</span></td>
-                        <td>2026-01-15</td>
-                        <td>2026-12-31</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="P002">
-                        <td>Innovate Africa</td>
-                        <td>Sarah Johnson</td>
-                        <td>sarah@innovateafrica.com</td>
-                        <td><span class="status-badge status-pending">Gold</span></td>
-                        <td>3,000,000</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>2026-02-01</td>
-                        <td>2026-12-31</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
-                                <button class="btn btn-success btn-sm approve-partner-btn">Approve</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-id="P003">
-                        <td>Global Finance Inc</td>
-                        <td>Michael Brown</td>
-                        <td>michael@globalfinance.com</td>
-                        <td><span class="status-badge status-approved">Silver</span></td>
-                        <td>1,500,000</td>
-                        <td><span class="status-badge status-approved">Active</span></td>
-                        <td><span class="status-badge status-approved">Paid</span></td>
-                        <td>2026-01-20</td>
-                        <td>2026-12-31</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-partner-btn">View</button>
-                                <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-partner-btn">Delete</button>
-                            </div>
+                <tbody id="partnersTableBody">
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #007bff;"></i>
+                            <span style="margin-left: 10px; color: #666;">Loading partners...</span>
                         </td>
                     </tr>
                 </tbody>
@@ -1591,7 +1733,7 @@
                     <i class="fas fa-calendar-day"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalAgendaItems">42</h3>
+                    <h3 id="totalAgendaItems">0</h3>
                     <p>Total Sessions</p>
                 </div>
             </div>
@@ -1600,7 +1742,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="day1Sessions">18</h3>
+                    <h3 id="day1Sessions">0</h3>
                     <p>Day 1 Sessions</p>
                 </div>
             </div>
@@ -1609,7 +1751,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="day2Sessions">24</h3>
+                    <h3 id="day2Sessions">0</h3>
                     <p>Day 2 Sessions</p>
                 </div>
             </div>
@@ -1655,98 +1797,18 @@
             <!-- Day 1 - Wednesday -->
             <div class="agenda-day" id="day-wednesday">
                 <h3 class="day-header">Wednesday, June 25, 2026</h3>
-                
-                <div class="timeline-session" data-id="A001">
-                    <div class="session-time">
-                        <span class="time">08:00 - 09:00</span>
-                    </div>
-                    <div class="session-details">
-                        <h4 class="session-title">Registration & Welcome Coffee</h4>
-                        <p class="session-track">Registration</p>
-                        <p class="session-venue">Main Lobby</p>
-                        <p class="session-speakers">All Participant</p>
-                    </div>
-                    <div class="session-actions">
-                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
-                    </div>
-                </div>
-
-                <div class="timeline-session" data-id="A002">
-                    <div class="session-time">
-                        <span class="time">09:00 - 10:30</span>
-                    </div>
-                    <div class="session-details">
-                        <h4 class="session-title">Opening Ceremony & Keynote Address</h4>
-                        <p class="session-track">Keynote</p>
-                        <p class="session-venue">Main Hall</p>
-                        <p class="session-speakers">Dr. Elizabeth Williams, Prof. James Anderson</p>
-                        <p class="session-description">Official opening of ICSC 2026 with keynote addresses on the future of public service.</p>
-                    </div>
-                    <div class="session-actions">
-                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
-                    </div>
-                </div>
-
-                <div class="timeline-session" data-id="A003">
-                    <div class="session-time">
-                        <span class="time">10:30 - 11:00</span>
-                    </div>
-                    <div class="session-details">
-                        <h4 class="session-title">Coffee Break & Networking</h4>
-                        <p class="session-track">Networking</p>
-                        <p class="session-venue">Networking Zone</p>
-                        <p class="session-speakers">All Participant</p>
-                    </div>
-                    <div class="session-actions">
-                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
-                    </div>
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading agenda items...</p>
                 </div>
             </div>
 
             <!-- Day 2 - Thursday -->
             <div class="agenda-day" id="day-thursday">
                 <h3 class="day-header">Thursday, June 26, 2026</h3>
-                
-                <div class="timeline-session" data-id="A004">
-                    <div class="session-time">
-                        <span class="time">08:30 - 10:00</span>
-                    </div>
-                    <div class="session-details">
-                        <h4 class="session-title">Digital Transformation in Public Service</h4>
-                        <p class="session-track">Panel Discussion</p>
-                        <p class="session-venue">Conference Room A</p>
-                        <p class="session-speakers">Sarah Johnson, Michael Chen, David Wilson</p>
-                        <p class="session-description">Exploring the role of technology in modernizing public service delivery.</p>
-                    </div>
-                    <div class="session-actions">
-                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
-                    </div>
-                </div>
-
-                <div class="timeline-session" data-id="A005">
-                    <div class="session-time">
-                        <span class="time">10:00 - 11:30</span>
-                    </div>
-                    <div class="session-details">
-                        <h4 class="session-title">Leadership Workshop</h4>
-                        <p class="session-track">Workshop</p>
-                        <p class="session-venue">Conference Room B</p>
-                        <p class="session-speakers">Dr. Elizabeth Williams</p>
-                        <p class="session-description">Interactive workshop on developing leadership skills in public service.</p>
-                    </div>
-                    <div class="session-actions">
-                        <button class="btn btn-info btn-sm view-agenda-btn">View</button>
-                        <button class="btn btn-warning btn-sm edit-agenda-btn">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-agenda-btn">Delete</button>
-                    </div>
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading agenda items...</p>
                 </div>
             </div>
         </div>
@@ -3343,7 +3405,7 @@
                 </div>
                 <div class="stat-info">
                     <h3 id="diamondUtilization">0/0</h3>
-                    <p>Diamond Partners</p>
+                    <p>Platinum Partners</p>
                     <small><span id="diamondPercentage">0%</span> utilized</small>
                 </div>
             </div>
@@ -4205,7 +4267,7 @@ ICSC 2026 Team</textarea>
 </div>
 
     <!-- Success Modal -->
-    <div id="successModal" class="modal">
+    <!-- <div id="successModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Success!</h2>
@@ -4222,7 +4284,7 @@ ICSC 2026 Team</textarea>
                 <a href="#" class="btn btn-secondary" data-tab="attendees">View All Participant</a>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Edit Attendee Modal -->
     <div id="editAttendeeModal" class="modal">
@@ -4559,15 +4621,24 @@ ICSC 2026 Team</textarea>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="boothFeatures">Features</label>
-                        <select id="boothFeatures" class="form-control" multiple>
-                            <option value="electricity">Electricity</option>
-                            <option value="wifi">WiFi</option>
-                            <option value="furniture">Furniture</option>
-                            <option value="lighting">Special Lighting</option>
-                            <option value="display">Display Screen</option>
-                        </select>
-                        <small>Hold Ctrl/Cmd to select multiple features</small>
+                        <label>Features</label>
+                        <div id="boothFeatures" class="features-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="electricity"> Electricity
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="wifi"> WiFi
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="furniture"> Furniture
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="lighting"> Special Lighting
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="display"> Display Screen
+                            </label>
+                        </div>
                     </div>
                 </div>
                 
@@ -4627,6 +4698,129 @@ ICSC 2026 Team</textarea>
         </div>
     </div>
 </div>
+
+<script>
+(function(){
+    const form = document.getElementById('addBoothForm');
+    const boothStatus = document.getElementById('boothStatus');
+    const exhibitorSection = document.getElementById('exhibitorInfoSection');
+    const cancelBtn = document.getElementById('cancelAddBoothBtn');
+
+    function getToken(){
+        try{
+            const raw = localStorage.getItem('authUser');
+            if (raw){ const a = JSON.parse(raw); if (a && a.token) return a.token; }
+        } catch(e){}
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    // Show/hide exhibitor section based on status
+    if (boothStatus) {
+        const updateExhibitorVisibility = () => {
+            const v = (boothStatus.value || '').toString().toLowerCase();
+            if (v === 'reserved' || v === 'sold') exhibitorSection.style.display = '';
+            else exhibitorSection.style.display = 'none';
+        };
+        boothStatus.addEventListener('change', updateExhibitorVisibility);
+        // ensure correct initial state
+        updateExhibitorVisibility();
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            const modal = document.getElementById('addBoothModal');
+            if (modal) modal.style.display = 'none';
+            if (form) form.reset();
+            if (exhibitorSection) exhibitorSection.style.display = 'none';
+        });
+    }
+
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const origText = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn){ submitBtn.disabled = true; submitBtn.textContent = 'Adding...'; }
+
+        // Collect values
+        const boothId = (document.getElementById('boothId') && document.getElementById('boothId').value || '').trim();
+        const boothLocation = (document.getElementById('boothLocation') && document.getElementById('boothLocation').value) || '';
+        const boothPrice = document.getElementById('boothPrice') ? Number(document.getElementById('boothPrice').value || 0) : 0;
+        const boothSize = (document.getElementById('boothSize') && document.getElementById('boothSize').value) || '';
+        const boothStatusVal = (document.getElementById('boothStatus') && document.getElementById('boothStatus').value) || '';
+        const featuresContainer = document.getElementById('boothFeatures');
+        const features = featuresContainer ? Array.from(featuresContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value) : [];
+
+        // Exhibitor info - include only when relevant or filled
+        const exhibitorName = (document.getElementById('exhibitorName') && document.getElementById('exhibitorName').value.trim()) || '';
+        const exhibitorCompany = (document.getElementById('exhibitorCompany') && document.getElementById('exhibitorCompany').value.trim()) || '';
+        const exhibitorEmail = (document.getElementById('exhibitorEmail') && document.getElementById('exhibitorEmail').value.trim()) || '';
+        const exhibitorPhone = (document.getElementById('exhibitorPhone') && document.getElementById('exhibitorPhone').value.trim()) || '';
+        const paymentStatus = (document.getElementById('paymentStatus') && document.getElementById('paymentStatus').value) || '';
+        const paymentDate = (document.getElementById('paymentDate') && document.getElementById('paymentDate').value) || '';
+        const remarks = (document.getElementById('boothRemarks') && document.getElementById('boothRemarks').value.trim()) || '';
+
+        console.log('Creating booth with data features:', {
+            features
+        });
+
+        // Build payload using keys consistent with existing code (snake_case)
+        const payload = {
+            booth_number: boothId,
+            location: boothLocation,
+            price: isNaN(boothPrice) ? 0 : boothPrice,
+            booth_size: boothSize,
+            status: boothStatusVal,
+            features: features,
+        };
+
+        if (exhibitorName || exhibitorCompany || exhibitorEmail || exhibitorPhone || paymentStatus || paymentDate || remarks) {
+            payload.exhibitor_name = exhibitorName;
+            payload.company_name = exhibitorCompany;
+            payload.exhibitor_email = exhibitorEmail;
+            payload.exhibitor_phone = exhibitorPhone;
+            if (paymentStatus) payload.payment_status = paymentStatus;
+            if (paymentDate) payload.payment_date = paymentDate;
+            if (remarks) payload.remarks = remarks;
+        }
+
+        try {
+            let res;
+            if (window.apiClient) {
+                // apiClient should already have baseURL and headers configured
+                res = await window.apiClient.post('/admin/create-booth', payload);
+            } else {
+                const token = getToken();
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+                res = await axios.post(`${API_BASE_URL}/admin/create-booth`, payload, { headers });
+            }
+
+            if (res && (res.status === 200 || res.status === 201)) {
+                const successMessageEl = document.getElementById('successMessage');
+                if (successMessageEl) successMessageEl.textContent = 'Booth created successfully.';
+                form.reset();
+                if (exhibitorSection) exhibitorSection.style.display = 'none';
+
+                // trigger booths refresh if the refresh button exists
+                const refreshBtn = document.getElementById('refreshBoothsBtn');
+                if (refreshBtn) try { refreshBtn.click(); } catch (e) { /* ignore */ }
+            } else {
+                const msg = res?.data?.message || 'Failed to create booth';
+                throw new Error(msg);
+            }
+        } catch (err) {
+            const msg = err?.response?.data?.message || err.message || 'Create booth failed';
+            alert(msg);
+            console.error('Create booth error:', err);
+        } finally {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
+        }
+    });
+})();
+</script>
 
 <!-- View Booth Modal -->
 <div id="viewBoothModal" class="modal">
@@ -4800,130 +4994,102 @@ ICSC 2026 Team</textarea>
             <button class="close-modal">&times;</button>
         </div>
         
-        <div class="api-indicator">
-            <strong>API Status:</strong> <span id="speaker-api-status">Checking...</span>
-        </div>
-        
         <div class="modal-body">
             <form id="addSpeakerForm">
-                <div class="form-group">
-                    <label for="speakerEvent">Event</label>
-                    <select id="speakerEvent" class="form-control" required>
-                        <option value="">Select Event</option>
-                        <option value="Keynote: The Future of Public Service">Keynote: The Future of Public Service</option>
-                        <option value="Panel: Digital Transformation in Government">Panel: Digital Transformation in Government</option>
-                        <option value="The Civil Service as the Engine of Governance">The Civil Service as the Engine of Governance</option>
-                    </select>
-                </div>
-                <div class="form-row">
-    <div class="form-group">
-        <label for="speakerPrefix">Prefix</label>
-        <select id="speakerPrefix" class="form-control" required>
-            <option value="">Select prefix</option>
-            <option>Mr</option>
-            <option>Mrs</option>
-            <option>Miss</option>
-            <option>Dr</option>
-            <option>Prof</option>
-        </select>
-    </div>
                 
-                <div class="form-group">
-        <label for="speakerFirstName">First Name</label>
-        <input type="text" id="speakerFirstName" class="form-control" placeholder="Enter first name">
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerLastName">Last Name</label>
-        <input type="text" id="speakerLastName" class="form-control" placeholder="Enter last name">
-    </div>
-
-    <div class="form-group">
-        <label for="speakerEmail">Work Email (Login)</label>
-        <input type="email" id="speakerEmail" class="form-control" placeholder="Enter work email" >
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerPassword">Password</label>
-        <input type="password" id="speakerPassword" class="form-control" placeholder="Enter password">
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerExperience">Previous Speaking Experience</label>
-        <textarea id="speakerExperience" class="form-control" placeholder="Enter previous speaking experience"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="speakerCountry">Country *</label>
-        <input type="text" id="speakerCountry" class="form-control" placeholder="Enter country">
-    </div>
-</div>          
-          <div class="form-group">
-                    <label for="speakerDescription">Brief Introduction</label>
-                    <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief intrduction"></textarea>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerPrefix">Prefix</label>
+                        <select id="speakerPrefix" class="form-control" required>
+                            <option value="">Select prefix</option>
+                            <option>Mr</option>
+                            <option>Mrs</option>
+                            <option>Miss</option>
+                            <option>Dr</option>
+                            <option>Prof</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-row">
-    <div class="form-group">
-        <label for="speakerTopic">Topic</label>
-        <input type="text" id="speakerTopic" class="form-control" placeholder="Enter topic">
-    </div>
-
-                
-                <div class="form-group">
-                    <label for="speakerAffiliation">Affiliation/Organization</label>
-                    <input type="text" id="speakerAffiliation" class="form-control" placeholder="Enter organization">
+                    <div class="form-group">
+                        <label for="speakerFirstName">First Name</label>
+                        <input type="text" id="speakerFirstName" class="form-control" placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerLastName">Last Name</label>
+                        <input type="text" id="speakerLastName" class="form-control" placeholder="Enter last name">
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="speakerPackage">Speaker Package </label>
-                    <select id="speakerPackage" class="form-control" required>
-                        <option value="">Select Package</option>
-                        <option value="diamond">Diamond Partner</option>
-                        <option value="gold">Gold Knowledge Partner</option>
-                        <option value="silver">Silver Roundtable Partner</option>
-                        <option value="bronze">Bronze Exhibition Partner</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerStatus">Status</label>
-                    <select id="speakerStatus" class="form-control">
-                        <option value="confirmed">Confirmed</option>
-                        <option value="pending">Pending</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerPayment">Payment Status</label>
-                    <select id="speakerPayment" class="form-control">
-                        <option value="paid">Paid</option>
-                        <option value="pending">Pending</option>
-                        <option value="overdue">Overdue</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerLinks">Social Media Links</label>
-                    <textarea id="speakerLinks" class="form-control" placeholder="Enter social media profiles (one per line)"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerFile">Upload Profile/Topic PDF</label>
-                    <input type="file" id="speakerFile" class="form-control" accept=".pdf">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerEmail">Work Email (Login)</label>
+                        <input type="email" id="speakerEmail" class="form-control" placeholder="Enter work email" >
+                    </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelAddSpeakerBtn">Cancel</button>
-                    <button type="submit" class="btn-accept">Add Speaker</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerPhone">Phone Number</label>
+                        <input type="tel" id="speakerPhone" class="form-control" placeholder="Enter phone number">
+                    </div>
                 </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerExperience">Previous Speaking Experience</label>
+                        <textarea id="speakerExperience" class="form-control" placeholder="Enter previous speaking experience"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerCountry">Country *</label>
+                        <input type="text" id="speakerCountry" class="form-control" placeholder="Enter country">
+                    </div>
+                </div>
+                <div class="form-row">          
+                    <div class="form-group">
+                        <label for="speakerDescription">Brief Introduction</label>
+                        <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief intrduction"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerJobTitle">Job Title</label>
+                        <input type="text" id="speakerJobTitle" class="form-control" placeholder="Job Title">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerTopic">Topic</label>
+                        <input type="text" id="speakerTopic" class="form-control" placeholder="Enter topic">
+                    </div>
+                </div>  
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerAffiliation">Affiliation/Organization</label>
+                        <input type="text" id="speakerAffiliation" class="form-control" placeholder="Enter organization">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerLinks">Social Media Links</label>
+                        <textarea id="speakerLinks" class="form-control" placeholder="Enter social media profiles (one per line)"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" id="cancelAddSpeakerBtn">Cancel</button>
+                        <button type="submit" class="btn-accept">Add Speaker</button>
+                    </div>
+                </div>
+
+                
             </form>
         </div>
     </div>
@@ -4956,23 +5122,9 @@ ICSC 2026 Team</textarea>
             <button class="close-modal">&times;</button>
         </div>
         
-        <div class="api-indicator">
-            <strong>API Status:</strong> <span id="edit-speaker-api-status">Checking...</span>
-        </div>
-        
         <div class="modal-body">
             <form id="editSpeakerForm">
                 <input type="hidden" id="editSpeakerId">
-                
-                <div class="form-group">
-                    <label for="editSpeakerEvent">Event</label>
-                    <select id="editSpeakerEvent" class="form-control" required>
-                        <option value="">Select Event</option>
-                        <option value="Keynote: The Future of Public Service">Keynote: The Future of Public Service</option>
-                        <option value="Panel: Digital Transformation in Government">Panel: Digital Transformation in Government</option>
-                        <option value="The Civil Service as the Engine of Governance">The Civil Service as the Engine of Governance</option>
-                    </select>
-                </div>
                 
                 <div class="form-row">
                     <div class="form-group">
@@ -5064,14 +5216,7 @@ ICSC 2026 Team</textarea>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="editSpeakerPayment">Payment Status</label>
-                        <select id="editSpeakerPayment" class="form-control">
-                            <option value="paid">Paid</option>
-                            <option value="pending">Pending</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
-                    </div>
+                    
                     <div class="form-group">
                         <label for="editSpeakerDay">Presentation Day</label>
                         <select id="editSpeakerDay" class="form-control">
@@ -5388,139 +5533,6 @@ ICSC 2026 Team</textarea>
 </div>
         </div>
 
-<!-- Add Agenda Item Modal -->
-<div id="addAgendaItemModal" class="modal">
-    <div class="modal-content modal-lg">
-        <div class="modal-header">
-            <h2>Add Agenda Item</h2>
-            <button class="close-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="addAgendaItemForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaSessionTitle" class="has-star">Session Title</label>
-                        <input type="text" id="agendaSessionTitle" class="form-control" placeholder="Enter session title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaDay" class="has-star">Day</label>
-                        <select id="agendaDay" class="form-control" required>
-                            <option value="">Select Day</option>
-                            <option value="wednesday">Wednesday, June 25, 2026</option>
-                            <option value="thursday">Thursday, June 26, 2026</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaStartTime" class="has-star">Start Time</label>
-                        <input type="time" id="agendaStartTime" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaEndTime" class="has-star">End Time</label>
-                        <input type="time" id="agendaEndTime" class="form-control" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaTrack" class="has-star">Session Track</label>
-                        <select id="agendaTrack" class="form-control" required>
-                            <option value="">Select Track</option>
-                            <option value="keynote">Keynote</option>
-                            <option value="panel">Panel Discussion</option>
-                            <option value="workshop">Workshop</option>
-                            <option value="networking">Networking</option>
-                            <option value="breakout">Breakout Session</option>
-                            <option value="plenary">Plenary Session</option>
-                            <option value="registration">Registration</option>
-                            <option value="coffee">Coffee Break</option>
-                            <option value="lunch">Lunch Break</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaVenue" class="has-star">Venue/Location</label>
-                        <select id="agendaVenue" class="form-control" required>
-                            <option value="">Select Venue</option>
-                            <option value="main-hall">Main Hall</option>
-                            <option value="conference-room-a">Conference Room A</option>
-                            <option value="conference-room-b">Conference Room B</option>
-                            <option value="exhibition-hall">Exhibition Hall</option>
-                            <option value="networking-zone">Networking Zone</option>
-                            <option value="main-lobby">Main Lobby</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="agendaDescription">Session Description</label>
-                    <textarea id="agendaDescription" class="form-control" placeholder="Describe the session content" rows="3"></textarea>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaSpeakers">Speakers/Presenters</label>
-                        <select id="agendaSpeakers" class="form-control" multiple>
-                            <option value="Dr. Elizabeth Williams">Dr. Elizabeth Williams</option>
-                            <option value="Prof. James Anderson">Prof. James Anderson</option>
-                            <option value="Ms. Sarah Johnson">Ms. Sarah Johnson</option>
-                            <option value="Michael Chen">Michael Chen</option>
-                            <option value="David Wilson">David Wilson</option>
-                        </select>
-                        <small>Hold Ctrl/Cmd to select multiple speakers</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaModerator">Moderator</label>
-                        <input type="text" id="agendaModerator" class="form-control" placeholder="Enter moderator name">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaCapacity">Maximum Capacity</label>
-                        <input type="number" id="agendaCapacity" class="form-control" placeholder="Enter maximum attendees">
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaStatus">Session Status</label>
-                        <select id="agendaStatus" class="form-control">
-                            <option value="confirmed" selected>Confirmed</option>
-                            <option value="tentative">Tentative</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agendaPrerequisites">Prerequisites</label>
-                        <textarea id="agendaPrerequisites" class="form-control" placeholder="Any prerequisites for attendees" rows="2"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="agendaMaterials">Required Materials</label>
-                        <textarea id="agendaMaterials" class="form-control" placeholder="Any materials attendees should bring" rows="2"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="agendaAdditionalInfo">Additional Information</label>
-                    <textarea id="agendaAdditionalInfo" class="form-control" placeholder="Any additional information about the session" rows="3"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="agendaSessionFile">Upload Session Materials</label>
-                    <input type="file" id="agendaSessionFile" class="form-control" accept=".pdf,.ppt,.pptx,.doc,.docx">
-                    <small>Accepted formats: PDF, PPT, DOC (Max: 20MB)</small>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelAddAgendaBtn">Cancel</button>
-                    <button type="submit" class="btn-accept">Add Agenda Item</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
         </div>
 
     <!-- Add Exhibitor Modal -->
@@ -5529,11 +5541,6 @@ ICSC 2026 Team</textarea>
         <div class="modal-header">
             <h2>Add New Exhibitor</h2>
             <button class="close-modal">&times;</button>
-        </div>
-        
-        <!-- BACKEND INTEGRATION: Booth selection and payment -->
-        <div class="api-indicator" style="margin: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3;">
-            <strong>BACKEND INTEGRATION:</strong> Exhibitor data will be saved via API endpoints
         </div>
         
         <div class="modal-body">
@@ -5552,8 +5559,8 @@ ICSC 2026 Team</textarea>
     </div>
 
     <div class="form-group">
-        <label for="exhibitorName">Company / Organisation Name</label>
-        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter name" required>
+        <label for="exhibitorCompanyName">Company / Organisation Name</label>
+        <input type="text" id="exhibitorCompanyName" class="form-control" placeholder="Enter name">
     </div>
 </div>
 
@@ -5574,6 +5581,7 @@ ICSC 2026 Team</textarea>
         <label for="exhibitorContactPhone">Contact Phone Number</label>
         <input type="tel" id="exhibitorContactPhone" class="form-control" placeholder="Enter contact phone" >
     </div>
+</div>
 
                 
                 <div class="form-row">
@@ -5581,60 +5589,11 @@ ICSC 2026 Team</textarea>
                         <label for="exhibitionTitle">Exhibition Title *</label>
                         <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title">
                     </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group">
                         <label for="exhibitionDescription">Description</label>
                         <textarea id="exhibitionDescription" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="exhibitorBooth">Booth Assignment </label>
-                        <select id="exhibitorBooth" class="form-control">
-                            <option value="">Select Booth</option>
-                            <option value="B001">B001 - Main Hall A1</option>
-                            <option value="B002">B002 - Main Hall A2</option>
-                            <option value="B003">B003 - Exhibition Area B1</option>
-                            <option value="B004">B004 - Exhibition Area B2</option>
-                            <option value="B005">B005 - Networking Zone C1</option>
-                            <option value="B006">B006 - Networking Zone C2</option>
-                            
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exhibitionDay">Exhibition Day *</label>
-                        <select id="exhibitionDay" class="form-control">
-                            <option value="">Select Day</option>
-                            <option value="wednesday">Wednesday 25 June 2026</option>
-                            <option value="thursday">Thursday 26 June 2026</option>
-                            <option value="both">Both Days</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="exhibitorStatus">Status</label>
-                        <select id="exhibitorStatus" class="form-control">
-                            <option value="pending">Pending</option>
-                            <option value="confirmed" selected>Confirmed</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="paymentStatus">Payment Status</label>
-                        <select id="paymentStatus" class="form-control">
-                            <option value="pending">Pending</option>
-                            <option value="paid" selected>Paid</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exhibitorRemarks">Remarks</label>
-                        <textarea id="exhibitorRemarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
                     </div>
                 </div>
 
@@ -5795,112 +5754,82 @@ ICSC 2026 Team</textarea>
                     <h3>Account Information</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="partnerEmail" class="has-star">Email Address</label>
-                            <input type="email" id="partnerEmail" class="form-control" placeholder="Enter email address" required>
+                            <label class="has-star" for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                            <div class="help-block-error" id="email-error"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="partnerPassword" class="has-star">Password</label>
-                            <div class="position-relative">
-                                <input type="password" id="partnerPassword" class="form-control" placeholder="Enter password" required>
-                                <button type="button" class="password-toggle" id="togglePartnerPassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Company Information -->
-                <div class="form-section">
-                    <h3>Company Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="partnerCompanyPrefix" class="has-star">Company Type</label>
-                            <select id="partnerCompanyPrefix" class="form-control" required>
-                                <option value="">Select Type</option>
-                                <option value="company">Company</option>
-                                <option value="organization">Organization</option>
-                                <option value="institution">Institution</option>
-                                <option value="agency">Agency</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="partnerCompanyName" class="has-star">Company/Organization Name</label>
-                            <input type="text" id="partnerCompanyName" class="form-control" placeholder="Enter company name" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerCompanyLogo" class="has-star">Company Logo</label>
-                        <input type="file" id="partnerCompanyLogo" class="form-control" accept="image/*" required>
-                        <div class="hint-block">Accepted formats: JPG, PNG, GIF (Max size: 5MB)</div>
                     </div>
                 </div>
 
                 <!-- Contact Information -->
                 <div class="form-section">
                     <h3>Contact Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="partnerContactFirstName" class="has-star">First Name</label>
-                            <input type="text" id="partnerContactFirstName" class="form-control" placeholder="Enter first name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="partnerContactLastName" class="has-star">Last Name</label>
-                            <input type="text" id="partnerContactLastName" class="form-control" placeholder="Enter last name" required>
-                        </div>
+                    <div class="form-group">
+                        <label class="has-star" for="prefix">Prefix</label>
+                        <select id="prefix" name="prefix" class="form-control" required>
+                            <option value="">Please choose...</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Prof">Prof</option>
+                        </select>
+                        <div class="help-block-error" id="prefix-error"></div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="partnerContactEmail" class="has-star">Contact Email</label>
-                            <input type="email" id="partnerContactEmail" class="form-control" placeholder="Enter contact email" required>
+                            <label class="has-star" for="firstName">First name</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" required>
+                            <div class="help-block-error" id="firstName-error"></div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="partnerContactPhone" class="has-star">Contact Phone</label>
-                            <input type="tel" id="partnerContactPhone" class="form-control" placeholder="Enter phone number" required>
+                            <label class="has-star" for="lastName">Last name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control" required>
+                            <div class="help-block-error" id="lastName-error"></div>
                         </div>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="partnerWebsite">Website</label>
-                            <input type="url" id="partnerWebsite" class="form-control" placeholder="https://example.com">
+                    <div class="form-group">
+                        <label class="has-star" for="country">Country</label>
+                        <select id="country" name="country" class="form-control" required>
+                            <option value="" disabled>Select your country</option>
+                        </select>
+                        <div class="help-block-error" id="country-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="has-star" for="jobTitle">Job title</label>
+                        <input type="text" id="jobTitle" name="jobTitle" class="form-control" required>
+                        <div class="help-block-error" id="jobTitle-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="organisation">Organisation/MDA/Company</label>
+                        <input type="text" id="organisation" name="organisation" class="form-control" required>
+                        <div class="help-block-error" id="organisation-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="has-star" for="workPhone">Work phone</label>
+                        <div class="phone-input-container">
+                            <input type="tel" id="workPhone" name="workPhone" class="form-control" placeholder="0802 123 4567" required>
                         </div>
-                        <div class="form-group">
-                            <label for="partnerSocialMedia">Social Media</label>
-                            <input type="text" id="partnerSocialMedia" class="form-control" placeholder="@companyname">
-                        </div>
+                        <div class="help-block-error" id="workPhone-error"></div>
                     </div>
                 </div>
 
                 <!-- Partner Details -->
                 <div class="form-section">
                     <h3>Partner Details</h3>
-                    <div class="form-group">
-                        <label for="partnerDescription">Company Description</label>
-                        <textarea id="partnerDescription" class="form-control" placeholder="Describe your company/organization" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerInterest">Partnership Interest</label>
-                        <textarea id="partnerInterest" class="form-control" placeholder="Why are you interested in partnering with ICSC 2026?" rows="3"></textarea>
-                    </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="partnerPackage" class="has-star">Partnership Package</label>
                             <select id="partnerPackage" class="form-control" required>
                                 <option value="">Select Package</option>
-                                <option value="bronze">Bronze Partner</option>
-                                <option value="silver">Silver Partner</option>
-                                <option value="gold">Gold Partner</option>
-                                <option value="platinum">Platinum Partner</option>
                             </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="partnerInvestment">Investment (₦)</label>
-                            <input type="number" id="partnerInvestment" class="form-control" placeholder="Enter investment amount">
                         </div>
                     </div>
                     
@@ -5920,17 +5849,6 @@ ICSC 2026 Team</textarea>
                                 <option value="paid" selected>Paid</option>
                                 <option value="overdue">Overdue</option>
                             </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="partnerStartDate">Partnership Start Date</label>
-                            <input type="date" id="partnerStartDate" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="partnerEndDate">Partnership End Date</label>
-                            <input type="date" id="partnerEndDate" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -6593,7 +6511,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             
             // Submit booth data
-            submitBoothData(formData);
+            // submitBoothData(formData);
         });
     }
     
@@ -6655,26 +6573,123 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Function to submit booth data to backend
-async function submitBoothData(formData) {
-    try {
-        // BACKEND INTEGRATION: Replace with actual API call
-        console.log('Booth data submitted:', formData);
-        
-        // Show success message
-        showSuccessMessage('Booth has been successfully added!');
-        
-        // Close modal
-        document.getElementById('addBoothModal').style.display = 'none';
-        
-        // Refresh booths table
-        refreshBoothsTable();
-        
-    } catch (error) {
-        console.error('Error submitting booth data:', error);
-        alert('Error adding booth. Please try again.');
+// Partner Management Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const addPartnerForm = document.getElementById('addPartnerForm');
+
+    // Populate country select
+    const countrySelect = document.getElementById('country');
+    if (countrySelect) {
+        const countries = [
+            'Nigeria', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Italy', 'Spain', 'Netherlands',
+            'Belgium', 'Switzerland', 'Austria', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Portugal', 'Greece',
+            'Poland', 'Czech Republic', 'Hungary', 'Slovakia', 'Slovenia', 'Croatia', 'Romania', 'Bulgaria', 'Serbia', 'Bosnia and Herzegovina',
+            'Montenegro', 'Kosovo', 'Albania', 'North Macedonia', 'Turkey', 'Russia', 'Ukraine', 'Belarus', 'Moldova', 'Georgia',
+            'Armenia', 'Azerbaijan', 'Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Tajikistan', 'Kyrgyzstan', 'Afghanistan', 'Pakistan',
+            'India', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Bhutan', 'Maldives', 'China', 'Japan', 'South Korea', 'North Korea',
+            'Mongolia', 'Vietnam', 'Laos', 'Cambodia', 'Thailand', 'Myanmar', 'Malaysia', 'Singapore', 'Indonesia', 'Philippines',
+            'Brunei', 'East Timor', 'Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Solomon Islands', 'Vanuatu', 'Samoa',
+            'Tonga', 'Tuvalu', 'Kiribati', 'Marshall Islands', 'Micronesia', 'Palau', 'Nauru', 'Egypt', 'Libya', 'Tunisia',
+            'Algeria', 'Morocco', 'Western Sahara', 'Mauritania', 'Mali', 'Niger', 'Chad', 'Sudan', 'South Sudan', 'Eritrea',
+            'Djibouti', 'Somalia', 'Ethiopia', 'Kenya', 'Tanzania', 'Uganda', 'Rwanda', 'Burundi', 'Democratic Republic of the Congo',
+            'Republic of the Congo', 'Gabon', 'Equatorial Guinea', 'Cameroon', 'Central African Republic', 'Angola', 'Zambia',
+            'Zimbabwe', 'Malawi', 'Mozambique', 'Botswana', 'Namibia', 'South Africa', 'Lesotho', 'Swaziland', 'Ghana', 'Togo',
+            'Benin', 'Burkina Faso', 'Côte d\'Ivoire', 'Liberia', 'Sierra Leone', 'Guinea', 'Guinea-Bissau', 'Senegal', 'Gambia',
+            'Cape Verde', 'São Tomé and Príncipe', 'Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia', 'Venezuela', 'Ecuador',
+            'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname', 'French Guiana', 'Mexico', 'Guatemala', 'Belize', 'El Salvador',
+            'Honduras', 'Nicaragua', 'Costa Rica', 'Panama', 'Cuba', 'Haiti', 'Dominican Republic', 'Jamaica', 'Trinidad and Tobago',
+            'Barbados', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Grenada', 'Antigua and Barbuda', 'Saint Kitts and Nevis',
+            'Bahamas', 'Puerto Rico', 'U.S. Virgin Islands', 'British Virgin Islands', 'Anguilla', 'Montserrat', 'Guadeloupe',
+            'Martinique', 'Saint Martin', 'Saint Barthélemy', 'Aruba', 'Curaçao', 'Bonaire', 'Saba', 'Sint Eustatius', 'Sint Maarten'
+        ];
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            countrySelect.appendChild(option);
+        });
     }
-}
+
+    if (addPartnerForm) {
+        addPartnerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = addPartnerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : 'Add Partner';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating...';
+            }
+
+            // Collect form data
+            const formData = {
+                contactEmail: document.getElementById('email').value.trim(),
+                prefix: document.getElementById('prefix').value,
+                contactFirstName: document.getElementById('firstName').value.trim(),
+                contactLastName: document.getElementById('lastName').value.trim(),
+                country: document.getElementById('country').value,
+                jobTitle: document.getElementById('jobTitle').value.trim(),
+                companyName: document.getElementById('organisation').value.trim(),
+                contactPhone: document.getElementById('workPhone').value.trim(),
+                package_id: document.getElementById('partnerPackage').value,
+                package_status: document.getElementById('partnerStatus').value,
+                status: document.getElementById('partnerPaymentStatus').value
+            };
+
+            try {
+                const token = localStorage.getItem('accessToken');
+                const response = await fetch(`${API_BASE_URL}/admin/create-partner`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccessMessage('Partner created successfully!');
+                    addPartnerForm.reset();
+                    document.getElementById('addPartnerModal').style.display = 'none';
+                    // TODO: Refresh partners table if exists
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    alert('Error: ' + (errorData.message || 'Failed to create partner'));
+                }
+            } catch (error) {
+                console.error('Error creating partner:', error);
+                alert('Error creating partner. Please try again.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    }
+});
+
+// Function to submit booth data to backend
+// async function submitBoothData(formData) {
+//     try {
+//         // BACKEND INTEGRATION: Replace with actual API call
+//         console.log('Booth data submitted:', formData);
+        
+//         // Show success message
+//         // showSuccessMessage('Booth has been successfully added!');
+        
+//         // Close modal
+//         document.getElementById('addBoothModal').style.display = 'none';
+        
+//         // Refresh booths table
+//         // refreshBoothsTable();
+        
+//     } catch (error) {
+//         console.error('Error submitting booth data:', error);
+//         alert('Error adding booth. Please try again.');
+//     }
+// }
 
 // View Booth Details
 function viewBooth(boothId) {
@@ -6683,17 +6698,19 @@ function viewBooth(boothId) {
     if (!row) return;
     
     const cells = row.cells;
+    console.log('cells:', cells);
     
     // Populate view modal with booth data
     document.getElementById('viewBoothId').textContent = cells[0].textContent;
     document.getElementById('viewBoothLocation').textContent = cells[1].textContent;
     document.getElementById('viewBoothPrice').textContent = cells[2].textContent;
-    document.getElementById('viewBoothStatus').textContent = cells[3].textContent;
+    document.getElementById('viewBoothSize').textContent = cells[3].textContent;
+    document.getElementById('viewBoothStatus').textContent = cells[4].textContent;
     
     // Get additional data from row dataset if available
     const boothData = row.dataset;
-    document.getElementById('viewBoothSize').textContent = boothData.size || 'Not specified';
-    document.getElementById('viewBoothFeatures').textContent = boothData.features || 'None';
+    
+    document.getElementById('viewBoothFeatures').textContent = (boothData.features ? JSON.parse(boothData.features).join(', ') : 'None');
     
     // Show exhibitor info if booth is assigned
     const exhibitorInfoSection = document.getElementById('viewExhibitorInfoSection');
@@ -7240,21 +7257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Helper function to show success message
-function showSuccessMessage(message) {
-    const successModal = document.getElementById('successModal');
-    const successMessage = document.getElementById('successMessage');
-    
-    if (successModal && successMessage) {
-        successMessage.textContent = message;
-        successModal.style.display = 'flex';
-        
-        // Auto-close after 3 seconds
-        setTimeout(() => {
-            successModal.style.display = 'none';
-        }, 3000);
-    }
-}
+
 
 // Helper function to close custom modal
 function closeCustomModal() {
@@ -8221,13 +8224,13 @@ function refreshSpeakersTable() {
     if (!tbody) return;
 
     // Show loading row
-    tbody.innerHTML = `<tr><td colspan="9">Loading speakers...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5">Loading speakers...</td></tr>`;
 
     client.get(endpoint).then(resp => {
         const data = resp && (resp.data && Array.isArray(resp.data.data) ? resp.data.data : (Array.isArray(resp.data) ? resp.data : []));
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9">No speakers found.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5">No speakers found.</td></tr>`;
             // update counters
             const totalEl = document.getElementById('totalSpeakers');
             const confirmedEl = document.getElementById('confirmedSpeakers');
@@ -8243,16 +8246,9 @@ function refreshSpeakersTable() {
             const name = s.fullname || `${s.first_name || ''} ${s.last_name || ''}`.trim() || 'N/A';
             const topic = s.topic || s.speaking_topic || '-';
             const affiliation = s.organization || s.affiliation || '-';
-            const pkg = s.package || s.package_level || '-';
-            const day = s.day || '-';
-            const session = s.session || '-';
             const statusRaw = (s.status || '').toString().toLowerCase();
             const statusLabel = statusRaw ? (statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1)) : 'Pending';
             const statusClass = statusRaw.includes('confirm') || statusRaw === 'confirmed' ? 'status-approved' : (statusRaw.includes('pend') ? 'status-pending' : 'status-rejected');
-            // Payment status not provided in this endpoint sample; default to Pending
-            const paymentStatus = (s.paymentStatus || s.payment || '').toString().toLowerCase();
-            const paymentLabel = paymentStatus ? (paymentStatus.charAt(0).toUpperCase() + paymentStatus.slice(1)) : 'Pending';
-            const paymentClass = paymentStatus.includes('paid') ? 'status-approved' : (paymentStatus.includes('pend') ? 'status-pending' : 'status-rejected');
 
             // Actions: show Approve or Reject depending on current status
             let actions = `<div class="action-buttons">`;
@@ -8270,11 +8266,7 @@ function refreshSpeakersTable() {
                     <td>${escapeHtml(name)}</td>
                     <td>${escapeHtml(topic)}</td>
                     <td>${escapeHtml(affiliation)}</td>
-                    <td><span class="status-badge ${statusClass}">${escapeHtml(pkg ? pkg : '-')}</span></td>
-                    <td>${escapeHtml(day)}</td>
-                    <td>${escapeHtml(session)}</td>
                     <td><span class="status-badge ${statusClass}">${escapeHtml(statusLabel)}</span></td>
-                    <td><span class="status-badge ${paymentClass}">${escapeHtml(paymentLabel)}</span></td>
                     <td>${actions}</td>
                 </tr>
             `;
@@ -8302,7 +8294,7 @@ function refreshSpeakersTable() {
         } catch (e) { console.error('Stats update failed', e); }
     }).catch(err => {
         console.error('Failed to load speakers:', err);
-        tbody.innerHTML = `<tr><td colspan="9">Failed to load speakers. Please try again later.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5">Failed to load speakers. Please try again later.</td></tr>`;
         // reset counters on failure
         const totalEl = document.getElementById('totalSpeakers');
         const confirmedEl = document.getElementById('confirmedSpeakers');
@@ -9027,7 +9019,275 @@ function refreshPartnersTable() {
     <script src="../../js/protectedRoute.js"></script>
     <!-- Shared API client (automatically attaches token) -->
     <script src="../../js/apiClient.js"></script>
+
+    <!-- Fetch partners and update stats from backend -->
+    <script>
+    (function () {
+        const partnersBody = document.getElementById('partnersTableBody');
+        const totalEl = document.getElementById('totalPartners');
+        const diamondEl = document.getElementById('diamondPartners');
+        const goldEl = document.getElementById('goldPartners');
+        const silverEl = document.getElementById('silverPartners');
+        const bronzeEl = document.getElementById('bronzePartners');
+        const refreshBtn = document.getElementById('refreshPartnersBtn');
+
+        function safeText(v) {
+            return (v === null || v === undefined || v === '') ? '-' : String(v);
+        }
+
+        function formatCurrency(v) {
+            if (v === null || v === undefined || v === '') return '-';
+            const n = Number(String(v).replace(/[^0-9.-]+/g, ''));
+            if (Number.isFinite(n)) return n.toLocaleString();
+            return String(v);
+        }
+
+        function statusClassFrom(status) {
+            if (!status) return 'status-pending';
+            const s = String(status).toLowerCase();
+            if (s === 'active' || s === 'approved' || s === 'paid') return 'status-approved';
+            if (s === 'pending' || s === 'reserved') return 'status-pending';
+            return 'status-rejected';
+        }
+
+        function packageClassFrom(pkg) {
+            if (!pkg) return 'status-pending';
+            const p = String(pkg).toLowerCase();
+            if (p.includes('platinum') || p.includes('diamond')) return 'status-approved';
+            if (p.includes('gold')) return 'status-pending';
+            if (p.includes('silver')) return 'status-rejected';
+            if (p.includes('bronze')) return 'status-pending';
+            return 'status-pending';
+        }
+
+        function renderPartners(list) {
+            if (!partnersBody) return;
+            partnersBody.innerHTML = '';
+            if (!Array.isArray(list) || list.length === 0) {
+                partnersBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No partners found.</td></tr>';
+                return;
+            }
+            list.forEach(partner => {
+                const tr = document.createElement('tr');
+                if (partner.id !== undefined) tr.setAttribute('data-id', partner.id);
+                const company = safeText(partner.entity_name || '-');
+                const contact = safeText(`${partner.prefix || ''} ${partner.firstname || ''} ${partner.lastname || ''}`.trim() || '-');
+                const email = safeText(partner.email || '-');
+
+                // Get package details from EventPartnerPackages
+                const packages = partner.EventPartnerPackages || [];
+                const firstPackage = packages[0] || {};
+                const eventPackage = firstPackage.event_package || {};
+                const packageType = safeText(eventPackage.title || '-');
+                const investment = formatCurrency(eventPackage.price || '-');
+                const status = safeText(firstPackage.payment_status || '-');
+                const payment = safeText(firstPackage.payment_status || '-');
+                const startDate = firstPackage.assignedAt ? new Date(firstPackage.assignedAt).toLocaleDateString() : '-';
+                const endDate = '-'; // Not in response
+
+                const statusClass = statusClassFrom(status);
+                const paymentClass = statusClassFrom(payment);
+                const packageClass = packageClassFrom(packageType);
+
+                tr.innerHTML = `
+                    <td>${company}</td>
+                    <td>${contact}</td>
+                    <td>${email}</td>
+                    <td><span class="status-badge ${packageClass}">${packageType}</span></td>
+                    <td>${investment}</td>
+                    <td><span class="status-badge ${statusClass}">${status}</span></td>
+                    <td><span class="status-badge ${paymentClass}">${payment}</span></td>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-info btn-sm view-partner-btn">View</button>
+                            <button class="btn btn-warning btn-sm edit-partner-btn">Edit</button>
+                        </div>
+                    </td>
+                `;
+                partnersBody.appendChild(tr);
+            });
+        }
+
+        function updateStats(list) {
+            const arr = Array.isArray(list) ? list : [];
+            if (totalEl) totalEl.textContent = arr.length;
+            let diamondCount = 0, goldCount = 0, silverCount = 0, bronzeCount = 0;
+            arr.forEach(partner => {
+                const packages = partner.EventPartnerPackages || [];
+                const firstPackage = packages[0] || {};
+                const eventPackage = firstPackage.event_package || {};
+                const title = (eventPackage.title || '').toLowerCase();
+                if (title.includes('platinum') || title.includes('diamond')) diamondCount++;
+                else if (title.includes('gold')) goldCount++;
+                else if (title.includes('silver')) silverCount++;
+                else if (title.includes('bronze')) bronzeCount++;
+            });
+            if (diamondEl) diamondEl.textContent = diamondCount;
+            if (goldEl) goldEl.textContent = goldCount;
+            if (silverEl) silverEl.textContent = silverCount;
+            if (bronzeEl) bronzeEl.textContent = bronzeCount;
+        }
+
+        async function fetchPartners() {
+            console.log('Fetching partners...');
+            try {
+                const client = window.apiClient || axios;
+                console.log('Using client:', client);
+                const res = await client.get('/admin/partners');
+                console.log('Response:', res);
+                const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+                console.log('Partners list:', list);
+                renderPartners(list);
+                updateStats(list);
+            } catch (err) {
+                console.error('Error fetching partners:', err);
+                if (partnersBody) partnersBody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#c00;">Failed to load partners.</td></tr>';
+            }
+        }
+
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                fetchPartners();
+            });
+        }
+
+        // Fetch once DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fetchPartners);
+        } else {
+            fetchPartners();
+        }
+    })();
+
+    const countries = [
+    "Nigeria", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+    "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
+    "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+    "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
+    "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
+    "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
+    "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+    "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
+    "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
+    "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
+    "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", 
+    "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", 
+    "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", 
+    "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", 
+    "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", 
+    "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+    "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
+    "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+    "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
+    "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
+    "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
+    "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+];
+
+function populateCountryDropdowns() {
+    const countrySelectors = ['country'];
+    
+    countrySelectors.forEach(selector => {
+        const select = document.getElementById(selector);
+        if (select) {
+            const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
+            select.innerHTML = placeholder;
+            
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
+            
+            Array.from(select.options).forEach(opt => {
+                if (!opt.value || opt.value.trim() === '') {
+                    opt.value = opt.textContent.trim();
+                }
+            });
+            
+            // Set empty default
+            select.selectedIndex = 0;
+        }
+    });
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', populateCountryDropdowns);
+    </script>
+
     <!-- Dashboard logic (handles add-attendee integration) -->
     <script src="superadmindashboard.js"></script>
+
+    <script>
+    function getToken(){
+        try{
+            const raw = localStorage.getItem('userData');
+            if (raw){ const a = JSON.parse(raw); if (a && a.token) return a.token; }
+        } catch(e){}
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const partnerPackageSelect = document.getElementById('partnerPackage');
+        if (partnerPackageSelect) {
+            fetch(`${API_BASE_URL}/packages/event-partner-packages`, {
+                headers: {
+                    'Authorization': `Bearer ${getToken()}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(result => {
+                    const data = result.data;
+                    data.forEach(pkg => {
+                        const option = document.createElement('option');
+                        option.value = pkg.id;
+                        option.textContent = pkg.title;
+                        partnerPackageSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading partner packages:', error);
+                });
+        }
+    });
+    </script>
+
+    <style>
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color, #333);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .loading-container p {
+            color: var(--text-medium, #666);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </body>
 </html>
