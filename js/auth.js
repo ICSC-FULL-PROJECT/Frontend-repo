@@ -53,7 +53,8 @@
 			role: 'ministry',
 			username,
 			ministryCode,
-			ministryName: res?.data?.ministryName || res?.data?.data?.organization_name || ''
+			ministryName: res.data.user.organization,
+			contactPerson: res.data.user.contact_person
 		};
 		saveAuth(auth);
 		return auth;

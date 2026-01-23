@@ -39,7 +39,7 @@
                     <div class="user-avatar" id="ministryAvatar">MF</div>
                     <div>
                         <div id="ministryNameDisplay">Ministry of Finance</div>
-                        <div style="font-size: 0.8rem; color: var(--text-medium);">Last login: Today, 09:45 AM</div>
+                        <!-- <div style="font-size: 0.8rem; color: var(--text-medium);">Last login: Today, 09:45 AM</div> -->
                     </div>
                 </div>
             </div>
@@ -54,15 +54,15 @@
                     <div class="ministry-info-box">
                         <div class="ministry-info-item">
                             <div class="ministry-info-label">Ministry Name:</div>
-                            <div id="currentMinistryName">Ministry of Finance</div>
+                            <div id="currentMinistryName">Loading…</div>
                         </div>
                         <div class="ministry-info-item">
                             <div class="ministry-info-label">Ministry Code:</div>
-                            <div id="currentMinistryCode">MOF</div>
+                            <div id="currentMinistryCode">Loading…</div>
                         </div>
                         <div class="ministry-info-item">
                             <div class="ministry-info-label">Contact Person:</div>
-                            <div id="currentContactPerson">Permanent Secretary Finance</div>
+                            <div id="currentContactPerson">Loading…</div>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="ministryPendingCount">3</h3>
+                                <h3 id="ministryPendingCount">0</h3>
                                 <p>Pending Verification</p>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="ministryApprovedCount">42</h3>
+                                <h3 id="ministryApprovedCount">0</h3>
                                 <p>Approved Participant</p>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 id="ministryTotalCount">45</h3>
+                                <h3 id="ministryTotalCount">0</h3>
                                 <p>Total Participant</p>
                             </div>
                         </div>
@@ -118,32 +118,11 @@
                                     <th>Action</th>
                                     <th>Participant</th>
                                     <th>Position</th>
-                                    <th>Date & Time</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody id="ministryActivityTable">
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Samuel Johnson</td>
-                                    <td>Assistant Director</td>
-                                    <td>2023-10-25 14:30</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Fatima Bello</td>
-                                    <td>Chief Officer</td>
-                                    <td>2023-10-24 11:15</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Michael Adekunle</td>
-                                    <td>Senior Officer</td>
-                                    <td>2023-10-23 09:45</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
+                                <!-- Recent activity will be populated dynamically -->
                             </tbody>
                         </table>
                     </div>
@@ -201,51 +180,7 @@
                                 </tr>
                             </thead>
                             <tbody id="ministryAttendeesTable">
-                                <tr data-id="1">
-                                    <td>Samuel Johnson</td>
-                                    <td>s.johnson@finance.gov.ng</td>
-                                    <td>12345678901</td>
-                                    <td>Assistant Director</td>
-                                    <td>Audit</td>
-                                    <td>Office of the Accountant General</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-id="2">
-                                    <td>Fatima Bello</td>
-                                    <td>f.bello@finance.gov.ng</td>
-                                    <td>23456789012</td>
-                                    <td>Chief Officer</td>
-                                    <td>Treasury</td>
-                                    <td>National Treasury</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-id="3">
-                                    <td>Michael Adekunle</td>
-                                    <td>m.adekunle@finance.gov.ng</td>
-                                    <td>34567890123</td>
-                                    <td>Senior Officer</td>
-                                    <td>Budget & Planning</td>
-                                    <td>Budget Office of the Federation</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
-                                            <button class="btn btn-danger btn-sm delete-ministry-attendee-btn">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -405,7 +340,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="ministryAttendeeOrganization">Organization *</label>
-                        <input type="text" id="ministryAttendeeOrganization" class="form-control" value="Federal Government" readonly>
+                        <input type="text" id="ministryAttendeeOrganization" class="form-control" readonly>
                     </div>
 
                     <div class="form-group">
@@ -450,11 +385,6 @@
 
                 <!-- Row 7: Ministry and Department -->
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="ministryAttendeeMinistry">Ministry</label>
-                        <input type="text" id="ministryAttendeeMinistry" class="form-control" readonly>
-                    </div>
-                    
                     <div class="form-group">
                         <label for="ministryAttendeeDepartment">Department *</label>
                         <input type="text" id="ministryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
