@@ -38,7 +38,6 @@ const addMinistryBtn = document.getElementById('addMinistryBtn');
 const API_BASE_URL = 'http://localhost:9100/api/v1';
 // const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
 window.API_BASE_URL = API_BASE_URL;
-const CREATE_MINISTRY_URL = `${API_BASE_URL}/admin/create-user`;
 
 // Tab Navigation
 const tabs = document.querySelectorAll('.tab-content');
@@ -51,6 +50,64 @@ let attendees = [];
 // Current attendee/ministry being edited or deleted
 let currentAttendeeId = null;
 let currentMinistryId = null;
+
+// Add to recent activity
+function addToRecentActivity(attendeeData) {
+    const table = document.getElementById('ministryActivityTable');
+    const now = new Date();
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>Added</td>
+        <td>${attendeeData.firstName} ${attendeeData.lastName}</td>
+        <td>${attendeeData.position}</td>
+        <td><span class="status-badge status-pending">Pending</span></td>
+    `;
+    
+    table.insertBefore(row, table.firstChild);
+    
+    // Keep only last 10 activities
+    if (table.children.length > 10) {
+        table.removeChild(table.lastChild);
+    }
+}
+
+// Render recent activity table with last 3 participants
+function renderRecentActivity() {
+    const tbody = document.getElementById('ministryActivityTable');
+    if (!tbody) {
+        console.error('ministryActivityTable not found');
+        return;
+    }
+    tbody.innerHTML = ''; // Clear existing content
+
+    console.log('Rendering recent activity, attendees count:', ministryAttendees.length);
+
+    // Sort attendees by dateAdded descending, handling empty dates
+    const recentAttendees = ministryAttendees
+        .sort((a, b) => {
+            const dateA = a.dateAdded ? new Date(a.dateAdded) : new Date(0);
+            const dateB = b.dateAdded ? new Date(b.dateAdded) : new Date(0);
+            return dateB - dateA;
+        })
+        .slice(0, 3);
+
+    console.log('Recent attendees:', recentAttendees);
+
+    recentAttendees.forEach(attendee => {
+        const row = document.createElement('tr');
+        const statusClass = attendee.status.toLowerCase() === 'approved' ? 'status-approved' : 
+                           attendee.status.toLowerCase() === 'rejected' ? 'status-rejected' : 'status-pending';
+        
+        row.innerHTML = `
+            <td>Added</td>
+            <td>${attendee.name}</td>
+            <td>${attendee.position}</td>
+            <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
 // Initialize the dashboard
 document.addEventListener('DOMContentLoaded', function() {
@@ -85,6 +142,9 @@ function initializeTabs() {
             if (tabId === 'exhibitors' && typeof window.fetchExhibitors === 'function') {
                 window.fetchExhibitors();
             }
+            if (tabId === 'partners' && typeof window.fetchPartners === 'function') {
+                window.fetchPartners();
+            }
         });
     });
 
@@ -105,6 +165,9 @@ function initializeTabs() {
                 // Load tab-specific data
                 if (tabId === 'exhibitors' && typeof window.fetchExhibitors === 'function') {
                     window.fetchExhibitors();
+                }
+                if (tabId === 'partners' && typeof window.fetchPartners === 'function') {
+                    window.fetchPartners();
                 }
             }
         });
@@ -539,6 +602,7 @@ async function handleAddAttendee(e) {
             // Show generated password in the success message so admin can communicate it
             const displayedPassword = created.password || payload.password || tempPassword;
             toastr.success(`Participant has been successfully added`);
+            if (successModal) successModal.style.display = 'flex';
             addAttendeeForm.reset();
         } else {
             const msg = res?.data?.message || 'Failed to add attendee';
@@ -928,6 +992,7 @@ async function handleAddMinistry(e) {
             updateStats();
 
             toastr.success('Ministry has been successfully created!');
+            if (successModal) successModal.style.display = 'flex';
 
             addMinistryForm.reset();
             addMinistryModal.style.display = 'none';
@@ -2316,17 +2381,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add simulation button for testing
     setTimeout(addSimulationButton, 1000);
     
-    // Simulate some initial submissions
-    setTimeout(() => simulateUserSubmission(), 2000);
-    setTimeout(() => simulateUserSubmission(), 4000);
-    setTimeout(() => simulateUserSubmission(), 6000);
+    // Simulate some initial submissions - REMOVED for production
+    // setTimeout(() => simulateUserSubmission(), 2000);
+    // setTimeout(() => simulateUserSubmission(), 4000);
+    // setTimeout(() => simulateUserSubmission(), 6000);
     
-    // Auto-simulate every 10 seconds (for demo purposes)
-    setInterval(() => {
-        if (Math.random() > 0.7) { // 30% chance every 10 seconds
-            simulateUserSubmission();
-        }
-    }, 10000);
+    // Auto-simulate every 10 seconds (for demo purposes) - REMOVED
+    // setInterval(() => {
+    //     if (Math.random() > 0.7) { // 30% chance every 10 seconds
+    //         simulateUserSubmission();
+    //     }
+    // }, 10000);
     
     console.log('Auto-approval notification system initialized');
 });
@@ -2649,7 +2714,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Populate Bulk Table with Data
     function populateBulkTable() {
-        const tbody = bulkApprovalsTable.querySelector('tbody');
+        const tbody = bulkApprovalsTable;
         tbody.innerHTML = '';
         
         bulkUploadsData.forEach(upload => {
@@ -3056,7 +3121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const statusFilter = filterBulkStatus?.value || '';
         const ministryFilter = filterBulkMinistry?.value || '';
         
-        const rows = bulkApprovalsTable.querySelectorAll('tbody tr');
+        const rows = bulkApprovalsTable.querySelectorAll('tr');
         
         rows.forEach(row => {
             const ministry = row.cells[1].textContent.toLowerCase();
@@ -3205,6 +3270,130 @@ let partnershipPackages = {
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
     initializePackageManagement();
+
+    function getToken(){
+        try{
+            const raw = localStorage.getItem('userData');
+            if (raw){ const a = JSON.parse(raw); if (a && a.token) return a.token; }
+        } catch(e){}
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    const partnerPackageSelect = document.getElementById('partnerPackage');
+    if (partnerPackageSelect) {
+        fetch(`${API_BASE_URL}/packages/event-partner-packages`, {
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(result => {
+                const data = result.data;
+                data.forEach(pkg => {
+                    const option = document.createElement('option');
+                    option.value = pkg.id;
+                    option.textContent = pkg.title;
+                    partnerPackageSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading partner packages:', error);
+            });
+    }
+
+    const countrySelect = document.getElementById('country');
+    if (countrySelect) {
+        const countries = [
+            'Nigeria', 'United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Italy', 'Spain', 'Netherlands',
+            'Belgium', 'Switzerland', 'Austria', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Portugal', 'Greece',
+            'Poland', 'Czech Republic', 'Hungary', 'Slovakia', 'Slovenia', 'Croatia', 'Romania', 'Bulgaria', 'Serbia', 'Bosnia and Herzegovina',
+            'Montenegro', 'Kosovo', 'Albania', 'North Macedonia', 'Turkey', 'Russia', 'Ukraine', 'Belarus', 'Moldova', 'Georgia',
+            'Armenia', 'Azerbaijan', 'Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Tajikistan', 'Kyrgyzstan', 'Afghanistan', 'Pakistan',
+            'India', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Bhutan', 'Maldives', 'China', 'Japan', 'South Korea', 'North Korea',
+            'Mongolia', 'Vietnam', 'Laos', 'Cambodia', 'Thailand', 'Myanmar', 'Malaysia', 'Singapore', 'Indonesia', 'Philippines',
+            'Brunei', 'East Timor', 'Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Solomon Islands', 'Vanuatu', 'Samoa',
+            'Tonga', 'Tuvalu', 'Kiribati', 'Marshall Islands', 'Micronesia', 'Palau', 'Nauru', 'Egypt', 'Libya', 'Tunisia',
+            'Algeria', 'Morocco', 'Western Sahara', 'Mauritania', 'Mali', 'Niger', 'Chad', 'Sudan', 'South Sudan', 'Eritrea',
+            'Djibouti', 'Somalia', 'Ethiopia', 'Kenya', 'Tanzania', 'Uganda', 'Rwanda', 'Burundi', 'Democratic Republic of the Congo',
+            'Republic of the Congo', 'Gabon', 'Equatorial Guinea', 'Cameroon', 'Central African Republic', 'Angola', 'Zambia',
+            'Zimbabwe', 'Malawi', 'Mozambique', 'Botswana', 'Namibia', 'South Africa', 'Lesotho', 'Swaziland', 'Ghana', 'Togo',
+            'Benin', 'Burkina Faso', 'Côte d\'Ivoire', 'Liberia', 'Sierra Leone', 'Guinea', 'Guinea-Bissau', 'Senegal', 'Gambia',
+            'Cape Verde', 'São Tomé and Príncipe', 'Brazil', 'Argentina', 'Chile', 'Peru', 'Colombia', 'Venezuela', 'Ecuador',
+            'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname', 'French Guiana', 'Mexico', 'Guatemala', 'Belize', 'El Salvador',
+            'Honduras', 'Nicaragua', 'Costa Rica', 'Panama', 'Cuba', 'Haiti', 'Dominican Republic', 'Jamaica', 'Trinidad and Tobago',
+            'Barbados', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Grenada', 'Antigua and Barbuda', 'Saint Kitts and Nevis',
+            'Bahamas', 'Puerto Rico', 'U.S. Virgin Islands', 'British Virgin Islands', 'Anguilla', 'Montserrat', 'Guadeloupe',
+            'Martinique', 'Saint Martin', 'Saint Barthélemy', 'Aruba', 'Curaçao', 'Bonaire', 'Saba', 'Sint Eustatius', 'Sint Maarten'
+        ];
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            countrySelect.appendChild(option);
+        });
+    }
+
+    const addPartnerForm = document.getElementById('addPartnerForm');
+
+    if (addPartnerForm) {
+        addPartnerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = addPartnerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : 'Add Partner';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating...';
+            }
+
+            // Collect form data
+            const formData = {
+                contactEmail: document.getElementById('email').value.trim(),
+                prefix: document.getElementById('prefix').value,
+                contactFirstName: document.getElementById('firstName').value.trim(),
+                contactLastName: document.getElementById('lastName').value.trim(),
+                country: document.getElementById('country').value,
+                jobTitle: document.getElementById('jobTitle').value.trim(),
+                companyName: document.getElementById('organisation').value.trim(),
+                contactPhone: document.getElementById('workPhone').value.trim(),
+                package_id: document.getElementById('partnerPackage').value,
+                package_status: document.getElementById('partnerStatus').value,
+                status: document.getElementById('partnerPaymentStatus').value
+            };
+
+            try {
+                const token = localStorage.getItem('accessToken');
+                const response = await fetch(`${API_BASE_URL}/admin/create-partner`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccessMessage('Partner created successfully!');
+                    addPartnerForm.reset();
+                    document.getElementById('addPartnerModal').style.display = 'none';
+                    // TODO: Refresh partners table if exists
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    alert('Error: ' + (errorData.message || 'Failed to create partner'));
+                }
+            } catch (error) {
+                console.error('Error creating partner:', error);
+                alert('Error creating partner. Please try again.');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    }
 });
 
 function initializePackageManagement() {
@@ -3536,14 +3725,8 @@ function setupPackageChangeMonitoring() {
 
 // Fake fetch
 async function fetchCurrentPartnerCounts() {
-    try {
-        const response = await fetch("/api/partners/counts-by-package");
-        if (response.ok) return await response.json();
-        throw new Error("API failed");
-    } catch (error) {
-        console.warn("Using fallback partner counts");
-        return { diamond: 0, gold: 0, silver: 0, bronze: 0 };
-    }
+    console.warn("Using fallback partner counts");
+    return { diamond: 0, gold: 0, silver: 0, bronze: 0 };
 }
 
 // Toast
@@ -3721,11 +3904,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize date validation
     validateDateRange();
     
-    // Export Functionality
-    document.getElementById('exportPDFBtn').addEventListener('click', () => exportReport('pdf'));
-    document.getElementById('exportExcelBtn').addEventListener('click', () => exportReport('excel'));
-    document.getElementById('exportCSVBtn').addEventListener('click', () => exportReport('csv'));
-    document.getElementById('exportChartBtn').addEventListener('click', exportCharts);
     document.getElementById('clearCanvasBtn').addEventListener('click', clearCanvas);
     document.getElementById('generateCustomBtn').addEventListener('click', generateCustomReport);
     document.getElementById('saveTemplateBtn').addEventListener('click', saveTemplate);
@@ -4659,37 +4837,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function exportReport(format) {
-        const fileName = document.getElementById('exportFileName').value || 'ICSC2026_Report';
-        const formatType = document.getElementById('exportFormat').value;
-        const includeOptions = Array.from(document.getElementById('exportInclude').selectedOptions).map(opt => opt.value);
-        
-        // Show loading state
-        showToast(`Exporting ${format.toUpperCase()} report...`, 'info');
-        
-        // Simulate export process
-        setTimeout(() => {
-            showToast(`${fileName}.${format} downloaded successfully!`, 'success');
-            
-            // Add to report history
-            addToReportHistory(fileName, format, formatType);
-        }, 1500);
-    }
-    
-    function exportCharts() {
-        // Export all charts as images
-        Object.keys(charts).forEach(chartId => {
-            const chart = charts[chartId];
-            if (chart) {
-                const link = document.createElement('a');
-                link.download = `${chartId}.png`;
-                link.href = chart.toBase64Image();
-                link.click();
-            }
-        });
-        showToast('Charts exported as images!', 'success');
-    }
-    
     function addToReportHistory(name, format, type) {
         const historyTable = document.getElementById('reportHistoryTable');
         const now = new Date();
@@ -4714,10 +4861,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners to new buttons
         row.querySelector('.view-report-btn').addEventListener('click', () => {
             showToast('Opening report...', 'info');
-        });
-        
-        row.querySelector('.download-report-btn').addEventListener('click', () => {
-            showToast('Downloading report...', 'info');
         });
         
         row.querySelector('.delete-report-btn').addEventListener('click', function() {
@@ -4748,12 +4891,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.view-report-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 showToast('Opening report...', 'info');
-            });
-        });
-        
-        document.querySelectorAll('.download-report-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                showToast('Downloading report...', 'info');
             });
         });
         
@@ -6052,94 +6189,6 @@ class AttendanceReportManager {
         this.showToast('Participants data refreshed', 'success');
     }
 
-    exportToExcel() {
-        const filteredData = this.getFilteredData();
-        
-        if (filteredData.length === 0) {
-            this.showToast('No data to export', 'error');
-            return;
-        }
-
-        // Create workbook
-        const wb = XLSX.utils.book_new();
-        
-        // Create worksheet data
-        const wsData = [
-            ['Attendance Report - ICSC 2026'],
-            ['Generated: ' + new Date().toLocaleDateString()],
-            [''],
-            ['Name', 'Type', 'Email', 'Event', 'Day', 'Time', 'Status', 'Approved By', 'Approved At']
-        ];
-        
-        // Add filtered data
-        filteredData.forEach(record => {
-            wsData.push([
-                record.userName,
-                record.userType.toUpperCase(),
-                record.userEmail,
-                record.eventTitle,
-                record.eventDay,
-                record.eventTime,
-                'Attended',
-                record.approvedBy,
-                this.formatDate(record.approvedAt)
-            ]);
-        });
-        
-        // Create worksheet
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        
-        // Set column widths
-        const colWidths = [
-            {wch: 25}, // Name
-            {wch: 12}, // Type
-            {wch: 30}, // Email
-            {wch: 40}, // Event
-            {wch: 15}, // Day
-            {wch: 10}, // Time
-            {wch: 12}, // Status
-            {wch: 15}, // Approved By
-            {wch: 20}  // Approved At
-        ];
-        ws['!cols'] = colWidths;
-        
-        // Merge header rows
-        ws['!merges'] = [
-            {s: {r: 0, c: 0}, e: {r: 0, c: 8}}, // Title row
-            {s: {r: 1, c: 0}, e: {r: 1, c: 8}}  // Date row
-        ];
-        
-        // Add worksheet to workbook
-        XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
-        
-        // Generate filename based on filters
-        let filename = 'ICSC_Attendance_';
-        
-        if (this.filters.day !== 'all') {
-            filename += this.filters.day.charAt(0).toUpperCase() + this.filters.day.slice(1) + '_';
-        }
-        
-        if (this.filters.type !== 'all') {
-            filename += this.filters.type + '_';
-        }
-        
-        if (this.filters.event !== 'all') {
-            const eventName = this.filters.event === 'A001' ? 'Registration' :
-                            this.filters.event === 'A002' ? 'Opening' :
-                            this.filters.event === 'A003' ? 'CoffeeBreak' :
-                            this.filters.event === 'A004' ? 'DigitalTransformation' :
-                            this.filters.event === 'A005' ? 'Leadership' : 'Event';
-            filename += eventName + '_';
-        }
-        
-        filename += new Date().toISOString().split('T')[0] + '.xlsx';
-        
-        // Export file
-        XLSX.writeFile(wb, filename);
-        
-        this.showToast(`Exported ${filteredData.length} records to Excel`, 'success');
-    }
-
     showToast(message, type = 'info') {
         // Use notification system's toast if available
         if (window.notificationSystem) {
@@ -6273,13 +6322,22 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBenefitsTabs();
     
     // Handle form submission
-    document.getElementById('packageConfigForm').addEventListener('submit', savePackageConfigurations);
+    const packageConfigForm = document.getElementById('packageConfigForm');
+    if (packageConfigForm) {
+        packageConfigForm.addEventListener('submit', savePackageConfigurations);
+    }
     
     // Handle refresh stats button
-    document.getElementById('refreshPackageStatsBtn').addEventListener('click', refreshPackageStats);
+    const refreshPackageStatsBtn = document.getElementById('refreshPackageStatsBtn');
+    if (refreshPackageStatsBtn) {
+        refreshPackageStatsBtn.addEventListener('click', refreshPackageStats);
+    }
     
     // Handle reset defaults button
-    document.getElementById('resetPackageDefaultsBtn').addEventListener('click', resetPackageDefaults);
+    const resetPackageDefaultsBtn = document.getElementById('resetPackageDefaultsBtn');
+    if (resetPackageDefaultsBtn) {
+        resetPackageDefaultsBtn.addEventListener('click', resetPackageDefaults);
+    }
 });
 
 function initializeFeatureToggles() {
@@ -7639,4 +7697,263 @@ document.body.style.display = 'block';
     } else {
         fetchAgendaItems();
     }
+})();
+
+(function () {
+
+    function safeText(v) {
+        return (v === null || v === undefined || v === '') ? '-' : String(v);
+    }
+
+    function formatBudget(v) {
+        if (v === null || v === undefined || v === '') return '-';
+        // Try to coerce to number, otherwise return as-is
+        const n = Number(String(v).replace(/[^0-9.-]+/g, ''));
+        if (Number.isFinite(n)) return n.toLocaleString();
+        return String(v);
+    }
+
+    function statusClassFrom(status) {
+        if (!status) return 'status-pending';
+        const s = String(status).toLowerCase();
+        if (s === 'confirmed' || s === 'approved' || s === 'paid') return 'status-approved';
+        if (s === 'pending' || s === 'reserved') return 'status-pending';
+        return 'status-rejected';
+    }
+
+    function renderExhibitors(list) {
+        const exhibitorsBody = document.getElementById('exhibitors-table-body');
+        if (!exhibitorsBody) return;
+        exhibitorsBody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            exhibitorsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No exhibitors found.</td></tr>';
+            return;
+        }
+        list.forEach(ex => {
+            const tr = document.createElement('tr');
+            if (ex.id !== undefined) tr.setAttribute('data-id', ex.id);
+            const name = safeText(ex.contact_person || '-');
+            const company = safeText(ex.company_name || '-');
+            const email = safeText(ex.contact_email || '-');
+            const phone = safeText(ex.contact_phone || '-');
+            const status = safeText(ex.status || '-');
+            const registeredAt = ex.registeredAt ? new Date(ex.registeredAt).toLocaleDateString() : '-';
+
+            const statusClass = statusClassFrom(status);
+
+            tr.innerHTML = `
+                <td>${name}</td>
+                <td>${company}</td>
+                <td>${email}</td>
+                <td>${phone}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td>${registeredAt}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-info btn-sm view-exhibitor-btn">View</button>
+                        <button class="btn btn-warning btn-sm edit-exhibitor-btn">Edit</button>
+                    </div>
+                </td>
+            `;
+            exhibitorsBody.appendChild(tr);
+        });
+    }
+
+    function updateStats(list) {
+        const totalEl = document.getElementById('total-exhibitors');
+        const confirmedEl = document.getElementById('confirmed-exhibitors');
+        const pendingEl = document.getElementById('pending-exhibitors');
+        const arr = Array.isArray(list) ? list : [];
+        if (totalEl) totalEl.textContent = arr.length;
+        if (confirmedEl) confirmedEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'confirmed').length;
+        if (pendingEl) pendingEl.textContent = arr.filter(e => (e.status || '').toString().toLowerCase() === 'pending').length;
+    }
+
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (e) { }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    async function fetchExhibitors() {
+        try {
+            console.log('Fetching exhibitors...');
+            const endpoint = `${window.API_BASE_URL || 'http://localhost:9100/api/v1'}/admin/exhibitors`;
+            const token = getToken();
+            const headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.get(endpoint, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            console.log('Fetched data:', list);
+            renderExhibitors(list);
+            updateStats(list);
+        } catch (err) {
+            console.error('Error fetching exhibitors:', err);
+            const exhibitorsBody = document.getElementById('exhibitors-table-body');
+            if (exhibitorsBody) exhibitorsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#c00;">Failed to load exhibitors.</td></tr>';
+        }
+    }
+
+    function openAddExhibitorModal() {
+        const modal = document.getElementById('addExhibitorModal');
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.classList.remove('active');
+    }
+
+    async function addExhibitor(data) {
+        try {
+            const endpoint = `${window.API_BASE_URL || 'http://localhost:9100/api/v1'}/admin/create-exhibitor`;
+            const token = getToken();
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.post(endpoint, data, { headers });
+            console.log('Added exhibitor:', res.data);
+            fetchExhibitors(); // Refresh the list
+            closeModal('addExhibitorModal');
+            // Reset form
+            document.getElementById('addExhibitorForm').reset();
+        } catch (err) {
+            console.error('Error adding exhibitor:', err);
+            alert('Failed to add exhibitor. Please try again.');
+        }
+    }
+
+   document.addEventListener('DOMContentLoaded', () => {
+    fetchExhibitors();
+    const refreshBtn = document.getElementById('refresh-exhibitors-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetchExhibitors();
+        });
+    }
+    const addBtn = document.getElementById('add-exhibitor-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            openAddExhibitorModal();
+        });
+    }
+    const form = document.getElementById('addExhibitorForm');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            addExhibitor(data);
+        });
+    }
+    // Close modal on close button
+    const closeBtn = document.querySelector('#addExhibitorModal .close-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => closeModal('addExhibitorModal'));
+    }
+    });
+
+    // Expose fetchExhibitors globally for use by other scripts
+    window.fetchExhibitors = fetchExhibitors;
+})();
+
+// Partners Management
+(function () {
+    function getToken() {
+        try {
+            const raw = localStorage.getItem('authUser');
+            if (raw) {
+                const a = JSON.parse(raw);
+                if (a && a.token) return a.token;
+            }
+        } catch (e) { }
+        return localStorage.getItem('accessToken') || null;
+    }
+
+    function safeText(v) {
+        return (v === null || v === undefined || v === '') ? '-' : String(v);
+    }
+
+    function renderPartners(list) {
+        const tbody = document.querySelector('#partnersTable tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No partners found.</td></tr>';
+            return;
+        }
+        list.forEach(partner => {
+            const tr = document.createElement('tr');
+            if (partner.id !== undefined) tr.setAttribute('data-id', partner.id);
+            const contact = safeText(`${partner.firstname || ''} ${partner.lastname || ''}`.trim() || '-');
+            const email = safeText(partner.email || '-');
+            const package = safeText(partner.EventPartnerPackages && partner.EventPartnerPackages[0] ? partner.EventPartnerPackages[0].event_package?.title || '-' : '-');
+            const status = safeText(partner.EventPartnerPackages && partner.EventPartnerPackages[0] ? partner.EventPartnerPackages[0].payment_status || '-' : '-');
+            // Placeholder actions
+            const actions = `<button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Delete</button>`;
+            tr.innerHTML = `
+                <td>${contact}</td>
+                <td>${email}</td>
+                <td>${package}</td>
+                <td>${status}</td>
+                <td>${actions}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function updatePartnerStats(list) {
+        const arr = Array.isArray(list) ? list : [];
+        const totalEl = document.getElementById('totalPartners');
+        const platinumEl = document.getElementById('platinumPartners');
+        const goldEl = document.getElementById('goldPartners');
+        const silverEl = document.getElementById('silverPartners');
+        const bronzeEl = document.getElementById('bronzePartners');
+        if (totalEl) totalEl.textContent = arr.length;
+        if (platinumEl) platinumEl.textContent = arr.filter(p => p.EventPartnerPackages && p.EventPartnerPackages[0] && (p.EventPartnerPackages[0].event_package?.title || '').toLowerCase().includes('platinum')).length;
+        if (goldEl) goldEl.textContent = arr.filter(p => p.EventPartnerPackages && p.EventPartnerPackages[0] && (p.EventPartnerPackages[0].event_package?.title || '').toLowerCase().includes('gold')).length;
+        if (silverEl) silverEl.textContent = arr.filter(p => p.EventPartnerPackages && p.EventPartnerPackages[0] && (p.EventPartnerPackages[0].event_package?.title || '').toLowerCase().includes('silver')).length;
+        if (bronzeEl) bronzeEl.textContent = arr.filter(p => p.EventPartnerPackages && p.EventPartnerPackages[0] && (p.EventPartnerPackages[0].event_package?.title || '').toLowerCase().includes('bronze')).length;
+    }
+
+    async function fetchPartners() {
+        try {
+            console.log('Fetching partners...');
+            const endpoint = `${window.API_BASE_URL || 'http://localhost:9100/api/v1'}/admin/partners`;
+            const token = getToken();
+            const headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const res = await axios.get(endpoint, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            console.log('Fetched partners:', list);
+            renderPartners(list);
+            updatePartnerStats(list);
+        } catch (err) {
+            console.error('Error fetching partners:', err);
+            const tbody = document.querySelector('#partnersTable tbody');
+            if (tbody) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c00;">Failed to load partners.</td></tr>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const refreshBtn = document.getElementById('refreshPartnersBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                fetchPartners();
+            });
+        }
+    });
+
+    // Expose fetchPartners globally for use by other scripts
+    window.fetchPartners = fetchPartners;
 })();
