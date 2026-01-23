@@ -53,7 +53,7 @@ let currentMinistryId = null;
 
 // Add to recent activity
 function addToRecentActivity(attendeeData) {
-    const table = document.getElementById('ministryActivityTable');
+    const table = document.getElementById('recentActivityTable');
     const now = new Date();
     
     const row = document.createElement('tr');
@@ -74,9 +74,9 @@ function addToRecentActivity(attendeeData) {
 
 // Render recent activity table with last 3 participants
 function renderRecentActivity() {
-    const tbody = document.getElementById('ministryActivityTable');
+    const tbody = document.getElementById('recentActivityTable');
     if (!tbody) {
-        console.error('ministryActivityTable not found');
+        console.error('recentActivityTable not found');
         return;
     }
     tbody.innerHTML = ''; // Clear existing content
@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchAttendees();
     renderMinistriesTable();
     fetchMinistries();
+    // renderRecentActivity()
 });
 
 // Tab Navigation
@@ -618,6 +619,9 @@ async function handleAddAttendee(e) {
             submitBtn.textContent = origText || 'Add Attendee';
         }
     }
+
+    // Add to recent activity
+    addToRecentActivity(values);
 }
 
 async function handleAddSpeaker(e) {

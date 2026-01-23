@@ -262,41 +262,7 @@
                                 </tr>
                             </thead>
                             <tbody id="recentActivityTable">
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Samuel Johnson</td>
-                                    <td>Ministry of Finance</td>
-                                    <td>2023-10-25 14:30</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Verified</td>
-                                    <td>Aisha Mohammed</td>
-                                    <td>Ministry of Education</td>
-                                    <td>2023-10-25 13:15</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>James Okoro</td>
-                                    <td>Ministry of Health</td>
-                                    <td>2023-10-25 11:45</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>John Doe</td>
-                                    <td>Ministry of Agriculture</td>
-                                    <td>2023-10-24 09:00</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Added</td>
-                                    <td>Jane Smith</td>
-                                    <td>Ministry of Environment</td>
-                                    <td>2023-10-24 08:30</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
+                                <!-- Will be populated by JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -1285,6 +1251,109 @@
         document.addEventListener('DOMContentLoaded', fetchSpeakers);
     } else {
         fetchSpeakers();
+    }
+})();
+</script>
+
+<!-- Fetch recent attendees for activity table -->
+<script>
+(function () {
+    const activityBody = document.getElementById('recentActivityTable');
+    const refreshBtn = document.getElementById('refreshActivityBtn');
+
+    function safeText(v) {
+        return (v === null || v === undefined || v === '') ? '-' : String(v);
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        } catch (e) {
+            return safeText(dateString);
+        }
+    }
+
+    function statusClassFrom(status) {
+        if (!status) return 'status-pending';
+        const s = String(status).toLowerCase();
+        if (s === 'approved' || s === 'confirmed') return 'status-approved';
+        if (s === 'pending') return 'status-pending';
+        return 'status-rejected';
+    }
+
+    function renderActivity(list) {
+        if (!activityBody) return;
+        activityBody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            activityBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent activity.</td></tr>';
+            return;
+        }
+        list.forEach(attendee => {
+            const tr = document.createElement('tr');
+            const action = 'Registration';
+            const participant = safeText(attendee.fullname);
+            const ministry = safeText(attendee.organization);
+            const dateTime = formatDate(attendee.createdAt);
+            const status = safeText(attendee.status);
+            const statusClass = statusClassFrom(status);
+
+            tr.innerHTML = `
+                <td>${action}</td>
+                <td>${participant}</td>
+                <td>${ministry}</td>
+                <td>${dateTime}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+            `;
+            activityBody.appendChild(tr);
+        });
+    }
+
+    async function fetchRecentActivity() {
+        try {
+            let token = null;
+            try {
+                const raw = localStorage.getItem('authUser');
+                if (raw) {
+                    const a = JSON.parse(raw);
+                    token = a?.token || token;
+                }
+            } catch (e) { /* ignore */ }
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            // Sort by date descending and take first 4
+            const sorted = list.sort((a, b) => new Date(b.created_at || b.registration_date || 0) - new Date(a.created_at || a.registration_date || 0));
+            const recent = sorted.slice(0, 4);
+            renderActivity(recent);
+        } catch (err) {
+            console.error('Error fetching recent activity:', err);
+            if (activityBody) activityBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c00;">Failed to load recent activity.</td></tr>';
+        }
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetchRecentActivity();
+        });
+    }
+
+    // Fetch once DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchRecentActivity);
+    } else {
+        fetchRecentActivity();
     }
 })();
 </script>
@@ -8640,6 +8709,7 @@ function refreshPartnersTable() {
         }
     </script>
 
+    <script src="../../js/auth.js"></script>
     <script src="../../js/protectedRoute.js"></script>
     <!-- Shared API client (automatically attaches token) -->
     <script src="../../js/apiClient.js"></script>
