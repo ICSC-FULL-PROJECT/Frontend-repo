@@ -409,30 +409,48 @@ function initializeEventListeners() {
     }
 
     // Global document click handlers for table actions
-    document.addEventListener('click', function(e) {
-        const closestRow = e.target.closest && e.target.closest('tr');
-        
-        // Attendee actions
-        if (e.target.classList.contains('edit-btn') && closestRow) {
-            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(attendeeId)) openEditModal(attendeeId);
-        }
-        if (e.target.classList.contains('view-btn') && closestRow) {
-            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(attendeeId)) openViewModal(attendeeId);
-        }
-        if (e.target.classList.contains('delete-btn') && closestRow) {
-            const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-            const attendeeName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
-            if (!Number.isNaN(attendeeId)) openDeleteModal(attendeeId, attendeeName);
-        }
+document.addEventListener('click', function(e) {
+    const target = e.target;
+    const closestRow = target.closest('tr');
+    if (!closestRow) return;
 
-        // Ministry actions
-        if (e.target.classList.contains('delete-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            const ministryName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
-            if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
-        }
+    const dataId = closestRow.getAttribute('data-id');
+
+    // --- ATTENDEE ACTIONS ---
+    if (target.classList.contains('edit-btn')) {
+        const attendeeId = parseInt(dataId);
+        if (!isNaN(attendeeId)) openEditModal(attendeeId);
+    }
+    if (target.classList.contains('view-btn')) {
+        openViewModal(dataId);
+    }
+    if (target.classList.contains('delete-btn')) {
+        const name = closestRow.cells[0].textContent;
+        openDeleteModal(dataId, name);
+    }
+
+    // --- EXHIBITOR ACTIONS (Fix for your specific buttons) ---
+    if (target.classList.contains('view-exhibitor-btn')) {
+        // Redirect to a view function or open a specific exhibitor modal
+        console.log("Viewing Exhibitor ID:", dataId);
+        // If using the same view modal:
+        openViewModal(dataId); 
+    }
+    if (target.classList.contains('edit-exhibitor-btn')) {
+        console.log("Editing Exhibitor ID:", dataId);
+        const editExhibitorModal = document.getElementById('editExhibitorModal');
+        if (editExhibitorModal) editExhibitorModal.style.display = 'flex';
+    }
+
+    // --- MINISTRY ACTIONS ---
+    if (target.classList.contains('edit-ministry-btn')) {
+        openEditMinistryModal(dataId);
+    }
+    if (target.classList.contains('delete-ministry-btn')) {
+        const name = closestRow.cells[0].textContent;
+        openDeleteMinistryModal(dataId, name);
+    }
+
 
         // // Verification actions
         // if (e.target.classList.contains('approve-btn') && closestRow) {
@@ -1297,11 +1315,14 @@ function openDeleteMinistryModal(ministryId, ministryName) {
 }
 
 function openViewModal(id) {
-  // 1. Find the attendee in your global 'attendees' array
   const attendee = attendees.find((a) => a.id == id);
-  if (!attendee) return;
+  // If not found in attendees, it might be an exhibitor or partner
+  if (!attendee) {
+    console.warn("Item not found in attendees list");
+    // Add logic here to find in exhibitors if needed
+    return;
+  }
 
-  // 2. Map the data to the IDs in your "View Attendee Modal" HTML
   document.getElementById("viewName").textContent = attendee.name || "N/A";
   document.getElementById("viewEmail").textContent = attendee.email || "N/A";
   document.getElementById("viewPhone").textContent = attendee.phone || "N/A";
@@ -1312,11 +1333,8 @@ function openViewModal(id) {
   document.getElementById("viewDepartment").textContent =
     attendee.department || "N/A";
 
-  // 3. Display the modal
   const viewModal = document.getElementById("viewAttendeeModal");
-  if (viewModal) {
-    viewModal.style.display = "flex"; // Or 'block' depending on your CSS
-  }
+  if (viewModal) viewModal.style.display = "flex";
 }
 
 function openViewMinistryModal(ministryId) {
