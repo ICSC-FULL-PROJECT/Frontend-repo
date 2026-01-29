@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="title.png" type="image/x-icon">
     <style>
         /* CSS Variables and Base Styles */
         :root {
@@ -676,6 +677,133 @@
             margin-bottom: 0;
         }
 
+        /* Package Cards Styling */
+.package-container {
+    margin-top: 50px;
+}
+
+.package-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.package-card {
+    background: #fff;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    text-align: center;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    position: relative;
+}
+
+.package-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary-color);
+}
+
+.package-card h4 {
+    color: var(--text-dark);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.package-card .price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.package-card ul {
+    text-align: left;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.package-card ul li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    position: relative;
+    padding-left: 25px;
+}
+
+.package-card ul li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+.package-card .limited {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.package-card .card-btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.package-card:hover .card-btn {
+    background: var(--primary-light);
+}
+.package-card.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.package-card.disabled::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.limited {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+.package-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
         /* Footer */
         footer {
             background: linear-gradient(135deg, var(--text-dark) 0%, #000000 100%);
@@ -1028,10 +1156,23 @@
     <section class="partnership-content">
         <div class="container">
             <div class="partnership-container">
-                <div class="section-header">
-                    <h2>PARTNER WITH US</h2>
-                    <p>To receive the <strong>International Civil Service Conference</strong> partnership brochure, including our full range of packages and exhibition options, please contact our team.</p>
-                </div>
+    <div class="section-header">
+        <h2>PARTNER WITH US</h2>
+        <!-- <p>To receive the <strong>International Civil Service Conference</strong> partnership brochure, including our full range of packages and exhibition options, please contact our team.</p> -->
+    </div>
+
+    <div class="package-container">
+        <h3 class="text-center mb-4">Select Your Partnership Package</h3>
+        <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals. Click any package to begin registration.</p>
+        
+        <div class="package-cards">
+            <div class="text-center">Loading packages...</div>
+        </div>
+    </div>
+    
+    <div class="contact-info-card">
+        </div>
+</div>
                 
                 <div class="contact-info-card">
                     <h3>Contact Our Partnership Team</h3>
@@ -1041,14 +1182,14 @@
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <h4>Email</h4>
-                            <p>partners.icsc2025@icsc.ohcsf.gov.ng</p>
+                            <p>partners@icsc.ohcsf.gov.ng</p>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">
                                 <i class="fas fa-phone"></i>
                             </div>
                             <h4>Call Us</h4>
-                            <p>+2348034098544</p>
+                            <p>+234 8103247323</p>
                         </div>
                     </div>
                 </div>
@@ -1146,14 +1287,14 @@
                 </div>
                 <div class="footer-col">
                     <h4>Contact Info</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
-                    <p><i class="fas fa-calendar-alt"></i> 25-26 May, 2026</p>
-                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
-                    <p><i class="fas fa-phone"></i>+234 7066173834</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ICSC Secretariat, Office of the Head of the Civil Service of the Federation, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 20-21 May, 2026</p>
+                    <p><i class="fas fa-envelope"></i> contactus@icsc.ohcsf.gov.ng</p>
+                    <p><i class="fas fa-phone"></i>+234 8103247323</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a></p>
             </div>
         </div>
     </footer>
@@ -1193,6 +1334,153 @@
                 backToTop.classList.remove('active');
             }
         });
+
+      /**
+ * 1. ENSURE API CLIENT EXISTS
+ * This prevents the "Cannot read properties of undefined (reading 'get')" error.
+ */
+if (!window.apiClient) {
+    window.apiClient = {
+        get: async function(endpoint) {
+            console.warn("Using mock API client. Real backend not detected.");
+            return { data: [] }; // Returns empty so the script uses the fallbacks below
+        }
+    };
+}
+
+/**
+ * 2. FETCH AND RENDER PACKAGES
+ * Matches the logic from register-partner.html but with redirect-on-click
+ */
+async function fetchAndRenderPackages() {
+    const container = document.querySelector('.package-cards');
+    if (!container) return;
+
+    // OFFICIAL HARDCODED PACKAGES (Matches the tiers in your document)
+    const officialFallbacks = [
+        {
+            id: 4,
+            slug: 'diamond-partner',
+            title: 'Diamond Partner',
+            investment: 30000000,
+            features: ['Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'Keynote speaking slot (15 mins)', 'Guest passes: opportunity to invite a limited number of your own VIPs to the event. (Not to be used for Guest passes: opportunity to invite a limited number of your own VIPs to the event.)',
+             'Premium exhibition location', 'Space located in the main exhibition area for 2 days. Offered as space only', 'Company logo and profile on event website (Full coverage)', 'News coverage of your session published on the OHCSF Website and shared in the Civil Service newsletter'
+            ],
+            total_slot: 30,
+            current_count: 0
+        },
+        {
+            id: 3,
+            slug: 'gold-partner',
+            title: 'Gold Partner',
+            investment: 15000000,
+            features: ['All Silver benefits', 'Speaking slot (5 mins)', '4 conference passes', 'Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'VIP dinner invitation', 'Space located in the main exhibition area for 2 days. Offered as space only', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)'],
+            total_slot: 15,
+            current_count: 0
+        },
+        {
+            id: 2,
+            slug: 'silver-partner',
+            title: 'Silver Partner',
+            investment: 10000000,
+            features: ['All Bronze benefits', 'Logo on conference backdrop', '2 conference passes', 'Full page in program booklet', 'Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)'],
+            total_slot: 10,
+            current_count: 0
+        },
+
+
+        {
+            id: 1,
+            slug: 'bronze-partner',
+            title: 'Bronze Partner',
+            investment: 5000000,
+            features: ['Company logo on website', 'Social media mention', '1 conference pass', 'Exhibition space (optional)', 'Partner certificate', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Basic Coverage)'],
+            total_slot: 20,
+            current_count: 0
+        }
+    ];
+
+    let fetchedPackages = [];
+    
+    try {
+        // Try fetching from the real API
+        const resp = await window.apiClient.get('/packages/event-partner-packages');
+        const respData = resp && (resp.data || resp);
+        
+        if (respData && Array.isArray(respData.data)) {
+            fetchedPackages = respData.data;
+        } else if (Array.isArray(respData)) {
+            fetchedPackages = respData;
+        }
+    } catch (err) {
+        console.error("API Fetch Error:", err);
+    }
+
+    // If API returned nothing (or mock was used), use the official fallbacks
+    const finalPackages = fetchedPackages.length > 0 ? fetchedPackages : officialFallbacks;
+
+    container.innerHTML = ''; // Clear container
+
+    finalPackages.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = 'package-card';
+        
+        // --- DATA NORMALIZATION (Matching the Registration Document) ---
+        const price = Number(pkg.investment ?? pkg.price ?? 0);
+        const priceText = price.toLocaleString();
+        
+        const max_count = Number(pkg.total_slot ?? pkg.max_count ?? 0);
+        const remaining = Number(pkg.remaining_slot ?? (max_count === 0 ? 0 : max_count - (pkg.current_count || 0)));
+        const isAvailable = max_count === 0 || remaining > 0;
+
+        // Features HTML
+        let featuresHtml = '';
+        if (Array.isArray(pkg.features) && pkg.features.length > 0) {
+            featuresHtml = '<ul>' + pkg.features.map(f => `<li>${f}</li>`).join('') + '</ul>';
+        } else if (pkg.description) {
+            featuresHtml = `<p class="package-description">${pkg.description}</p>`;
+        }
+
+        // Availability Text
+        let availabilityText = '';
+        if (!isAvailable) {
+            availabilityText = `<div class="limited" style="color: #dc3545;">Fully Booked</div>`;
+        } else if (max_count > 0) {
+            availabilityText = `<div class="limited">${remaining} of ${max_count} slots remaining</div>`;
+        } else {
+            availabilityText = `<div class="limited">Unlimited slots available</div>`;
+        }
+
+        // --- CONSTRUCT CARD ---
+        card.innerHTML = `
+            <h4>${pkg.title || pkg.name}</h4>
+            <div class="price">₦${priceText}</div>
+            ${featuresHtml}
+            ${availabilityText}
+            <div class="text-center mt-3">
+                <span class="btn-standard w-100 py-2" style="display:block; border-radius:6px; font-weight:600;">
+                    ${isAvailable ? 'Select & Register' : 'Sold Out'}
+                </span>
+            </div>
+        `;
+
+        // --- REDIRECT LOGIC ---
+        if (isAvailable) {
+            card.onclick = () => {
+                // Takes them to registration page and passes the package ID/Slug
+                window.location.href = `register-partner.html?package=${pkg.slug || pkg.id}`;
+            };
+        } else {
+            card.style.opacity = '0.6';
+            card.style.cursor = 'not-allowed';
+        }
+
+        container.appendChild(card);
+    });
+}
+
+// Start the process
+document.addEventListener('DOMContentLoaded', fetchAndRenderPackages);
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

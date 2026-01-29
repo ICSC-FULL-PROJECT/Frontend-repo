@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Civil Service Conference - Reform, Resilience & Results </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Civil Service Conference 2026 | Reform, Resilience & Results</title>
+<meta name="description" content="The International Civil Service Conference (ICSC) 2026 brings together global public sector leaders to explore reform, resilience, digital transformation, and service delivery excellence. Register, partner, or participate today.">
+<meta name="keywords" content="International Civil Service Conference, ICSC 2026, public sector conference, civil service reform, government innovation, digital governance, public administration, policy leaders">
+<meta name="author" content="International Civil Service Conference">
+<link rel="canonical" href="https://icsc2026.ohcsf.gov.ng/">
+<meta property="og:title" content="International Civil Service Conference 2026">
+<meta property="og:description" content="A global platform for civil service leaders focused on reform, resilience, and measurable results in public sector transformation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://icsc2026.ohcsf.gov.ng/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="International Civil Service Conference 2026">
+<meta name="twitter:description" content="Join global civil service leaders shaping the future of governance, reform, and service delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="/title.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
                /* CSS Reset and Base Styles */
         :root {
@@ -565,6 +577,10 @@
     margin-bottom: 5px;
     color: white;
     transition: all 0.3s ease;
+    /* --- ADD THESE 3 LINES --- */
+    font-variant-numeric: tabular-nums; /* Makes numbers equal width */
+    min-width: 150px;                   /* Reserves space for the final number */
+    display: inline-block;              /* Allows min-width to work while keeping it centered */
 }
 
 .stat-item h3.animated {
@@ -827,7 +843,7 @@
             font-size: 15px;
             text-transform: uppercase;
             color: var(--text-dark);
-            padding: 8px 0;
+            padding: 3px 0;
             position: relative;
             display: flex;
             align-items: center;
@@ -1173,7 +1189,8 @@
             z-index: 2;
             text-align: center;
             color: var(--text-light);
-            padding: 0 20px;
+            padding:  20px;
+            padding-top: 450px;
             max-width: 900px;
             width: 90%;
             margin-top: 200px;
@@ -1181,7 +1198,7 @@
         }
 
         .hero-content h1 {
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 800;
             margin-bottom: 20px;
             text-transform: uppercase;
@@ -1193,23 +1210,28 @@
 
         .hero-content h2 {
             font-size: 2.2rem;
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             font-weight: 600;
             color: #f8d64e;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }
 
         .hero-content h2 em {
-            font-style: italic;
-            color: #a8e6cf;
+            /* font-style: italic; */
+            color: #008751;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+                .hero-content h3 em {
+            /* font-style: italic; */
+            color: #008751;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
 
         .hero-content p {
-            font-size: 1.3rem;
-            line-height: 1.7;
-            margin: 25px 0 35px;
-            max-width: 700px;
+            font-size: 1.2rem;
+            line-height: 1.3;
+            margin: 25px 0 60px;
+            max-width: 1000px;
             margin-left: auto;
             margin-right: auto;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
@@ -1390,19 +1412,36 @@
 /* Fixed Floating Timer */
 .fixed-countdown-timer {
     position: fixed;
-    top: 150px;
     right: 20px;
-    width: 120px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 10px 30px rgba(0, 135, 81, 0.3);
-    z-index: 1000;
-    transform: translateX(150px);
-    transition: transform 0.5s ease;
-    border: 2px solid white;
+    top: 150px;
+    z-index: 999;
+    width: 120px; /* Slightly wider for better presence */
+    padding: 15px 10px;
+    border-radius: 12px;
     text-align: center;
-    display: none;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+.fixed-timer-days {
+    font-size: 2.5rem; /* Larger font for the number */
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.fixed-timer-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.fixed-timer-header {
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 5px;
 }
 
 .fixed-countdown-timer.active {
@@ -1446,6 +1485,46 @@
     padding: 5px;
     border-radius: 5px;
     margin-top: 5px;
+}
+/* Center the single day count */
+.popup-countdown-single {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.popup-days-circle {
+    background: rgba(var(--primary-rgb), 0.1); /* Use a light version of your brand color */
+    border: 3px solid var(--primary-color);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: pulsePopup 2s infinite;
+}
+
+.popup-countdown-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.popup-countdown-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+@keyframes pulsePopup {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.4); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(var(--primary-rgb), 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0); }
 }
 
 /* Responsive adjustments */
@@ -1561,7 +1640,7 @@
     border: none; /* Thin dark border */
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     border-radius: 4;
-    width: 90%; 
+    width: 80%; 
     margin: 0 auto; /* Centers him in his grid cell */
 }
 
@@ -1744,7 +1823,14 @@
         }
 
         .hosted-item img {
-            max-height: 120px;
+            max-height: 320px;
+            width: auto;
+            margin-bottom: 20px;
+            filter: grayscale(0%);
+            transition: var(--transition);
+        }
+        .hosted-item img.ON { 
+             max-height: 75px;
             width: auto;
             margin-bottom: 20px;
             filter: grayscale(0%);
@@ -1760,12 +1846,24 @@
             margin-bottom: 10px;
             color: var(--primary-color);
         }
+        .hosted-item h2{
+            color: var(--primary-color);
+        }
+        .hosted-item h6{
+            color: var(--primary-color)}
+
 
         .hosted-item p {
-            font-weight: 600;
+            font-family: "poppins", sans-serif;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+                .hosted-item p.ON {
+            font-weight: 300;
             color: var(--text-dark);
         }
 
+        
         /* Partners Section */
         .partners-section {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
@@ -1948,7 +2046,7 @@
             padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: #aaaaaa;
-            font-size: 0.9rem;
+            font-size: 0.2rem;
         }
 
         /* Back to Top Button */
@@ -2129,7 +2227,7 @@
             }
             
             .hero-content h2 {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
             
             .hero-content p {
@@ -2467,12 +2565,11 @@
     <section class="hero-slider">
         
         <div class="hero-content">
-            <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE</h1>
-            <h2><em>Reform, Resilience & Results!
-            </em></h2>
+            <!-- <h1>INTERNATIONAL CIVIL SERVICE CONFERENCE</h1> -->
+            <h3><em>Reform, Resilience and Results!
+            </em></h3>
             
-            
-            
+
             <p>
                 Explore key pillars of public service performance with global leaders. 
                 Discover how governments can build capabilities for the future.
@@ -2521,10 +2618,10 @@
         </div>
         <div class="about-content">
             <div class="about-text">
-                <p>The Nigerian Civil Service International Conference 2026 is a prestigious gathering of policymakers, government officials, and stakeholders aimed at discussing innovations and best practices in public administration.</p>
+                <p>The International Civil Service Conference  is a prestigious gathering of policymakers, government officials, and stakeholders aimed at discussing innovations and best practices in public administration.</p>
                 <p>Scheduled to take place in Abuja, Nigeria, the conference will focus on reforms, digital transformation, and capacity building within the civil service. Key speakers from Nigeria and across the globe will share insights on enhancing efficiency and governance.</p>
                 <p>Participants will engage in workshops, panel discussions, and networking sessions to drive impactful policy changes. The event provides a platform for knowledge exchange fostering collaboration between the public and private sectors.</p>
-                <p>Registrations and donations are open to support the success of this transformative initiative.</p>
+                <p>Registrations are now open, and we welcome partnerships to help drive the success of this transformative initiative.</p>
               <div class="about-stats">
     <div class="stat-item">
         <h3 class="count" data-target="5000">0</h3>
@@ -2550,42 +2647,61 @@
         </div>
         
   <!-- Themes Section -->
-        <div class="themes-section">
-            <h3>Conference Stages</h3>
-            <div class="themes-grid">
-                <div class="theme-card">
-                    <i class="fas fa-users"></i>
-                    <h4>Strong Leadership</h4>
-                    <p>Developing mutual respect and alignment between ministers and senior officials for effective governance.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-user-graduate"></i>
-                    <h4>Skilled Workforce</h4>
-                    <p>Building a highly skilled, inclusive and thriving public sector workforce ready for future challenges.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-rocket"></i>
-                    <h4>Agile Culture</h4>
-                    <p>Fostering an agile, digital, and risk-taking culture focused on delivery and innovation.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-sitemap"></i>
-                    <h4>Integrated Structures</h4>
-                    <p>Implementing public service delivery structures that transcend organisational silos and bureaucracy.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-handshake"></i>
-                    <h4>Trusted Government</h4>
-                    <p>Building a government trusted by its users and the public through transparency and accountability.</p>
-                </div>
-                <div class="theme-card">
-                    <i class="fas fa-chart-line"></i>
-                    <h4>Digital Transformation</h4>
-                    <p>Leveraging technology to enhance service delivery and improve citizen engagement.</p>
-                </div>
-            </div>
+<div class="themes-section">
+    <h3>Conference Stages</h3>
+    <div class="themes-grid">
+
+        <div class="theme-card">
+            <i class="fas fa-users"></i>
+            <h4>Transform</h4>
+            <p>Driving fundamental reforms in structures, policies, and leadership approaches to reshape public institutions for modern governance.</p>
         </div>
+
+        <div class="theme-card">
+            <i class="fas fa-user-graduate"></i>
+            <h4>Rejuvenate</h4>
+            <p>Revitalising the public service workforce through skills renewal, youth inclusion, wellbeing, and a culture that energises performance.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-rocket"></i>
+            <h4>Innovate</h4>
+            <p>Encouraging experimentation, digital adoption, and new service models that solve public problems in smarter and more efficient ways.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-sitemap"></i>
+            <h4>Accelerate</h4>
+            <p>Speeding up policy execution and service delivery by removing bottlenecks, simplifying processes, and improving cross-agency collaboration.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-handshake"></i>
+            <h4>Accomplish</h4>
+            <p>Focusing on measurable outcomes, performance accountability, and delivering tangible results that improve citizens’ lives.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-chart-line"></i>
+            <h4>Impact</h4>
+            <p>Using data, evidence, and feedback to ensure public policies and programmes create lasting social and economic value.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-lightbulb"></i>
+            <h4>Aspire</h4>
+            <p>Setting bold national and institutional visions, benchmarking globally, and positioning the civil service for future excellence.</p>
+        </div>
+
+        <div class="theme-card">
+            <i class="fas fa-bolt"></i>
+            <h4>Activate</h4>
+            <p>Turning strategies into action through leadership commitment, workforce mobilisation, and secure digital systems that support execution.</p>
+        </div>
+
     </div>
+</div>
+
 </section>
 
 <!-- Countdown Popup Modal -->
@@ -2597,34 +2713,22 @@
         
         <div class="popup-header">
             <img src="icsc-logos.png" alt="logo">
-            <h3><i class="fas fa-calendar-alt"></i></h3>
-            <p>International Civil Service Conference 2026</p>
+            <h3>ICSC 2026</h3>
+            <p>International Civil Service Conference</p>
         </div>
         
-        <div class="popup-countdown" id="popupCountdown">
-            <div class="popup-countdown-item">
+        <div class="popup-countdown-single" id="popupCountdown">
+            <div class="popup-days-circle">
                 <span class="popup-countdown-number" id="popupDays">00</span>
-                <span class="popup-countdown-label">Days</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupHours">00</span>
-                <span class="popup-countdown-label">Hours</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupMinutes">00</span>
-                <span class="popup-countdown-label">Minutes</span>
-            </div>
-            <div class="popup-countdown-item">
-                <span class="popup-countdown-number" id="popupSeconds">00</span>
-                <span class="popup-countdown-label">Seconds</span>
+                <span class="popup-countdown-label">Days to go</span>
             </div>
         </div>
         
         <p class="popup-auto-close" id="autoCloseMessage">
-            This popup will auto-close in <span id="closeTimer">5</span> seconds
+            This popup will close in <span id="closeTimer">5</span>s
         </p>
         
-        <button class="btn" id="registerFromPopup" style="margin-top: 20px;">
+        <button class="btn" id="registerFromPopup" style="margin-top: 15px; width: 100%;">
             <i class="fas fa-user-plus"></i> Register Now
         </button>
     </div>
@@ -2633,31 +2737,29 @@
 <!-- Fixed Floating Timer -->
 <div class="fixed-countdown-timer" id="fixedCountdown">
     <div class="fixed-timer-header">
-        <i class="fas fa-clock"></i> ICSC 2026
+        <i class="fas fa-calendar-alt"></i> ICSC 2026
     </div>
     <div class="fixed-timer-display">
         <div class="fixed-timer-days" id="fixedDays">00</div>
         <div class="fixed-timer-label">Days To Go</div>
-        <div class="fixed-timer-time" id="fixedTime">00:00:00</div>
     </div>
-</div>
-        
+</div>  
     <!-- Hosted By Section -->
     <section class="hosted-section">
         <div class="container">
-            <div class="section-header">
+            <!-- <div class="section-header">
                 <h2>Hosted By & In Association With</h2>
-            </div>
+            </div> -->
             <div class="hosted-container">
                 <div class="hosted-item">
-                    <h4>Hosted by:</h4>
+                    <h4>HOSTED BY :</h4>
                     <img src="images/NG.jpeg" alt="Federal Government of Nigeria">
-                    <p><strong>The Federal Government of Nigeria</strong></p>
+                    <p><strong> FEDERAL GOVERNMENT OF NIGERIA </strong></p>
                 </div>
                 <div class="hosted-item">
-                    <h4>In association with:</h4>
-                    <img src="images/Global.png" alt="Global Government Forum">
-                    <p><strong>Global Government Forum</strong></p>
+                    <h6>In association with:</h6>
+                    <img src="images/Global.png" alt="Global Government Forum" class="ON">
+                    <!-- <p class="ON">Global Government Forum </p> -->
                 </div>
             </div>
         </div>
@@ -2730,14 +2832,14 @@
                 </div>
                 <div class="footer-col">
                     <h4>Contact Info</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Eagle Square, Abuja, Nigeria</p>
-                    <p><i class="fas fa-calendar-alt"></i> 25-26 May, 2026</p>
-                    <p><i class="fas fa-envelope"></i> info@icsc.gov.ng</p>
-                    <p><i class="fas fa-phone"></i>+234 7066173834</p>
+                    <p><i class="fas fa-map-marker-alt"></i>ICSC Secretariat, Office of the Head of the Civil Service of the Federation, Abuja, Nigeria</p>
+                    <p><i class="fas fa-calendar-alt"></i> 20-21 May, 2026</p>
+                    <p><i class="fas fa-envelope"></i> contactus@icsc.ohcsf.gov.ng</p>
+                    <p><i class="fas fa-phone"></i> +234 810 324 7323</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 International Civil Service Conference. All rights reserved. | <a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a> - <a href="https://www.globalgovernmentforum.com/terms-and-conditions/">Privacy & Terms</a></p>
+                <p>&copy; 2026 International Civil Service Conference. All rights reserved. |<a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a></p>
             </div>
         </div>
     </footer>
@@ -2745,7 +2847,7 @@
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
 
-    <script>
+<script>
         // Mobile Menu Toggle
         document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
             document.querySelector('.mobile-menu').classList.toggle('active');
@@ -2929,20 +3031,20 @@ function animateCountersEnhanced() {
             
             const pics = [
                 'images/happy.jpg',
-                'images/iya-alone.jpeg',
-                'images/iya.jpg',
+                'images/ICSC_3293.jpg',
+                'images/ICSC_3054.jpg',
                 'images/iya-rite.jpg',
-                'images/iya-rr.jpg',
+                'images/ICSC_3820.jpg',
                 'images/iya-pres.jpeg',
-                'images/iya-mic.jpg',
-                'images/iya-pot.jpg',
+                'images/ICSC_1639.jpg',
+                'images/ICSC_3057.jpg',
                 'images/smile.jpg',
                 'images/award.jpg',
                 'images/selfie.jpg',
                 'images/award-6.jpg',
                 'images/iya-pod.jpg',
-                'images/iya-speak.jpg',
-                'images/thumbs.jpg'
+                'images/ICSC_2258.jpg',
+                'images/ICSC_3122.jpg',
             ];
 
             // Preload images to avoid flicker
@@ -2968,8 +3070,9 @@ document.querySelector('#mobileLiveStream')?.addEventListener('click', function(
 // Add live status indicator to nav (optional):
 function updateLiveStatus() {
     const now = new Date();
-    const conferenceStart = new Date('2026-05-25T09:00:00');
-    const conferenceEnd = new Date('2026-05-26T18:00:00');
+    // UPDATED DATE: May 20th 2026
+    const conferenceStart = new Date('2026-05-20');
+    const conferenceEnd = new Date('2026-05-21');
     
     const liveNav = document.getElementById('liveStreamNav');
     const mobileLive = document.getElementById('mobileLiveStream');
@@ -3084,31 +3187,11 @@ updateLiveStatus();
                 }, 500);
             }
         }
+
+// UPDATED: Simple Days-Only Countdown Logic
 function updateCountdownTimers() {
-    // Prefer the canonical epoch (if saved by admin)
-    let eventEpoch = localStorage.getItem('icsc_event_epoch');
-
-    if (eventEpoch) {
-        eventEpoch = parseInt(eventEpoch);
-    } else {
-        // Fallback to timezone-aware ISO date saved by admin
-        let eventDate = localStorage.getItem('icsc_event_date');
-
-        // If no date exists, set default
-        if (!eventDate) {
-            eventDate = '2026-05-25T09:00:00Z';
-            localStorage.setItem('icsc_event_date', eventDate);
-        }
-
-        // Date.parse() correctly handles ISO strings with Z or +01:00
-        eventEpoch = Date.parse(eventDate);
-
-        // Optional: save epoch for future accuracy
-        localStorage.setItem('icsc_event_epoch', String(eventEpoch));
-    }
-
-    // eventEpoch is now the universal timestamp the countdown should use
-    const eventTime = eventEpoch;
+    const newDateString = '2026-05-21'; 
+    const eventTime = Date.parse(newDateString);
 
     function updateAllTimers() {
         const now = Date.now();
@@ -3116,87 +3199,50 @@ function updateCountdownTimers() {
 
         // If event has already passed
         if (timeRemaining < 0) {
-            // Update popup if it's open
-            const popup = document.getElementById('countdownPopup');
-            const popupCountdown = document.getElementById('popupCountdown');
-            if (popup && popupCountdown && popup.classList.contains('active')) {
-                popupCountdown.innerHTML = `
-                    <div style="font-size: 1.8rem; color: var(--primary-color); font-weight: 700;">
-                        <i class="fas fa-check-circle"></i> Conference is Live!
-                    </div>
-                `;
-            }
-            
-            // Update fixed timer
             const fixedTimer = document.getElementById('fixedCountdown');
             if (fixedTimer) {
-                fixedTimer.innerHTML = `
-                    <div class="fixed-timer-header" style="color: #f8d64e;">
-                        <i class="fas fa-broadcast-tower"></i> LIVE NOW
-                    </div>
-                    <div class="fixed-timer-display">
-                        <div style="font-size: 1.2rem; color: white; font-weight: 700;">
-                            Join Us!
-                        </div>
-                    </div>
-                `;
+                fixedTimer.innerHTML = `<div style="color:white; font-weight:700; padding:10px;">LIVE NOW</div>`;
             }
-            
             return;
         }
                 
-                // Calculate time units
-                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-                
-                // Update popup timer
-                const popupDays = document.getElementById('popupDays');
-                const popupHours = document.getElementById('popupHours');
-                const popupMinutes = document.getElementById('popupMinutes');
-                const popupSeconds = document.getElementById('popupSeconds');
-                
-                if (popupDays) popupDays.textContent = days.toString().padStart(2, '0');
-                if (popupHours) popupHours.textContent = hours.toString().padStart(2, '0');
-                if (popupMinutes) popupMinutes.textContent = minutes.toString().padStart(2, '0');
-                if (popupSeconds) popupSeconds.textContent = seconds.toString().padStart(2, '0');
-                
-                // Update fixed timer
-                const fixedDays = document.getElementById('fixedDays');
-                const fixedTime = document.getElementById('fixedTime');
-                const fixedTimer = document.getElementById('fixedCountdown');
-                
-                if (fixedDays) fixedDays.textContent = days;
-                if (fixedTime) {
-                    fixedTime.textContent = 
-                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-                
-                // Update fixed timer style based on days remaining
-                if (fixedTimer) {
-                    if (days < 7) {
-                        // Less than a week - show urgent style
-                        fixedTimer.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%)';
-                        fixedTimer.style.animation = 'pulse 2s infinite';
-                    } else if (days < 30) {
-                        // Less than a month - show warning style
-                        fixedTimer.style.background = 'linear-gradient(135deg, #ffa502 0%, #ff7f00 100%)';
-                    } else {
-                        // Reset to default
-                        fixedTimer.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)';
-                        fixedTimer.style.animation = 'none';
-                    }
-                }
-            }
-            
-            // Initial update
-            updateAllTimers();
-            
-            // Update every second
-            setInterval(updateAllTimers, 1000);
+        // Calculate ONLY days
+        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        
+        // 1. Update Popup (if you have a single day display element)
+        const popupDays = document.getElementById('popupDays');
+        if (popupDays) {
+            popupDays.textContent = days;
+        }
+
+        // 2. Update Fixed Timer (Side tab)
+        const fixedDays = document.getElementById('fixedDays');
+        const fixedTime = document.getElementById('fixedTime'); // The hh:mm:ss element
+        
+        if (fixedDays) fixedDays.textContent = days;
+        
+        // 3. Hide or Remove the clock portion
+        if (fixedTime) {
+            fixedTime.style.display = 'none'; 
+            // Alternatively, change text to "Days to go"
+            // fixedTime.textContent = "Days Left";
         }
         
+        // Optional: Update styling based on urgency
+        const fixedTimer = document.getElementById('fixedCountdown');
+        if (fixedTimer) {
+            if (days < 7) {
+                fixedTimer.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%)';
+            } else {
+                fixedTimer.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)';
+            }
+        }
+    }
+    
+    updateAllTimers();
+    // Since we only care about days, we can update every hour instead of every second
+    setInterval(updateAllTimers, 3600000); 
+}
         // Add pulse animation to your existing CSS keyframes
         if (!document.querySelector('style').textContent.includes('@keyframes pulse')) {
             const style = document.createElement('style');

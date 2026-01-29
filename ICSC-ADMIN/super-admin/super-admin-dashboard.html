@@ -113,6 +113,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="title.png" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -682,40 +683,53 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="attendeeMinistry">Ministry</label>
-                        <select id="attendeeMinistry" class="form-control" required>
-                            <option value="">Select Ministry</option>
-                            <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
-                            <option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
-                            <option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
-                            <option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
-                            <option value="Ministry of Defence">Ministry of Defence</option>
-                            <option value="Ministry of Education">Ministry of Education</option>
-                            <option value="Ministry of Environment">Ministry of Environment</option>
-                            <option value="Ministry of Finance and Coordinating Ministry of the Economy">Ministry of Finance and Coordinating Ministry of the Economy</option>
-                            <option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
-                            <option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
-                            <option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
-                            <option value="Ministry of Humanitarian Affairs and Poverty Alleviation">Ministry of Humanitarian Affairs and Poverty Alleviation</option>
-                            <option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
-                            <option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
-                            <option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
-                            <option value="Ministry of Interior">Ministry of Interior</option>
-                            <option value="Ministry of Justice">Ministry of Justice</option>
-                            <option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
-                            <option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
-                            <option value="Ministry of Niger Delta Development">Ministry of Niger Delta Development</option>
-                            <option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
-                            <option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
-                            <option value="Ministry of Power">Ministry of Power</option>
-                            <option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
-                            <option value="Ministry of Steel Development">Ministry of Steel Development</option>
-                            <option value="Ministry of Tourism">Ministry of Tourism</option>
-                            <option value="Ministry of Transportation">Ministry of Transportation</option>
-                            <option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
-                            <option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
-                            <option value="Ministry of Works">Ministry of Works</option>
-                            <option value="Ministry of Youth Development">Ministry of Youth Development</option>
-                        </select>
+<select id="attendeeMinistry" class="form-control" required>
+    <option value="">Select Ministry / Office</option>
+    <option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
+    <option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
+    <option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
+    <option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
+    <option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+    <option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
+    <option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+    <option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
+    <option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
+    <option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+    <option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
+    <option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+    <option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+    <option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
+    <option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+    <option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
+    <option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+    <option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
+    <option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+    <option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+    <option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+    <option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
+    <option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+    <option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
+    <option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
+    <option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
+    <option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
+    <option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+    <option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
+    <option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
+    <option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
+    <option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
+    <option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
+    <option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
+    <option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
+    <option value="COMMON SERVICE OFFICE (OHCSF)">COMMON SERVICE OFFICE (OHCSF)</option>
+    <option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
+    <option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
+    <option value="STATE HOUSE">STATE HOUSE</option>
+</select>
                     </div>
                     <!-- <div class="form-group">
                         <label for="attendeeDepartment">Department</label>
@@ -853,12 +867,13 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Job Title</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Ministry</th>
-                                    <th>Department</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Ministry</th>
+    <th>Job Title</th>
+    <th>Phone</th>
+    <th>Status</th>
+    <th>Actions</th>
                                 <!-- <th>Actions</th> -->
                                 </tr>
                             </thead>
@@ -1569,7 +1584,7 @@
                     <i class="fas fa-calendar-day"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="totalAgendaItems">42</h3>
+                    <h3 id="totalAgendaItems">0</h3>
                     <p>Total Sessions</p>
                 </div>
             </div>
@@ -1578,7 +1593,7 @@
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 id="day1Sessions">18</h3>
+                    <h3 id="day1Sessions">0</h3>
                     <p>Day 1 Sessions</p>
                 </div>
             </div>
@@ -2087,51 +2102,51 @@
                                 <option value="all">All Ministries</option>
                                 <!-- Ministry options will be populated dynamically -->
                            <option value="">All Ministries</option>
-    <option value="Ministry of Justice">Ministry of Justice</option>
-<option value="Ministry of Defence">Ministry of Defence</option>
-<option value="Ministry of Education">Ministry of Education</option>
-<option value="Ministry of Interior">Ministry of Interior</option>
-<option value="Ministry of Power">Ministry of Power</option>
-<option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
-<option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
-<option value="Ministry of Works">Ministry of Works</option>
-<option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
-<option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
-<option value="Ministry of Solid Minerals Development">Ministry of Solid Minerals Development</option>
-<option value="Ministry of Finance">Ministry of Finance</option>
-<option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
-<option value="Ministry of Humanitarian Affairs and Poverty Reduction">Ministry of Humanitarian Affairs and Poverty Reduction</option>
-<option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
-<option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
-<option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
-<option value="Ministry of Environment">Ministry of Environment</option>
-<option value="Ministry of Regional Development">Ministry of Regional Development</option>
-<option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
-<option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
-<option value="Ministry of Youth Development">Ministry of Youth Development</option>
-<option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
-<option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
-<option value="Ministry of Livestock Development">Ministry of Livestock Development</option>
-<option value="Ministry of Steel Development">Ministry of Steel Development</option>
-<option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
-<option value="Ministry of Transportation">Ministry of Transportation</option>
-<option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
-<option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
-<option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
-<option value="Ministry of Arts, Culture, Tourism and Creative Economy">Ministry of Arts, Culture, Tourism and Creative Economy</option>
-<option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
-<option value="Ecological Project Office">Ecological Project Office</option>
-<option value="Cabinet Affairs Office">Cabinet Affairs Office</option>
-<option value="General Services Office">General Services Office</option>
-<option value="Economic and Political Affairs Office">Economic and Political Affairs Office</option>
-<option value="Special Services Office">Special Services Office</option>
-<option value="Service Policies and Strategies Office">Service Policies and Strategies Office</option>
-<option value="Career Management Office">Career Management Office</option>
-<option value="Special Duties Office">Special Duties Office</option>
-<option value="Common Services Office">Common Services Office</option>
-<option value="Service Welfare Office">Service Welfare Office</option>
-<option value="Federal Civil Service Commission">Federal Civil Service Commission</option>
-<option value="State House">State House</option>
+   <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
+<option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
+<option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
+<option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
+<option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
+<option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+<option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
+<option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+<option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
+<option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
+<option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+<option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
+<option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+<option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
+<option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+<option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
+<option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+<option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+<option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
+<option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
+<option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
+<option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+<option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
+<option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
+<option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
+<option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
+<option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
+<option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
+<option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
+<option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
+<option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
+<option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
+<option value="STATE HOUSE">STATE HOUSE</option>
 </select>
                         </div>
                         <div class="form-group">
@@ -2532,7 +2547,6 @@
     </div>
 </div>
 
-<!-- Bulk Approvals Tab -->
 <div id="bulk-approvals" class="tab-content">
     <div class="dashboard-section">
         <div class="section-header">
@@ -2590,344 +2604,57 @@
                 <select id="filterBulkMinistry" class="form-control filter-select">
                     <option value="">All Ministries</option>
 <option value="">All Ministries</option>
-    <option value="Ministry of Justice">Ministry of Justice</option>
-<option value="Ministry of Defence">Ministry of Defence</option>
-<option value="Ministry of Education">Ministry of Education</option>
-<option value="Ministry of Interior">Ministry of Interior</option>
-<option value="Ministry of Power">Ministry of Power</option>
-<option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
-<option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
-<option value="Ministry of Works">Ministry of Works</option>
-<option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
-<option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
-<option value="Ministry of Solid Minerals Development">Ministry of Solid Minerals Development</option>
-<option value="Ministry of Finance">Ministry of Finance</option>
-<option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
-<option value="Ministry of Humanitarian Affairs and Poverty Reduction">Ministry of Humanitarian Affairs and Poverty Reduction</option>
-<option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
-<option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
-<option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
-<option value="Ministry of Environment">Ministry of Environment</option>
-<option value="Ministry of Regional Development">Ministry of Regional Development</option>
-<option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
-<option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
-<option value="Ministry of Youth Development">Ministry of Youth Development</option>
-<option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
-<option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
-<option value="Ministry of Livestock Development">Ministry of Livestock Development</option>
-<option value="Ministry of Steel Development">Ministry of Steel Development</option>
-<option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
-<option value="Ministry of Transportation">Ministry of Transportation</option>
-<option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
-<option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
-<option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
-<option value="Ministry of Arts, Culture, Tourism and Creative Economy">Ministry of Arts, Culture, Tourism and Creative Economy</option>
-<option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
-<option value="Ecological Project Office">Ecological Project Office</option>
-<option value="Cabinet Affairs Office">Cabinet Affairs Office</option>
-<option value="General Services Office">General Services Office</option>
-<option value="Economic and Political Affairs Office">Economic and Political Affairs Office</option>
-<option value="Special Services Office">Special Services Office</option>
-<option value="Service Policies and Strategies Office">Service Policies and Strategies Office</option>
-<option value="Career Management Office">Career Management Office</option>
-<option value="Special Duties Office">Special Duties Office</option>
-<option value="Common Services Office">Common Services Office</option>
-<option value="Service Welfare Office">Service Welfare Office</option>
-<option value="Federal Civil Service Commission">Federal Civil Service Commission</option>
-<option value="State House">State House</option>
+   <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
+<option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
+<option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
+<option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
+<option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
+<option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+<option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
+<option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+<option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
+<option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
+<option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+<option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
+<option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+<option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
+<option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+<option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
+<option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+<option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+<option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
+<option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
+<option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
+<option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+<option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
+<option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
+<option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
+<option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
+<option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
+<option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
+<option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
+<option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
+<option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
+<option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
+<option value="STATE HOUSE">STATE HOUSE</option>
 </select>
                 <button class="btn btn-secondary" id="clearBulkFiltersBtn">Clear Filters</button>
             </div>
         </div>
 
-        <!-- Bulk Uploads Table -->
-        <div class="table-responsive">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Upload ID</th>
-                        <th>Ministry</th>
-                        <th>Filename</th>
-                        <th>Records</th>
-                        <th>Valid</th>
-                        <th>Errors</th>
-                        <th>Submitted By</th>
-                        <th>Date Submitted</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="bulkApprovalsTable">
-                    <!-- Sample Data - Will be populated from API -->
-                    <tr data-upload-id="BULK001" data-ministry="Ministry of Finance" data-records='[{"id":"1","name":"John Doe","email":"john@finance.gov.ng","position":"AD","department":"Accounts"}]'>
-                        <td>BULK001</td>
-                        <td>Ministry of Finance</td>
-                        <td>MOF_Participant_2024.xlsx</td>
-                        <td>25</td>
-                        <td>22</td>
-                        <td>3</td>
-                        <td>MOF Admin</td>
-                        <td>2024-01-15 14:30</td>
-                        <td><span class="status-badge status-pending">Pending Review</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm review-bulk-btn">Review & Approve</button>
-                                <button class="btn btn-danger btn-sm reject-bulk-btn">Reject All</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr data-upload-id="BULK002" data-ministry="Ministry of Education" data-records='[]'>
-                        <td>BULK002</td>
-                        <td>Ministry of Education</td>
-                        <td>MOE_Staff_Jan.xlsx</td>
-                        <td>18</td>
-                        <td>18</td>
-                        <td>0</td>
-                        <td>MOE Admin</td>
-                        <td>2024-01-14 11:20</td>
-                        <td><span class="status-badge status-approved">Approved</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-info btn-sm view-approved-btn">View Details</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<!-- Review Bulk Upload Modal -->
-<div id="reviewBulkModal" class="modal">
-    <div class="modal-content modal-lg">
-        <div class="modal-header">
-            <h2>Review & Approve Bulk Upload</h2>
-            <button class="close-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <!-- Upload Summary -->
-            <div class="bulk-upload-summary" id="bulkUploadSummary">
-                <div class="summary-row">
-                    <div class="summary-item">
-                        <span class="summary-label">Upload ID:</span>
-                        <span class="summary-value" id="reviewUploadId">BULK001</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Ministry:</span>
-                        <span class="summary-value" id="reviewMinistry">Ministry of Finance</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Filename:</span>
-                        <span class="summary-value" id="reviewFilename">MOF_Participants_2024.xlsx</span>
-                    </div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-item">
-                        <span class="summary-label">Total Records:</span>
-                        <span class="summary-value" id="reviewTotalRecords">25</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Valid Records:</span>
-                        <span class="summary-value" id="reviewValidRecords">22</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Errors:</span>
-                        <span class="summary-value" id="reviewErrorRecords">3</span>
-                    </div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-item">
-                        <span class="summary-label">Submitted By:</span>
-                        <span class="summary-value" id="reviewSubmittedBy">MOF Admin</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Date Submitted:</span>
-                        <span class="summary-value" id="reviewDateSubmitted">2024-01-15 14:30</span>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Validation Errors (if any) -->
-            <div class="validation-errors" id="validationErrorsSection" style="display: none;">
-                <h3><i class="fas fa-exclamation-triangle"></i> Validation Errors</h3>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Row #</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Error Type</th>
-                                <th>Error Message</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="validationErrorsTable">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Valid Records Preview -->
-            <div class="valid-records-preview">
-                <h3><i class="fas fa-check-circle"></i> Valid Records (Preview)</h3>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                
-                                <th>Department</th>
-                                <th>Ministry</th>
-                                
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="validRecordsPreviewTable">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Bulk Actions -->
-            <div class="bulk-actions">
-                <div class="action-controls">
-                    <div class="form-group">
-                        <label for="bulkStatusSelect">Bulk Status Action:</label>
-                        <select id="bulkStatusSelect" class="form-control">
-                            <option value="approve_all">Approve All Valid Records</option>
-                            <option value="approve_except_errors">Approve All Except Errors</option>
-                            <option value="reject_all">Reject All Records</option>
-                            <option value="custom">Custom Selection</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group" id="customSelectionSection" style="display: none;">
-                        <label>Select Records to Approve:</label>
-                        <div class="record-selection">
-                            <button type="button" class="btn btn-sm btn-secondary" id="selectAllValidBtn">
-                                Select All Valid
-                            </button>
-                            <button type="button" class="btn btn-sm btn-secondary" id="deselectAllBtn">
-                                Deselect All
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="bulkRemarks">Approval Remarks (Optional):</label>
-                    <textarea id="bulkRemarks" class="form-control" 
-                              placeholder="Add remarks about this approval/rejection..." 
-                              rows="3"></textarea>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="closeReviewBtn">
-                        Cancel
-                    </button>
-                    <button type="button" class="btn-remove" id="rejectBulkBtn">
-                        <i class="fas fa-times"></i> Reject Entire Upload
-                    </button>
-                    <button type="button" class="btn-accept" id="approveBulkBtn">
-                        <i class="fas fa-check"></i> Approve Selected Records
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- View Approved Bulk Details Modal -->
-<div id="viewApprovedBulkModal" class="modal">
-    <div class="modal-content modal-lg">
-        <div class="modal-header">
-            <h2>Approved Bulk Upload Details</h2>
-            <button class="close-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <!-- Upload Summary -->
-            <div class="bulk-upload-summary">
-                <div class="summary-row">
-                    <div class="summary-item">
-                        <span class="summary-label">Upload ID:</span>
-                        <span class="summary-value" id="viewApprovedUploadId">BULK002</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Ministry:</span>
-                        <span class="summary-value" id="viewApprovedMinistry">Ministry of Education</span>
-                    </div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-item">
-                        <span class="summary-label">Total Approved:</span>
-                        <span class="summary-value" id="viewApprovedCount">18</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Approved By:</span>
-                        <span class="summary-value" id="viewApprovedBy">Super Admin</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Date Approved:</span>
-                        <span class="summary-value" id="viewApprovedDate">2024-01-16 10:15</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Approved Records -->
-            <div class="approved-records">
-                <h3><i class="fas fa-check-circle"></i> Approved Participants</h3>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                
-                                <th>Department</th>
-                                <th>Ministry</th>
-                                
-                                <th>Approval Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="approvedRecordsTable">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Export Options -->
-            <div class="export-options">
-                <h3><i class="fas fa-download"></i> Export Approved Records</h3>
-                <div class="export-buttons">
-                    <button type="button" class="btn btn-secondary" id="exportApprovedExcelBtn">
-                        <i class="fas fa-file-excel"></i> Export to Excel
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="exportApprovedPDFBtn">
-                        <i class="fas fa-file-pdf"></i> Export to PDF
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="exportApprovedCSVBtn">
-                        <i class="fas fa-file-csv"></i> Export to CSV
-                    </button>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="closeApprovedViewBtn">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
             <!-- Settings Tab -->
 <div id="settings" class="tab-content">
     <div class="dashboard-section">
@@ -4151,37 +3878,51 @@ ICSC 2026 Team</textarea>
                             <label for="editAttendeeMinistry">Ministry </label>
                             <select id="editAttendeeMinistry" class="form-control" required>
                                 <option value="">Select Ministry</option>
-    <option value="Ministry of Agriculture and Food Security">Ministry of Agriculture and Food Security</option>
-    <option value="Ministry of Aviation and Aerospace Development">Ministry of Aviation and Aerospace Development</option>
-    <option value="Ministry of Budget and Economic Planning">Ministry of Budget and Economic Planning</option>
-    <option value="Ministry of Communications, Innovation and Digital Economy">Ministry of Communications, Innovation and Digital Economy</option>
-    <option value="Ministry of Defence">Ministry of Defence</option>
-    <option value="Ministry of Education">Ministry of Education</option>
-    <option value="Ministry of Environment">Ministry of Environment</option>
-    <option value="Ministry of Finance and Coordinating Ministry of the Economy">Ministry of Finance and Coordinating Ministry of the Economy</option>
-    <option value="Ministry of Foreign Affairs">Ministry of Foreign Affairs</option>
-    <option value="Ministry of Health and Social Welfare">Ministry of Health and Social Welfare</option>
-    <option value="Ministry of Housing and Urban Development">Ministry of Housing and Urban Development</option>
-    <option value="Ministry of Humanitarian Affairs and Poverty Alleviation">Ministry of Humanitarian Affairs and Poverty Alleviation</option>
-    <option value="Ministry of Industry, Trade and Investment">Ministry of Industry, Trade and Investment</option>
-    <option value="Ministry of Information and National Orientation">Ministry of Information and National Orientation</option>
-    <option value="Ministry of Innovation, Science and Technology">Ministry of Innovation, Science and Technology</option>
-    <option value="Ministry of Interior">Ministry of Interior</option>
-    <option value="Ministry of Justice">Ministry of Justice</option>
-    <option value="Ministry of Labour and Employment">Ministry of Labour and Employment</option>
-    <option value="Ministry of Marine and Blue Economy">Ministry of Marine and Blue Economy</option>
-    <option value="Ministry of Niger Delta Development">Ministry of Niger Delta Development</option>
-    <option value="Ministry of Petroleum Resources">Ministry of Petroleum Resources</option>
-    <option value="Ministry of Police Affairs">Ministry of Police Affairs</option>
-    <option value="Ministry of Power">Ministry of Power</option>
-    <option value="Ministry of Special Duties and Intergovernmental Affairs">Ministry of Special Duties and Intergovernmental Affairs</option>
-    <option value="Ministry of Steel Development">Ministry of Steel Development</option>
-    <option value="Ministry of Tourism">Ministry of Tourism</option>
-    <option value="Ministry of Transportation">Ministry of Transportation</option>
-    <option value="Ministry of Water Resources and Sanitation">Ministry of Water Resources and Sanitation</option>
-    <option value="Ministry of Women Affairs">Ministry of Women Affairs</option>
-    <option value="Ministry of Works">Ministry of Works</option>
-    <option value="Ministry of Youth Development">Ministry of Youth Development</option>
+    <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
+<option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
+<option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
+<option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
+<option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
+<option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+<option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
+<option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+<option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
+<option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
+<option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+<option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
+<option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+<option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
+<option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+<option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
+<option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+<option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+<option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+<option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
+<option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
+<option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
+<option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
+<option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
+<option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+<option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
+<option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
+<option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
+<option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
+<option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
+<option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
+<option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
+<option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
+<option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
+<option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
+<option value="STATE HOUSE">STATE HOUSE</option>
 </select>
                                             <div class="form-group">
                         <label for="attendeeJobTitle">Job Title</label>
@@ -4308,28 +4049,28 @@ ICSC 2026 Team</textarea>
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>Ministry Name</label>
-                        <p id="viewMinistryName" class="form-control" style="background: #f8f9fa;">Ministry of Finance</p>
+                        <p id="viewMinistryName" class="form-control" style="background: #f8f9fa;">...loading</p>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Ministry Code</label>
-                        <p id="viewMinistryCode" class="form-control" style="background: #f8f9fa;">MOF</p>
+                        <p id="viewMinistryCode" class="form-control" style="background: #f8f9fa;">...loading</p>
                     </div>
                     <div class="form-group">
                         <label>Contact Person</label>
-                        <p id="viewContactPerson" class="form-control" style="background: #f8f9fa;">Permanent Secretary Finance</p>
+                        <p id="viewContactPerson" class="form-control" style="background: #f8f9fa;">..loading</p>
                     </div>
                     <div class="form-group">
                         <label>Contact Person Email</label>
-                        <p id="viewContactPersonEmail" class="form-control" style="background: #f8f9fa;">ps-finance@gov.ng</p>
+                        <p id="viewContactPersonEmail" class="form-control" style="background: #f8f9fa;">..loading</p>
                     </div>
                 </div>
                 <div class="credentials-box">
                     <h3>Login Credentials</h3>
                     <div class="credential-item">
                         <span class="credential-label">Username:</span>
-                        <span class="credential-value" id="viewUsername">MOF2024</span>
+                        <span class="credential-value" id="viewUsername">...loading </span>
                     </div>
                     <div class="credential-item">
                         <span class="credential-label">Password:</span>

@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+    <link rel="icon" href="title.png" type="image/x-icon">
     <style>
         /* Include all the same CSS styles from the original file */
         :root {
@@ -747,10 +748,8 @@
                 <div class="progress-indicator dots" id="progress-indicator">
                     <span class="dot active" id="dot-1" title="Account Information"></span>
                     <span class="dot" id="dot-2" title="Profile Information"></span>
-                    <span class="dot" id="dot-3" title="Package Selection"></span>
-                    <span class="dot" id="dot-4" title="Payment"></span>
-                    <span class="dot" id="dot-5" title="Confirmation"></span>
-                    <div class="progress-line"></div>
+                    <span class="dot" id="dot-3" title="Confirmation"></span>
+                    <div class="progress-line" id="progress-line"></div>
                 </div>
             </div>
             
@@ -851,23 +850,60 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="has-star" for="speakerOrganization">Organization</label>
-                        <input type="text" id="speakerOrganization" name="speakerOrganization" class="form-control" required>
+                        <label  for="speakerOrganization">Organization</label>
+                        <input type="text" id="speakerOrganization" name="speakerOrganization" class="form-control">
                         <div class="help-block-error" id="speakerOrganization-error"></div>
                     </div>
+
+                    <div class="form-group">
+    <label class="has-star" for="speakerPhoto">Profile Photo (Optional)</label>
+    <div class="d-flex align-items-center gap-3">
+        <input type="file" id="speakerPhoto" name="speakerPhoto" class="form-control" accept="image/*" style="flex-grow: 1;">
+        <div id="photoPreviewContainer" style="display: none; flex-shrink: 0;">
+            <img id="photoPreview" src="#" alt="Profile Preview" style="height: 60px; width: 60px; object-fit: cover; border: 1px solid var(--border-color); border-radius: 50%; background: #fff; padding: 2px;">
+        </div>
+    </div>
+    <div class="help-block-error" id="speakerPhoto-error"></div>
+    <div class="hint-block">Optional: A professional headshot (Recommended: Square aspect ratio)</div>
+</div>
                     
                     <div class="form-group">
-                        <label class="has-star" for="speakerPhone">Work Phone</label>
+                        <label class="has-star" for="speakerPhone">Phone</label>
                         <div class="phone-input-container">
                             <input type="tel" id="speakerPhone" name="speakerPhone" class="form-control" required>
                         </div>
                         <div class="help-block-error" id="speakerPhone-error"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="socialMedia">Social Media Handles</label>
-                        <input type="text" id="socialMedia" name="socialMedia" class="form-control" placeholder="e.g., @Name on either instagram, twitter,facebook">
-                    </div>
+<div class="form-group">
+    <label class="d-flex justify-content-between align-items-center">
+        Social Media Profiles
+        <button type="button" class="btn btn-sm btn-outline-primary" id="add-social-btn">
+            <i class="fas fa-plus-circle me-1"></i> Add Another
+        </button>
+    </label>
+    
+    <div id="social-handles-container">
+        <div class="social-row mb-2">
+            <div class="input-group">
+                <select class="form-control platform-select" style="max-width: 150px; background-color: #f8f9fa;">
+                    <option value="instagram.com/">Instagram</option>
+                    <option value="x.com/">X (Twitter)</option>
+                    <option value="linkedin.com/in/">LinkedIn</option>
+                    <option value="facebook.com/">Facebook</option>
+                </select>
+                <div class="input-group-prepend">
+                    <span class="input-group-text url-prefix">instagram.com/</span>
+                </div>
+                <input type="text" class="form-control handle-input" placeholder="username" required>
+                <button type="button" class="btn btn-outline-danger remove-social-btn" style="display:none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <small class="form-text text-muted">Select platforms and enter your usernames. You can add up to 4 different platforms.</small>
+</div>
 
                     <div class="form-group">
                         <label class="has-star" for="speakerWorkEmail">Work Email</label>
@@ -888,7 +924,7 @@
                     
                     <div class="form-group">
                         <label for="speakerExperience">Previous Speaking Experience</label>
-                        <textarea id="speakerExperience" name="speakerExperience" class="form-control" rows="3" placeholder="Please describe any previous speaking experience"></textarea>
+                        <textarea id="speakerExperience" name="speakerExperience" class="form-control" rows="3" placeholder="Please describe any previous speaking experience(Add links to them)"></textarea>
                     </div>
                 </form>
                 
@@ -902,105 +938,8 @@
                 </div>
             </div>
 
-            <!-- Step 3: Package Selection Section -->
-            <div id="package-section" class="form-section" style="display: none;">
-                <h2 class="text-center mb-4">Select Your Speaker Package</h2>
-                
-                <!-- PDF Viewer for Speaker -->
-                <div class="sponsor-package-info">
-                    <h5><i class="fas fa-file-pdf me-2"></i>Speaker Package Information</h5>
-                    <p>Please review the speaker package details in the document below before making your selection.</p>
-                    <div class="pdf-viewer">
-                        <h5>ICSC Speaker Packages</h5>
-                        <div class="pdf-placeholder">
-                            <i class="fas fa-file-pdf"></i>
-                            <p>ICSC_Speaker_Packages.pdf</p>
-                            <p class="text-muted">This document contains detailed information about speaker packages and benefits.</p>
-                            <button type="button" class="btn btn-outline-primary mt-2" onclick="viewSpeakerPackagePDF()">
-                                <i class="fas fa-eye me-2"></i>View PDF
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary mt-2" onclick="downloadSpeakerPackagePDF()">
-                                <i class="fas fa-download me-2"></i>Download PDF
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <p class="text-center mb-4">Choose the speaker package that best fits your needs</p>
-                
-                <div class="package-cards" id="package-cards">Loading packages...</div>
-                
-                <div class="button-container">
-                    <button type="button" class="btn btn-outline-standard" id="back-to-profile-btn">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back
-                    </button>
-                    <button type="button" class="btn btn-standard" id="continue-to-payment-btn" disabled>
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
-                    </button>
-                </div>
-            </div>
 
-            <!-- Step 4: Payment Section -->
-            <div id="payment-section" class="form-section" style="display: none;">
-                <h2 class="text-center mb-4">Payment Information</h2>
-                
-                <div class="payment-section">
-                    <div class="form-group">
-                        <label class="has-star">Select Payment Method</label>
-                        <div class="payment-option">
-                            <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
-                            <label for="bank-transfer">Bank Transfer</label>
-                        </div>
-                        <div class="payment-option">
-                            <input type="radio" id="flutterwave" name="payment-method" value="flutterwave">
-                            <label for="flutterwave">Flutterwave (Online Payment)</label>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-form" id="bank-transfer-form">
-                        <h5>Bank Transfer Details</h5>
-                        <p><strong>Bank Name:</strong> First Bank Nigeria</p>
-                        <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
-                        <p><strong>Account Number:</strong> 1234567890</p>
-                        <p><strong>Sort Code:</strong> 123456</p>
-                        <p>Please include your registration ID as the payment reference.</p>
-                        
-                        <!-- Payment Receipt Upload - Only for Bank Transfer -->
-                        <div class="form-group mt-4">
-                            <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
-                            <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                            <div class="help-block-error" id="paymentReceipt-error"></div>
-                            <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-form" id="flutterwave-form">
-                        <h5>Flutterwave Payment</h5>
-                        <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
-                        <p>Accepted payment methods:</p>
-                        <ul>
-                            <li>Visa/Mastercard</li>
-                            <li>Bank Transfer</li>
-                            <li>USSD</li>
-                            <li>Mobile Money</li>
-                        </ul>
-                        <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
-                            <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="button-container">
-                    <button type="button" class="btn btn-outline-standard" id="back-to-package-btn">
-                        <i class="fas fa-arrow-circle-left me-2"></i> Back
-                    </button>
-                    <button type="button" class="btn btn-standard" id="complete-registration-btn" disabled>
-                        Complete Registration
-                    </button>
-                </div>
-            </div>
-
-            <!-- Step 5: Confirmation Section -->
+            <!-- Step 3: Confirmation Section -->
             <div id="confirmation-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Registration Confirmation</h2>
                 
@@ -1013,36 +952,24 @@
                 <div class="confirmation-details">
                     <h4 class="mb-3">Registration Details</h4>
                     <div class="confirmation-item">
-                        <div class="confirmation-label">Registration ID</div>
-                        <div class="confirmation-value" id="confirmation-id">ICSC2026-001234</div>
-                    </div>
-                    <div class="confirmation-item">
                         <div class="confirmation-label">Registrant Type</div>
                         <div class="confirmation-value" id="confirmation-type">Speaker</div>
                     </div>
                     <div class="confirmation-item">
                         <div class="confirmation-label">Name</div>
-                        <div class="confirmation-value" id="confirmation-name">John Doe</div>
+                        <div class="confirmation-value" id="confirmation-name">loading...</div>
                     </div>
                     <div class="confirmation-item">
                         <div class="confirmation-label">Email</div>
-                        <div class="confirmation-value" id="confirmation-email">john.doe@example.com</div>
-                    </div>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Selected Package</div>
-                        <div class="confirmation-value" id="confirmation-package">Basic Speaker Package</div>
-                    </div>
-                    <div class="confirmation-item">
-                        <div class="confirmation-label">Payment Status</div>
-                        <div class="confirmation-value" id="confirmation-payment">Pending</div>
+                        <div class="confirmation-value" id="confirmation-email">loading...</div>
                     </div>
                 </div>
                 
                 <div class="text-center mt-4">
-                    <p>A confirmation email has been sent to <strong id="confirmation-email-text">john.doe@example.com</strong> with all the details.</p>
+                    <p>A confirmation email has been sent to <strong id="confirmation-email-text">email...</strong> with all the details.</p>
                     <div class="button-container">
                         <button type="button" class="btn btn-standard" id="go-to-dashboard-btn">
-                            Go to Dashboard
+                            Login to Your Account <i class="fas fa-arrow-circle-right ms-2"></i>
                         </button>
                         <a href="Index.html" class="btn btn-outline-standard">Return to Conference Website</a>
                     </div>
@@ -1061,12 +988,12 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <h5>Contact Us</h5>
-                    <p>Email: info@icsc2026.org</p>
-                    <p>Phone: +1 (555) 123-4567</p>
+                    <p> Email: contactus@icsc.ohcsf.gov.ng</p>
+                    <p> Phone: +234 810 324 7323</p>
                     <div class="social-media-links mt-3">
-                        <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="https://www.twitter.com/OHCSF_NGR" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="https://www.instagram.com/ngcivilservice/" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1Bt97sAP1Q/?mibextid=wwXIfr" class="me-3"><i class="fab fa-facebook fa-lg"></i></a>
                     </div>
                 </div>
             </div>
@@ -1086,1042 +1013,317 @@
     <script src="js/apiClient.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 
-    <!-- Mock API Implementation -->
-    <script>
-        // Mock API for speaker registration
-        window.RegisterAPI = {
-            registerSpeaker: async function(payload) {
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Generate mock response
-                const mockResponse = {
-                    success: true,
-                    message: "Registration successful",
-                    data: {
-                        id: Math.floor(100000 + Math.random() * 900000),
-                        reference: "ICSC2026-SPEAKER-" + Math.floor(1000 + Math.random() * 9000),
-                        registrationId: "ICSC2026-SPEAKER-" + Date.now(),
-                        status: "pending",
-                        speakerType: payload.selectedPackage,
-                        speakerName: `${payload.speakerFirstName} ${payload.speakerLastName}`,
-                        speakerEmail: payload.speakerWorkEmail,
-                        createdAt: new Date().toISOString()
-                    }
-                };
-                
-                // Simulate 10% chance of error for testing
-                if (Math.random() < 0.1) {
-                    throw new Error("Server error: Unable to process registration at this time");
-                }
-                
-                return mockResponse;
-            },
-            
-            // Mock function to simulate login after registration
-            loginSpeaker: async function(email, password) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const mockResponse = {
-                    success: true,
-                    token: "mock_jwt_token_" + Math.random().toString(36).substr(2, 9),
-                    user: {
-                        id: Math.floor(100000 + Math.random() * 900000),
-                        email: email,
-                        type: "speaker",
-                        name: "Mock Speaker Name"
-                    }
-                };
-                
-                return mockResponse;
-            }
-        };
-
-        // Mock Auth functions
-        window.Auth = {
-            setToken: function(token) {
-                localStorage.setItem('speaker_token', token);
-                localStorage.setItem('speaker_login_time', new Date().toISOString());
-            },
-            
-            getToken: function() {
-                return localStorage.getItem('speaker_token');
-            },
-            
-            isLoggedIn: function() {
-                const token = this.getToken();
-                const loginTime = localStorage.getItem('speaker_login_time');
-                
-                if (!token || !loginTime) return false;
-                
-                // Check if token is expired (mock - 24 hours)
-                const loginDate = new Date(loginTime);
-                const now = new Date();
-                const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
-                
-                return hoursDiff < 24;
-            },
-            
-            logout: function() {
-                localStorage.removeItem('speaker_token');
-                localStorage.removeItem('speaker_login_time');
-            }
-        };
-    </script>
+>
 
     <!-- Main Application Script -->
-    <script>
-        // Global variables for speaker registration
-        let currentStep = 1;
-        const selectedRegistrantType = 'speaker';
-        let selectedPackage = '';
-        let selectedPaymentMethod = '';
-        let phoneInputs = [];
-        let registrationData = {};
-        // Backend endpoint for speaker packages - prefer apiClient baseURL when available
-        const PACKAGES_ENDPOINT = (function(){
-            try {
-                // If apiClient is available, use its configured baseURL
-                const base = window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL;
-                if (base) return base.replace(/\/+$/, '') + '/packages/speaker-packages';
-            } catch (e) {}
-            // Fallback to relative path
-            return '/packages/speaker-packages';
-        })();
-        // Map of packages keyed by id (populated from backend)
-        let fetchedPackages = {};
-        
-        // Country list for dropdowns
-        const countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
-            "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
-            "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
-            "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
-            "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
-            "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
-            "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
-            "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
-            "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
-            "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
-            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
-            "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", 
-            "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", 
-            "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", 
-            "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", 
-            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
-            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
-            "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
-            "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
-            "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
-            "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
-            "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+<script>
+    // Global variables
+    let currentStep = 1;
+    let phoneInputs = [];
+
+    const countries = [
+        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+        "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
+        "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+        "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
+        "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
+        "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
+        "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+        "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
+        "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
+        "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
+        "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
+        "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", 
+        "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", 
+        "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", 
+        "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", 
+        "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+        "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
+        "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+        "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
+        "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
+        "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
+        "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+        setupSocialMediaLogic();
+        setupEventListeners();
+    });
+
+    function initializeApp() {
+        populateCountryDropdowns();
+        initializePhoneInputs();
+        updateProgressIndicator();
+    }
+
+    function populateCountryDropdowns() {
+        const select = document.getElementById('speakerCountry');
+        if (select) {
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                select.appendChild(option);
+            });
+            select.value = 'Nigeria';
+        }
+    }
+
+    function initializePhoneInputs() {
+        const input = document.getElementById('speakerPhone');
+        if (input && window.intlTelInput) {
+            const iti = window.intlTelInput(input, {
+                initialCountry: "ng",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+            });
+            phoneInputs.push({ id: 'speakerPhone', iti: iti });
+        }
+    }
+
+    function setupSocialMediaLogic() {
+        const container = document.getElementById('social-handles-container');
+        const addBtn = document.getElementById('add-social-btn');
+        const platforms = [
+            { name: 'Instagram', value: 'instagram.com/' },
+            { name: 'X (Twitter)', value: 'x.com/' },
+            { name: 'LinkedIn', value: 'linkedin.com/in/' },
+            { name: 'Facebook', value: 'facebook.com/' }
         ];
-        
-        // PDF viewing functions
-        function viewSpeakerPackagePDF() {
-            const pdfUrl = 'ICSC Sponsor Packages.pdf';
-            window.open(pdfUrl, '_blank');
+
+        if (addBtn && container) {
+            addBtn.addEventListener('click', function() {
+                const rows = container.querySelectorAll('.social-row');
+                if (rows.length >= platforms.length) return alert("All platforms added.");
+
+                const used = Array.from(container.querySelectorAll('.platform-select')).map(s => s.value);
+                const available = platforms.filter(p => !used.includes(p.value));
+
+                const newRow = document.createElement('div');
+                newRow.className = 'social-row mb-2';
+                newRow.innerHTML = `
+                    <div class="input-group">
+                        <select class="form-control platform-select" style="max-width: 150px;">
+                            ${available.map(p => `<option value="${p.value}">${p.name}</option>`).join('')}
+                        </select>
+                        <div class="input-group-prepend"><span class="input-group-text url-prefix">${available[0].value}</span></div>
+                        <input type="text" class="form-control handle-input" placeholder="username" required>
+                        <button type="button" class="btn btn-outline-danger remove-social-btn"><i class="fas fa-times"></i></button>
+                    </div>`;
+                container.appendChild(newRow);
+                toggleRemoveButtons();
+            });
+
+            container.addEventListener('change', (e) => {
+                if (e.target.classList.contains('platform-select')) {
+                    e.target.closest('.input-group').querySelector('.url-prefix').textContent = e.target.value;
+                }
+            });
+
+            container.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-social-btn')) {
+                    e.target.closest('.social-row').remove();
+                    toggleRemoveButtons();
+                }
+            });
         }
 
-        function downloadSpeakerPackagePDF() {
-            const pdfUrl = 'ICSC Sponsor Packages.pdf';
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = 'ICSC Sponsor Packages.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        function toggleRemoveButtons() {
+            const rows = container.querySelectorAll('.social-row');
+            rows.forEach(r => r.querySelector('.remove-social-btn').style.display = rows.length > 1 ? 'block' : 'none');
         }
-        
-        // Initialize the application when DOM is loaded
-        document.addEventListener('DOMContentLoaded', async function() {
-            await initializeApp();
+    }
+
+    function setupEventListeners() {
+        // Password toggles
+        document.getElementById('togglePassword')?.addEventListener('click', function() {
+            togglePassVisibility('password', this);
+        });
+        document.getElementById('toggleConfirmPassword')?.addEventListener('click', function() {
+            togglePassVisibility('confirmPassword', this);
         });
 
-        async function initializeApp() {
-            try {
-                populateCountryDropdowns();
-                initializePhoneInputs();
-                setupEventListeners();
-                updateProgressIndicator();
-                // Load packages from backend and wait for rendering so packages are available immediately
-                await fetchSpeakerPackages();
-                setupPaymentSection();
-            } catch (error) {
-                console.error('Error initializing app:', error);
-            }
-        }
+        // Navigation
+        document.getElementById('continue-to-profile-btn')?.addEventListener('click', () => {
+            if (validateAccountForm()) showStep(2);
+        });
+        document.getElementById('back-to-account-btn')?.addEventListener('click', () => showStep(1));
         
-        function populateCountryDropdowns() {
-            const countrySelectors = ['speakerCountry'];
-            
-            countrySelectors.forEach(selector => {
-                const select = document.getElementById(selector);
-                if (select) {
-                    const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
-                    select.innerHTML = placeholder;
-                    
-                    countries.forEach(country => {
-                        const option = document.createElement('option');
-                        option.value = country;
-                        option.textContent = country;
-                        select.appendChild(option);
-                    });
-                    
-                    Array.from(select.options).forEach(opt => {
-                        if (!opt.value || opt.value.trim() === '') {
-                            opt.value = opt.textContent.trim();
-                        }
-                    });
-                    
-                    if (Array.from(select.options).some(o => o.value === 'Nigeria')) {
-                        select.value = 'Nigeria';
-                    } else {
-                        select.selectedIndex = 0;
-                    }
-                }
-            });
-        }
-        
-        function initializePhoneInputs() {
-            const phoneInputIds = ['speakerPhone'];
-            
-            phoneInputs = phoneInputs || [];
-            
-            phoneInputIds.forEach(id => {
-                const input = document.getElementById(id);
-                if (input && window.intlTelInput) {
-                    try {
-                        const iti = window.intlTelInput(input, {
-                            initialCountry: "ng",
-                            separateDialCode: true,
-                            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-                        });
-                        phoneInputs.push({ id, iti });
-                    } catch (error) {
-                        console.error(`Error initializing phone input ${id}:`, error);
-                    }
-                }
-            });
-        }
-        
-        function setupEventListeners() {
-            // Password toggle functionality
-            const togglePassword = document.getElementById('togglePassword');
-            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            
-            if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-                });
-            }
-            
-            if (toggleConfirmPassword && confirmPasswordInput) {
-                toggleConfirmPassword.addEventListener('click', function() {
-                    const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    confirmPasswordInput.setAttribute('type', type);
-                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-                });
-            }
-            
-            // Navigation buttons
-            const continueToProfileBtn = document.getElementById('continue-to-profile-btn');
-            if (continueToProfileBtn) {
-                continueToProfileBtn.addEventListener('click', function() {
-                    if (validateAccountForm()) {
-                        showStep(2);
-                    }
-                });
-            }
-            
-            const backToAccountBtn = document.getElementById('back-to-account-btn');
-            if (backToAccountBtn) {
-                backToAccountBtn.addEventListener('click', function() {
-                    showStep(1);
-                });
-            }
-            
-            const continueToPackageBtn = document.getElementById('continue-to-package-btn');
-            if (continueToPackageBtn) {
-                continueToPackageBtn.addEventListener('click', function() {
-                    if (validateProfileForm()) {
-                        showStep(3);
-                    }
-                });
-            }
-            
-            const backToProfileBtn = document.getElementById('back-to-profile-btn');
-            if (backToProfileBtn) {
-                backToProfileBtn.addEventListener('click', function() {
-                    showStep(2);
-                });
-            }
-            
-            const continueToPaymentBtn = document.getElementById('continue-to-payment-btn');
-            if (continueToPaymentBtn) {
-                continueToPaymentBtn.addEventListener('click', async function() {
-                    if (!validatePackageSelection()) return;
-                    // Register speaker now that a package is selected, then proceed to payment
-                    await attemptSpeakerRegistration();
-                });
-            }
-            
-            const backToPackageBtn = document.getElementById('back-to-package-btn');
-            if (backToPackageBtn) {
-                backToPackageBtn.addEventListener('click', function() {
-                    showStep(3);
-                });
-            }
-            
-            const completeRegistrationBtn = document.getElementById('complete-registration-btn');
-            if (completeRegistrationBtn) {
-                completeRegistrationBtn.addEventListener('click', function() {
-                    if (validatePaymentForm()) {
-                        processRegistration();
-                    }
-                });
-            }
-            
-            // Flutterwave payment button
-            const flutterwaveBtn = document.getElementById('pay-with-flutterwave');
-            if (flutterwaveBtn) {
-                flutterwaveBtn.addEventListener('click', function() {
-                    processFlutterwavePayment();
-                });
-            }
-            
-            // Dashboard button
-            const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
-            if (goToDashboardBtn) {
-                goToDashboardBtn.addEventListener('click', function() {
-                    redirectToDashboard();
-                });
-            }
-        }
-        
-        // Register speaker helper: posts profile to /auth/speaker-register
-        async function registerSpeakerToBackend(payload) {
-            // Prefer configured apiClient baseURL if available
-            const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
-            const endpoint = (base ? base : '') + '/auth/speaker-register';
+        // Final Submission
+        document.getElementById('continue-to-package-btn')?.addEventListener('click', async () => {
+            if (validateProfileForm()) await submitRegistration();
+        });
 
-            try {
-                const client = window.apiClient || axios;
-                // If using apiClient with baseURL already set, pass relative path
-                if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
-                    return (await client.post('/auth/speaker-register', payload)).data;
-                }
-                return (await client.post(endpoint, payload)).data;
-            } catch (err) {
-                throw err;
-            }
-        }
+        // Profile Photo Preview Logic
+const photoInput = document.getElementById('speakerPhoto');
+const photoPreview = document.getElementById('photoPreview');
+const photoPreviewContainer = document.getElementById('photoPreviewContainer');
 
-        // Attempt registration after package selected and before showing payment
-        async function attemptSpeakerRegistration() {
-            const btn = document.getElementById('continue-to-payment-btn');
-            if (btn) { btn.disabled = true; btn.classList.add('btn-loading'); }
-
-            try {
-                const payload = {
-                    speakerPrefix: document.getElementById('speakerPrefix')?.value || '',
-                    speakerFirstName: document.getElementById('speakerFirstName')?.value || '',
-                    speakerLastName: document.getElementById('speakerLastName')?.value || '',
-                    speakerCountry: document.getElementById('speakerCountry')?.value || '',
-                    speakerJobTitle: document.getElementById('speakerJobTitle')?.value || '',
-                    speakerOrganization: document.getElementById('speakerOrganization')?.value || '',
-                    speakerPhone: document.getElementById('speakerPhone')?.value || '',
-                    speakerWorkEmail: document.getElementById('speakerWorkEmail')?.value || '',
-                    speakerBio: document.getElementById('speakerBio')?.value || '',
-                    speakertopic: document.getElementById('speakertopic')?.value || '',
-                    speakerExperience: document.getElementById('speakerExperience')?.value || '',
-                    password: document.getElementById('password')?.value || ''
-                };
-
-                // Call backend
-                const resp = await registerSpeakerToBackend(payload);
-                console.log('Speaker register response:', resp);
-
-                // Heuristic success checks (supporting both mock and real responses)
-                const ok = resp && (resp.success === true || resp.status === 'success' || resp.registered === true || resp.data || resp.id);
-
-                if (ok) {
-                    // Save pre-registration information for later use (used to finalize after payment)
-                    const loginEmail = payload.speakerWorkEmail || document.getElementById('email')?.value || '';
-                    localStorage.setItem('speaker_pre_registration', JSON.stringify({payload, apiResponse: resp, loginEmail}));
-                    // If backend returned an auth token, persist it for authenticated requests (payments)
-                    const token = resp && (resp.token || resp.access_token || resp.accessToken || resp.data && (resp.data.token || resp.data.access_token || resp.data.accessToken));
-                    if (token) {
-                        try {
-                            if (window.Auth && typeof window.Auth.setToken === 'function') {
-                                window.Auth.setToken(token);
-                            } else {
-                                localStorage.setItem('speaker_token', token);
-                            }
-                            console.log('Saved speaker auth token after registration');
-                        } catch (e) {
-                            console.warn('Failed to save token:', e);
-                        }
-                    }
-                    // Proceed to payment step
-                    showStep(4);
-                } else {
-                    const msg = resp && (resp.message || resp.error) ? (resp.message || resp.error) : 'Registration failed';
-                    alert(msg);
-                    localStorage.setItem('speaker_pre_registration', JSON.stringify({payload, apiResponse: resp}));
-                    const token = resp && (resp.token || resp.access_token || resp.accessToken || resp.data && (resp.data.token || resp.data.access_token || resp.data.accessToken));
-                    if (token) {
-                        try {
-                            if (window.Auth && typeof window.Auth.setToken === 'function') {
-                                window.Auth.setToken(token);
-                            } else {
-                                localStorage.setItem('speaker_token', token);
-                            }
-                            console.log('Saved speaker auth token after registration');
-                        } catch (e) {
-                            console.warn('Failed to save token:', e);
-                        }
-                    }
-                    // Proceed to payment step
-                    showStep(4);
-                }
-            } catch (err) {
-                console.error('Registration request failed:', err);
-                const message = err?.response?.data?.message || err?.message || 'Registration request failed';
-                alert(message);
-            } finally {
-                if (btn) { btn.disabled = false; btn.classList.remove('btn-loading'); }
-            }
-        }
-
-        function setupPackageSelection() {
-            const packageCards = document.querySelectorAll('.package-card');
-            
-            if (packageCards.length === 0) {
-                console.warn('No package cards found to set up selection');
+if (photoInput) {
+    photoInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            // Check file size (optional, e.g., max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showError('speakerPhoto-error', 'Image must be less than 2MB');
+                this.value = '';
+                photoPreviewContainer.style.display = 'none';
                 return;
             }
+            hideError('speakerPhoto-error');
             
-            packageCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // Remove selected class from all cards
-                    packageCards.forEach(c => c.classList.remove('selected'));
-                    
-                    // Add selected class to clicked card
-                    this.classList.add('selected');
-                    
-                    // Store selected package
-                    selectedPackage = this.getAttribute('data-package');
-                    
-                    console.log('Selected package:', selectedPackage);
-                    
-                    // Enable continue button
-                    const continueBtn = document.getElementById('continue-to-payment-btn');
-                    if (continueBtn) {
-                        continueBtn.disabled = false;
-                    }
-                });
-            });
-            
-            // If there's only one package, auto-select it
-            if (packageCards.length === 1) {
-                packageCards[0].click();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                photoPreview.setAttribute('src', e.target.result);
+                photoPreviewContainer.style.display = 'block';
             }
+            reader.readAsDataURL(file);
+        } else {
+            photoPreviewContainer.style.display = 'none';
         }
-        
-        function setupPaymentSection() {
-            const paymentOptions = document.querySelectorAll('.payment-option input');
-            paymentOptions.forEach(option => {
-                option.addEventListener('change', function() {
-                    if (this.checked) {
-                        selectedPaymentMethod = this.value;
-                        // Show/hide payment forms based on selection
-                        const paymentForms = document.querySelectorAll('.payment-form');
-                        paymentForms.forEach(form => form.style.display = 'none');
-                        
-                        if (this.value === 'bank-transfer') {
-                            const bankForm = document.getElementById('bank-transfer-form');
-                            if (bankForm) bankForm.style.display = 'block';
-                        } else if (this.value === 'flutterwave') {
-                            const flutterwaveForm = document.getElementById('flutterwave-form');
-                            if (flutterwaveForm) flutterwaveForm.style.display = 'block';
-                        }
-                        
-                        // Enable complete registration button
-                        const completeBtn = document.getElementById('complete-registration-btn');
-                        if (completeBtn) {
-                            completeBtn.disabled = false;
-                        }
-                    }
-                });
-            });
-        }
-
-        // Fetch speaker packages from backend and render into #package-cards
-        async function fetchSpeakerPackages() {
-            const container = document.getElementById('package-cards');
-
-            if (container) container.innerHTML = 'Loading packages...';
-
-            try {
-                const resp = await axios.get(PACKAGES_ENDPOINT);
-                console.log('Packages API Response:', resp.data);
-                
-                let packages = [];
-
-                // Handle different response structures
-                if (Array.isArray(resp.data)) {
-                    packages = resp.data;
-                } else if (resp.data && Array.isArray(resp.data.packages)) {
-                    packages = resp.data.packages;
-                } else if (resp.data && Array.isArray(resp.data.data)) {
-                    packages = resp.data.data;
-                } else {
-                    console.error('Unexpected packages response structure:', resp.data);
-                    throw new Error('Invalid response format from packages endpoint');
-                }
-
-                if (!packages || packages.length === 0) {
-                    throw new Error('No packages available from the server');
-                }
-
-                renderPackages(packages, container);
-            } catch (err) {
-                console.error('Failed to load packages from backend:', err);
-                const container = document.getElementById('package-cards');
-                if (container) {
-                    container.innerHTML = `
-                        <div class="alert alert-danger">
-                            <h5>Unable to Load Packages</h5>
-                            <p>Failed to load speaker packages. Please try again later or contact support.</p>
-                            <p><small>Error: ${err.message}</small></p>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        // Helper function to render packages
-        function renderPackages(packages, container) {
-            fetchedPackages = {};
-            const html = packages.map(p => {
-                // Extract package data with fallbacks
-                const id = p.slug || p.id || (p.name || p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                const price = Number(p.price || p.amount || p.price_usd || 0);
-                const priceLabel = p.priceLabel || p.displayPrice || (p.currency === 'USD' ? `$${price}` : `N${price}`) || `N${price}`;
-                const benefits = p.features || p.benefits || p.items || [];
-                const limitedText = p.limitedText || p.limited || p.note || '';
-
-                // Store in fetchedPackages for later use
-                // Keep the API's numeric id (if present) as `apiId` so we can send it to the backend
-                fetchedPackages[id] = {
-                    id,
-                    apiId: p.id || (p.packageId || null),
-                    name: p.title || p.name || id,
-                    price,
-                    currency: p.currency || 'USD',
-                    priceLabel,
-                    benefits,
-                    limited: limitedText
-                };
-
-                // Create benefits HTML
-                const benefitsHtml = benefits.map(b => `<li>${b}</li>`).join('');
-
-                return `
-                    <div class="package-card" data-package="${id}" data-price="${price}">
-                        <h4>${fetchedPackages[id].name}</h4>
-                        <div class="price">${fetchedPackages[id].priceLabel}</div>
-                        <ul>${benefitsHtml}</ul>
-                        <div class="limited">${fetchedPackages[id].limited || ''}</div>
-                    </div>
-                `;
-            }).join('');
-
-            if (container) container.innerHTML = html;
-
-            // Wire up selection handlers after rendering
-            setupPackageSelection();
-        }
-        
-        function validateAccountForm() {
-            let isValid = true;
-            
-            // Email validation
-            const email = document.getElementById('email').value;
-            if (!email || !isValidEmail(email)) {
-                showError('email-error', 'Please enter a valid email address');
-                isValid = false;
-            } else {
-                hideError('email-error');
-            }
-            
-            // Password validation
-            const password = document.getElementById('password').value;
-            if (!password || password.length < 8) {
-                showError('password-error', 'Password must be at least 8 characters long');
-                isValid = false;
-            } else {
-                hideError('password-error');
-            }
-            
-            // Confirm password validation
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            if (!confirmPassword || password !== confirmPassword) {
-                showError('confirmPassword-error', 'Passwords do not match');
-                isValid = false;
-            } else {
-                hideError('confirmPassword-error');
-            }
-            
-            return isValid;
-        }
-        
-        function validateProfileForm() {
-            return validateSpeakerProfile();
-        }
-        
-        function validateSpeakerProfile() {
-            let isValid = true;
-            
-            const requiredFields = [
-                'speakerPrefix', 'speakerFirstName', 'speakerLastName', 
-                'speakerCountry', 'speakerJobTitle', 'speakerOrganization', 
-                'speakerPhone', 'speakerBio', 'speakertopic', 'speakerWorkEmail'
-            ];
-            
-            requiredFields.forEach(field => {
-                const element = document.getElementById(field);
-                if (!element || !element.value) {
-                    showError(`${field}-error`, 'This field is required');
-                    isValid = false;
-                } else {
-                    hideError(`${field}-error`);
-                }
-            });
-
-            const workEmail = document.getElementById('speakerWorkEmail')?.value;
-            if (workEmail && !isValidEmail(workEmail)) {
-                showError('speakerWorkEmail-error', 'Please enter a valid work email address');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-        
-        function validatePackageSelection() {
-            if (!selectedPackage) {
-                alert('Please select a speaker package');
-                return false;
-            }
-            return true;
-        }
-        
-        function validatePaymentForm() {
-            if (!selectedPaymentMethod) {
-                alert('Please select a payment method');
-                return false;
-            }
-            
-            // Validate bank transfer receipt upload - ONLY for bank transfers
-            if (selectedPaymentMethod === 'bank-transfer') {
-                const paymentReceipt = document.getElementById('paymentReceipt');
-                if (!paymentReceipt || !paymentReceipt.files || paymentReceipt.files.length === 0) {
-                    showError('paymentReceipt-error', 'Please upload your payment receipt');
-                    return false;
-                }
-                
-                // Validate file size (5MB max)
-                const file = paymentReceipt.files[0];
-                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-                if (file.size > maxSize) {
-                    showError('paymentReceipt-error', 'File size must be less than 5MB');
-                    return false;
-                }
-                
-                // Validate file type
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                if (!allowedTypes.includes(file.type)) {
-                    showError('paymentReceipt-error', 'Please upload a valid file type (PDF, JPG, PNG, DOC)');
-                    return false;
-                }
-                
-                hideError('paymentReceipt-error');
-            }
-            
-            return true;
-        }
-        
-        function processFlutterwavePayment() {
-            // Determine amount from fetchedPackages (backend) or from card attribute
-            let amount = 0;
-            let packageName = selectedPackage;
-            if (fetchedPackages && fetchedPackages[selectedPackage]) {
-                amount = Number(fetchedPackages[selectedPackage].price) || 0;
-                packageName = fetchedPackages[selectedPackage].name || selectedPackage;
-            } else {
-                const card = document.querySelector(`.package-card[data-package="${selectedPackage}"]`);
-                if (card) amount = Number(card.getAttribute('data-price')) || 0;
-            }
-            const email = document.getElementById('email')?.value || '';
-            const speakerFirstName = document.getElementById('speakerFirstName')?.value || '';
-            const speakerLastName = document.getElementById('speakerLastName')?.value || '';
-            const phone = document.getElementById('speakerPhone')?.value || '';
-            
-            // Flutterwave payment integration
-            // Build payment payload per provided structure
-            const selectedPkg = (fetchedPackages && fetchedPackages[selectedPackage]) ? fetchedPackages[selectedPackage] : null;
-            // Prefer the numeric API id when available (apiId), fall back to the package key
-            let pkgId = selectedPkg ? (selectedPkg.apiId || selectedPkg.id) : selectedPackage;
-            // Try to coerce numeric id when possible
-            const numericPkgId = parseInt(pkgId, 10);
-            const txRef = 'ICSC2026-' + Date.now();
-            const paymentPayload = {
-                speaker_package_id: Number.isFinite(numericPkgId) ? numericPkgId : pkgId,
-                amount: amount,
-                currency: 'NGN',
-                tx_ref: txRef
-            };
-
-            // Save payload locally for backend reconciliation if needed
-            localStorage.setItem('flutterwave_payment_payload', JSON.stringify(paymentPayload));
-
-            // Initialize payment on the backend before launching checkout
-            async function initializePayment(payload) {
-                const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
-                const endpoint = (base ? base : '') + '/payments/initialize-speaker-payment';
-                try {
-                    const client = window.apiClient || axios;
-                    // Obtain auth token if available
-                    const token = localStorage.getItem('speaker_token') || (window.Auth && typeof window.Auth.getToken === 'function' ? window.Auth.getToken() : null);
-                    alert(token);
-                    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-                    if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
-                        return (await client.post('/payments/initialize-speaker-payment', payload, { headers })).data;
-                    }
-                    return (await client.post(endpoint, payload, { headers })).data;
-                } catch (err) {
-                    throw err;
-                }
-            }
-
-            // Terminate payment session: clear saved payment payload and return user to package step
-            function terminatePaymentSession(reason) {
-                try {
-                    localStorage.removeItem('flutterwave_payment_payload');
-                } catch (e) {
-                    console.warn('Failed to clear flutterwave payload:', e);
-                }
-
-                console.warn('Payment session terminated:', reason);
-
-                // Inform user and send them back to package selection to reconfirm
-                alert('Payment initialization failed: ' + (reason || 'Invalid payment configuration') + '. Please reconfirm your data.');
-                showStep(3);
-            }
-
-            // Call initialize endpoint and then open Flutterwave with returned data (if any)
-            initializePayment(paymentPayload).then(initResp => {
-                console.log('Payment initialize response:', initResp);
-                // Prefer values returned by initialize endpoint when available
-                const initData = (initResp && (initResp.data || initResp)) || {};
-                // If backend returned a redirect/checkout URL, redirect the browser there immediately
-                const redirectUrl = initData.redirect_url || initData.redirectUrl || initData.checkout_url || initData.checkoutUrl || initData.authorization_url || initData.authorizationUrl || initData.payment_url || initData.paymentUrl || initData.link || initData.data?.redirect_url || initData.data?.checkout_url || initData.data?.payment_url || initData.data?.link;
-                if (redirectUrl && typeof redirectUrl === 'string') {
-                    // Clear saved payload before redirecting
-                    try { localStorage.removeItem('flutterwave_payment_payload'); } catch (e) {}
-                    window.location.href = redirectUrl;
-                    return;
-                }
-            }).catch(err => {
-                console.error('Failed to initialize payment:', err);
-                const message = err?.response?.data?.message || err?.message || 'Failed to initialize payment';
-                // If backend indicates missing PBFPubKey, terminate and ask user to reconfirm
-                if (/(PBFPubKey|Invalid parameter)/i.test(String(message))) {
-                    terminatePaymentSession(message);
-                    return;
-                }
-                alert(message);
-            });
-        }
-        
-        async function processRegistration() {
-            const completeBtn = document.getElementById('complete-registration-btn');
-            
-            if (completeBtn) {
-                completeBtn.classList.add('btn-loading');
-                completeBtn.disabled = true;
-            }
-            
-            try {
-                // If we already saved a pre-registration when moving to payment, use that
-                const saved = localStorage.getItem('speaker_pre_registration');
-                if (saved) {
-                    const { payload, apiResponse, loginEmail } = JSON.parse(saved);
-                    // Store registration data for dashboard if not already stored
-                    if (!localStorage.getItem('speaker_registration_data')) {
-                        localStorage.setItem('speaker_registration_data', JSON.stringify({ ...payload, apiResponse }));
-                    }
-
-                    // Attempt auto-login using saved loginEmail and password from payload
-                    const emailToLogin = loginEmail || payload.speakerWorkEmail || payload.email || document.getElementById('email')?.value || '';
-                    const passwordToLogin = payload.password || document.getElementById('password')?.value || '';
-
-                    try {
-                        const loginResponse = await window.RegisterAPI.loginSpeaker(emailToLogin, passwordToLogin);
-                        if (loginResponse && loginResponse.success) {
-                            window.Auth.setToken(loginResponse.token);
-                        }
-                    } catch (loginErr) {
-                        console.warn('Auto-login failed (will still show confirmation):', loginErr);
-                    }
-
-                    // Update confirmation and show final step
-                    updateConfirmationSection(apiResponse);
-                    showStep(5);
-                    return;
-                }
-
-                // Add this to your registration page JavaScript
-/* function checkRegistrationCap(type) {
-    const capStatus = JSON.parse(localStorage.getItem('icsc_cap_status') || '{}');
-    const caps = JSON.parse(localStorage.getItem('icsc_registration_caps') || '{}');
-    const registrationStatus = localStorage.getItem('icsc_registration_status') || 'open';
-    
-    // Check if registration is closed
-    if (registrationStatus === 'closed') {
-        return {
-            allowed: false,
-            message: 'Registration is currently closed. Please check back later.'
-        };
-    }
-    
-    // Check specific type cap
-    if (capStatus[type]) {
-        const action = caps[type]?.action || 'disable';
-        const message = caps.globalMessage || 'Registration for this category is currently full.';
-        
-        return {
-            allowed: false,
-            message: message,
-            action: action
-        };
-    }
-    
-    return { allowed: true };
+    });
 }
 
-// Example usage in registration form:
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    const capCheck = checkRegistrationCap('attendees'); // or 'speakers', 'exhibitors', 'partners'
-    
-    if (!capCheck.allowed) {
-        e.preventDefault();
-        alert(capCheck.message);
-        
-        if (capCheck.action === 'hide') {
-            document.getElementById('registrationForm').style.display = 'none';
-        } else if (capCheck.action === 'disable') {
-            this.querySelectorAll('input, select, textarea, button').forEach(el => {
-                el.disabled = true;
+        // Dashboard Redirect
+        document.getElementById('go-to-dashboard-btn')?.addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+    }
+
+    function togglePassVisibility(id, btn) {
+        const input = document.getElementById(id);
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        btn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    }
+
+    async function submitRegistration() {
+        const btn = document.getElementById('continue-to-package-btn');
+        btn.disabled = true;
+        btn.innerHTML = 'Processing... <i class="fas fa-spinner fa-spin ms-2"></i>';
+
+        try {
+            // Collect Social Media
+            const socialRows = document.querySelectorAll('.social-row');
+            const socialMediaList = Array.from(socialRows).map(row => {
+                const select = row.querySelector('.platform-select');
+                return {
+                    platform: select.options[select.selectedIndex].text,
+                    fullUrl: 'https://' + select.value + row.querySelector('.handle-input').value
+                };
             });
+
+            // Build Payload
+            const payload = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                speakerPrefix: document.getElementById('speakerPrefix').value,
+                speakerFirstName: document.getElementById('speakerFirstName').value,
+                speakerLastName: document.getElementById('speakerLastName').value,
+                speakerCountry: document.getElementById('speakerCountry').value,
+                speakerJobTitle: document.getElementById('speakerJobTitle').value,
+                speakerOrganization: document.getElementById('speakerOrganization').value,
+                speakerPhone: document.getElementById('speakerPhone').value,
+                speakerWorkEmail: document.getElementById('speakerWorkEmail').value,
+                speakerBio: document.getElementById('speakerBio').value,
+                speakertopic: document.getElementById('speakertopic').value,
+                speakerExperience: document.getElementById('speakerExperience').value,
+                socialMedia: socialMediaList
+            };
+
+            // --- BACKEND INTEGRATION POINT ---
+            // Replace this boss when your code is ready:
+            // const response = await axios.post('/api/auth/speaker-register', payload);
+            
+            // Temporary Success Simulation (Remove when backend is ready)
+            console.log("Payload to send:", payload);
+            await new Promise(resolve => setTimeout(resolve, 1500)); 
+            const success = true; 
+
+            if (success) {
+                updateConfirmationSection();
+                showStep(3);
+            } else {
+                throw new Error("Registration failed.");
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Complete Registration <i class="fas fa-check-circle ms-2"></i>';
         }
     }
-}); */
 
-                // Fallback: if no saved pre-registration, perform full registration now
-                // Collect all registration data
-                registrationData = {
-                    speaker_prefix: document.getElementById('speakerPrefix')?.value || '',
-                    speaker_first_name: document.getElementById('speakerFirstName')?.value || '',
-                    speaker_last_name: document.getElementById('speakerLastName')?.value || '',
-                    speaker_country: document.getElementById('speakerCountry')?.value || '',
-                    speaker_job_title: document.getElementById('speakerJobTitle')?.value || '',
-                    speaker_organization: document.getElementById('speakerOrganization')?.value || '',
-                    speaker_phone: document.getElementById('speakerPhone')?.value || '',
-                    speaker_work_email: document.getElementById('speakerWorkEmail')?.value || '',
-                    speaker_bio: document.getElementById('speakerBio')?.value || '',
-                    speaker_topic: document.getElementById('speakertopic')?.value || '',
-                    speaker_experience: document.getElementById('speakerExperience')?.value || '',
-                    social_media: document.getElementById('socialMedia')?.value || '',
-                    speaker_package: selectedPackage,
-                    speaker_package_price: (fetchedPackages && fetchedPackages[selectedPackage] && Number(fetchedPackages[selectedPackage].price)) || Number(document.querySelector(`.package-card[data-package="${selectedPackage}"]`)?.getAttribute('data-price')) || 0,
-                    payment_method: selectedPaymentMethod,
-                    email: document.getElementById('email')?.value || '',
-                    password: document.getElementById('password')?.value || '',
-                    timestamp: new Date().toISOString()
-                };
+    function validateAccountForm() {
+        let isValid = true;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        const conf = document.getElementById('confirmPassword').value;
 
-                // Call the mock API
-                const response = await window.RegisterAPI.registerSpeaker(registrationData);
+        if (!email || !email.includes('@')) { showError('email-error', 'Valid email required'); isValid = false; }
+        else hideError('email-error');
 
-                if (response.success) {
-                    // Store registration data in localStorage for dashboard
-                    localStorage.setItem('speaker_registration_data', JSON.stringify({
-                        ...registrationData,
-                        apiResponse: response.data
-                    }));
+        if (pass.length < 8) { showError('password-error', 'Min 8 characters'); isValid = false; }
+        else hideError('password-error');
 
-                    // Auto-login the user after successful registration
-                    const loginResponse = await window.RegisterAPI.loginSpeaker(
-                        registrationData.email,
-                        registrationData.password
-                    );
+        if (pass !== conf) { showError('confirmPassword-error', 'Passwords do not match'); isValid = false; }
+        else hideError('confirmPassword-error');
 
-                    if (loginResponse.success) {
-                        // Store auth token
-                        window.Auth.setToken(loginResponse.token);
+        return isValid;
+    }
 
-                        // Update confirmation with response data
-                        updateConfirmationSection(response.data);
-                        showStep(5);
-                    } else {
-                        throw new Error('Auto-login failed after registration');
-                    }
-                } else {
-                    throw new Error(response.message || 'Registration failed');
-                }
-            } catch (err) {
-                console.error('Registration failed', err);
-                const message = err?.message || 'Registration failed. Please try again.';
-                alert(message);
-            } finally {
-                if (completeBtn) {
-                    completeBtn.classList.remove('btn-loading');
-                    completeBtn.disabled = false;
-                }
-            }
-        }
+    function validateProfileForm() {
+        let isValid = true;
+        const required = ['speakerPrefix', 'speakerFirstName', 'speakerLastName', 'speakerCountry', 'speakerJobTitle', 'speakerPhone', 'speakerBio', 'speakertopic', 'speakerWorkEmail', 'speakerPhoto'];
         
-        function updateConfirmationSection(apiData) {
-            const email = document.getElementById('email')?.value || '';
-            const workEmail = document.getElementById('speakerWorkEmail')?.value || '';
-            const speakerFirstName = document.getElementById('speakerFirstName')?.value || '';
-            const speakerLastName = document.getElementById('speakerLastName')?.value || '';
-            
-            const confirmationEmail = document.getElementById('confirmation-email');
-            const confirmationEmailText = document.getElementById('confirmation-email-text');
-            const confirmationName = document.getElementById('confirmation-name');
-            const confirmationType = document.getElementById('confirmation-type');
-            const confirmationPackage = document.getElementById('confirmation-package');
-            const confirmationPayment = document.getElementById('confirmation-payment');
-            const confirmationId = document.getElementById('confirmation-id');
-            
-            if (confirmationEmail) confirmationEmail.textContent = workEmail || email;
-            if (confirmationEmailText) confirmationEmailText.textContent = workEmail || email;
-            if (confirmationName) confirmationName.textContent = `${speakerFirstName} ${speakerLastName}`;
-            if (confirmationType) confirmationType.textContent = 'Speaker';
-            if (confirmationPackage) {
-                confirmationPackage.textContent = fetchedPackages[selectedPackage]?.name || selectedPackage;
-            }
-            if (confirmationPayment) {
-                const paymentMethods = {
-                    'bank-transfer': 'Bank Transfer',
-                    'flutterwave': 'Flutterwave'
-                };
-                confirmationPayment.textContent = paymentMethods[selectedPaymentMethod] || selectedPaymentMethod;
-            }
-            if (confirmationId && apiData) {
-                confirmationId.textContent = apiData.reference || apiData.registrationId || confirmationId.textContent;
-            }
-        }
-        
-        function redirectToDashboard() {
-            window.location.href = 'speakers-dash.html';
-        }
-        
-        function showStep(step) {
-            const sections = ['account-section', 'profile-section', 'package-section', 'payment-section', 'confirmation-section'];
-            
-            sections.forEach(section => {
-                const element = document.getElementById(section);
-                if (element) {
-                    element.style.display = 'none';
-                }
-            });
-            
-            let currentSection;
-            if (step === 1) {
-                currentSection = document.getElementById('account-section');
-            } else if (step === 2) {
-                currentSection = document.getElementById('profile-section');
-            } else if (step === 3) {
-                currentSection = document.getElementById('package-section');
-            } else if (step === 4) {
-                currentSection = document.getElementById('payment-section');
-            } else if (step === 5) {
-                currentSection = document.getElementById('confirmation-section');
-            }
-            
-            if (currentSection) {
-                currentSection.style.display = 'block';
-            }
-            
-            currentStep = step;
-            updateProgressIndicator();
-            window.scrollTo(0, 0);
-        }
-        
-        function updateProgressIndicator() {
-            document.querySelectorAll('.dot').forEach(dot => {
-                dot.classList.remove('active', 'completed');
-            });
-            
-            const progressLine = document.querySelector('.progress-line');
-            if (progressLine) {
-                const totalSteps = 5;
-                const widthPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
-                progressLine.style.width = `${widthPercentage}%`;
-            }
-            
-            for (let i = 1; i <= 5; i++) {
-                const dot = document.getElementById(`dot-${i}`);
-                if (dot) {
-                    if (i < currentStep) {
-                        dot.classList.add('completed');
-                    } else if (i === currentStep) {
-                        dot.classList.add('active');
-                    }
-                }
-            }
-        }
-        
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        function showError(errorId, message) {
-            const errorElement = document.getElementById(errorId);
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
-                
-                const inputId = errorId.replace('-error', '');
-                const inputElement = document.getElementById(inputId);
-                if (inputElement) {
-                    inputElement.classList.add('error');
-                }
-            }
-        }
-        
-        function hideError(errorId) {
-            const errorElement = document.getElementById(errorId);
-            if (errorElement) {
-                errorElement.style.display = 'none';
-                
-                const inputId = errorId.replace('-error', '');
-                const inputElement = document.getElementById(inputId);
-                if (inputElement) {
-                    inputElement.classList.remove('error');
-                }
-            }
-        }
-    </script>
+        required.forEach(field => {
+            const el = document.getElementById(field);
+            if (!el || !el.value) { showError(`${field}-error`, 'Required'); isValid = false; }
+            else hideError(`${field}-error`);
+        });
+        return isValid;
+    }
+
+    function updateConfirmationSection() {
+        document.getElementById('confirmation-name').textContent = document.getElementById('speakerFirstName').value + ' ' + document.getElementById('speakerLastName').value;
+        const email = document.getElementById('speakerWorkEmail').value;
+        document.getElementById('confirmation-email').textContent = email;
+        document.getElementById('confirmation-email-text').textContent = email;
+    }
+
+    function showStep(step) {
+        document.getElementById('account-section').style.display = step === 1 ? 'block' : 'none';
+        document.getElementById('profile-section').style.display = step === 2 ? 'block' : 'none';
+        document.getElementById('confirmation-section').style.display = step === 3 ? 'block' : 'none';
+        currentStep = step;
+        updateProgressIndicator();
+        window.scrollTo(0, 0);
+    }
+
+    function updateProgressIndicator() {
+        const dots = document.querySelectorAll('.progress-indicator.dots .dot');
+        const line = document.getElementById('progress-line');
+        if (line) line.style.width = ((currentStep - 1) / 2) * 100 + '%';
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('completed', i + 1 < currentStep);
+            dot.classList.toggle('active', i + 1 === currentStep);
+        });
+    }
+
+    function showError(id, msg) {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = msg; el.style.display = 'block'; }
+        document.getElementById(id.replace('-error', ''))?.classList.add('error');
+    }
+
+    function hideError(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+        document.getElementById(id.replace('-error', ''))?.classList.remove('error');
+    }
+</script>
 </body>
 </html>

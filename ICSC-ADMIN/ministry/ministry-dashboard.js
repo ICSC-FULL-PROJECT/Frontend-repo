@@ -15,8 +15,8 @@ const filterMinistryStatus = document.getElementById('filterMinistryStatus');
 const filterMinistryDepartment = document.getElementById('filterMinistryDepartment');
 const clearMinistryFiltersBtn = document.getElementById('clearMinistryFiltersBtn');
 
-const API_BASE_URL = 'http://localhost:9100/api/v1';
-// const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
+// const API_BASE_URL = 'http://localhost:9100/api/v1';
+const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
 
 // Tab Navigation
 const tabs = document.querySelectorAll('.tab-content');
@@ -511,12 +511,12 @@ async function handleAddMinistryAttendee(e) {
     lastName: document.getElementById('ministryAttendeeLastName').value,
     email: document.getElementById('ministryAttendeeEmail').value,
     password: document.getElementById('ministryAttendeePassword').value,
-    jobTitle: document.getElementById('ministryAttendeeJobTitle').value,
+    position: document.getElementById('ministryAttendeeJobTitle').value,
     organization: document.getElementById('ministryAttendeeOrganization').value,
     workPhone: document.getElementById('ministryAttendeeWorkPhone').value,
     phone_number: document.getElementById('ministryAttendeePhone').value,
     nin: document.getElementById('ministryAttendeeNIN').value,
-    position: document.getElementById('ministryAttendeePosition').value,
+    // position: document.getElementById('ministryAttendeePosition').value,
     grade: document.getElementById('ministryAttendeeGradeLevel').value,
     department: document.getElementById('ministryAttendeeDepartment').value,
     department_agency: document.getElementById('ministryAttendeeAgency').value,
@@ -836,11 +836,9 @@ function renderMinistryAttendeesTable(attendeesList) {
             <tr data-id="${attendee.id}">
                 <td>${attendee.name}</td>
                 <td>${attendee.email}</td>
-                <td>${attendee.nin}</td>
-                <td>${attendee.position}</td>
-                <td>${attendee.department}</td>
-                <td>${attendee.agency}</td>
-                <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+                <td>${attendee.position || ''}</td>
+                <td>${attendee.phone || ''}</td>
+                
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-success btn-sm edit-ministry-attendee-btn">Edit</button>
@@ -1340,11 +1338,7 @@ function exportAttendees() {
     const data = ministryAttendees.map(attendee => ({
         Name: attendee.name,
         Email: attendee.email,
-        NIN: attendee.nin,
         Position: attendee.position,
-        Department: attendee.department,
-        Agency: attendee.agency,
-        Status: attendee.status
     }));
     
     const ws = XLSX.utils.json_to_sheet(data);
@@ -1367,17 +1361,9 @@ function editAttendee(attendeeId) {
     document.getElementById('editMinistryAttendeeFirstName').value = attendee.firstName || attendee.name.split(' ')[0];
     document.getElementById('editMinistryAttendeeLastName').value = attendee.lastName || attendee.name.split(' ').slice(1).join(' ');
     document.getElementById('editMinistryAttendeeEmail').value = attendee.email;
-    document.getElementById('editMinistryAttendeeJobTitle').value = attendee.jobTitle || attendee.position;
-    document.getElementById('editMinistryAttendeeWorkPhone').value = attendee.workPhone || '';
+    document.getElementById('editMinistryAttendeeJobTitle').value = attendee.position;
     document.getElementById('editMinistryAttendeePhone').value = attendee.phone || '';
-    document.getElementById('editMinistryAttendeePosition').value = attendee.position;
-    document.getElementById('editMinistryAttendeeGradeLevel').value = attendee.gradeLevel || '';
-    document.getElementById('editMinistryAttendeeDepartment').value = attendee.department;
-    document.getElementById('editMinistryAttendeeAgency').value = attendee.agency;
-    document.getElementById('editMinistryAttendeeStaffId').value = attendee.staffId || '';
-    document.getElementById('editMinistryAttendeeOffice').value = attendee.office || '';
-    document.getElementById('editMinistryAttendeeRemarks').value = attendee.remarks || '';
-    document.getElementById('editMinistryAttendeeStatus').value = attendee.status;
+
     
     openModal('editMinistryAttendeeModal');
 }
@@ -1398,9 +1384,8 @@ function updateAttendee() {
             ...ministryAttendees[index],
             name: `${document.getElementById('editMinistryAttendeeFirstName').value} ${document.getElementById('editMinistryAttendeeLastName').value}`,
             email: document.getElementById('editMinistryAttendeeEmail').value,
-            position: document.getElementById('editMinistryAttendeePosition').value,
-            department: document.getElementById('editMinistryAttendeeDepartment').value,
-            agency: document.getElementById('editMinistryAttendeeAgency').value,
+            position: document.getElementById('editMinistryAttendeeJobTitle').value,
+            phone: document.getElementById('editMinistryAttendeePhone').value,  
             status: document.getElementById('editMinistryAttendeeStatus').value
         };
         
@@ -1439,6 +1424,7 @@ function addToRecentActivity(attendeeData) {
         <td>Added</td>
         <td>${attendeeData.firstName} ${attendeeData.lastName}</td>
         <td>${attendeeData.position}</td>
+        <td>${attendeeData.phone}</td>
         <td><span class="status-badge status-pending">Pending</span></td>
     `;
     
@@ -1480,8 +1466,9 @@ function renderRecentActivity() {
         row.innerHTML = `
             <td>Added</td>
             <td>${attendee.name}</td>
-            <td>${attendee.position}</td>
-            <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+            <td>${attendee.position || ''}</td>
+            <td>${attendee.phone || ''}</td>
+            
         `;
         tbody.appendChild(row);
     });

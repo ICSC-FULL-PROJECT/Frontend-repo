@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="icon" href="title.png" type="image/x-icon">
 </head>
 <body>
     <!-- Ministry Dashboard -->
@@ -115,10 +116,11 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Action</th>
+                                    <th>Status</th>
                                     <th>Participant</th>
                                     <th>Position</th>
-                                    <th>Status</th>
+                                    <th>Phone</th>
+                                    <!-- <th>Status</th> -->
                                 </tr>
                             </thead>
                             <tbody id="ministryActivityTable">
@@ -171,11 +173,8 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>NIN</th>
-                                    <th>Position</th>
-                                    <th>Department</th>
-                                    <th>Agency</th>
-                                    <th>Status</th>
+                                    <th>Job Title</th>
+                                    <th>Phone</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -610,7 +609,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="editMinistryAttendeeFirstName">First Name *</label>
+                        <label for="editMinistryAttendeeFirstName">First Name</label>
                         <input type="text" id="editMinistryAttendeeFirstName" class="form-control" placeholder="Enter first name" required>
                     </div>
                 </div>
@@ -618,7 +617,7 @@
                 <!-- Row 2: Last Name and Email -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="editMinistryAttendeeLastName">Last Name *</label>
+                        <label for="editMinistryAttendeeLastName">Last Name</label>
                         <input type="text" id="editMinistryAttendeeLastName" class="form-control" placeholder="Enter last name" required>
                     </div>
 
@@ -631,7 +630,7 @@
                 <!-- Row 3: Password and Job Title -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="editMinistryAttendeePassword">Password *</label>
+                        <label for="editMinistryAttendeePassword">Password</label>
                         <div class="password-input-container">
                             <input type="password" id="editMinistryAttendeePassword" class="form-control" placeholder="Enter password (min 8 characters)" required>
                             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('editMinistryAttendeePassword')">
@@ -642,28 +641,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editMinistryAttendeeJobTitle">Job Title *</label>
+                        <label for="editMinistryAttendeeJobTitle">Job Title</label>
                         <input type="text" id="editMinistryAttendeeJobTitle" class="form-control" placeholder="Enter job title" required>
                     </div>
                 </div>
 
                 <!-- Row 4: Organization and Work Phone -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeOrganization">Organization *</label>
-                        <input type="text" id="editMinistryAttendeeOrganization" class="form-control" value="Federal Government" readonly>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeWorkPhone">Work Phone *</label>
-                        <input type="tel" id="editMinistryAttendeeWorkPhone" class="form-control" placeholder="Enter work phone" required>
-                    </div>
-                </div>
 
                 <!-- Row 5: Phone Number and NIN -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="editMinistryAttendeePhone">Phone Number *</label>
+                        <label for="editMinistryAttendeePhone">Phone Number</label>
                         <input type="tel" id="editMinistryAttendeePhone" class="form-control" placeholder="Enter phone number" required>
                     </div>
                     
@@ -673,63 +661,17 @@
                     </div> -->
                 </div>
 
-                <!-- Row 6: Position and Grade Level -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editMinistryAttendeePosition">Position *</label>
-                        <input type="text" id="editMinistryAttendeePosition" class="form-control" placeholder="Enter position" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeGradeLevel">Grade Level *</label>
-                        <select id="editMinistryAttendeeGradeLevel" class="form-control" required>
-                            <option value="">Select grade level</option>
-                            <option value="Director">Director</option>
-                            <option value="Deputy Director">Deputy Director</option>
-                            <option value="Assistant Director">Assistant Director</option>
-                            <option value="Chief Officer">Chief Officer</option>
-                            <option value="Senior Officer">Senior Officer</option>
-                            <option value="Officer">Officer</option>
-                        </select>
-                    </div>
-                </div>
 
                 <!-- Row 7: Ministry and Department -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="editMinistryAttendeeMinistry">Ministry *</label>
+                        <label for="editMinistryAttendeeMinistry">Ministry</label>
                         <input type="text" id="editMinistryAttendeeMinistry" class="form-control" readonly>
                     </div>
                     
                     <div class="form-group">
-                        <label for="editMinistryAttendeeDepartment">Department *</label>
+                        <label for="editMinistryAttendeeDepartment">Department</label>
                         <input type="text" id="editMinistryAttendeeDepartment" class="form-control" placeholder="Enter department" required>
-                    </div>
-                </div>
-
-                <!-- Row 8: Agency and Staff ID -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeAgency">Department Agency *</label>
-                        <input type="text" id="editMinistryAttendeeAgency" class="form-control" placeholder="Enter department agency" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeStaffId">Staff ID</label>
-                        <input type="text" id="editMinistryAttendeeStaffId" class="form-control" placeholder="Enter staff ID">
-                    </div>
-                </div>
-
-                <!-- Row 9: Office Location and Remarks -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeOffice">Office Location</label>
-                        <input type="text" id="editMinistryAttendeeOffice" class="form-control" placeholder="Enter office location">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="editMinistryAttendeeRemarks">Remarks</label>
-                        <textarea id="editMinistryAttendeeRemarks" class="form-control" placeholder="Any additional remarks" rows="3"></textarea>
                     </div>
                 </div>
 

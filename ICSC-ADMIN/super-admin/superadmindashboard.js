@@ -35,8 +35,8 @@ const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 const addMinistryBtn = document.getElementById('addMinistryBtn');
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:9100/api/v1';
-// const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
+// const API_BASE_URL = 'http://localhost:9100/api/v1';
+const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
 window.API_BASE_URL = API_BASE_URL;
 
 // Tab Navigation
@@ -444,14 +444,19 @@ function initializeEventListeners() {
         //     if (!Number.isNaN(attendeeId)) rejectAttendee(attendeeId);
         // }
 
-        // if (e.target.classList.contains('view-ministry-btn') && closestRow) {
-        //     const ministryId = parseInt(closestRow.getAttribute('data-id'));
-        //     if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
-        // }
-        // if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
-        //     const ministryId = parseInt(closestRow.getAttribute('data-id'));
-        //     if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
-        // }
+        if (e.target.classList.contains('view-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
+        }
+        if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
+        }
+        if (e.target.classList.contains('delete-ministry-btn') && closestRow) {
+            const ministryId = parseInt(closestRow.getAttribute('data-id'));
+            const ministryName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
+            if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
+        }
 
         // Exhibitor actions
         if (e.target.classList.contains('edit-exhibitor-btn') && closestRow) {
@@ -1291,21 +1296,33 @@ function openDeleteMinistryModal(ministryId, ministryName) {
     deleteMinistryModal.style.display = 'flex';
 }
 
-function openViewModal(attendeeId) {
-    const attendee = attendees.find(a => a.id === attendeeId);
-    if (attendee) {
-        document.getElementById('viewName').textContent = attendee.name;
-        document.getElementById('viewEmail').textContent = attendee.email;
-        document.getElementById('viewPhone').textContent = attendee.phone;
-        document.getElementById('viewOrganization').textContent = attendee.ministry;
-        document.getElementById('viewStatus').textContent = attendee.status;
-        
-        viewAttendeeModal.style.display = 'flex';
-    }
+function openViewModal(id) {
+  // 1. Find the attendee in your global 'attendees' array
+  const attendee = attendees.find((a) => a.id == id);
+  if (!attendee) return;
+
+  // 2. Map the data to the IDs in your "View Attendee Modal" HTML
+  document.getElementById("viewName").textContent = attendee.name || "N/A";
+  document.getElementById("viewEmail").textContent = attendee.email || "N/A";
+  document.getElementById("viewPhone").textContent = attendee.phone || "N/A";
+  document.getElementById("viewJobTitle").textContent =
+    attendee.jobTitle || "N/A";
+  document.getElementById("viewMinistry").textContent =
+    attendee.ministry || "N/A";
+  document.getElementById("viewDepartment").textContent =
+    attendee.department || "N/A";
+
+  // 3. Display the modal
+  const viewModal = document.getElementById("viewAttendeeModal");
+  if (viewModal) {
+    viewModal.style.display = "flex"; // Or 'block' depending on your CSS
+  }
 }
 
 function openViewMinistryModal(ministryId) {
-    const ministry = ministries.find(m => m.id === ministryId);
+    const ministry = ministries.find(
+      (m) => String(m.id) === String(ministryId),
+    );
     if (ministry) {
         currentMinistryId = ministryId;
 
@@ -2538,6 +2555,7 @@ function renderMinistriesTable() {
                     <div class="action-buttons">
                         <button class="btn btn-success btn-sm view-ministry-btn">View</button>
                         <button class="btn btn-danger btn-sm delete-ministry-btn">Delete</button>
+                        <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
                     </div>
                 </td>
             </tr>
@@ -2565,11 +2583,13 @@ function renderAttendeesTable(attendeesList) {
                 <td>${attendee.email || ''}</td>
                 <td>${attendee.ministry || ''}</td>
                 <td>${attendee.jobTitle || ''}</td>
+                <td>${attendee.phone || ''}</td>
                 <td><span class="status-badge ${statusClass}">${attendee.status || ''}</span></td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-info btn-sm view-btn">View</button>
                         <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+                        <button class="btn btn-warning btn-sm edit-btn">Edit</button>
                     </div>
                 </td>
             </tr>
