@@ -213,8 +213,11 @@
 
 .themes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* This forces 4 columns. If you have 8 items, it will make 2 rows. */
+    grid-template-columns: repeat(4, 1fr) !important;
     gap: 25px;
+    max-width: 1400px;
+    margin: 40px auto 0;
 }
 
 .theme-card {
@@ -343,9 +346,8 @@
         gap: 15px;
     }
     
-    .themes-grid {
-        grid-template-columns: 1fr;
-    }
+
+
 }
 
 @media (max-width: 576px) {
@@ -709,8 +711,14 @@
         height: 400px;
     }
     
-    .themes-grid {
-        grid-template-columns: 1fr;
+.themes-grid {
+        /* Reset any potential side margins and ensure 1 column is centered */
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
     }
 }
 
@@ -1495,30 +1503,34 @@
 }
 
 .popup-days-circle {
-    background: rgba(var(--primary-rgb), 0.1); /* Use a light version of your brand color */
+    background: rgba(var(--primary-rgb), 0.1);
     border: 3px solid var(--primary-color);
-    width: 140px;
-    height: 140px;
+    /* Increased size slightly to accommodate large text */
+    width: 160px; 
+    height: 160px;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin: 0 auto; /* Centers the circle in the modal */
     animation: pulsePopup 2s infinite;
 }
 
 .popup-countdown-number {
-    font-size: 3.5rem;
+    /* Reduced from 3.5rem to 3rem for a better fit */
+    font-size: 3rem; 
     font-weight: 800;
     color: var(--primary-color);
-    line-height: 1;
+    line-height: 0.9; /* Tightened line height to pull label closer */
 }
 
 .popup-countdown-label {
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Slightly smaller label */
     text-transform: uppercase;
     font-weight: 600;
-    margin-top: 5px;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
 }
 
 @keyframes pulsePopup {
@@ -2823,10 +2835,12 @@
                 <div class="footer-col">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#about">About the Conference</a></li>
+                        <li><a href="live-stream.html">Livestream</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
                         <li><a href="agenda.html">Conference Agenda</a></li>
                         <li><a href="speakers.html">Speakers</a></li>
                         <li><a href="partners.html">Partners</a></li>
+                        <li><a href="why-attend.html">Why Attend?</a></li>
                         <li><a href="venue.html">Venue Information</a></li>
                     </ul>
                 </div>
@@ -2838,9 +2852,9 @@
                     <p><i class="fas fa-phone"></i> +234 810 324 7323</p>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 International Civil Service Conference. All rights reserved. |<a href="https://ohcsf.gov.ng/home">Office of the Head of the Civil Service of the Federation</a></p>
-            </div>
+           <footer style="text-align: center; padding: 20px; font-size: 14px; color: #666; border-top: 1px solid #eee;">
+    <p>&copy; 2024 Your Company. All rights reserved. | <strong>Powered by LYT24</strong></p>
+</footer>
         </div>
     </footer>
 

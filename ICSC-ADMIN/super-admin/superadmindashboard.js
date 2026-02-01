@@ -443,24 +443,51 @@ document.addEventListener('click', function(e) {
     }
 
     // --- MINISTRY ACTIONS ---
-    if (target.classList.contains('edit-ministry-btn')) {
-        openEditMinistryModal(dataId);
-    }
-    if (target.classList.contains('delete-ministry-btn')) {
-        const name = closestRow.cells[0].textContent;
-        openDeleteMinistryModal(dataId, name);
-    }
+// Robust click handler for the Edit button
 
+// 1. EDIT MINISTRY BUTTON
+if (target.closest(".edit-ministry-btn")) {
+  e.preventDefault();
 
-        // // Verification actions
-        // if (e.target.classList.contains('approve-btn') && closestRow) {
-        //     const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-        //     if (!Number.isNaN(attendeeId)) approveAttendee(attendeeId);
-        // }
-        // if (e.target.classList.contains('reject-btn') && closestRow) {
-        //     const attendeeId = parseInt(closestRow.getAttribute('data-id'));
-        //     if (!Number.isNaN(attendeeId)) rejectAttendee(attendeeId);
-        // }
+  const btn = target.closest(".edit-ministry-btn");
+  const closestRow = btn.closest("tr");
+
+  // You defined it here as dataId (no hyphen)
+  const dataId =
+    btn.getAttribute("data-id") || closestRow?.getAttribute("data-id");
+
+  // FIX: Change 'data-id' to 'dataId'
+  if (dataId) {
+    console.log("Opening Edit Modal for ID:", dataId);
+    openEditMinistryModal(dataId);
+  } else {
+    console.error("Could not find data-id for this ministry");
+  }
+}
+
+// 2. DELETE MINISTRY BUTTON
+else if (target.closest(".delete-ministry-btn")) {
+  e.preventDefault();
+
+  const btn = target.closest(".delete-ministry-btn");
+  const closestRow = btn.closest("tr");
+
+  // Get ID and Name safely
+  const dataId =
+    btn.getAttribute("data-id") || closestRow?.getAttribute("data-id");
+  // We grab the name from the first cell (index 0)
+  const name = closestRow
+    ? closestRow.cells[0].textContent.trim()
+    : "this ministry";
+
+  if (dataId) {
+    console.log("Opening Delete Modal for:", name);
+    // Ensure this function is defined globally in your script
+    openDeleteMinistryModal(dataId, name);
+  } else {
+    console.error("Delete failed: No ID found for row");
+  }
+}
 
         if (e.target.classList.contains('view-ministry-btn') && closestRow) {
             const ministryId = parseInt(closestRow.getAttribute('data-id'));
@@ -515,7 +542,7 @@ document.addEventListener('click', function(e) {
     if (refreshActivityBtn) refreshActivityBtn.addEventListener('click', function () { alert('Refreshing recent activity...'); });
     if (refreshPendingBtn) refreshPendingBtn.addEventListener('click', function () { alert('Refreshing pending attendees...'); });
     if (exportAttendeesBtn) exportAttendeesBtn.addEventListener('click', function () { alert('Exporting attendees data...'); });
-}
+
 
 // Form Handlers
 async function handleAddAttendee(e) {
@@ -1269,6 +1296,8 @@ function handleEditMinistry(e) {
     }
 }
 
+}
+
 // Modal Functions
 function openEditModal(attendeeId) {
     const attendee = attendees.find(a => a.id === attendeeId);
@@ -1352,6 +1381,33 @@ function openViewMinistryModal(ministryId) {
 
         viewMinistryModal.style.display = 'flex';
     }
+}
+
+function openEditMinistryModal(ministryId) {
+  // 1. Find the specific ministry from your global 'ministries' array
+  const ministry = ministries.find((m) => String(m.id) === String(ministryId));
+
+  if (!ministry) {
+    alert("Ministry data not found");
+    return;
+  }
+
+  // 2. Populate the Edit Modal Form Fields
+  document.getElementById("editMinistryId").value = ministry.id;
+  document.getElementById("editMinistryName").value = ministry.name || "";
+  document.getElementById("editMinistryCode").value = ministry.code || "";
+  document.getElementById("editContactPerson").value =
+    ministry.contactPerson || "";
+  document.getElementById("editContactPersonEmail").value =
+    ministry.contactPersonEmail || "";
+
+  // 3. Show the Modal
+  const modal = document.getElementById("editMinistryModal");
+  if (modal) {
+    modal.style.display = "flex";
+  } else {
+    console.error("Edit Ministry Modal HTML element missing!");
+  }
 }
 
 // Speaker Modal Functions

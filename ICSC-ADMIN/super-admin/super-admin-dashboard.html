@@ -1090,6 +1090,7 @@
     </div>
 </div>
 
+
 <!-- Speakers Tab -->
 <div id="speakers" class="tab-content">
     <div class="dashboard-section">
@@ -2545,7 +2546,8 @@
             </div>
         </div>
     </div>
-</div>
+    
+
 
 <!-- Bulk Approvals Tab -->
 <div id="bulk-approvals" class="tab-content">
@@ -2654,6 +2656,8 @@
                 <button class="btn btn-secondary" id="clearBulkFiltersBtn">Clear Filters</button>
             </div>
         </div>
+    </div>
+</div>
 
 
             <!-- Settings Tab -->
@@ -2735,6 +2739,7 @@
                 </div>
             </form>
         </div> -->
+
 
         <!-- Registration Caps Management -->
         <div class="settings-section">
@@ -4376,139 +4381,157 @@ ICSC 2026 Team</textarea>
     <!-- Add Speaker Modal -->
 <div id="addSpeakerModal" class="modal">
     <div class="modal-content modal-lg">
-        <div class="modal-header">
-            <h2>Add New Speaker</h2>
-            <button class="close-modal">&times;</button>
+        <div class="modal-header" style="background: var(--primary-dark); color: white; border-radius: 10px 10px 0 0;">
+            <h2><i class="fas fa-user-plus"></i> Add New Speaker (Admin Panel)</h2>
+            <button class="close-modal" style="color: white;">&times;</button>
         </div>
         
         <div class="api-indicator">
-            <strong>API Status:</strong> <span id="speaker-api-status">Checking...</span>
+            <strong>System Status:</strong> <span id="speaker-api-status">Ready to Provision Account</span>
         </div>
         
         <div class="modal-body">
             <form id="addSpeakerForm">
-                <div class="form-group">
-                    <label for="speakerEvent">Event</label>
-                    <select id="speakerEvent" class="form-control" required>
-                        <option value="">Select Event</option>
-                        <option value="Keynote: The Future of Public Service">Keynote: The Future of Public Service</option>
-                        <option value="Panel: Digital Transformation in Government">Panel: Digital Transformation in Government</option>
-                        <option value="The Civil Service as the Engine of Governance">The Civil Service as the Engine of Governance</option>
-                    </select>
+                <div style="background: #f0f7f4; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-dark);">Account Access</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="speakerEmail">Work Email (Username) *</label>
+                            <input type="email" id="speakerEmail" class="form-control" placeholder="email@organization.gov" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="speakerPassword">Login Password</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="text" id="speakerPassword" class="form-control" placeholder="Generated Password">
+                                <button type="button" class="btn-outline btn-sm" onclick="generatePassword()" style="white-space: nowrap;">Generate</button>
+                            </div>
+                            <small>Default password for first-time login.</small>
+                        </div>
+                    </div>
                 </div>
+
+                <h4 style="margin-bottom: 15px; border-bottom: 1px solid #eee;">Speaker Bio-Data</h4>
                 <div class="form-row">
-    <div class="form-group">
-        <label for="speakerPrefix">Prefix</label>
-        <select id="speakerPrefix" class="form-control" required>
-            <option value="">Select prefix</option>
-            <option>Mr</option>
-            <option>Mrs</option>
-            <option>Miss</option>
-            <option>Dr</option>
-            <option>Prof</option>
-        </select>
-    </div>
-                
-                <div class="form-group">
-        <label for="speakerFirstName">First Name</label>
-        <input type="text" id="speakerFirstName" class="form-control" placeholder="Enter first name">
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerLastName">Last Name</label>
-        <input type="text" id="speakerLastName" class="form-control" placeholder="Enter last name">
-    </div>
-
-    <div class="form-group">
-        <label for="speakerEmail">Work Email (Login)</label>
-        <input type="email" id="speakerEmail" class="form-control" placeholder="Enter work email" >
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerPassword">Password</label>
-        <input type="password" id="speakerPassword" class="form-control" placeholder="Enter password">
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="speakerExperience">Previous Speaking Experience</label>
-        <textarea id="speakerExperience" class="form-control" placeholder="Enter previous speaking experience"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="speakerCountry">Country *</label>
-        <input type="text" id="speakerCountry" class="form-control" placeholder="Enter country">
-    </div>
-</div>          
-          <div class="form-group">
-                    <label for="speakerDescription">Brief Introduction</label>
-                    <textarea id="speakerDescription" class="form-control" placeholder="Provide a brief intrduction"></textarea>
+                    <div class="form-group" style="flex: 0 0 100px;">
+                        <label for="speakerPrefix">Prefix</label>
+                        <select id="speakerPrefix" class="form-control">
+                            <option value="">...</option>
+                            <option>Mr</option><option>Mrs</option><option>Miss</option>
+                            <option>Dr</option><option>Prof</option><option>Hon</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerFirstName">First Name *</label>
+                        <input type="text" id="speakerFirstName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerLastName">Last Name *</label>
+                        <input type="text" id="speakerLastName" class="form-control" required>
+                    </div>
                 </div>
 
                 <div class="form-row">
-    <div class="form-group">
-        <label for="speakerTopic">Topic</label>
-        <input type="text" id="speakerTopic" class="form-control" placeholder="Enter topic">
-    </div>
-
-                
-                <div class="form-group">
-                    <label for="speakerAffiliation">Affiliation/Organization</label>
-                    <input type="text" id="speakerAffiliation" class="form-control" placeholder="Enter organization">
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerPackage">Speaker Package </label>
-                    <select id="speakerPackage" class="form-control" required>
-                        <option value="">Select Package</option>
-                        <option value="diamond">Diamond Partner</option>
-                        <option value="gold">Gold Knowledge Partner</option>
-                        <option value="silver">Silver Roundtable Partner</option>
-                        <option value="bronze">Bronze Exhibition Partner</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerStatus">Status</label>
-                    <select id="speakerStatus" class="form-control">
-                        <option value="confirmed">Confirmed</option>
-                        <option value="pending">Pending</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerPayment">Payment Status</label>
-                    <select id="speakerPayment" class="form-control">
-                        <option value="paid">Paid</option>
-                        <option value="pending">Pending</option>
-                        <option value="overdue">Overdue</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerLinks">Social Media Links</label>
-                    <textarea id="speakerLinks" class="form-control" placeholder="Enter social media profiles (one per line)"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="speakerFile">Upload Profile/Topic PDF</label>
-                    <input type="file" id="speakerFile" class="form-control" accept=".pdf">
+                    <div class="form-group">
+                        <label for="speakerJobTitle">Job Title / Designation</label>
+                        <input type="text" id="speakerJobTitle" class="form-control" placeholder="e.g. Director General">
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerAffiliation">Organization / Affiliation</label>
+                        <input type="text" id="speakerAffiliation" class="form-control" placeholder="e.g. OHCSF">
+                    </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelAddSpeakerBtn">Cancel</button>
-                    <button type="submit" class="btn-accept">Add Speaker</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerCountry">Country</label>
+                        <input type="text" id="speakerCountry" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerPhone">Contact Number (WhatsApp)</label>
+                        <input type="tel" id="speakerPhone" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerLinkedIn"><i class="fab fa-linkedin"></i> LinkedIn URL</label>
+                        <input type="url" id="speakerLinkedIn" class="form-control" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerTwitter"><i class="fab fa-twitter"></i> Twitter/X Handle</label>
+                        <input type="text" id="speakerTwitter" class="form-control" placeholder="@username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="speakerDescription">Professional Biography</label>
+                    <textarea id="speakerDescription" class="form-control" rows="3" placeholder="Provide a summary for the event brochure"></textarea>
+                </div>
+
+                <h4 style="margin-bottom: 15px; border-bottom: 1px solid #eee; margin-top: 20px;">Administrative Assignment</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="speakerPackage">Sponsorship/Speaker Category</label>
+                        <select id="speakerPackage" class="form-control">
+                            <option value="diamond">Diamond Partner</option>
+                            <option value="gold">Gold Knowledge Partner</option>
+                            <option value="silver">Silver Roundtable Partner</option>
+                            <option value="bronze" selected>Guest Speaker</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerStatus">Approval Status</label>
+                        <select id="speakerStatus" class="form-control">
+                            <option value="confirmed">Confirmed (Access Enabled)</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="assignedSessions">Assign Initial Session(s)</label>
+                    <select id="assignedSessions" class="form-control" multiple style="height: 80px;">
+                        <option value="keynote_1">Opening Keynote - Day 1</option>
+                        <option value="roundtable_A">Civil Service Reform Roundtable</option>
+                        <option value="panel_3">Digital Transformation Panel</option>
+                    </select>
+                    <small>Hold Ctrl (Cmd) to select multiple</small>
+                </div>
+
+                <div class="form-row" style="background: #fafafa; padding: 15px; border-radius: 8px;">
+                    <div class="form-group">
+                        <label for="speakerPhoto"><i class="fas fa-image"></i> Official Headshot (PNG/JPG)</label>
+                        <input type="file" id="speakerPhoto" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="speakerFile"><i class="fas fa-file-pdf"></i> Presentation Brief/Paper (PDF)</label>
+                        <input type="file" id="speakerFile" class="form-control" accept=".pdf">
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                    <button type="button" class="btn-cancel" id="cancelAddSpeakerBtn">Dismiss</button>
+                    <button type="submit" class="btn-accept" style="background: var(--primary);">Save & Send Welcome Email</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+// Function to generate a random secure password for the Admin
+function generatePassword() {
+    const charset = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
+    let retVal = "";
+    for (let i = 0, n = charset.length; i < 10; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    document.getElementById("speakerPassword").value = retVal;
+}
+
+// Ensure the generate function runs on modal open or via the button
+</script>
         </div>
 
 
@@ -4527,7 +4550,8 @@ ICSC 2026 Team</textarea>
         </div>
     </div>
 </div>
-        </div>
+
+        
 
 <!-- Edit Speaker Modal -->
 <div id="editSpeakerModal" class="modal">
@@ -4689,7 +4713,7 @@ ICSC 2026 Team</textarea>
         </div>
     </div>
 </div>
-        </div>
+        
 
 <!-- View Partner Modal -->
 <div id="viewPartnerModal" class="modal">
@@ -4967,8 +4991,8 @@ ICSC 2026 Team</textarea>
         </div>
     </div>
 </div>
-        </div>
-        </div>
+
+
 
     <!-- Add Exhibitor Modal -->
 <div class="modal" id="addExhibitorModal">
@@ -5430,6 +5454,8 @@ ICSC 2026 Team</textarea>
             </form>
         </div>
     </div>
+</div>
+</div>
 </div>
 
     <!-- Script: generate username/password from ministry code -->

@@ -174,6 +174,82 @@
             font-size: 1.5rem;
         }
 
+        /* Header */
+        header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 20px 0; box-shadow: var(--shadow); border-radius: 10px; margin-bottom: 30px; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo i { font-size: 2.5rem; }
+        .logo h1 { font-size: 1.8rem; font-weight: 700; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { width: 50px; height: 50px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+        .role-badge { padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; background-color: rgba(255,255,255,0.2); }
+
+        /* Dashboard Grid */
+        .dashboard-container { display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        
+        /* Sidebar */
+        .sidebar { background-color: white; border-radius: 10px; padding: 20px; box-shadow: var(--shadow); height: fit-content; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 10px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 15px; border-radius: 8px; color: #555; text-decoration: none; transition: all 0.3s ease; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background-color: #f0f5ff; color: var(--primary); }
+
+        /* Content Area */
+        .dashboard-content { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+        .main-content { background-color: white; border-radius: 10px; padding: 25px; box-shadow: var(--shadow); display: none; }
+        .main-content.active-tab { display: block; }
+        
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .content-header h2 { color: var(--primary); font-size: 1.5rem; }
+
+        /* Status Badges */
+        .status-badge { padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; }
+        .status-approved { background-color: #d4edda; color: #155724; }
+
+        /* Proposal Card */
+        .proposal-card { border: 1px solid var(--border); border-radius: 10px; padding: 25px; margin-bottom: 25px; background: white; border-left: 5px solid var(--primary); }
+        .proposal-header { margin-bottom: 15px; }
+        .proposal-title h3 { font-size: 1.4rem; color: #333; margin-bottom: 5px; }
+        .proposal-meta { color: #666; font-size: 0.9rem; margin-bottom: 15px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .proposal-meta span { display: flex; align-items: center; gap: 5px; }
+
+        /* NEW: Assigned Session List Styles */
+        .assignments-container { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .assignment-item { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease; }
+        .assignment-item:hover { border-color: var(--primary-light); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .assignment-details h4 { color: var(--primary); margin-bottom: 5px; font-size: 1.1rem; }
+        .assignment-meta { font-size: 0.9rem; color: #555; display: flex; gap: 15px; flex-wrap: wrap; }
+        .assignment-meta span { display: flex; align-items: center; gap: 5px; }
+        
+        /* Action Box */
+        .action-box { background-color: #f0f5ff; border: 1px dashed var(--primary); border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+        .action-text h4 { font-size: 0.95rem; color: #333; margin-bottom: 2px; }
+        .action-text p { font-size: 0.8rem; color: #666; }
+
+        /* Sidebar Widgets */
+        .sidebar-widgets { display: flex; flex-direction: column; gap: 20px; }
+        .sidebar-widget { background-color: white; border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+        .widget-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; color: var(--primary); font-weight: bold;}
+        .info-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+        .info-label { color: #666; }
+        .info-value { font-weight: 600; color: #333; text-align: right; }
+
+        /* Buttons & Forms */
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; font-weight: 500; cursor: pointer; transition: 0.3s; text-decoration: none; font-size: 0.9rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: transparent; }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+
+        /* Responsive */
+        @media (max-width: 992px) { .dashboard-content { grid-template-columns: 1fr; } .sidebar-widgets { display: grid; grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 768px) { .dashboard-container { grid-template-columns: 1fr; } .sidebar-widgets { grid-template-columns: 1fr; } .assignment-item { flex-direction: column; align-items: flex-start; gap: 15px; } .assignment-item .btn { width: 100%; } }
+
         /* Live Stream Styles from Exhibitors */
         .live-stream-content {
             padding: 20px;
@@ -1150,10 +1226,10 @@
                     <h1>ICSC 2026 Speaker Dashboard</h1>
                 </div>
                 <div class="user-info">
-                    <div class="user-avatar">SJ</div>
+                    <div class="user-avatar" id="header-avatar">SJ</div>
                     <div>
-                        <div class="user-name">Dr. Sarah Johnson</div>
-                        <div class="role-badge speaker-badge">Keynote Speaker</div>
+                        <div class="user-name" id="header-name">Dr. Sarah Johnson</div>
+                        <div class="role-badge">Speaker</div>
                     </div>
                 </div>
             </div>
@@ -1162,965 +1238,307 @@
         <div class="dashboard-container">
             <div class="sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
-                    <li><a href="#" data-tab="live-stream"><i class="fas fa-play-circle"></i> Live Stream</a></li>
-                    <li><a href="#" data-tab="benefits"><i class="fas fa-gift"></i> Benefits</a></li>
-                    <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
-                    <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> My Proposal & Sessions</a></li>
+                    <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Full Agenda</a></li>
+                    <li><a href="#" data-tab="resources"><i class="fas fa-file-download"></i> Resources & Briefs</a></li>
+                    <li><a href="#" data-tab="profile"><i class="fas fa-user-edit"></i> My Profile</a></li>
                     <li><a href="Index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </div>
             
             <div class="dashboard-content">
-                <!-- Dashboard Tab -->
+                
                 <div class="main-content active-tab" id="dashboard-tab">
                     <div class="content-header">
-                        <h2>Speaker Dashboard</h2>
-                        <div class="day-selector">
-                            <button class="tab-btn active" data-day="wednesday">Wednesday 25 June</button>
-                            <button class="tab-btn" data-day="thursday">Thursday 26 June</button>
-                        </div>
+                        <h2>My Proposal & Session Status</h2>
+                        <span class="status-badge status-approved" id="main-status-badge"><i class="fas fa-check-circle"></i> Approved</span>
                     </div>
                     
-                    <!-- Speaker Package Card -->
-                    <div class="package-card speaker">
-                        <div class="package-header">
-                            <div class="package-icon speaker">
-                                <i class="fas fa-microphone-alt"></i>
-                            </div>
-                            <div class="package-title">
-                                <h3>Keynote Speaker Package</h3>
-                                <div class="package-type">Premium Speaking Engagement</div>
+                    <div class="proposal-card">
+                        <div class="proposal-header">
+                            <div class="proposal-title">
+                                <small style="color:var(--primary); font-weight:bold; text-transform:uppercase;">Submitted Topic</small>
+                                <h3 id="dash-topic">The Future of Public Service: A Global Perspective</h3>
                             </div>
                         </div>
                         
-                        <div class="package-description">
-                            <p><strong>Description:</strong> As a keynote speaker, you have access to premium speaking slots and exclusive speaker benefits. Your expertise is valued at this international conference.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Stats -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number">2</div>
-                            <div class="stat-label">Speaking Slots</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">6</div>
-                            <div class="stat-label">Total Benefits</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">4</div>
-                            <div class="stat-label">Available</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number">75%</div>
-                            <div class="stat-label">Benefits Used</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Agenda for Dashboard -->
-                    <div class="agenda-container">
-                        <div class="agenda-day active" id="wednesday-agenda">
-                            <h3>Wednesday 25 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Speaker Briefing & Preparation</h4>
-                                    <p><i class="far fa-clock"></i> 08:00-08:30 | <i class="fas fa-map-marker-alt"></i> Speaker Lounge</p>
-                                    <p>Mandatory briefing for all speakers</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">Confirmed</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Opening Ceremony</h4>
-                                    <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
-                                    <p>Official opening of the International Civil Service Conference 2026</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Keynote: The Future of Public Service</h4>
-                                    <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Your scheduled keynote presentation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">You're Speaking</button>
-                                </div>
-                            </div>
+                        <div class="proposal-meta">
+                            <span id="dash-date"><i class="far fa-calendar"></i> Submitted: Jan 15, 2026</span>
+                            <span><i class="fas fa-tag"></i> Track: Public Administration</span>
                         </div>
                         
-                        <div class="agenda-day" id="thursday-agenda">
-                            <h3>Thursday 26 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Panel: Digital Transformation in Government</h4>
-                                    <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Panel discussion participation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">Confirmed</button>
+                        <p style="color: #555; margin-bottom: 20px;">
+                            <strong>Admin Note:</strong> "Your topic has been approved. Based on your expertise, the committee has assigned you to the following speaking opportunities."
+                        </p>
+
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+                        <h4 style="color: #333; margin-bottom: 15px;"><i class="fas fa-clipboard-list"></i> Assigned Speaking Schedules</h4>
+                        
+                        <div class="assignments-container" id="assigned-sessions-list">
+                            <div class="assignment-item">
+                                <div class="assignment-details">
+                                    <h4><i class="fas fa-users"></i> Morning Roundtable Discussion</h4>
+                                    <div class="assignment-meta">
+                                        <span><i class="far fa-clock"></i> Wed, 20 May | 14:00 - 15:30</span>
+                                        <span><i class="fas fa-map-marker-alt"></i> Room A - Policy Hall</span>
+                                    </div>
+                                    <div class="action-box">
+                                        <div class="action-text">
+                                            <h4>Session Brief</h4>
+                                            <p>Download specific agenda & rules for this roundtable.</p>
+                                        </div>
+                                        <button class="btn btn-outline btn-sm" onclick="downloadBrief('Roundtable')"><i class="fas fa-download"></i> PDF</button>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Speaker Networking Lunch</h4>
-                                    <p><i class="far fa-clock"></i> 12:30-14:00 | <i class="fas fa-map-marker-alt"></i> VIP Dining</p>
-                                    <p>Exclusive networking with other speakers</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Attend</button>
+
+                            <div class="assignment-item">
+                                <div class="assignment-details">
+                                    <h4><i class="fas fa-microphone"></i> Keynote: Future Trends</h4>
+                                    <div class="assignment-meta">
+                                        <span><i class="far fa-clock"></i> Thu, 21 May | 09:00 - 09:45</span>
+                                        <span><i class="fas fa-map-marker-alt"></i> Main Auditorium</span>
+                                    </div>
+                                    <div class="action-box">
+                                        <div class="action-text">
+                                            <h4>Keynote Guidelines</h4>
+                                            <p>Download tech specs & slide template for main stage.</p>
+                                        </div>
+                                        <button class="btn btn-outline btn-sm" onclick="downloadBrief('Keynote')"><i class="fas fa-download"></i> PDF</button>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
-                
-                <!-- Agenda Tab (Full) -->
+                <!--Agenda Tab Content -->
                 <div class="main-content" id="agenda-tab">
                     <div class="content-header">
                         <h2>Conference Agenda</h2>
-                        <div class="day-selector">
-                            <button class="tab-btn active" data-day="wednesday">Wednesday 25 June</button>
-                            <button class="tab-btn" data-day="thursday">Thursday 26 June</button>
-                        </div>
                     </div>
-                    
-                    <div class="agenda-container">
-                        <div class="agenda-day active" id="agenda-wednesday">
-                            <h3>Wednesday 25 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Speaker Briefing & Preparation</h4>
-                                    <p><i class="far fa-clock"></i> 08:00-08:30 | <i class="fas fa-map-marker-alt"></i> Speaker Lounge</p>
-                                    <p>Mandatory briefing for all speakers</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">Confirmed</button>
-                                </div>
+                    <div class="agenda-day active" style="display:block;">
+                        <h3 style="background:#eee; padding:10px; border-radius:5px;">Wednesday 20 May 2026</h3>
+                        
+                        <div class="event-item" style="padding:15px; border:1px solid #eee; margin-bottom:10px; border-radius:8px;">
+                            <div class="event-info">
+                                <h4>Opening Ceremony</h4>
+                                <p><i class="far fa-clock"></i> 09:00 - 10:30 | Main Hall</p>
                             </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Registration and Welcome Coffee</h4>
-                                    <p><i class="far fa-clock"></i> 08:30-09:00 | <i class="fas fa-map-marker-alt"></i> Main Hall</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
+                        </div>
+
+                        <div class="event-item" style="padding:15px; border:2px solid var(--primary); background: #f9fff9; margin-bottom:10px; border-radius:8px;">
+                            <div class="event-info">
+                                <h4 style="color:var(--primary);"> <i class="fas fa-microphone"></i> YOUR SESSION: Roundtable Discussion</h4>
+                                <p><strong>Topic:</strong> The Future of Public Service</p>
+                                <p><i class="far fa-clock"></i> 14:00 - 15:30 | Room A</p>
                             </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Opening Ceremony</h4>
-                                    <p><i class="far fa-clock"></i> 09:00-09:30 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
-                                    <p>Official opening of the International Civil Service Conference 2026</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Keynote: The Future of Public Service</h4>
-                                    <p><i class="far fa-clock"></i> 09:30-10:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Your scheduled keynote presentation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">You're Speaking</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Networking Break</h4>
-                                    <p><i class="far fa-clock"></i> 10:30-11:00 | <i class="fas fa-map-marker-alt"></i> Networking Area</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
+                            <div class="event-actions">
+                                <span class="status-badge status-approved">Confirmed</span>
                             </div>
                         </div>
                         
-                        <div class="agenda-day" id="agenda-thursday">
-                            <h3>Thursday 26 June 2026</h3>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Opening Welcome</h4>
-                                    <p><i class="far fa-clock"></i> 09:00-09:10 | <i class="fas fa-map-marker-alt"></i> Main Stage</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
+                        <h3 style="background:#eee; padding:10px; border-radius:5px; margin-top:20px;">Thursday 21 May 2026</h3>
+                        
+                        <div class="event-item" style="padding:15px; border:2px solid var(--primary); background: #f9fff9; margin-bottom:10px; border-radius:8px;">
+                            <div class="event-info">
+                                <h4 style="color:var(--primary);"> <i class="fas fa-microphone"></i> YOUR SESSION: Keynote Address</h4>
+                                <p><strong>Topic:</strong> Future Trends in Governance</p>
+                                <p><i class="far fa-clock"></i> 09:00 - 09:45 | Main Auditorium</p>
                             </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>The Civil Service as the Engine of Governance</h4>
-                                    <p><i class="far fa-clock"></i> 09:10-10:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Measuring and monitoring performance in public service</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Panel: Digital Transformation in Government</h4>
-                                    <p><i class="far fa-clock"></i> 11:00-12:30 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>Panel discussion participation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn attending">Confirmed</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Speaker Networking Lunch</h4>
-                                    <p><i class="far fa-clock"></i> 12:30-14:00 | <i class="fas fa-map-marker-alt"></i> VIP Dining</p>
-                                    <p>Exclusive networking with other speakers</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
-                            </div>
-                            
-                            <div class="event-item">
-                                <div class="event-info">
-                                    <h4>Leadership & Institutional Innovation</h4>
-                                    <p><i class="far fa-clock"></i> 14:00-15:00 | <i class="fas fa-map-marker-alt"></i> Transform Stage</p>
-                                    <p>The role of exemplary leadership in driving innovation</p>
-                                </div>
-                                <div class="event-actions">
-                                    <button class="attend-btn">Add to Schedule</button>
-                                </div>
+                            <div class="event-actions">
+                                <span class="status-badge status-approved">Confirmed</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Live Stream Tab (Replaces On Demand) -->
-                <div class="main-content" id="live-stream-tab">
+
+                <!-- Resources Tab Content -->
+                <div class="main-content" id="resources-tab">
                     <div class="content-header">
-                        <h2>Conference Live Stream</h2>
+                        <h2>General Resources</h2>
                     </div>
-                    
-                    <div class="live-stream-content">
-                        <div class="stream-info">
-                            <h4><i class="fas fa-info-circle"></i> Live Stream Information</h4>
-                            <p>Watch the ICSC 2026 conference live stream directly from this page. The stream will be active during conference hours (9:00 AM - 5:00 PM WAT).</p>
-                            <p><strong>Current Status:</strong> <span id="stream-status" class="event-status live-now">LIVE NOW</span></p>
+                    <p class="mb-3">General documents for all speakers.</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                        <div class="proposal-card" style="padding: 15px; margin:0;">
+                            <i class="fas fa-file-pdf fa-2x" style="color: var(--primary); margin-bottom:10px;"></i>
+                            <h4>General Speaker Guide</h4>
+                            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Logistics, accommodation, and travel info.</p>
+                            <button class="btn btn-outline btn-sm" onclick="downloadBrief('General')">Download</button>
                         </div>
                         
-                        <div class="stream-controls">
-                            <button id="play-live-btn">
-                                <i class="fas fa-play"></i> Play Live Stream
-                            </button>
-                            <button id="pause-stream-btn">
-                                <i class="fas fa-pause"></i> Pause
-                            </button>
-                            <button id="fullscreen-btn">
-                                <i class="fas fa-expand"></i> Fullscreen
-                            </button>
-                            <a href="https://www.youtube.com/@OHCSF" target="_blank" class="stream-controls button youtube-btn">
-                                <i class="fab fa-youtube"></i> YouTube Channel
-                            </a>
-                        </div>
-                        
-                        <div class="video-container" id="youtube-container">
-                            <!-- YouTube Live Stream Embed -->
-                            <iframe 
-                                id="youtube-player"
-                                class="youtube-player"
-                                src="https://www.youtube.com/embed/live_stream?channel=UC_ICSCCONFERENCE&autoplay=0&mute=0"
-                                title="ICSC 2026 Live Stream"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                        
-                        <a href="https://www.youtube.com/@OHCSF/videos" target="_blank" class="youtube-channel-link">
-                            <i class="fab fa-youtube"></i> View All Conference Videos on YouTube
-                        </a>
-                        
-                        <div class="recorded-sessions">
-                            <h3>Featured Conference Sessions</h3>
-                            <p>Watch recorded sessions from previous days or explore related content.</p>
-                            
-                            <div class="session-grid" id="featured-sessions">
-                                <!-- Featured sessions will be populated here -->
-                            </div>
-                            
-                            <div style="text-align: center; margin-top: 30px;">
-                                <a href="https://www.youtube.com/@OHCSF/videos" target="_blank" class="btn btn-primary" style="background-color: #ff0000; border-color: #ff0000;">
-                                    <i class="fab fa-youtube"></i> Browse All Videos on YouTube
-                                </a>
-                            </div>
+                        <div class="proposal-card" style="padding: 15px; margin:0;">
+                            <i class="fas fa-file-powerpoint fa-2x" style="color: #c43e1c; margin-bottom:10px;"></i>
+                            <h4>Presentation Template</h4>
+                            <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Official ICSC 2026 slide deck theme.</p>
+                            <button class="btn btn-outline btn-sm" onclick="downloadBrief('Presentation')">Download .PPTX</button>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Benefits Tab -->
-                <div class="main-content" id="benefits-tab">
-                    <div class="content-header">
-                        <h2>Speaker Benefits</h2>
-                    </div>
-                    
-                    <div class="benefits-section">
-                        <div class="benefits-card">
-                            <div class="benefits-header">
-                                <h3>Your Speaker Package Benefits</h3>
-                                <div class="benefits-count">6 Benefits</div>
-                            </div>
-                            
-                            <!-- Benefit 1: Speaking Slot -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Keynote Speaking Slot</div>
-                                    <div class="benefit-status status-used">Confirmed</div>
-                                </div>
-                                <div class="benefit-description">
-                                    45-minute keynote presentation slot on Wednesday, June 25, 2026 at 09:30 AM.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-outline" onclick="viewSessionDetails('keynote')">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 2: Panel Participation -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Panel Participation Slot</div>
-                                    <div class="benefit-status status-used">Confirmed</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Panel discussion participation on Thursday, June 26, 2026 at 11:00 AM.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-outline" onclick="viewSessionDetails('panel')">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 3: Additional Session Interest -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Additional Session Interest</div>
-                                    <div class="benefit-status status-available">Available</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Express interest in additional speaking opportunities (workshops, breakout sessions).
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitModal('additional-session')">
-                                        <i class="fas fa-hand-pointer"></i> Express Interest
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 4: VIP Networking Access -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">VIP Networking Access</div>
-                                    <div class="benefit-status status-available">Available</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Access to exclusive speaker networking events, VIP lounge, and private receptions.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitModal('networking')">
-                                        <i class="fas fa-network-wired"></i> Register Interest
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 5: Conference Passes -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Complimentary Conference Passes</div>
-                                    <div class="benefit-status status-available">Available: 2</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Two complimentary full-conference passes for colleagues or guests.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitModal('passes')">
-                                        <i class="fas fa-user-plus"></i> Register Guests
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Benefit 6: Special Invitation Registration -->
-                            <div class="benefit-item">
-                                <div class="benefit-header">
-                                    <div class="benefit-title">Special Invitation Registration</div>
-                                    <div class="benefit-status status-available">Available</div>
-                                </div>
-                                <div class="benefit-description">
-                                    Register for special invitations to partner events, roundtables, and exclusive sessions.
-                                </div>
-                                <div class="benefit-actions">
-                                    <button class="btn btn-primary" onclick="openBenefitModal('invitation')">
-                                        <i class="fas fa-envelope"></i> Register for Invitations
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-<!-- Resources Tab -->
-<div class="main-content" id="resources-tab">
+
+                <!-- Profile Tab Content -->
+                <div class="main-content" id="profile-tab">
     <div class="content-header">
-        <h2>Speaker Resources & Materials</h2>
+        <h2>My Profile Data</h2>
     </div>
     
-    <div class="tab-content active" id="documents-resources">
-        <!-- <div class="tab-nav">
-            <button class="tab-btn active" data-resource-tab="presentation">Presentation Materials</button>
-            <button class="tab-btn" data-resource-tab="documents">Speaker Documents</button>
-            <button class="tab-btn" data-resource-tab="media">Media & Promo</button>
-        </div> -->
-        
-        <!-- Presentation Materials Tab -->
-        <div class="resource-tab-content active" id="presentation-resources">
-            <h3>Presentation Materials</h3>
-            <p>Download templates and resources for your presentation.</p>
-            
-            <div class="resource-grid">
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-file-powerpoint"></i>
-                    </div>
-                    <h4>Presentation Template</h4>
-                    <p>Official ICSC 2026 PowerPoint template with branding</p>
-                    <div class="resource-meta">
-                        <span><i class="far fa-file"></i> PPTX</span>
-                        <span><i class="fas fa-download"></i> 2.3 MB</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('pres-template')">
-                        <i class="fas fa-download"></i> Download Template
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-images"></i>
-                    </div>
-                    <h4>Speaker Slide Deck</h4>
-                    <p>Your prepared slide deck for review and editing</p>
-                    <div class="resource-meta">
-                        <span><i class="far fa-clock"></i> Last updated: 15 Jun 2026</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('slide-deck')">
-                        <i class="fas fa-download"></i> Download Deck
-                    </button>
-                    <button class="btn btn-outline" onclick="uploadNewVersion()">
-                        <i class="fas fa-upload"></i> Upload New Version
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <h4>Presentation Recording</h4>
-                    <p>Your keynote presentation recording (available after event)</p>
-                    <div class="resource-meta">
-                        <span><i class="far fa-clock"></i> Available: 26 Jun 2026</span>
-                    </div>
-                    <button class="btn btn-primary" disabled>
-                        <i class="fas fa-play-circle"></i> Will be available after event
-                    </button>
-                </div>
-            </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="form-group">
+            <label>Prefix</label>
+            <input type="text" class="form-control" value="Dr." readonly>
         </div>
-        
-        <!-- Speaker Documents Tab -->
-        <div class="resource-tab-content" id="documents-resources">
-            <h3>Speaker Documents & Agreements</h3>
-            <p>Access all your speaker-related documents and agreements.</p>
-            
-            <div class="resource-grid">
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
-                    <h4>Speaker Agreement</h4>
-                    <p>Your signed speaker agreement and terms</p>
-                    <div class="resource-meta">
-                        <span><i class="far fa-file-pdf"></i> PDF</span>
-                        <span><i class="fas fa-check-circle" style="color: #4caf50;"></i> Signed</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('speaker-agreement')">
-                        <i class="fas fa-download"></i> Download Agreement
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <h4>Honorarium Details</h4>
-                    <p>Payment details and honorarium information</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-money-bill-wave"></i> ₦500,000</span>
-                        <span><i class="fas fa-check-circle" style="color: #4caf50;"></i> Paid</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('honorarium-details')">
-                        <i class="fas fa-download"></i> Download Details
-                    </button>
-                    <button class="btn btn-outline" onclick="showReceipt()">
-                        <i class="fas fa-receipt"></i> View Receipt
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-plane"></i>
-                    </div>
-                    <h4>Travel & Accommodation</h4>
-                    <p>Travel arrangements and accommodation details</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-hotel"></i> Hilton Lagos</span>
-                        <span><i class="fas fa-calendar-check"></i> 24-27 Jun</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('travel-details')">
-                        <i class="fas fa-download"></i> Download Itinerary
-                    </button>
-                    <button class="btn btn-outline" onclick="contactTravelDesk()">
-                        <i class="fas fa-headset"></i> Contact Travel Desk
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-taxi"></i>
-                    </div>
-                    <h4>Transportation</h4>
-                    <p>Airport transfers and local transportation details</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-car"></i> VIP Transfer</span>
-                        <span><i class="fas fa-phone"></i> +234 800 123 4567</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('transportation')">
-                        <i class="fas fa-download"></i> Download Schedule
-                    </button>
-                </div>
-            </div>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" value="Sarah Johnson" readonly>
         </div>
-        
-        <!-- Media & Promo Tab -->
-        <div class="resource-tab-content" id="media-resources">
-            <h3>Media & Promotional Materials</h3>
-            <p>Access media assets and promotional materials for your session.</p>
-            
-            <div class="resource-grid">
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <h4>Speaker Profile</h4>
-                    <p>Your published speaker profile and biography</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-globe"></i> Published on website</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="viewProfile()">
-                        <i class="fas fa-eye"></i> View Profile
-                    </button>
-                    <button class="btn btn-outline" onclick="editProfile()">
-                        <i class="fas fa-edit"></i> Edit Profile
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <h4>Promotional Materials</h4>
-                    <p>Social media graphics and promotional assets</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-hashtag"></i> #ICSC2026</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('promo-kit')">
-                        <i class="fas fa-download"></i> Download Promo Kit
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-photo-video"></i>
-                    </div>
-                    <h4>Media Assets</h4>
-                    <p>High-resolution photos, logos, and conference branding</p>
-                    <div class="resource-meta">
-                        <span><i class="fas fa-images"></i> 15+ assets</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="downloadResource('media-assets')">
-                        <i class="fas fa-download"></i> Download Assets
-                    </button>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="resource-icon">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                    <h4>Press Release</h4>
-                    <p>Official press release featuring your keynote</p>
-                    <div class="resource-meta">
-                        <span><i class="far fa-newspaper"></i> Released: 20 Jun 2026</span>
-                    </div>
-                    <button class="btn btn-primary" onclick="viewPressRelease()">
-                        <i class="fas fa-external-link-alt"></i> View Online
-                    </button>
-                    <button class="btn btn-outline" onclick="downloadResource('press-release')">
-                        <i class="fas fa-download"></i> Download PDF
-                    </button>
-                </div>
-            </div>
+        <div class="form-group">
+            <label>Country</label>
+            <input type="text" class="form-control" value="Nigeria" readonly>
         </div>
+        <div class="form-group">
+            <label>Organization</label>
+            <input type="text" class="form-control" value="University of Global Studies" readonly>
+        </div>
+        <div class="form-group">
+            <label>Job Title</label>
+            <input type="text" class="form-control" value="Professor of Public Admin" readonly>
+        </div>
+            <div class="form-group">
+            <label>Work Email</label>
+            <input type="text" class="form-control" value="s.johnson@uniglobal.edu" readonly>
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Bio</label>
+            <textarea class="form-control" rows="3" readonly>Distinguished professor with 15+ years experience in public service reform. Published author and international consultant.</textarea>
+        </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+    <div class="security-section">
+        <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.2rem;">
+            <i class="fas fa-lock"></i> Security Settings
+        </h3>
         
-        <!-- Quick Links Section
-        <div class="quick-links-section" style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 10px;">
-            <h4>Quick Links</h4>
-            <div class="quick-links-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-                <a href="#" class="quick-link" onclick="contactSpeakerSupport()" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 6px; text-decoration: none; color: #333; border: 1px solid #ddd;">
-                    <i class="fas fa-headset" style="color: var(--primary);"></i>
-                    <span>Speaker Support</span>
-                </a>
-                <a href="#" class="quick-link" onclick="openSpeakerPortal()" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 6px; text-decoration: none; color: #333; border: 1px solid #ddd;">
-                    <i class="fas fa-tv" style="color: var(--primary);"></i>
-                    <span>Speaker Portal</span>
-                </a>
-                <a href="#" class="quick-link" onclick="downloadSpeakerHandbook()" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 6px; text-decoration: none; color: #333; border: 1px solid #ddd;">
-                    <i class="fas fa-book" style="color: var(--primary);"></i>
-                    <span>Speaker Handbook</span>
-                </a>
-                <a href="#" class="quick-link" onclick="viewConferenceApp()" style="display: flex; align-items: center; gap: 10px; padding: 10px; background: white; border-radius: 6px; text-decoration: none; color: #333; border: 1px solid #ddd;">
-                    <i class="fas fa-mobile-alt" style="color: var(--primary);"></i>
-                    <span>Conference App</span>
-                </a>
+        <form id="password-reset-form" action="/api/change-password" method="POST">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="password-toggle" style="position: relative;">
+                        <input type="password" id="currentPassword" name="currentPassword" class="form-control" placeholder="Enter current password" required>
+                        <i class="fas fa-eye" onclick="togglePassword('currentPassword', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+                    </div>
+                </div>
+
+                <div></div>
+
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="password-toggle" style="position: relative;">
+                        <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="Enter new password" required>
+                        <i class="fas fa-eye" onclick="togglePassword('newPassword', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+                    </div>
+                    <small style="color: #666; font-size: 0.8rem;">Min 8 chars, 1 uppercase, 1 number.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <div class="password-toggle" style="position: relative;">
+                        <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="Repeat new password" required>
+                        <i class="fas fa-eye" onclick="togglePassword('confirmNewPassword', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+                    </div>
+                </div>
             </div>
-        </div> -->
+
+            <div style="margin-top: 20px; text-align: right;">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Update Password
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-                
-                <!-- Settings Tab -->
-                <div class="main-content" id="settings-tab">
-                    <div class="content-header">
-                        <h2>Account Settings</h2>
-                    </div>
-                    
-                    <div class="settings-grid">
-                        <div class="settings-section">
-                            <h4>Profile Information</h4>
-                            <div class="form-group">
-                                <label for="full-name">Full Name</label>
-                                <input type="text" id="full-name" value="Dr. Sarah Johnson">
-                            </div>
-                            <div class="form-group">
-                                <label for="job-title">Job Title</label>
-                                <input type="text" id="job-title" value="Professor of Public Administration">
-                            </div>
-                            <div class="form-group">
-                                <label for="institution">Institution</label>
-                                <input type="text" id="institution" value="University of Global Studies">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" value="s.johnson@uniglobal.edu">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" value="+1 (555) 987-6543">
-                            </div>
-                            <div class="form-group">
-                                <label for="bio">Speaker Biography</label>
-                                <textarea id="bio" rows="4">Distinguished professor with 15+ years experience in public service reform. Published author and international consultant.</textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="showNotification('Profile updated successfully!')">Update Profile</button>
-                        </div>
-                        
-                        <div class="settings-section">
-                            <h4>Password & Security</h4>
-                            <div class="form-group password-toggle">
-                                <label for="current-password">Current Password</label>
-                                <input type="password" id="current-password" placeholder="Enter current password">
-                                <i class="fas fa-eye" onclick="togglePassword('current-password', this)"></i>
-                            </div>
-                            <div class="form-group password-toggle">
-                                <label for="new-password">New Password</label>
-                                <input type="password" id="new-password" placeholder="Enter new password">
-                                <i class="fas fa-eye" onclick="togglePassword('new-password', this)"></i>
-                            </div>
-                            <div class="form-group password-toggle">
-                                <label for="confirm-password">Confirm New Password</label>
-                                <input type="password" id="confirm-password" placeholder="Confirm new password">
-                                <i class="fas fa-eye" onclick="togglePassword('confirm-password', this)"></i>
-                            </div>
-                            <button class="btn btn-primary" onclick="updatePassword()">Change Password</button>
-                        </div>
-                        
-                        <div class="settings-section">
-                            <h4>Notification Preferences</h4>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="email-notifications" checked>
-                                <label for="email-notifications">Email notifications</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="schedule-updates" checked>
-                                <label for="schedule-updates">Schedule updates</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="speaker-news" checked>
-                                <label for="speaker-news">Speaker news and opportunities</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="networking-suggestions">
-                                <label for="networking-suggestions">Networking suggestions</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="conference-updates" checked>
-                                <label for="conference-updates">Conference updates</label>
-                            </div>
-                            <button class="btn btn-primary" onclick="showNotification('Preferences saved successfully!')">Save Preferences</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sidebar Widgets -->
+
+
+
+<script>
+function togglePassword(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+
                 <div class="sidebar-widgets">
-                    <div class="sidebar-widget">
-                        <div class="widget-header">
-                            <i class="fas fa-gift"></i>
-                            <h3>Benefits Status</h3>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Total Benefits</div>
-                            <div class="info-value">6</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Available</div>
-                            <div class="info-value">4</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Confirmed</div>
-                            <div class="info-value">2</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Pending</div>
-                            <div class="info-value">0</div>
-                        </div>
-                    </div>
                     
                     <div class="sidebar-widget">
                         <div class="widget-header">
-                            <i class="fas fa-calendar-check"></i>
-                            <h3>Speaking Schedule</h3>
+                            <i class="fas fa-clipboard-check"></i>
+                            <h3>Submission Status</h3>
                         </div>
-                        <div id="speaking-schedule">
-                            <div class="info-item">
-                                <div class="info-label">Wed, 09:30</div>
-                                <div class="info-value">Keynote</div>
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: #d4edda; color: #155724; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto;">
+                                <i class="fas fa-check"></i>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label">Thu, 11:00</div>
-                                <div class="info-value">Panel</div>
-                            </div>
+                            <h4 style="margin-top: 10px; color: var(--primary);">Approved</h4>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Assignments:</span>
+                            <span class="info-value">2 Sessions</span>
                         </div>
                     </div>
 
                     <div class="sidebar-widget">
                         <div class="widget-header">
-                            <i class="fas fa-calendar-check"></i>
-                            <h3>My Schedule</h3>
+                            <i class="fas fa-user-tie"></i>
+                            <h3>Speaker Details</h3>
                         </div>
-                        <div id="selected-events">
-                            <p>No events selected yet. Click "Attend" on events to add them to your schedule.</p>
-                        </div>
-                        <!-- Add this button below the selected-events div -->
-                        <button class="btn btn-outline" style="width: 100%; margin-top: 10px;" onclick="submitScheduleToAdmin()">
-                            Submit Schedule to Admin
-                        </button>
-                    </div>
-                    
-                    <!-- Live Stream Status Widget -->
-                    <div class="sidebar-widget">
-                        <div class="widget-header">
-                            <i class="fas fa-bell"></i>
-                            <h3>Live Stream Status</h3>
+                         <div class="info-item">
+                            <span class="info-label">Country:</span>
+                            <span class="info-value">Nigeria <img src="https://flagcdn.com/16x12/ng.png"></span>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Current Stream</div>
-                            <div class="info-value">Main Stage</div>
+                            <span class="info-label">Org:</span>
+                            <span class="info-value">Uni. Global Studies</span>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">Viewers Online</div>
-                            <div class="info-value">1,245</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Next Session</div>
-                            <div class="info-value">14:00 PM</div>
-                        </div>
-                        <a href="#live-stream-tab" class="btn btn-primary watch-live-btn" style="width: 100%; margin-top: 10px; text-align: center;">
-                            <i class="fas fa-play"></i> Watch Live
-                        </a>
                     </div>
                     
                     <div class="sidebar-widget">
                         <div class="widget-header">
-                            <i class="fas fa-chart-line"></i>
-                            <h3>Speaker Info</h3>
+                            <i class="fas fa-headset"></i>
+                            <h3>Support</h3>
                         </div>
-                        <div class="info-item">
-                            <div class="info-label">Package Level</div>
-                            <div class="info-value">Keynote</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Honorarium</div>
-                            <div class="info-value">₦500,000</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Status</div>
-                            <div class="info-value">Active</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Travel Covered</div>
-                            <div class="info-value">Yes</div>
-                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Questions about your schedule?</p>
+                        <a href="mailto:contactus@icsc.ohcsf.gov.ng" class="btn btn-outline" style="width: 100%; text-align: center;">Contact Admin</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Benefit Application Modal -->
-    <div class="modal" id="benefit-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title">Apply for Benefit</h3>
-                <button class="close-modal" onclick="closeBenefitModal()">&times;</button>
-            </div>
-            <div class="modal-form">
-                <p id="modal-description">Please provide details for your benefit application.</p>
-                
-                <form id="benefit-application-form">
-                    <input type="hidden" id="benefit-type">
-                    
-                    <div class="form-group">
-                        <label for="session-topic">Session Topic/Title</label>
-                        <input type="text" id="session-topic" placeholder="Enter your session topic" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="session-description">Detailed Description</label>
-                        <textarea id="session-description" placeholder="Describe your session in detail..." rows="4" required></textarea>
-                    </div>
-                    
-                    <div class="form-group" id="attendee-fields" style="display: none;">
-                        <label for="attendee-name">Participants Name</label>
-                        <input type="text" id="attendee-name" placeholder="Full name">
-                        <label for="attendee-email" style="margin-top: 10px;">Participants Email</label>
-                        <input type="email" id="attendee-email" placeholder="Email address">
-                    </div>
-                    
-                    <div class="form-group" id="networking-fields" style="display: none;">
-                        <label for="networking-interest">Networking Interests</label>
-                        <textarea id="networking-interest" placeholder="What type of networking are you interested in?" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-group" id="invitation-fields" style="display: none;">
-                        <label for="invitation-type">Preferred Invitation Type</label>
-                        <select id="invitation-type">
-                            <option value="roundtable">Roundtable Discussions</option>
-                            <option value="partner-events">Partner Events</option>
-                            <option value="exclusive-sessions">Exclusive Sessions</option>
-                            <option value="all">All Invitations</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="additional-notes">Additional Notes (Optional)</label>
-                        <textarea id="additional-notes" placeholder="Any additional information or special requirements..." rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" onclick="closeBenefitModal()">Cancel</button>
-                <button class="modal-btn modal-btn-primary" onclick="submitBenefitApplication()">Submit to Admin</button>
-            </div>
-        </div>
+
+    <div id="notification" style="position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: white; padding: 15px 25px; border-radius: 8px; transform: translateY(150%); transition: transform 0.3s ease; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <i class="fas fa-info-circle"></i> <span id="notification-msg">Message</span>
     </div>
-    
-    <!-- Session Details Modal -->
-    <div class="modal" id="session-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="session-modal-title">Session Details</h3>
-                <button class="close-modal" onclick="closeSessionModal()">&times;</button>
-            </div>
-            <div class="modal-form">
-                <div id="session-details-content">
-                    <!-- Content will be populated by JavaScript -->
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" onclick="closeSessionModal()">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <div class="notification-text">Notification message</div>
-    </div>
+
+    <div style="margin-top: auto; padding: 20px; text-align: center; opacity: 0.7;">
+    <small>System Powered by <strong>LYT24 TECH</strong></small>
+</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize
+            // Tab Switching Logic
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a[data-tab]');
             const mainTabs = document.querySelectorAll('.main-content');
-            mainTabs.forEach(tab => {
-                if (tab.id !== 'dashboard-tab') {
-                    tab.style.display = 'none';
-                }
-            });
-
-            // Selected events array
-            let selectedEvents = [];
-
-            // Logout functionality
-            const logoutLink = document.querySelector('.sidebar-menu a[href="Index.html"]');
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.clear();
-                sessionStorage.clear();
-                if (confirm('Are you sure you want to logout?')) {
-                    window.location.href = 'Index.html';
-                }
-            });
-
-            // Tab switching functionality
-            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
             
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -2128,968 +1546,32 @@
                     
                     // Remove active class from all links
                     sidebarLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
                     this.classList.add('active');
                     
-                    // Hide all main content tabs
-                    mainTabs.forEach(tab => {
-                        tab.style.display = 'none';
-                    });
+                    // Hide all tabs
+                    mainTabs.forEach(tab => tab.style.display = 'none');
                     
-                    // Show corresponding tab
+                    // Show target tab
                     const tabId = this.getAttribute('data-tab') + '-tab';
-                    const targetTab = document.getElementById(tabId);
-                    if (targetTab) {
-                        targetTab.style.display = 'block';
-                        
-                        // If live stream tab is opened, initialize it
-                        if (tabId === 'live-stream-tab') {
-                            loadLiveStreamData();
-                            renderFeaturedSessions();
-                        }
-                    }
+                    document.getElementById(tabId).style.display = 'block';
                 });
             });
-            
-            // Day switching functionality
-            const dayButtons = document.querySelectorAll('.tab-btn[data-day]');
-            
-            dayButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const day = this.getAttribute('data-day');
-                    const parent = this.closest('.main-content');
-                    
-                    // Update active button
-                    const siblingButtons = parent.querySelectorAll('.tab-btn[data-day]');
-                    siblingButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Hide all agenda days
-                    const agendaDays = parent.querySelectorAll('.agenda-day');
-                    agendaDays.forEach(dayElement => {
-                        dayElement.style.display = 'none';
-                    });
-                    
-                    // Show corresponding day
-                    const targetDay = parent.querySelector(`#agenda-${day}`);
-                    if (targetDay) {
-                        targetDay.style.display = 'block';
-                    } else {
-                        // For dashboard tab
-                        const dashboardDay = parent.querySelector(`#${day}-agenda`);
-                        if (dashboardDay) {
-                            dashboardDay.style.display = 'block';
-                        }
-                    }
-                });
-            });
-            
-            // Event attendance functionality
-            const attendButtons = document.querySelectorAll('.attend-btn');
-            
-            attendButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const eventItem = this.closest('.event-item');
-                    const eventTitle = eventItem.querySelector('h4').textContent;
-                    const eventTime = eventItem.querySelector('.fa-clock').parentNode.textContent.trim();
-                    const eventLocation = eventItem.querySelector('.fa-map-marker-alt').parentNode.textContent.trim();
-                    
-                    // Check if event is already selected
-                    const eventIndex = selectedEvents.findIndex(event => event.title === eventTitle);
-                    
-                    if (eventIndex === -1) {
-                        // Add event to selected events
-                        selectedEvents.push({
-                            title: eventTitle,
-                            time: eventTime,
-                            location: eventLocation
-                        });
-                        
-                        this.textContent = 'Added';
-                        this.classList.add('attending');
-                        
-                        showNotification(`"${eventTitle}" added to your schedule!`);
-                    } else {
-                        // Remove event from selected events
-                        selectedEvents.splice(eventIndex, 1);
-                        
-                        this.textContent = 'Attend';
-                        this.classList.remove('attending');
-                        
-                        showNotification(`"${eventTitle}" removed from your schedule!`);
-                    }
-                    
-                    updateSelectedEventsDisplay();
-                });
-            });
-            
-            // Update selected events display
-            function updateSelectedEventsDisplay() {
-                const selectedEventsContainer = document.getElementById('selected-events');
-                
-                if (selectedEvents.length === 0) {
-                    selectedEventsContainer.innerHTML = '<p>No events selected yet. Click "Attend" on events to add them to your schedule.</p>';
-                    return;
-                }
-                
-                let html = '';
-                selectedEvents.forEach(event => {
-                    html += `
-                        <div class="info-item">
-                            <div class="info-label">${event.title}</div>
-                            <div class="info-value">${event.time}</div>
-                        </div>
-                    `;
-                });
-                
-                selectedEventsContainer.innerHTML = html;
-            }
-            
-            // Submit schedule to admin
-            window.submitScheduleToAdmin = function() {
-                if (selectedEvents.length === 0) {
-                    showNotification('Please add events to your schedule first.');
-                    return;
-                }
-                
-                showNotification('Schedule submitted to Super Admin successfully!');
-                
-                // Log for debugging
-                console.log('Submitted events:', selectedEvents);
-            };
-            
-            // Modal functionality
-            const benefitModal = document.getElementById('benefit-modal');
-            const sessionModal = document.getElementById('session-modal');
-            
-            window.openBenefitModal = function(benefitType) {
-                const modal = document.getElementById('benefit-modal');
-                const title = document.getElementById('modal-title');
-                const description = document.getElementById('modal-description');
-                const benefitTypeInput = document.getElementById('benefit-type');
-                
-                // Hide all special fields
-                document.getElementById('attendee-fields').style.display = 'none';
-                document.getElementById('networking-fields').style.display = 'none';
-                document.getElementById('invitation-fields').style.display = 'none';
-                
-                // Reset form
-                document.getElementById('benefit-application-form').reset();
-                
-                // Set benefit type
-                benefitTypeInput.value = benefitType;
-                
-                // Configure modal based on benefit type
-                switch(benefitType) {
-                    case 'additional-session':
-                        title.textContent = 'Express Interest in Additional Session';
-                        description.textContent = 'Please provide details about the additional speaking opportunity you\'re interested in.';
-                        break;
-                    case 'networking':
-                        title.textContent = 'Register for VIP Networking Access';
-                        description.textContent = 'Register your interest for exclusive networking events and VIP access.';
-                        document.getElementById('networking-fields').style.display = 'block';
-                        break;
-                    case 'passes':
-                        title.textContent = 'Register Complimentary Passes';
-                        description.textContent = 'Register your colleagues or guests for complimentary conference passes.';
-                        document.getElementById('attendee-fields').style.display = 'block';
-                        break;
-                    case 'invitation':
-                        title.textContent = 'Register for Special Invitations';
-                        description.textContent = 'Select your preferences for special invitations to exclusive events.';
-                        document.getElementById('invitation-fields').style.display = 'block';
-                        break;
-                }
-                
-                modal.style.display = 'flex';
-            };
-            
-            window.closeBenefitModal = function() {
-                benefitModal.style.display = 'none';
-                document.getElementById('benefit-application-form').reset();
-            };
-            
-            window.submitBenefitApplication = function() {
-                const benefitType = document.getElementById('benefit-type').value;
-                const form = document.getElementById('benefit-application-form');
-                
-                if (form.checkValidity()) {
-                    // In a real application, you would submit to backend here
-                    showNotification('Benefit application submitted to Super Admin successfully!');
-                    closeBenefitModal();
-                    
-                    // Update benefit status (simulated)
-                    const benefitItems = document.querySelectorAll('.benefit-item');
-                    benefitItems.forEach(item => {
-                        const title = item.querySelector('.benefit-title').textContent;
-                        if (title.includes('Additional Session') && benefitType === 'additional-session') {
-                            item.querySelector('.benefit-status').textContent = 'Pending Approval';
-                            item.querySelector('.benefit-status').className = 'benefit-status status-pending';
-                        }
-                    });
-                } else {
-                    form.reportValidity();
-                }
-            };
-            
-            window.viewSessionDetails = function(sessionType) {
-                const modal = document.getElementById('session-modal');
-                const title = document.getElementById('session-modal-title');
-                const content = document.getElementById('session-details-content');
-                
-                if (sessionType === 'keynote') {
-                    title.textContent = 'Keynote Speaking Slot Details';
-                    content.innerHTML = `
-                        <h4>The Future of Public Service: A Global Perspective</h4>
-                        <p><strong>Date:</strong> Wednesday, June 25, 2026</p>
-                        <p><strong>Time:</strong> 09:30 AM - 10:30 AM</p>
-                        <p><strong>Location:</strong> Transform Stage</p>
-                        <p><strong>Duration:</strong> 45 minutes presentation + 15 minutes Q&A</p>
-                        <p><strong>Status:</strong> <span class="benefit-status status-used" style="display: inline-block;">Confirmed</span></p>
-                        <p><strong>Technical Requirements:</strong> Projector, microphone, clicker provided</p>
-                        <p><strong>Contact Person:</strong> John Smith (Program Director)</p>
-                        <p><strong>Notes:</strong> Please arrive 30 minutes early for technical check</p>
-                    `;
-                } else if (sessionType === 'panel') {
-                    title.textContent = 'Panel Participation Details';
-                    content.innerHTML = `
-                        <h4>Panel: Digital Transformation in Government</h4>
-                        <p><strong>Date:</strong> Thursday, June 26, 2026</p>
-                        <p><strong>Time:</strong> 11:00 AM - 12:30 PM</p>
-                        <p><strong>Location:</strong> Transform Stage</p>
-                        <p><strong>Duration:</strong> 90 minutes panel discussion</p>
-                        <p><strong>Status:</strong> <span class="benefit-status status-used" style="display: inline-block;">Confirmed</span></p>
-                        <p><strong>Moderator:</strong> Dr. Michael Chen</p>
-                        <p><strong>Other Panelists:</strong> 4 additional experts</p>
-                        <p><strong>Preparation:</strong> Pre-panel briefing at 10:30 AM</p>
-                    `;
-                }
-                
-                modal.style.display = 'flex';
-            };
-            
-            window.closeSessionModal = function() {
-                sessionModal.style.display = 'none';
-            };
-            
-            // Password toggle functionality
-            window.togglePassword = function(passwordId, icon) {
-                const passwordField = document.getElementById(passwordId);
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    passwordField.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            };
-            
-            // Update password function
-            window.updatePassword = function() {
-                const currentPassword = document.getElementById('current-password').value;
-                const newPassword = document.getElementById('new-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                
-                if (!currentPassword || !newPassword || !confirmPassword) {
-                    showNotification('Please fill in all password fields.');
-                    return;
-                }
-                
-                if (newPassword !== confirmPassword) {
-                    showNotification('New passwords do not match.');
-                    return;
-                }
-                
-                if (newPassword.length < 6) {
-                    showNotification('Password must be at least 6 characters long.');
-                    return;
-                }
-                
-                // Simulate password update
-                showNotification('Password updated successfully!');
-                
-                // Clear password fields
-                document.getElementById('current-password').value = '';
-                document.getElementById('new-password').value = '';
-                document.getElementById('confirm-password').value = '';
-            };
-            
-            // Show notification
-            function showNotification(message) {
-                const notification = document.getElementById('notification');
-                notification.querySelector('.notification-text').textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Close modals when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target === benefitModal) {
-                    closeBenefitModal();
-                }
-                if (event.target === sessionModal) {
-                    closeSessionModal();
-                }
-            });
-            
-            // Initialize selected events display
-            updateSelectedEventsDisplay();
-            
-            // Live Stream Functions from Exhibitors Dashboard
-            function loadLiveStreamData() {
-                // Simulate fetching live stream data
-                const isLive = true;
-                
-                if (isLive) {
-                    document.getElementById('stream-status').textContent = 'LIVE NOW';
-                    document.getElementById('stream-status').className = 'event-status live-now';
-                } else {
-                    document.getElementById('stream-status').textContent = 'OFFLINE';
-                    document.getElementById('stream-status').className = 'event-status';
-                }
-                
-                // Set up player controls
-                setupPlayerControls();
-            }
-            
-            function setupPlayerControls() {
-                const playBtn = document.getElementById('play-live-btn');
-                const pauseBtn = document.getElementById('pause-stream-btn');
-                const fullscreenBtn = document.getElementById('fullscreen-btn');
-                const player = document.getElementById('youtube-player');
-                
-                // Play live stream
-                if (playBtn) {
-                    playBtn.addEventListener('click', function() {
-                        playLiveStream();
-                    });
-                }
-                
-                // Pause stream
-                if (pauseBtn) {
-                    pauseBtn.addEventListener('click', function() {
-                        // In a real implementation with YouTube API:
-                        // player.pauseVideo();
-                        
-                        // For iframe, we need to reload with autoplay=0
-                        const currentSrc = player.src;
-                        if (currentSrc.includes('autoplay=1')) {
-                            player.src = currentSrc.replace('autoplay=1', 'autoplay=0');
-                        }
-                        
-                        showNotification('Stream paused');
-                    });
-                }
-                // Resource tab switching
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize resource tabs
-    const resourceTabButtons = document.querySelectorAll('[data-resource-tab]');
-    const resourceTabContents = document.querySelectorAll('.resource-tab-content');
-    
-    resourceTabButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const tabId = this.getAttribute('data-resource-tab');
-            
-            // Update active tab button
-            resourceTabButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Show corresponding tab content
-            resourceTabContents.forEach(content => content.classList.remove('active'));
-            document.getElementById(`${tabId}-resources`).classList.add('active');
         });
-    });
-    
-    // Initialize upload modal
-    initializeUploadModal();
-});
 
-// Resource download functions
-function downloadResource(resourceType) {
-    const resources = {
-        'pres-template': {
-            name: 'ICSC_2026_Presentation_Template.pptx',
-            size: '2.3 MB',
-            type: 'PowerPoint Template'
-        },
-        'slide-deck': {
-            name: 'Dr_Johnson_Keynote_Deck.pptx',
-            size: '8.7 MB',
-            type: 'Presentation Deck'
-        },
-        'speaker-agreement': {
-            name: 'Speaker_Agreement_Signed.pdf',
-            size: '1.2 MB',
-            type: 'Legal Document'
-        },
-        'honorarium-details': {
-            name: 'Honorarium_Payment_Details.pdf',
-            size: '890 KB',
-            type: 'Payment Document'
-        },
-        'travel-details': {
-            name: 'Travel_Itinerary_Lagos.pdf',
-            size: '1.5 MB',
-            type: 'Travel Document'
-        },
-        'transportation': {
-            name: 'Transportation_Schedule.pdf',
-            size: '560 KB',
-            type: 'Schedule Document'
-        },
-        'promo-kit': {
-            name: 'ICSC_2026_Promo_Kit.zip',
-            size: '15.4 MB',
-            type: 'Promotional Materials'
-        },
-        'media-assets': {
-            name: 'Conference_Media_Assets.zip',
-            size: '42.1 MB',
-            type: 'Media Files'
-        },
-        'press-release': {
-            name: 'Press_Release_Keynote_Speaker.pdf',
-            size: '780 KB',
-            type: 'Press Document'
-        }
-    };
-    
-    const resource = resources[resourceType];
-    if (resource) {
-        showNotification(`Downloading ${resource.name}...`);
-        
-        // Simulate download
-        setTimeout(() => {
-            showNotification(`${resource.type} downloaded successfully!`);
+        function downloadBrief(type) {
+            const msg = document.getElementById('notification-msg');
+            const notif = document.getElementById('notification');
             
-            // Log download activity
-            console.log('Resource downloaded:', {
-                resource: resourceType,
-                name: resource.name,
-                size: resource.size,
-                timestamp: new Date().toISOString(),
-                user: 'Dr. Sarah Johnson'
-            });
-        }, 1500);
-    }
-}
-
-function showReceipt() {
-    showNotification('Opening honorarium receipt...');
-    
-    // In a real app, this would open a modal with receipt details
-    setTimeout(() => {
-        const receiptModal = document.getElementById('receipt-modal');
-        if (!receiptModal) {
-            createReceiptModal();
-        }
-        document.getElementById('receipt-modal').style.display = 'flex';
-    }, 500);
-}
-
-function createReceiptModal() {
-    const modalHTML = `
-        <div class="modal" id="receipt-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Honorarium Receipt</h3>
-                    <button class="close-modal" onclick="document.getElementById('receipt-modal').style.display='none'">&times;</button>
-                </div>
-                <div class="modal-form">
-                    <div class="receipt-details">
-                        <div class="receipt-item">
-                            <div class="receipt-label">Speaker:</div>
-                            <div class="receipt-value">Dr. Sarah Johnson</div>
-                        </div>
-                        <div class="receipt-item">
-                            <div class="receipt-label">Amount:</div>
-                            <div class="receipt-value">₦500,000.00</div>
-                        </div>
-                        <div class="receipt-item">
-                            <div class="receipt-label">Payment Date:</div>
-                            <div class="receipt-value">June 15, 2026</div>
-                        </div>
-                        <div class="receipt-item">
-                            <div class="receipt-label">Payment Method:</div>
-                            <div class="receipt-value">Bank Transfer</div>
-                        </div>
-                        <div class="receipt-item">
-                            <div class="receipt-label">Transaction ID:</div>
-                            <div class="receipt-value">TXN-SPK-2026-001234</div>
-                        </div>
-                        <div class="receipt-item">
-                            <div class="receipt-label">Status:</div>
-                            <div class="receipt-value"><span style="color: #4caf50; font-weight: 600;">Paid</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="payment-breakdown" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-                        <h4>Payment Breakdown</h4>
-                        <div class="breakdown-item">
-                            <div>Speaking Fee</div>
-                            <div>₦400,000</div>
-                        </div>
-                        <div class="breakdown-item">
-                            <div>Travel Allowance</div>
-                            <div>₦100,000</div>
-                        </div>
-                        <div class="breakdown-item" style="font-weight: 600; border-top: 1px solid #ddd; padding-top: 10px;">
-                            <div>Total</div>
-                            <div>₦500,000</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-secondary" onclick="document.getElementById('receipt-modal').style.display='none'">Close</button>
-                    <button class="modal-btn modal-btn-primary" onclick="printReceipt()">
-                        <i class="fas fa-print"></i> Print Receipt
-                    </button>
-                    <button class="modal-btn modal-btn-primary" onclick="downloadReceiptPdf()">
-                        <i class="fas fa-download"></i> Download PDF
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-}
-
-function printReceipt() {
-    showNotification('Opening print dialog...');
-    // In a real app, this would trigger print dialog
-    window.print();
-}
-
-function downloadReceiptPdf() {
-    showNotification('Downloading receipt PDF...');
-    // In a real app, this would trigger PDF download
-}
-
-function contactTravelDesk() {
-    showNotification('Opening travel desk contact...');
-    // In a real app, this would open contact modal or email
-}
-
-function viewProfile() {
-    showNotification('Opening speaker profile...');
-    window.open('https://icsc2026.gov.ng/speakers/dr-sarah-johnson', '_blank');
-}
-
-function editProfile() {
-    showNotification('Redirecting to profile editor...');
-    // In a real app, this would open profile editing interface
-}
-
-function viewPressRelease() {
-    showNotification('Opening press release...');
-    window.open('https://icsc2026.gov.ng/news/keynote-speaker-announcement', '_blank');
-}
-
-// Upload functionality
-let currentFile = null;
-
-function uploadNewVersion() {
-    const uploadModal = document.getElementById('upload-modal');
-    if (!uploadModal) {
-        createUploadModal();
-    }
-    document.getElementById('upload-modal').style.display = 'flex';
-}
-
-function createUploadModal() {
-    const modalHTML = `
-        <div class="modal upload-modal" id="upload-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Upload New Slide Deck Version</h3>
-                    <button class="close-modal" onclick="closeUploadModal()">&times;</button>
-                </div>
-                <div class="modal-form">
-                    <div class="file-preview" id="file-preview">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Drag & drop your slide deck here or click to browse</p>
-                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Supports: PPTX, PDF, KEY (Max 50MB)</p>
-                    </div>
-                    
-                    <div class="file-info" id="file-info" style="display: none;">
-                        <div class="file-name" id="file-name"></div>
-                        <div class="file-size" id="file-size"></div>
-                    </div>
-                    
-                    <div class="upload-progress" id="upload-progress">
-                        <div class="upload-progress-bar" id="upload-progress-bar"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="version-notes">Version Notes (Optional)</label>
-                        <textarea id="version-notes" placeholder="What's new in this version? e.g., Updated slides 5-8, added new data..." rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-secondary" onclick="closeUploadModal()">Cancel</button>
-                    <button class="modal-btn modal-btn-primary" id="upload-btn" disabled onclick="startUpload()">
-                        <i class="fas fa-upload"></i> Upload New Version
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    initializeUploadModal();
-}
-
-function initializeUploadModal() {
-    const filePreview = document.getElementById('file-preview');
-    const fileInfo = document.getElementById('file-info');
-    const fileName = document.getElementById('file-name');
-    const fileSize = document.getElementById('file-size');
-    const uploadBtn = document.getElementById('upload-btn');
-    
-    if (!filePreview) return;
-    
-    // Click to select file
-    filePreview.addEventListener('click', function() {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.pptx,.ppt,.pdf,.key';
-        fileInput.onchange = function(e) {
-            handleFileSelect(e.target.files[0]);
-        };
-        fileInput.click();
-    });
-    
-    // Drag and drop
-    filePreview.addEventListener('dragover', function(e) {
-        e.preventDefault();
-this.style.borderColor = '#008751'; // The actual color from --primary
-this.style.backgroundColor = '#f0f5ff';
-    });
-    
-    filePreview.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#ddd';
-        this.style.backgroundColor = 'transparent';
-    });
-    
-    filePreview.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#ddd';
-        this.style.backgroundColor = 'transparent';
-        
-        if (e.dataTransfer.files.length) {
-            handleFileSelect(e.dataTransfer.files[0]);
-        }
-    });
-    
-    function handleFileSelect(file) {
-        if (!file) return;
-        
-        // Check file type
-        const validTypes = ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/pdf', 'application/vnd.apple.keynote'];
-        const validExtensions = ['.pptx', '.ppt', '.pdf', '.key'];
-        const fileExt = '.' + file.name.split('.').pop().toLowerCase();
-        
-        if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
-            showNotification('Please upload a valid presentation file (PPTX, PDF, KEY)', 'error');
-            return;
-        }
-        
-        // Check file size (50MB max)
-        if (file.size > 50 * 1024 * 1024) {
-            showNotification('File size exceeds 50MB limit', 'error');
-            return;
-        }
-        
-        currentFile = file;
-        
-        // Update preview
-        if (file.type.includes('image')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                filePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                showFileInfo();
-            };
-            reader.readAsDataURL(file);
-        } else {
-            filePreview.innerHTML = `<i class="fas fa-file-powerpoint" style="color: var(--primary);"></i><p>${file.name}</p>`;
-            showFileInfo();
-        }
-        
-        uploadBtn.disabled = false;
-    }
-    
-    function showFileInfo() {
-        fileInfo.style.display = 'block';
-        fileName.textContent = currentFile.name;
-        fileSize.textContent = formatFileSize(currentFile.size);
-    }
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function closeUploadModal() {
-    document.getElementById('upload-modal').style.display = 'none';
-    resetUploadModal();
-}
-
-function resetUploadModal() {
-    currentFile = null;
-    document.getElementById('file-preview').innerHTML = `
-        <i class="fas fa-cloud-upload-alt"></i>
-        <p>Drag & drop your slide deck here or click to browse</p>
-        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Supports: PPTX, PDF, KEY (Max 50MB)</p>
-    `;
-    document.getElementById('file-info').style.display = 'none';
-    document.getElementById('version-notes').value = '';
-    document.getElementById('upload-btn').disabled = true;
-    document.getElementById('upload-progress').style.display = 'none';
-}
-
-function startUpload() {
-    if (!currentFile) return;
-    
-    const progressBar = document.getElementById('upload-progress-bar');
-    const uploadProgress = document.getElementById('upload-progress');
-    const uploadBtn = document.getElementById('upload-btn');
-    const versionNotes = document.getElementById('version-notes').value;
-    
-    uploadBtn.disabled = true;
-    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-    uploadProgress.style.display = 'block';
-    progressBar.style.width = '0%';
-    
-    // Simulate upload progress
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += 5 + Math.random() * 15;
-        if (progress > 100) progress = 100;
-        progressBar.style.width = progress + '%';
-        
-        if (progress >= 100) {
-            clearInterval(interval);
+            msg.textContent = `Downloading ${type} Brief...`;
+            notif.style.transform = "translateY(0)";
             
-            // Simulate server processing
             setTimeout(() => {
-                uploadComplete(versionNotes);
-            }, 500);
+                msg.textContent = "Download Complete.";
+                setTimeout(() => {
+                    notif.style.transform = "translateY(150%)";
+                }, 3000);
+            }, 2000);
         }
-    }, 200);
-}
-
-function uploadComplete(versionNotes) {
-    showNotification('Slide deck uploaded successfully!');
-    
-    // Update the UI
-    const slideDeckCard = document.querySelector('.resource-card:has(h4:contains("Speaker Slide Deck"))');
-    if (slideDeckCard) {
-        const metaElement = slideDeckCard.querySelector('.resource-meta');
-        if (metaElement) {
-            metaElement.innerHTML = `
-                <span><i class="far fa-clock"></i> Last updated: Just now</span>
-                <span><i class="fas fa-file-powerpoint"></i> ${formatFileSize(currentFile.size)}</span>
-            `;
-        }
-    }
-    
-    // Log the upload
-    console.log('Slide deck uploaded:', {
-        filename: currentFile.name,
-        size: currentFile.size,
-        type: currentFile.type,
-        versionNotes: versionNotes,
-        timestamp: new Date().toISOString(),
-        user: 'Dr. Sarah Johnson'
-    });
-    
-    closeUploadModal();
-}
-
-// // Quick links functions
-// function contactSpeakerSupport() {
-//     showNotification('Opening speaker support contact...');
-//     // In a real app, this would open contact form or email
-// }
-
-// function openSpeakerPortal() {
-//     showNotification('Opening speaker portal...');
-//     window.open('https://speakers.icsc2026.gov.ng', '_blank');
-// }
-
-// function downloadSpeakerHandbook() {
-//     showNotification('Downloading speaker handbook...');
-//     // Simulate download
-//     setTimeout(() => {
-//         showNotification('Speaker handbook downloaded successfully!');
-//     }, 1500);
-// }
-
-// function viewConferenceApp() {
-//     showNotification('Opening conference app information...');
-//     window.open('https://icsc2026.gov.ng/app', '_blank');
-// }
-
-// Notification function (ensure this exists)
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    if (!notification) return;
-    
-    notification.querySelector('.notification-text').textContent = message;
-    
-    // Set icon based on type
-    const icon = notification.querySelector('i');
-    if (type === 'error') {
-        icon.className = 'fas fa-exclamation-circle';
-        notification.style.backgroundColor = '#e53935';
-    } else if (type === 'warning') {
-        icon.className = 'fas fa-exclamation-triangle';
-        notification.style.backgroundColor = '#ff9800';
-    } else {
-        icon.className = 'fas fa-check-circle';
-        notification.style.backgroundColor = 'var(--primary)';
-    }
-    
-    notification.classList.add('show');
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
-}
-                
-                // Fullscreen
-                if (fullscreenBtn) {
-                    fullscreenBtn.addEventListener('click', function() {
-                        if (player.requestFullscreen) {
-                            player.requestFullscreen();
-                        } else if (player.webkitRequestFullscreen) {
-                            player.webkitRequestFullscreen();
-                        } else if (player.msRequestFullscreen) {
-                            player.msRequestFullscreen();
-                        }
-                    });
-                }
-                
-                // Watch Live button in sidebar
-                const watchLiveBtn = document.querySelector('.watch-live-btn');
-                if (watchLiveBtn) {
-                    watchLiveBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        
-                        // Switch to Live Stream tab
-                        sidebarLinks.forEach(l => l.classList.remove('active'));
-                        document.querySelector('.sidebar-menu a[data-tab="live-stream"]').classList.add('active');
-                        
-                        mainTabs.forEach(tab => {
-                            tab.style.display = 'none';
-                        });
-                        document.getElementById('live-stream-tab').style.display = 'block';
-                        
-                        // Play the stream
-                        playLiveStream();
-                    });
-                }
-            }
-            
-            function playLiveStream() {
-                const player = document.getElementById('youtube-player');
-                
-                // Update src to autoplay
-                let src = player.src;
-                if (!src.includes('autoplay=1')) {
-                    src = src.includes('autoplay=0') 
-                        ? src.replace('autoplay=0', 'autoplay=1')
-                        : src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
-                    player.src = src;
-                }
-                
-                showNotification('Starting live stream...');
-                
-                // Update stream status
-                document.getElementById('stream-status').textContent = 'LIVE NOW';
-                document.getElementById('stream-status').className = 'event-status live-now';
-            }
-            
-            // Featured sessions data
-            const FEATURED_SESSIONS = [
-                {
-                    id: 1,
-                    title: "Opening Ceremony Highlights",
-                    date: "Wednesday, June 25",
-                    duration: "30 min",
-                    views: "1,234",
-                    description: "Watch the official opening of ICSC 2026",
-                    youtubeId: "m8nnnq9llq8"
-                },
-                {
-                    id: 2,
-                    title: "Welcome Speech: Future of Public Service",
-                    date: "Wednesday, June 25",
-                    duration: "1 hour",
-                    views: "2,567",
-                    description: "Exploring the evolving role of civil servants",
-                    youtubeId: "VrPYleIwziU"
-                },
-                {
-                    id: 3,
-                    title: "Digital Transformation Panel",
-                    date: "Wednesday, June 25",
-                    duration: "1.5 hours",
-                    views: "890",
-                    description: "How technology is reshaping government services",
-                    youtubeId: "k16v48Njp34"
-                },
-                {
-                    id: 4,
-                    title: "PRESIDENT BOLA AHMED TINUBU, GCFR SPEECH",
-                    date: "Thursday, June 26",
-                    duration: "30 min",
-                    views: "1,120",
-                    description: "Driving innovation in public sector leadership",
-                    youtubeId: "C7FiE-kNBlk&t=3s"
-                }
-            ];
-            
-            function renderFeaturedSessions() {
-                const container = document.getElementById('featured-sessions');
-                let html = '';
-                
-                FEATURED_SESSIONS.forEach(session => {
-                    html += `
-                        <div class="session-card" data-session-id="${session.id}">
-                            <h4>${session.title}</h4>
-                            <p>${session.description}</p>
-                            <div class="session-meta">
-                                <span><i class="far fa-calendar"></i> ${session.date}</span>
-                                <span><i class="far fa-clock"></i> ${session.duration}</span>
-                            </div>
-                            <div class="session-meta">
-                                <span><i class="fas fa-eye"></i> ${session.views} views</span>
-                                <a href="https://www.youtube.com/watch?v=${session.youtubeId}" target="_blank" class="watch-btn">
-                                    <i class="fab fa-youtube"></i> Watch on YouTube
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                container.innerHTML = html;
-            }
-        });
-        
     </script>
 </body>
 </html>
