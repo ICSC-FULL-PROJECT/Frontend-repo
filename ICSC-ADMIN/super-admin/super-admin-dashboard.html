@@ -77,7 +77,10 @@
 
     async function fetchBooths() {
         try {
-            const res = await axios.get('/admin/exhibitors');
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            const res = await axios.get(`${API_BASE_URL}/admin/exhibitors`, { headers });
             const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
             renderBooths(list);
             updateStats(list);
@@ -1245,7 +1248,10 @@
 
     async function fetchSpeakers() {
         try {
-            const res = await axios.get('/admin/speakers');
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            const res = await axios.get(`${API_BASE_URL}/admin/speakers`, { headers });
             const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
             renderSpeakers(list);
             updateStats(list);
@@ -7132,7 +7138,7 @@ function updateSpeaker(speakerId) {
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) { submitBtn.disabled = true; }
 
-    const endpoint = (base ? base : '') + `/admin/speakers/${encodeURIComponent(speakerId)}`;
+    const endpoint = `${API_BASE_URL}/admin/speakers/${encodeURIComponent(speakerId)}`;
 
     client.patch(endpoint, payload).then(response => {
         // Use response data to update UI when available
@@ -7705,7 +7711,7 @@ function refreshSpeakersTable() {
     console.log('Refreshing speakers table from backend...');
 
     const base = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) ? window.apiClient.defaults.baseURL.replace(/\/+$/, '') : '';
-    const endpoint = (base ? base : '') + '/admin/speakers';
+    const endpoint = `${API_BASE_URL}/admin/speakers`;
     const client = window.apiClient || axios;
 
     const tbody = document.querySelector('#speakersTable tbody');

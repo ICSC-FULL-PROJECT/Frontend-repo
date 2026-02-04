@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="title.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/apiClient.js"></script>
     <style>
         /* CSS Variables and Base Styles */
         :root {
@@ -1185,9 +1187,6 @@
             <div class="text-center">Loading packages...</div>
         </div>
     </div>
-    
-    <div class="contact-info-card">
-        </div>
 </div>
                 
                 <div class="contact-info-card">
@@ -1376,48 +1375,7 @@ async function fetchAndRenderPackages() {
     if (!container) return;
 
     // OFFICIAL HARDCODED PACKAGES (Matches the tiers in your document)
-    const officialFallbacks = [
-        {
-            id: 4,
-            slug: 'diamond-partner',
-            title: 'Diamond Partner',
-            investment: 30000000,
-            features: ['Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'Keynote speaking slot (15 mins)', 'Guest passes: opportunity to invite a limited number of your own VIPs to the event. (Not to be used for Guest passes: opportunity to invite a limited number of your own VIPs to the event.)',
-             'Premium exhibition location', 'Space located in the main exhibition area for 2 days. Offered as space only', 'Company logo and profile on event website (Full coverage)', 'News coverage of your session published on the OHCSF Website and shared in the Civil Service newsletter'
-            ],
-            total_slot: 30,
-            current_count: 0
-        },
-        {
-            id: 3,
-            slug: 'gold-partner',
-            title: 'Gold Partner',
-            investment: 15000000,
-            features: ['All Silver benefits', 'Speaking slot (5 mins)', '4 conference passes', 'Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'VIP dinner invitation', 'Space located in the main exhibition area for 2 days. Offered as space only', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)'],
-            total_slot: 15,
-            current_count: 0
-        },
-        {
-            id: 2,
-            slug: 'silver-partner',
-            title: 'Silver Partner',
-            investment: 10000000,
-            features: ['All Bronze benefits', 'Logo on conference backdrop', '2 conference passes', 'Full page in program booklet', 'Speaker/panelist/roundtable delegate profile promoted in line with the event agenda', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Full coverage)'],
-            total_slot: 10,
-            current_count: 0
-        },
-
-
-        {
-            id: 1,
-            slug: 'bronze-partner',
-            title: 'Bronze Partner',
-            investment: 5000000,
-            features: ['Company logo on website', 'Social media mention', '1 conference pass', 'Exhibition space (optional)', 'Partner certificate', 'Company logo included on all delegate and commercial emails, social media posts and world press conference announcing your company as a partner (Basic Coverage)'],
-            total_slot: 20,
-            current_count: 0
-        }
-    ];
+    const officialFallbacks = [];
 
     let fetchedPackages = [];
     

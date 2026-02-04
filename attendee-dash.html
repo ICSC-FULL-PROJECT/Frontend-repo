@@ -267,6 +267,12 @@
         .event-info p {
             color: #666;
             font-size: 0.9rem;
+            margin: 3px 0;
+        }
+        
+        .event-info .speakers {
+            color: var(--primary);
+            font-weight: 500;
         }
         
         .event-time {
@@ -1041,6 +1047,85 @@
             background-color: #cc0000;
             color: white;
         }
+        
+        .no-agenda {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .speaker-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .speaker-tag {
+            background-color: #f0f5ff;
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .user-loading {
+            opacity: 0.7;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .submit-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .submit-loading::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .event-attending {
+            border-left: 4px solid #4caf50;
+            background-color: #f8fff8;
+        }
+        
+        .already-attending {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+            cursor: default;
+        }
+        
+        .already-attending:hover {
+            background-color: #4caf50;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/apiClient.js"></script>
@@ -1057,10 +1142,10 @@
                     <h1>ICSC 2026 Dashboard</h1>
                 </div>
                 <div class="user-info">
-                    <div class="user-avatar">TO</div>
+                    <div class="user-avatar" id="user-avatar">?</div>
                     <div>
-                        <div class="user-name" id="display-name"></div>
-                        <div class="role-badge civil-servant-badge">Participant</div>
+                        <div class="user-name" id="display-name">Loading...</div>
+                        <div class="role-badge civil-servant-badge" id="user-role">Participant</div>
                     </div>
                 </div>
             </div>
@@ -1085,7 +1170,7 @@
                     <!-- Dashboard Tab -->
                     <div class="tab-content active" id="dashboard">
                         <div class="content-header">
-                            <h2>Conference Agenda</h2>
+                            <h2 id="welcome-message">Conference Agenda</h2>
                             <button class="export-btn" id="export-schedule">
                                 <i class="fas fa-download"></i> Export Schedule
                             </button>
@@ -1093,6 +1178,7 @@
                         
                         <div class="agenda-container" id="dashboard-agenda">
                             <!-- Agenda content will be dynamically populated by JavaScript -->
+                            <p class="no-agenda">Loading agenda data...</p>
                         </div>
                         
                         <div class="content-header">
@@ -1112,7 +1198,7 @@
                                 <div class="stat-label">Resources Downloaded</div>
                             </div>
                         </div>
-                        <p>Welcome to your personalized dashboard. Here you can manage your conference schedule, access live streams, and download resources.</p>
+                        <p id="user-greeting">Welcome to your personalized dashboard. Here you can manage your conference schedule, access live streams, and download resources.</p>
                     </div>
                     
                     <!-- Agenda Tab -->
@@ -1124,12 +1210,34 @@
                         <div class="agenda-breakdown">
                             <div class="breakdown-grid" id="agenda-stats">
                                 <!-- Stats will be dynamically populated by JavaScript -->
+                                <div class="breakdown-card">
+                                    <div class="breakdown-icon">
+                                        <i class="fas fa-microphone"></i>
+                                    </div>
+                                    <div class="breakdown-number">0</div>
+                                    <div class="breakdown-label">Keynote Speakers</div>
+                                </div>
+                                <div class="breakdown-card">
+                                    <div class="breakdown-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="breakdown-number">0</div>
+                                    <div class="breakdown-label">Sessions</div>
+                                </div>
+                                <div class="breakdown-card">
+                                    <div class="breakdown-icon">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div class="breakdown-number">0</div>
+                                    <div class="breakdown-label">Total Speakers</div>
+                                </div>
                             </div>
                             
                             <h3>Detailed Schedule</h3>
                             
                             <div id="full-agenda">
                                 <!-- Full agenda will be dynamically populated by JavaScript -->
+                                <p class="no-agenda">Loading agenda data...</p>
                             </div>
                         </div>
                     </div>
@@ -1144,7 +1252,7 @@
                             <div class="stream-info">
                                 <h4><i class="fas fa-info-circle"></i> Live Stream Information</h4>
                                 <p>Watch the ICSC 2026 conference live stream directly from this page. The stream will be active during conference hours (9:00 AM - 5:00 PM WAT).</p>
-                                <p><strong>Current Status:</strong> <span id="stream-status" class="live-now">LIVE NOW</span></p>
+                                <p><strong>Current Status:</strong> <span id="stream-status" class="event-status">OFFLINE</span></p>
                             </div>
                             
                             <div class="stream-controls">
@@ -1184,6 +1292,7 @@
                                 
                                 <div class="session-grid" id="featured-sessions">
                                     <!-- Featured sessions will be populated here -->
+                                    <p class="no-agenda">Loading featured sessions...</p>
                                 </div>
                                 
                                 <div style="text-align: center; margin-top: 30px;">
@@ -1206,22 +1315,32 @@
                             <div class="settings-grid">
                                 <div class="form-group">
                                     <label for="full-name">Full Name</label>
-                                    <input type="text" id="full-name" value="Titi Ola" placeholder="Enter your full name">
+                                    <input type="text" id="full-name" placeholder="Loading..." disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email Address</label>
-                                    <input type="email" id="email" value="titi.ola@government.gov.ng" readonly>
+                                    <input type="email" id="email" placeholder="Loading..." readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="organization">Organization</label>
-                                    <input type="text" id="organization" value="Federal Ministry of Civil Service" placeholder="Enter your organization">
+                                    <input type="text" id="organization" placeholder="Loading..." disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="position">Position/Title</label>
-                                    <input type="text" id="position" value="Senior Civil Servant" placeholder="Enter your position">
+                                    <input type="text" id="position" placeholder="Loading..." disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" placeholder="Loading..." disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="job-title">Job Title</label>
+                                    <input type="text" id="job-title" placeholder="Loading..." disabled>
                                 </div>
                             </div>
-                            <button class="payment-btn" id="update-profile">Update Profile</button>
+                            <button class="payment-btn" id="update-profile" disabled>
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </button>
                         </div>
                         
                         <div class="settings-section">
@@ -1229,11 +1348,11 @@
                             <div class="settings-grid">
                                 <div class="form-group">
                                     <label for="current-password">Current Password</label>
-                                    <input type="password" id="current-password" placeholder="Enter current password">
+                                    <input type="password" id="current-password" placeholder="Enter current password" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="new-password">New Password</label>
-                                    <input type="password" id="new-password" placeholder="Enter new password">
+                                    <input type="password" id="new-password" placeholder="Enter new password" disabled>
                                     <div class="password-strength">
                                         <div class="password-strength-bar" id="password-strength-bar"></div>
                                     </div>
@@ -1241,39 +1360,43 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="confirm-password">Confirm New Password</label>
-                                    <input type="password" id="confirm-password" placeholder="Confirm new password">
+                                    <input type="password" id="confirm-password" placeholder="Confirm new password" disabled>
                                 </div>
                             </div>
-                            <button class="payment-btn" id="change-password">Change Password</button>
+                            <button class="payment-btn" id="change-password" disabled>
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </button>
                         </div>
                         
                         <div class="settings-section">
                             <h4>Notification Preferences</h4>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" id="newsletter-checkbox" checked>
+                                    <input type="checkbox" id="newsletter-checkbox" disabled>
                                     Send me conference newsletter and updates
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" id="reminder-checkbox" checked>
+                                    <input type="checkbox" id="reminder-checkbox" disabled>
                                     Send me event reminders for days I'm attending
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" id="live-checkbox" checked>
+                                    <input type="checkbox" id="live-checkbox" disabled>
                                     Notify me when live streams are starting
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" id="announcement-checkbox" checked>
+                                    <input type="checkbox" id="announcement-checkbox" disabled>
                                     Important conference announcements
                                 </label>
                             </div>
-                            <button class="payment-btn" id="save-notifications">Save Notification Preferences</button>
+                            <button class="payment-btn" id="save-notifications" disabled>
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </button>
                         </div>
                     </div>
                     
@@ -1377,10 +1500,6 @@
                             <div class="info-label">Viewers Online</div>
                             <div class="info-value">0</div>
                         </div>
-                        <!-- <div class="info-item">
-                            <div class="info-label">Next Session</div>
-                            <div class="info-value"></div>
-                        </div> -->
                         <a href="#on-demand" class="payment-btn watch-live-btn">
                             <i class="fas fa-play"></i> Watch Live
                         </a>
@@ -1593,134 +1712,703 @@
 
         // Initialize state
         let selectedDays = [];
+        let selectedEventIds = new Set(); // Use Set to avoid duplicate IDs
+        let existingScheduledEventIds = new Set(); // Store event IDs from existing schedules
+        let existingScheduledEvents = []; // Store full event data from existing schedules
         let agendaData = {};
         let userProfile = {
-            name: "Titi Ola",
-            email: "titi.ola@government.gov",
-            organization: "Federal Ministry of Civil Service",
-            position: "Senior Civil Servant"
+            name: "Loading...",
+            email: "Loading...",
+            organization: "Loading...",
+            position: "Loading...",
+            phone: "Loading...",
+            jobTitle: "Loading...",
+            role: "Participant",
+            avatarInitials: "?"
         };
         
         let youtubePlayer = null;
 
-        // Start background fetch for agenda from API; fall back to SAMPLE_AGENDA_DATA on error.
+        // Function to fetch user data from API
+        async function fetchUserData() {
+            try {
+                // Try to fetch from API
+                const apiPath = '/attendee/profile'; // Adjust this path based on your API
+                
+                let response;
+                try {
+                    response = await fetch(apiPath, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${window.__authToken || ''}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const json = await response.json();
+                    
+                    // Return the user data - extract attendee object from response
+                    if (json.success && json.data && json.data.attendee) {
+                        return json.data;
+                    }
+                    return json.data || json;
+                    
+                } catch (fetchError) {
+                    console.warn('API fetch failed, trying with axios...', fetchError);
+                    
+                    // Fallback to axios if fetch fails
+                    if (window.apiClient && typeof window.apiClient.get === 'function') {
+                        const resp = await window.apiClient.get(apiPath);
+                        const data = resp?.data;
+                        if (data && data.success && data.data && data.data.attendee) {
+                            return data.data;
+                        }
+                        return data?.data || data;
+                    } else {
+                        // Try to get from localStorage/sessionStorage as fallback
+                        const storedUser = localStorage.getItem('authUser') || 
+                                          sessionStorage.getItem('authUser') ||
+                                          localStorage.getItem('user') || 
+                                          sessionStorage.getItem('user');
+                        
+                        if (storedUser) {
+                            try {
+                                const parsed = JSON.parse(storedUser);
+                                if (parsed && parsed.data && parsed.data.attendee) {
+                                    return parsed.data;
+                                }
+                                return parsed;
+                            } catch (e) {
+                                console.warn('Could not parse stored user data', e);
+                            }
+                        }
+                        
+                        throw fetchError;
+                    }
+                }
+                
+            } catch (err) {
+                console.warn('User data fetch failed, using sample data', err);
+                
+                // Return sample user data matching your API structure
+                return {
+                    attendee: {
+                        fullname: "Chukwuebuka James",
+                        email: "jimvalex54@gmail.com",
+                        phone_number: "1234567890",
+                        organization: "Ministry of Science & Technology",
+                        job_title: "Director",
+                        position: "Senior Civil Servant",
+                        role: "attendee",
+                        status: "Approved"
+                    },
+                    schedules: []
+                };
+            }
+        }
+
+        // Function to extract existing scheduled events from user data
+        function extractExistingSchedules(userData) {
+            const scheduledEvents = [];
+            const scheduledEventIds = new Set();
+            
+            if (userData && userData.schedules && Array.isArray(userData.schedules)) {
+                userData.schedules.forEach(schedule => {
+                    if (schedule.scheduleEvents && Array.isArray(schedule.scheduleEvents)) {
+                        schedule.scheduleEvents.forEach(scheduleEvent => {
+                            if (scheduleEvent.event) {
+                                const event = scheduleEvent.event;
+                                scheduledEvents.push({
+                                    id: event.id,
+                                    slug: event.slug,
+                                    event_date: event.event_date,
+                                    start_time: event.start_time,
+                                    end_time: event.end_time,
+                                    title: event.title,
+                                    location: event.location,
+                                    description: event.description,
+                                    hasLiveStream: event.hasLiveStream,
+                                    isKeynote: event.isKeynote,
+                                    moderator: event.moderator,
+                                    main_speakers: event.main_speakers,
+                                    lead_speakers: event.lead_speakers,
+                                    speakers: event.speakers,
+                                    track: event.track,
+                                    createdAt: event.createdAt,
+                                    updatedAt: event.updatedAt
+                                });
+                                scheduledEventIds.add(String(event.id));
+                            }
+                        });
+                    }
+                });
+            }
+            
+            return { scheduledEvents, scheduledEventIds };
+        }
+
+        // Function to update UI with user data
+        function updateUserInterface(userData) {
+            if (!userData) return;
+            
+            // Extract attendee data
+            const attendee = userData.attendee || userData;
+            
+            // Extract existing schedules
+            const { scheduledEvents, scheduledEventIds } = extractExistingSchedules(userData);
+            existingScheduledEvents = scheduledEvents;
+            existingScheduledEventIds = scheduledEventIds;
+            
+            // Extract data from API response
+            const fullName = attendee.fullname || attendee.name || "";
+            const email = attendee.email || "";
+            const phone = attendee.phone_number || attendee.phone || "";
+            const organization = attendee.organization || "";
+            const position = attendee.position || "";
+            const jobTitle = attendee.job_title || attendee.jobTitle || "";
+            const role = attendee.role || "Participant";
+            const status = attendee.status || "";
+            
+            // Update header
+            if (fullName) {
+                document.getElementById('display-name').textContent = fullName;
+                
+                // Update avatar with initials
+                const initials = getInitials(fullName);
+                document.getElementById('user-avatar').textContent = initials;
+                userProfile.avatarInitials = initials;
+            }
+            
+            // Update role badge with proper formatting
+            const roleElement = document.getElementById('user-role');
+            if (roleElement) {
+                roleElement.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                
+                // Add status indicator if available
+                if (status === "Approved") {
+                    roleElement.style.backgroundColor = "#4caf50"; // Green for approved
+                } else if (status === "Pending") {
+                    roleElement.style.backgroundColor = "#ff9800"; // Orange for pending
+                } else if (status === "Rejected") {
+                    roleElement.style.backgroundColor = "#e53935"; // Red for rejected
+                }
+            }
+            
+            // Update welcome message
+            const welcomeMessage = document.getElementById('welcome-message');
+            if (welcomeMessage && fullName) {
+                const firstName = fullName.split(' ')[0];
+                welcomeMessage.textContent = `Welcome, ${firstName}!`;
+            }
+            
+            // Update user greeting
+            const userGreeting = document.getElementById('user-greeting');
+            if (userGreeting && fullName) {
+                const greetingText = status === "Approved" 
+                    ? `Welcome ${fullName} to your personalized dashboard. You are approved to attend the conference.`
+                    : `Welcome ${fullName} to your personalized dashboard.`;
+                
+                userGreeting.textContent = greetingText;
+                
+                // Add status indicator to greeting if not approved
+                if (status && status !== "Approved") {
+                    const statusElement = document.createElement('div');
+                    statusElement.className = `event-status ${status.toLowerCase()}`;
+                    statusElement.textContent = status.toUpperCase();
+                    statusElement.style.marginTop = "10px";
+                    statusElement.style.display = "inline-block";
+                    userGreeting.appendChild(document.createElement('br'));
+                    userGreeting.appendChild(statusElement);
+                }
+            }
+            
+            // Update settings form
+            document.getElementById('full-name').value = fullName;
+            document.getElementById('email').value = email;
+            document.getElementById('organization').value = organization;
+            document.getElementById('position').value = position;
+            document.getElementById('phone').value = phone;
+            document.getElementById('job-title').value = jobTitle;
+            
+            // Enable form fields
+            document.getElementById('full-name').disabled = false;
+            document.getElementById('organization').disabled = false;
+            document.getElementById('position').disabled = false;
+            document.getElementById('phone').disabled = false;
+            document.getElementById('job-title').disabled = false;
+            document.getElementById('current-password').disabled = false;
+            document.getElementById('new-password').disabled = false;
+            document.getElementById('confirm-password').disabled = false;
+            
+            // Enable checkboxes
+            document.getElementById('newsletter-checkbox').disabled = false;
+            document.getElementById('reminder-checkbox').disabled = false;
+            document.getElementById('live-checkbox').disabled = false;
+            document.getElementById('announcement-checkbox').disabled = false;
+            
+            // Enable buttons
+            document.getElementById('update-profile').disabled = false;
+            document.getElementById('update-profile').innerHTML = 'Update Profile';
+            
+            document.getElementById('change-password').disabled = false;
+            document.getElementById('change-password').innerHTML = 'Change Password';
+            
+            document.getElementById('save-notifications').disabled = false;
+            document.getElementById('save-notifications').innerHTML = 'Save Notification Preferences';
+            
+            // Update userProfile object
+            userProfile.name = fullName;
+            userProfile.email = email;
+            userProfile.organization = organization;
+            userProfile.position = position;
+            userProfile.phone = phone;
+            userProfile.jobTitle = jobTitle;
+            userProfile.role = role;
+            userProfile.status = status;
+            
+            // Update selected events from existing schedules
+            updateSelectedEventsFromSchedules();
+        }
+
+        // Update selected events based on existing schedules
+        function updateSelectedEventsFromSchedules() {
+            if (existingScheduledEvents.length === 0) {
+                // Still call updateStats even with empty schedules to reset counts
+                updateStats();
+                return;
+            }
+            
+            // Clear current selections (we don't modify selectedEventIds here as it tracks NEW selections)
+            selectedDays = [];
+            
+            // Group events by date
+            const eventsByDate = {};
+            existingScheduledEvents.forEach(event => {
+                if (!eventsByDate[event.event_date]) {
+                    eventsByDate[event.event_date] = [];
+                }
+                eventsByDate[event.event_date].push(event);
+                // Don't add to selectedEventIds - these are already scheduled, not new selections
+            });
+            
+            // Create day entries for each date with events
+            Object.keys(eventsByDate).forEach(date => {
+                const events = eventsByDate[date];
+                const dateObj = new Date(date);
+                const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+                const formattedDate = dateObj.toLocaleDateString('en-US', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                selectedDays.push({
+                    id: date,
+                    title: `${dayName} ${formattedDate}`,
+                    eventIds: events.map(e => String(e.id))
+                });
+            });
+            
+            // Update UI
+            updateStats();
+            updateSelectedEventsDisplay();
+        }
+        
+        // Update stats - MOVED OUTSIDE DOMContentLoaded to be available during initialization
+        function updateStats() {
+            // Count unique days from both existing schedules and new selections
+            const allDays = new Set();
+            
+            // Add days from existing scheduled events
+            existingScheduledEvents.forEach(event => {
+                if (event.event_date) {
+                    allDays.add(event.event_date);
+                }
+            });
+            
+            // Add days from new selections
+            selectedDays.forEach(day => {
+                allDays.add(day.id);
+            });
+            
+            const totalDays = allDays.size;
+            const attendingCountEl = document.getElementById('attending-count');
+            if (attendingCountEl) {
+                attendingCountEl.textContent = totalDays;
+            }
+            
+            // For demo purposes, count live now events
+            const liveNowCount = totalDays > 0 ? 1 : 0;
+            const liveNowCountEl = document.getElementById('live-now-count');
+            if (liveNowCountEl) {
+                liveNowCountEl.textContent = liveNowCount;
+            }
+        }
+
+        // Helper function to get initials from name
+        function getInitials(name) {
+            if (!name) return '?';
+            
+            return name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase())
+                .join('')
+                .substring(0, 2);
+        }
+
+        // Helper function to format date for comparison
+        function formatDateForComparison(dateString) {
+            if (!dateString) return '';
+            // Convert to YYYY-MM-DD format
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0];
+        }
+
+        // Helper function to check if event is already scheduled
+        function isEventAlreadyScheduled(eventId) {
+            return existingScheduledEventIds.has(String(eventId));
+        }
+
+        // Helper function to check if day has scheduled events
+        function getScheduledEventsForDate(eventDate) {
+            const formattedDate = formatDateForComparison(eventDate);
+            return existingScheduledEvents.filter(event => 
+                formatDateForComparison(event.event_date) === formattedDate
+            );
+        }
+
+        // Background fetch for user data
+        window._userFetchPromise = fetchUserData();
+
+        // Background fetch for agenda from API
         window._agendaFetchPromise = (async function() {
             try {
                 const apiPath = '/misc/agenda/event-agendas';
-                console.log(window.apiClient);
-
-                // Try the public route first using fetch without Authorization to avoid CORS preflight.
-                let json = null;
-                // Construct fetch URL from axios baseURL if available, otherwise use path (browser will resolve relative to page)
-                let fetchUrl = apiPath;
-                if (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) {
-                    fetchUrl = window.apiClient.defaults.baseURL.replace(/\/$/, '') + apiPath;
-                }
-
+                
+                // Try to fetch from API
+                let response;
                 try {
-                    const resp = await fetch(fetchUrl, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
-                    if (!resp.ok) throw new Error('Network response was not ok: ' + resp.status);
-                    json = await resp.json();
-                } catch (fetchErr) {
-                    // If the simple fetch failed (network or CORS), try axios apiClient as a fallback
+                    // Use fetch directly for better error handling
+                    response = await fetch(apiPath, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${window.__authToken || ''}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const json = await response.json();
+                    
+                    // Return the data in the expected format from your API response
+                    return json.data || SAMPLE_AGENDA_DATA;
+                    
+                } catch (fetchError) {
+                    console.warn('API fetch failed, trying with axios...', fetchError);
+                    
+                    // Fallback to axios if fetch fails
                     if (window.apiClient && typeof window.apiClient.get === 'function') {
                         const resp = await window.apiClient.get(apiPath);
-                        json = resp?.data ?? resp;
+                        return resp?.data?.data || SAMPLE_AGENDA_DATA;
                     } else {
-                        throw fetchErr;
+                        throw fetchError;
                     }
                 }
-
-                const data = json?.data;
-                if (!data) return SAMPLE_AGENDA_DATA;
-
-                // `data` may be either:
-                //  - an array of events (each with event_date/start_time/end_time), or
-                //  - an object keyed by day (e.g. { friday: [ ...events ] })
-                const grouped = {};
-
-                if (Array.isArray(data)) {
-                    // Original shape: list of events with event_date
-                    data.forEach(ev => {
-                        const dateKey = ev.event_date || 'unknown';
-                        if (!grouped[dateKey]) grouped[dateKey] = [];
-                        const time = (ev.start_time || '') + (ev.end_time ? '-' + ev.end_time : '');
-                        grouped[dateKey].push({
-                            id: ev.id ?? ev.slug ?? `${dateKey}-${ev.title}`,
-                            time,
-                            title: ev.title || '',
-                            location: ev.location || '',
-                            description: ev.description || '',
-                            event_date: ev.event_date || ev.eventDate || null,
-                            day: ev.day || null,
-                            shortDay: ev.shortDay || null,
-                            hasLiveStream: !!ev.hasLiveStream,
-                            liveStreamUrl: ev.liveStreamUrl || null,
-                            isKeynote: !!ev.isKeynote,
-                            speakers: ev.speakers || null,
-                            track: ev.track || null,
-                            raw: ev
-                        });
-                    });
-                } else if (typeof data === 'object') {
-                    // New shape: already grouped by day names (e.g. { friday: [...] })
-                    Object.keys(data).forEach(dayKey => {
-                        const events = Array.isArray(data[dayKey]) ? data[dayKey] : [];
-                        grouped[dayKey] = events.map(ev => {
-                            const time = ev.time || ((ev.start_time || '') + (ev.end_time ? '-' + ev.end_time : ''));
-                            return {
-                                id: ev.id ?? ev.slug ?? `${dayKey}-${ev.title}`,
-                                time,
-                                title: ev.title || '',
-                                location: ev.location || '',
-                                description: ev.description || '',
-                                event_date: ev.event_date || ev.eventDate || null,
-                                day: ev.day || null,
-                                shortDay: ev.shortDay || null,
-                                hasLiveStream: !!ev.hasLiveStream,
-                                liveStreamUrl: ev.liveStreamUrl || null,
-                                isKeynote: !!ev.isKeynote,
-                                speakers: ev.speakers || null,
-                                track: ev.track || null,
-                                raw: ev
-                            };
-                        });
-                    });
-                } else {
-                    return SAMPLE_AGENDA_DATA;
-                }
-
-                // Convert date keys to weekday names when possible so existing UI labels remain friendly
-                const transformed = {};
-                Object.keys(grouped).forEach(dateKey => {
-                    let dayKey = dateKey;
-                    try {
-                        const d = new Date(dateKey);
-                        if (!isNaN(d)) {
-                            const weekday = d.toLocaleDateString(undefined, { weekday: 'long' }).toLowerCase();
-                            dayKey = weekday;
-                        }
-                    } catch (e) {
-                        // keep original dateKey
-                    }
-                    transformed[dayKey] = grouped[dateKey];
-                });
-
-                return transformed;
+                
             } catch (err) {
                 console.warn('Agenda fetch failed, using sample data', err);
                 return SAMPLE_AGENDA_DATA;
             }
         })();
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Log the API base URL from js/apiClient.js for debugging
-            try {
-                const baseUrl = (window.apiClient && window.apiClient.defaults && window.apiClient.defaults.baseURL) || 'not available';
-                console.log('apiClient baseURL:', baseUrl);
-            } catch (e) {
-                console.log('apiClient baseURL: error reading value', e);
+        // Helper function to transform API response data
+        function transformAgendaData(apiData) {
+            const transformed = {};
+            
+            // Check if data is in the new nested format
+            if (apiData && typeof apiData === 'object') {
+                // Format: { wednesday: { "Main Hall": [...], "Transform Stage": [...] } }
+                Object.keys(apiData).forEach(day => {
+                    const dayData = apiData[day];
+                    transformed[day] = [];
+                    
+                    // For each location in this day
+                    Object.keys(dayData).forEach(location => {
+                        // For each event in this location
+                        dayData[location].forEach(event => {
+                            transformed[day].push({
+                                id: event.id,
+                                time: event.time,
+                                title: event.title,
+                                location: event.location,
+                                description: event.description || '',
+                                event_date: event.event_date,
+                                event_date_verbose: event.event_date_verbose,
+                                day: event.day,
+                                shortDay: event.shortDay,
+                                hasLiveStream: event.hasLiveStream,
+                                isKeynote: event.isKeynote,
+                                track: event.track,
+                                moderator: event.moderator,
+                                main_speakers: event.main_speakers || [],
+                                lead_speakers: event.lead_speakers || [],
+                                speakers: event.speakers || [],
+                                raw: event
+                            });
+                        });
+                    });
+                    
+                    // Sort events by time for each day
+                    transformed[day].sort((a, b) => {
+                        // Extract start time (first part before '-')
+                        const timeA = a.time ? a.time.split('-')[0] : '00:00';
+                        const timeB = b.time ? b.time.split('-')[0] : '00:00';
+                        return timeA.localeCompare(timeB);
+                    });
+                });
+            } else {
+                // Assume data is already in the flat format
+                transformed = apiData || {};
             }
+            
+            return transformed;
+        }
+
+        // Helper: determine a display title for a day
+        function getDayTitle(dayKey, events) {
+            function capitalize(s) {
+                return typeof s === 'string' && s.length
+                    ? s.charAt(0).toUpperCase() + s.slice(1)
+                    : s;
+            }
+
+            if (events && events.length > 0) {
+                const firstEvent = events[0];
+                
+                // Use event_date_verbose if available
+                if (firstEvent.event_date_verbose) {
+                    const weekday = capitalize(firstEvent.day || dayKey);
+                    return `${weekday} ${firstEvent.event_date_verbose}`;
+                }
+                
+                // Fallback to parsing event_date
+                if (firstEvent.event_date) {
+                    try {
+                        const date = new Date(firstEvent.event_date);
+                        if (!isNaN(date)) {
+                            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+                            const formattedDate = date.toLocaleDateString(undefined, {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric'
+                            });
+                            return `${weekday} ${formattedDate}`;
+                        }
+                    } catch (e) {
+                        console.warn('Could not parse date:', e);
+                    }
+                }
+                
+                // Use day from event
+                if (firstEvent.day) {
+                    return capitalize(firstEvent.day);
+                }
+            }
+
+            return typeof dayKey === 'string' ? capitalize(dayKey) : 'Schedule';
+        }
+
+        // Calculate and render agenda statistics
+        function calculateAndRenderAgendaStats(agendaData) {
+            let keynoteSpeakers = 0;
+            let sessions = 0;
+            let totalSpeakers = new Set(); // Use a Set to count unique speakers
+            
+            if (agendaData && typeof agendaData === 'object') {
+                Object.keys(agendaData).forEach(day => {
+                    const dayData = agendaData[day];
+                    
+                    // Check if dayData is an object (nested format) or array (flat format)
+                    if (Array.isArray(dayData)) {
+                        // Flat format
+                        dayData.forEach(event => {
+                            sessions++;
+                            if (event.isKeynote) {
+                                keynoteSpeakers++;
+                            }
+                            
+                            // Add all speakers to the Set
+                            const allSpeakers = [
+                                ...(event.main_speakers || []),
+                                ...(event.lead_speakers || []),
+                                ...(event.speakers || [])
+                            ];
+                            
+                            allSpeakers.forEach(speaker => {
+                                if (speaker && speaker.trim()) {
+                                    totalSpeakers.add(speaker.trim());
+                                }
+                            });
+                        });
+                    } else if (typeof dayData === 'object') {
+                        // Nested format
+                        Object.keys(dayData).forEach(location => {
+                            dayData[location].forEach(event => {
+                                sessions++;
+                                if (event.isKeynote) {
+                                    keynoteSpeakers++;
+                                }
+                                
+                                // Add all speakers to the Set
+                                const allSpeakers = [
+                                    ...(event.main_speakers || []),
+                                    ...(event.lead_speakers || []),
+                                    ...(event.speakers || [])
+                                ];
+                                
+                                allSpeakers.forEach(speaker => {
+                                    if (speaker && speaker.trim()) {
+                                        totalSpeakers.add(speaker.trim());
+                                    }
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+            
+            // Render the stats
+            const container = document.getElementById('agenda-stats');
+            if (container) {
+                const html = `
+                    <div class="breakdown-card">
+                        <div class="breakdown-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="breakdown-number">${keynoteSpeakers}</div>
+                        <div class="breakdown-label">Keynote Speakers</div>
+                    </div>
+                    <div class="breakdown-card">
+                        <div class="breakdown-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="breakdown-number">${sessions}</div>
+                        <div class="breakdown-label">Sessions</div>
+                    </div>
+                    <div class="breakdown-card">
+                        <div class="breakdown-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="breakdown-number">${totalSpeakers.size}</div>
+                        <div class="breakdown-label">Total Speakers</div>
+                    </div>
+                `;
+                container.innerHTML = html;
+            }
+        }
+
+        // Function to submit schedule to backend
+        async function submitScheduleToBackend(eventIds, email) {
+            try {
+                // Show loading state
+                const submitBtn = document.getElementById('submit-schedule');
+                if (submitBtn) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('submit-loading');
+                    
+                    // Reset after success or error (handled in catch)
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('submit-loading');
+                    }, 3000);
+                }
+                
+                // Prepare the request data
+                const requestData = {
+                    eventIds: Array.from(eventIds),
+                    email: email
+                };
+                
+                console.log('Submitting schedule to backend:', requestData);
+                
+                // Use the apiClient from apiClient.js
+                if (window.apiClient) {
+                    const response = await window.apiClient.post('/attendee/agenda/schedule', requestData);
+                    
+                    console.log('Schedule submission successful:', response.data);
+                    showNotification('Schedule submitted successfully to admin!', 'success');
+                    
+                    // Add new events to existing scheduled events
+                    const newEventIds = Array.from(eventIds);
+                    // Note: In a real app, we would fetch updated schedule from backend
+                    // For now, we'll just update locally
+                    newEventIds.forEach(eventId => {
+                        if (!existingScheduledEventIds.has(String(eventId))) {
+                            existingScheduledEventIds.add(String(eventId));
+                            // In a real app, we would fetch the event details from the agenda data
+                        }
+                    });
+                    
+                    // Update UI
+                    updateSelectedEventsFromSchedules();
+                    renderDashboardAgenda(agendaData); // Re-render to update UI state
+                    
+                    return response.data;
+                } else {
+                    // Fallback to fetch if apiClient is not available
+                    const response = await fetch(`${window.API_BASE_URL}/attendee/agenda/schedule`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${window.__authToken || ''}`
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('Schedule submission successful:', data);
+                    showNotification('Schedule submitted successfully to admin!', 'success');
+                    
+                    // Add new events to existing scheduled events
+                    const newEventIds = Array.from(eventIds);
+                    newEventIds.forEach(eventId => {
+                        if (!existingScheduledEventIds.has(String(eventId))) {
+                            existingScheduledEventIds.add(String(eventId));
+                        }
+                    });
+                    
+                    // Update UI
+                    updateSelectedEventsFromSchedules();
+                    renderDashboardAgenda(agendaData); // Re-render to update UI state
+                    
+                    return data;
+                }
+            } catch (error) {
+                console.error('Error submitting schedule:', error);
+                
+                // Show error notification
+                const errorMessage = error?.response?.data?.message || error.message || 'Failed to submit schedule';
+                showNotification(`Error: ${errorMessage}`, 'error');
+                
+                throw error;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
             // Mobile menu functionality
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
             const sidebar = document.getElementById('sidebar');
@@ -1804,83 +2492,63 @@
             
             // Load initial data
             async function loadInitialData() {
-                // Await background agenda fetch started on script load so network starts on page load.
+                // Load user data first
+                try {
+                    const userData = await window._userFetchPromise;
+                    updateUserInterface(userData);
+                } catch (err) {
+                    console.error('Error loading user data', err);
+                    // Use fallback user data matching your API structure
+                    updateUserInterface({
+                        attendee: {
+                            fullname: "Chukwuebuka James",
+                            email: "jimvalex54@gmail.com",
+                            phone_number: "1234567890",
+                            organization: "Ministry of Science & Technology",
+                            job_title: "Director",
+                            position: "Senior Civil Servant",
+                            role: "attendee",
+                            status: "Approved"
+                        },
+                        schedules: []
+                    });
+                }
+                
+                // Then load agenda data
                 try {
                     const fetched = (window._agendaFetchPromise) ? await window._agendaFetchPromise : null;
-                    if (fetched && Object.keys(fetched).length > 0) {
-                        agendaData = fetched;
+                    
+                    if (fetched && typeof fetched === 'object') {
+                        // Transform the API data to our required format
+                        agendaData = transformAgendaData(fetched);
                     } else {
-                        // Leave agendaData empty if server returned nothing or fetch failed.
-                        agendaData = {};
+                        // Fallback to sample data
+                        agendaData = SAMPLE_AGENDA_DATA;
                     }
+                    
+                    // Render agenda/UI
+                    renderDashboardAgenda(agendaData);
+                    renderFullAgenda(agendaData);
+                    
+                    // Load agenda stats from the actual data
+                    calculateAndRenderAgendaStats(fetched || SAMPLE_AGENDA_DATA);
+                    
+                    // Load featured sessions
+                    renderFeaturedSessions();
+                    
+                    // Initialize YouTube player
+                    initializeYouTubePlayer();
+                    
                 } catch (err) {
-                    console.error('Error awaiting agenda fetch', err);
-                    agendaData = {};
+                    console.error('Error loading agenda data', err);
+                    agendaData = SAMPLE_AGENDA_DATA;
+                    renderDashboardAgenda(agendaData);
+                    renderFullAgenda(agendaData);
+                    calculateAndRenderAgendaStats(SAMPLE_AGENDA_DATA);
                 }
-
-                // Render agenda/UI
-                renderDashboardAgenda(agendaData);
-                renderFullAgenda(agendaData);
-
-                // Load agenda stats
-                const statsData = SAMPLE_AGENDA_STATS;
-                renderAgendaStats(statsData);
-
-                // Load featured sessions
-                renderFeaturedSessions();
-
-                // Initialize user profile
-                initializeUserProfile();
-
-                // Initialize YouTube player
-                initializeYouTubePlayer();
             }
             
-            // Initialize user profile
-            function initializeUserProfile() {
-                document.getElementById('full-name').value = userProfile.name;
-                document.getElementById('email').value = userProfile.email;
-                document.getElementById('organization').value = userProfile.organization;
-                document.getElementById('position').value = userProfile.position;
-            }
-
-            // Helper: determine a display title for a day using backend-provided values if available
-            function getDayTitle(dayKey, events) {
-                function capitalize(s) {
-                    return typeof s === 'string' && s.length
-                        ? s.charAt(0).toUpperCase() + s.slice(1)
-                        : s;
-                }
-
-                if (events && events.length > 0) {
-                    const ev = events[0];
-                    console.log('Parsing event_date for day title:', ev.event_date);
-
-                    if (ev.event_date) {
-                        console.log('Parsing event_date for day title:', ev.event_date);
-                        const date = new Date(ev.event_date);
-
-                        if (!isNaN(date)) {
-                            const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
-                            const formattedDate = date.toLocaleDateString(undefined, {
-                                day: '2-digit',
-                                month: 'long',
-                                year: 'numeric'
-                            });
-
-                            return `${weekday} ${formattedDate}`;
-                        }
-
-                        // If backend already sends formatted date string
-                        if (typeof ev.event_date === 'string') {
-                            const wk = ev.day ? capitalize(ev.day) : capitalize(dayKey);
-                            return `${wk} ${ev.event_date}`;
-                        }
-                    }
-                }
-
-                return typeof dayKey === 'string' ? capitalize(dayKey) : 'Schedule';
-            }
+            // Initialize user profile - now handled by updateUserInterface
             
             // Render agenda for dashboard
             function renderDashboardAgenda(agendaData) {
@@ -1894,32 +2562,100 @@
                 
                 for (const [day, events] of Object.entries(agendaData)) {
                     const dayTitle = getDayTitle(day, events);
+                    // Use the event_date from the first event as the canonical day date when available
                     const dayId = day;
+                    const dayDate = (events.find(e => e.event_date) || {}).event_date || dayId;
                     
-                    // Check if day is already selected
-                    const isSelected = selectedDays.find(d => d.id === dayId);
+                    // Check if day has scheduled events
+                    const scheduledEvents = [];
+                    let allEventsScheduled = true;
+                    let someEventsScheduled = false;
+                    
+                    events.forEach(event => {
+                        if (event.event_date) {
+                            const scheduledForDate = getScheduledEventsForDate(event.event_date);
+                            const isScheduled = scheduledForDate.some(scheduledEvent => 
+                                String(scheduledEvent.id) === String(event.id)
+                            );
+                            
+                            if (isScheduled) {
+                                scheduledEvents.push(event);
+                                someEventsScheduled = true;
+                            } else {
+                                allEventsScheduled = false;
+                            }
+                        }
+                    });
+                    
+                    // Check if day is already selected in UI (new selections)
+                    const isSelected = selectedDays.find(d => d.id === dayDate);
+                    
+                    // Determine button text, class and disabled state
+                    let buttonText = 'Attend This Day';
+                    let buttonClass = 'attend-btn';
+                    let buttonDisabled = false;
+
+                    // If all events for the day are already scheduled, show Attending and disable
+                    if (allEventsScheduled && someEventsScheduled) {
+                        buttonText = 'Attending';
+                        buttonClass = 'attend-btn already-attending';
+                        buttonDisabled = true;
+                    } else if (isSelected) {
+                        // User has newly selected this day in the UI
+                        buttonText = 'Attending';
+                        buttonClass = 'attend-btn attending';
+                    } else if (someEventsScheduled) {
+                        // Some events are already scheduled for this day -> treat as Attending
+                        buttonText = 'Attending';
+                        buttonClass = 'attend-btn already-attending';
+                        buttonDisabled = true;
+                    }
                     
                     html += `
                         <div class="agenda-day">
                             <div class="day-header">
                                 <h3>${dayTitle}</h3>
                                 <div class="day-actions">
-                                    <button class="attend-btn ${isSelected ? 'attending' : ''}" data-day="${dayId}">
-                                        ${isSelected ? 'Attending' : 'Attend This Day'}
+                                    <button class="${buttonClass}" data-day="${dayDate}" ${buttonDisabled ? 'disabled' : ''}>
+                                        ${buttonText}
                                     </button>
-                                    <button class="live-stream-btn" data-day="${dayId}"><i class="fas fa-play"></i> Watch Live</button>
+                                    <button class="live-stream-btn" data-day="${dayDate}"><i class="fas fa-play"></i> Watch Live</button>
                                 </div>
                             </div>
                             <div class="day-content">
                     `;
                     
                     events.forEach(event => {
+                        // Check if event is already scheduled
+                        const isEventScheduled = isEventAlreadyScheduled(event.id);
+                        const eventClass = isEventScheduled ? 'event-item event-attending' : 'event-item';
+                        
+                        // Build speaker string
+                        let speakerInfo = '';
+                        const allSpeakers = [
+                            ...(event.main_speakers || []),
+                            ...(event.lead_speakers || []),
+                            ...(event.speakers || [])
+                        ];
+                        
+                        if (allSpeakers.length > 0) {
+                            speakerInfo = `<p class="speakers"><i class="fas fa-user-tie"></i> ${allSpeakers.join(', ')}</p>`;
+                        }
+                        
+                        // Add scheduled indicator
+                        const scheduledIndicator = isEventScheduled 
+                            ? '<span class="event-status later-today" style="margin-left: 10px;">Scheduled</span>' 
+                            : '';
+                        
                         html += `
-                            <div class="event-item" data-event-id="${event.id}">
+                            <div class="${eventClass}" data-event-id="${event.id}">
                                 <div class="event-info">
-                                    <h4>${event.title}</h4>
+                                    <h4>${event.title} ${scheduledIndicator}</h4>
                                     <p>${event.description}</p>
+                                    ${speakerInfo}
                                     <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                                    ${event.track ? `<p><i class="fas fa-tag"></i> ${event.track}</p>` : ''}
+                                    ${event.event_date ? `<p><i class="far fa-calendar"></i> ${event.event_date}</p>` : ''}
                                 </div>
                                 <div class="event-time">${event.time}</div>
                             </div>
@@ -1934,37 +2670,6 @@
                 
                 container.innerHTML = html;
                 attachEventListeners();
-            }
-            
-            // Render agenda statistics
-            function renderAgendaStats(statsData) {
-                const container = document.getElementById('agenda-stats');
-                
-                const html = `
-                    <div class="breakdown-card">
-                        <div class="breakdown-icon">
-                            <i class="fas fa-microphone"></i>
-                        </div>
-                        <div class="breakdown-number">${statsData.keynoteSpeakers}</div>
-                        <div class="breakdown-label">Keynote Speakers</div>
-                    </div>
-                    <div class="breakdown-card">
-                        <div class="breakdown-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="breakdown-number">${statsData.sessions}</div>
-                        <div class="breakdown-label">Sessions</div>
-                    </div>
-                    <div class="breakdown-card">
-                        <div class="breakdown-icon">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="breakdown-number">${statsData.totalSpeakers}</div>
-                        <div class="breakdown-label">Total Speakers</div>
-                    </div>
-                `;
-                
-                container.innerHTML = html;
             }
             
             // Render full agenda for agenda tab
@@ -1989,12 +2694,36 @@
                     `;
                     
                     events.forEach(event => {
+                        // Check if event is already scheduled
+                        const isEventScheduled = isEventAlreadyScheduled(event.id);
+                        const eventClass = isEventScheduled ? 'event-item event-attending' : 'event-item';
+                        
+                        // Build speaker string
+                        let speakerInfo = '';
+                        const allSpeakers = [
+                            ...(event.main_speakers || []),
+                            ...(event.lead_speakers || []),
+                            ...(event.speakers || [])
+                        ];
+                        
+                        if (allSpeakers.length > 0) {
+                            speakerInfo = `<p class="speakers"><i class="fas fa-user-tie"></i> ${allSpeakers.join(', ')}</p>`;
+                        }
+                        
+                        // Add scheduled indicator
+                        const scheduledIndicator = isEventScheduled 
+                            ? '<span class="event-status later-today" style="margin-left: 10px;">Scheduled</span>' 
+                            : '';
+                        
                         html += `
-                            <div class="event-item" data-event-id="${event.id}">
+                            <div class="${eventClass}" data-event-id="${event.id}">
                                 <div class="event-info">
-                                    <h4>${event.title}</h4>
+                                    <h4>${event.title} ${scheduledIndicator}</h4>
                                     <p>${event.description}</p>
+                                    ${speakerInfo}
                                     <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                                    ${event.track ? `<p><i class="fas fa-tag"></i> ${event.track}</p>` : ''}
+                                    ${event.event_date ? `<p><i class="far fa-calendar"></i> ${event.event_date}</p>` : ''}
                                 </div>
                                 <div class="event-time">${event.time}</div>
                             </div>
@@ -2117,32 +2846,78 @@
                         const dayHeader = this.closest('.day-header');
                         const dayTitle = dayHeader.querySelector('h3').textContent;
                         
-                        // Check if day is already selected
+                        // Check if events from this day are already scheduled
+                        const dayContent = this.closest('.agenda-day').querySelector('.day-content');
+                        const eventItems = dayContent.querySelectorAll('.event-item');
+                        let allEventsAlreadyScheduled = true;
+                        let anyEventAlreadyScheduled = false;
+                        let unscheduledEventCount = 0;
+                        
+                        eventItems.forEach(eventItem => {
+                            const eventId = eventItem.getAttribute('data-event-id');
+                            if (eventId) {
+                                if (isEventAlreadyScheduled(eventId)) {
+                                    anyEventAlreadyScheduled = true;
+                                } else {
+                                    allEventsAlreadyScheduled = false;
+                                    unscheduledEventCount++;
+                                }
+                            }
+                        });
+                        
+                        // If all events are already scheduled, disable button and show attending state
+                        if (allEventsAlreadyScheduled && anyEventAlreadyScheduled) {
+                            this.textContent = 'Attending';
+                            this.classList.add('already-attending');
+                            this.disabled = true;
+                            showNotification('All events for this day are already in your schedule!', 'success');
+                            return;
+                        }
+                        
+                        // Check if day is already selected in UI (new selections, not existing schedule)
                         const dayIndex = selectedDays.findIndex(d => d.id === day);
                         
                         if (dayIndex === -1) {
-                            // Add day to selected days
-                            selectedDays.push({
-                                id: day,
-                                title: dayTitle
-                            });
-                            
-                            this.textContent = 'Attending';
-                            this.classList.add('attending');
-                            
-                            showNotification(`${dayTitle} added to your schedule!`);
+                            // Add day to selected days only if there are unscheduled events
+                            if (unscheduledEventCount > 0) {
+                                selectedDays.push({
+                                    id: day,
+                                    title: dayTitle
+                                });
+                                
+                                // Add all unscheduled event IDs from this day to the selectedEventIds Set
+                                eventItems.forEach(eventItem => {
+                                    const eventId = eventItem.getAttribute('data-event-id');
+                                    if (eventId && !isEventAlreadyScheduled(eventId)) {
+                                        selectedEventIds.add(eventId);
+                                    }
+                                });
+                                
+                                this.textContent = anyEventAlreadyScheduled ? 'Some Events Attending' : 'Attending';
+                                this.classList.add('attending');
+                                
+                                showNotification(`${dayTitle} added to your schedule!`);
+                            }
                         } else {
                             // Remove day from selected days
                             selectedDays.splice(dayIndex, 1);
                             
-                            this.textContent = 'Attend This Day';
+                            // Remove all unscheduled event IDs from this day from the selectedEventIds Set
+                            eventItems.forEach(eventItem => {
+                                const eventId = eventItem.getAttribute('data-event-id');
+                                if (eventId && !isEventAlreadyScheduled(eventId)) {
+                                    selectedEventIds.delete(eventId);
+                                }
+                            });
+                            
+                            this.textContent = anyEventAlreadyScheduled ? 'Some Events Scheduled' : 'Attend This Day';
                             this.classList.remove('attending');
+                            this.disabled = anyEventAlreadyScheduled; // Disable if some events are already scheduled
                             
                             showNotification(`${dayTitle} removed from your schedule!`);
                         }
                         
                         updateSelectedEventsDisplay();
-                        updateUpcomingEventsDisplay();
                         updateStats();
                     });
                 });
@@ -2174,24 +2949,94 @@
             function updateSelectedEventsDisplay() {
                 const selectedEventsContainer = document.getElementById('selected-events');
                 
-                if (selectedDays.length === 0) {
+                // Combine existing scheduled events with newly selected events
+                const totalDays = new Set();
+                const totalEventIds = new Set([...existingScheduledEventIds, ...selectedEventIds]);
+                
+                // Add days from existing schedules
+                selectedDays.forEach(day => totalDays.add(day.id));
+                
+                // Add days from existing scheduled events
+                existingScheduledEvents.forEach(event => {
+                    if (event.event_date) {
+                        totalDays.add(event.event_date);
+                    }
+                });
+                
+                const totalDaysCount = totalDays.size;
+                const totalEventsCount = totalEventIds.size;
+                
+                if (totalDaysCount === 0) {
                     selectedEventsContainer.innerHTML = '<p>No days selected yet. Click "Attend This Day" to add days to your schedule.</p>';
                     return;
                 }
                 
-                let html = '';
-                selectedDays.forEach(day => {
-                    html += `
-                        <div class="info-item">
-                            <div class="info-label">${day.title}</div>
-                            <div class="info-value">Full Day</div>
-                        </div>
-                    `;
+                let html = `
+                    <div class="info-item">
+                        <div class="info-label">Total Days</div>
+                        <div class="info-value">${totalDaysCount}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Total Events</div>
+                        <div class="info-value">${totalEventsCount}</div>
+                    </div>
+                `;
+                
+                // Show newly selected days (not already in schedule)
+                const newlySelectedDays = selectedDays.filter(day => {
+                    // Check if this day has any existing scheduled events
+                    const hasExistingEvents = existingScheduledEvents.some(event => 
+                        event.event_date && day.id.includes(event.event_date)
+                    );
+                    return !hasExistingEvents;
                 });
+                
+                if (newlySelectedDays.length > 0) {
+                    html += `<div style="margin-top: 10px; font-weight: 500; color: var(--primary);">New Selections:</div>`;
+                    newlySelectedDays.forEach(day => {
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">${day.title}</div>
+                                <div class="info-value">Pending</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Show already scheduled events
+                if (existingScheduledEventIds.size > 0) {
+                    html += `<div style="margin-top: 10px; font-weight: 500; color: #4caf50;">Already Scheduled:</div>`;
+                    // Group by date
+                    const eventsByDate = {};
+                    existingScheduledEvents.forEach(event => {
+                        if (!eventsByDate[event.event_date]) {
+                            eventsByDate[event.event_date] = [];
+                        }
+                        eventsByDate[event.event_date].push(event);
+                    });
+                    
+                    Object.keys(eventsByDate).forEach(date => {
+                        const events = eventsByDate[date];
+                        const dateObj = new Date(date);
+                        const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+                        const formattedDate = dateObj.toLocaleDateString('en-US', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        
+                        html += `
+                            <div class="info-item">
+                                <div class="info-label">${dayName} ${formattedDate}</div>
+                                <div class="info-value">${events.length} events</div>
+                            </div>
+                        `;
+                    });
+                }
                 
                 html += `
                     <div style="margin-top: 15px;">
-                        <button class="payment-btn" id="submit-schedule">Submit Schedule to Admin</button>
+                        <button class="payment-btn" id="submit-schedule">Submit New Selections to Admin</button>
                     </div>
                 `;
                 selectedEventsContainer.innerHTML = html;
@@ -2199,76 +3044,74 @@
                 // Add event listener to the submit button
                 const submitBtn = document.getElementById('submit-schedule');
                 if (submitBtn) {
-                    submitBtn.addEventListener('click', function() {
-                        submitToAdmin(selectedDays, 'attendee');
+                    submitBtn.addEventListener('click', async function() {
+                        if (selectedEventIds.size === 0) {
+                            showNotification('No new events selected to submit', 'error');
+                            return;
+                        }
+                        
+                        // Get user email
+                        const userEmail = document.getElementById('email').value || userProfile.email;
+                        
+                        if (!userEmail) {
+                            showNotification('Unable to retrieve your email. Please try again.', 'error');
+                            return;
+                        }
+                        
+                        // Show confirmation
+                        showConfirmation(
+                            'Submit New Selections',
+                            `Are you sure you want to submit ${selectedEventIds.size} new events from ${selectedDays.length} days to the admin?`,
+                            async () => {
+                                try {
+                                    await submitScheduleToBackend(selectedEventIds, userEmail);
+                                } catch (error) {
+                                    // Error is already handled in submitScheduleToBackend
+                                    console.error('Schedule submission failed:', error);
+                                }
+                            }
+                        );
                     });
                 }
             }
             
-            // Update upcoming events display
-            function updateUpcomingEventsDisplay() {
-                const upcomingEventsContainer = document.getElementById('upcoming-events');
-                
-                if (selectedDays.length === 0) {
-                    upcomingEventsContainer.innerHTML = '<p class="no-events">No upcoming events. Select days to see them here.</p>';
-                    return;
-                }
-                
-                let html = '';
-                
-                // Check if today is selected (for demo purposes, we'll assume today is Wednesday)
-                const todaySelected = selectedDays.find(day => day.id === 'wednesday');
-                if (todaySelected) {
-                    html += `
-                        <div class="info-item">
-                            <div class="info-label">
-                                ${todaySelected.title} 
-                                <span class="event-status live-now">LIVE NOW</span>
-                            </div>
-                            <div class="info-value">Today</div>
-                        </div>
-                    `;
-                }
-                
-                // Add any other selected days
-                selectedDays
-                    .filter(day => day.id !== 'wednesday')
-                    .forEach(day => {
-                        html += `
-                            <div class="info-item">
-                                <div class="info-label">${day.title}</div>
-                                <div class="info-value">Tomorrow</div>
-                            </div>
-                        `;
-                    });
-                
-                if (html === '') {
-                    upcomingEventsContainer.innerHTML = '<p class="no-events">No upcoming events from your schedule.</p>';
-                } else {
-                    upcomingEventsContainer.innerHTML = html;
-                }
-            }
-            
-            // Update stats
-            function updateStats() {
-                document.getElementById('attending-count').textContent = selectedDays.length;
-                
-                // Count live now events (for demo, if Wednesday is selected)
-                const liveNowCount = selectedDays.find(day => day.id === 'wednesday') ? 1 : 0;
-                document.getElementById('live-now-count').textContent = liveNowCount;
-            }
+
             
             // Export schedule functionality
             document.getElementById('export-schedule').addEventListener('click', function() {
-                if (selectedDays.length === 0) {
-                    showNotification('No days to export. Please select days first.', 'error');
+                const allEventIds = new Set([...existingScheduledEventIds, ...selectedEventIds]);
+                
+                if (allEventIds.size === 0) {
+                    showNotification('No events to export. Please select events first.', 'error');
                     return;
                 }
                 
                 let scheduleText = "My ICSC 2026 Schedule:\n\n";
-                selectedDays.forEach(day => {
-                    scheduleText += `${day.title} - Full Day\n`;
-                });
+                
+                // Add existing scheduled events
+                if (existingScheduledEventIds.size > 0) {
+                    scheduleText += "Already Scheduled Events:\n";
+                    existingScheduledEvents.forEach(event => {
+                        scheduleText += `- ${event.title} (${event.event_date} ${event.start_time}-${event.end_time})\n`;
+                    });
+                    scheduleText += "\n";
+                }
+                
+                // Add newly selected events
+                if (selectedEventIds.size > 0) {
+                    scheduleText += "Newly Selected Events:\n";
+                    // We need to get event details from agendaData
+                    Object.keys(agendaData).forEach(day => {
+                        agendaData[day].forEach(event => {
+                            if (selectedEventIds.has(String(event.id))) {
+                                scheduleText += `- ${event.title} (${event.event_date || day} ${event.time})\n`;
+                            }
+                        });
+                    });
+                }
+                
+                // Add event IDs
+                scheduleText += `\nTotal Event IDs: ${Array.from(allEventIds).join(', ')}`;
                 
                 // Create a blob and download link
                 const blob = new Blob([scheduleText], { type: 'text/plain' });
@@ -2289,6 +3132,8 @@
                 const fullName = document.getElementById('full-name').value;
                 const organization = document.getElementById('organization').value;
                 const position = document.getElementById('position').value;
+                const phone = document.getElementById('phone').value;
+                const jobTitle = document.getElementById('job-title').value;
                 
                 if (!fullName.trim()) {
                     showNotification('Please enter your full name', 'error');
@@ -2299,9 +3144,16 @@
                 userProfile.name = fullName;
                 userProfile.organization = organization;
                 userProfile.position = position;
+                userProfile.phone = phone;
+                userProfile.jobTitle = jobTitle;
                 
                 // Update display name
                 document.getElementById('display-name').textContent = fullName;
+                
+                // Update avatar with new initials
+                const initials = getInitials(fullName);
+                document.getElementById('user-avatar').textContent = initials;
+                userProfile.avatarInitials = initials;
                 
                 // In a real application, this would send data to the backend
                 console.log('Profile updated:', userProfile);
@@ -2392,28 +3244,11 @@
                 showNotification('Notification preferences saved successfully!');
             });
             
-            function submitToAdmin(days, role) {
-                // In a real application, this would send data to the backend
-                const submissionData = {
-                    role: role,
-                    userId: 'user123', // This would come from authentication
-                    days: days,
-                    timestamp: new Date().toISOString(),
-                    email: document.getElementById('email').value
-                };
-                
-                console.log('Submitting to admin:', submissionData);
-                
-                // Simulate API call
-                setTimeout(() => {
-                    showNotification('Your schedule has been submitted to the administrator!');
-                }, 1000);
-            }
-            
             // Confirmation modal functionality
             const confirmationModal = document.getElementById('confirmation-modal');
             const confirmActionBtn = document.getElementById('confirm-action');
             const cancelActionBtn = document.getElementById('cancel-action');
+            const closeModalBtn = document.querySelector('.close-modal');
             
             let currentConfirmationCallback = null;
             
@@ -2432,6 +3267,11 @@
             });
             
             cancelActionBtn.addEventListener('click', function() {
+                confirmationModal.style.display = 'none';
+                currentConfirmationCallback = null;
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
                 confirmationModal.style.display = 'none';
                 currentConfirmationCallback = null;
             });

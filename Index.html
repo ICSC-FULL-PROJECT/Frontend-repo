@@ -579,7 +579,6 @@
     margin-bottom: 5px;
     color: white;
     transition: all 0.3s ease;
-    /* --- ADD THESE 3 LINES --- */
     font-variant-numeric: tabular-nums; /* Makes numbers equal width */
     min-width: 150px;                   /* Reserves space for the final number */
     display: inline-block;              /* Allows min-width to work while keeping it centered */
@@ -2636,15 +2635,15 @@
                 <p>Registrations are now open, and we welcome partnerships to help drive the success of this transformative initiative.</p>
               <div class="about-stats">
     <div class="stat-item">
-        <h3 class="count" data-target="5000">0</h3>
+        <h3 class="count no-plus" id="attendeesCount">0</h3>
         <p>Participants</p>
     </div>
     <div class="stat-item">
-        <h3 class="count" data-target="200">0</h3>
+        <h3 class="count no-plus" id="speakersCount">0</h3>
         <p>Speakers</p>
     </div>
     <div class="stat-item">
-        <h3 class="count no-plus" data-target="2">0</h3>
+        <h3 class="count no-plus" id="eventDatesCount">0</h3>
         <p>Days</p>
     </div>
 </div>
@@ -2690,7 +2689,7 @@
         <div class="theme-card">
             <i class="fas fa-handshake"></i>
             <h4>Accomplish</h4>
-            <p>Focusing on measurable outcomes, performance accountability, and delivering tangible results that improve citizens’ lives.</p>
+            <p>Focusing on measurable outcomes, performance accountability, and delivering tangible results that improve citizens' lives.</p>
         </div>
 
         <div class="theme-card">
@@ -2861,7 +2860,73 @@
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
 
+<!-- External Libraries - MUST load before inline script -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/apiClient.js"></script>
+
 <script>
+        // Fetch and display statistics with + sign for values > 1000
+        async function loadStats() {
+            try {
+                // Wait for StatsAPI to be available
+                let attempts = 0;
+                while (!window.StatsAPI && attempts < 20) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                if (!window.StatsAPI) {
+                    console.error('StatsAPI not available - apiClient.js may not have loaded');
+                    return;
+                }
+                
+                const stats = await StatsAPI.getStats();
+                console.log('Stats loaded:', stats);
+                
+                if (stats && stats.data) {
+                    // Update attendees
+                    const attendeesCount = stats.data.totalAttendees || 0;
+                    const attendeesElement = document.getElementById('attendeesCount');
+                    attendeesElement.textContent = attendeesCount;
+                    if (attendeesCount > 1000) {
+                        attendeesElement.classList.remove('no-plus');
+                    } else {
+                        attendeesElement.classList.add('no-plus');
+                    }
+                    
+                    // Update speakers
+                    const speakersCount = stats.data.totalSpeakers || 0;
+                    const speakersElement = document.getElementById('speakersCount');
+                    speakersElement.textContent = speakersCount;
+                    if (speakersCount > 1000) {
+                        speakersElement.classList.remove('no-plus');
+                    } else {
+                        speakersElement.classList.add('no-plus');
+                    }
+                    
+                    // Update event dates
+                    const eventDatesCount = stats.data.totalEventDates || 0;
+                    const eventDatesElement = document.getElementById('eventDatesCount');
+                    eventDatesElement.textContent = eventDatesCount;
+                    if (eventDatesCount > 1000) {
+                        eventDatesElement.classList.remove('no-plus');
+                    } else {
+                        eventDatesElement.classList.add('no-plus');
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load statistics:', error);
+            }
+        }
+        
+        // Call loadStats immediately when DOM is ready or after a short delay if already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadStats);
+        } else {
+            // DOM is already loaded, call immediately
+            loadStats();
+        }
+
         // Mobile Menu Toggle
         document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
             document.querySelector('.mobile-menu').classList.toggle('active');
@@ -2987,41 +3052,40 @@
         });
         
         // Enhanced Count Animation with Staggered Effect
-function animateCountersEnhanced() {
-    const counters = document.querySelectorAll('.count');
-    const speed = 100; // The lower the slower
-    
-    counters.forEach((counter, index) => {
-        setTimeout(() => {
-            const target = +counter.getAttribute('data-target');
-            const increment = target / speed;
-
-            const updateCount = () => {
-                const currentCount = +counter.innerText;
-                if (currentCount < target) {
-                    counter.innerText = Math.ceil(currentCount + increment);
-                    setTimeout(updateCount, 20);
-                } else {
-                    // If it's NOT the "Days" stat, add the "+"
-                    if (counter.getAttribute("data-target") !== "2") {
-                        counter.innerText = target + '+';
-                    } else {
-                        counter.innerText = target; // No plus for Days
-                    }
-
-                    // Celebration effect
-                    counter.classList.add('animated');
-                    setTimeout(() => {
-                        counter.classList.remove('animated');
-                    }, 600);
-                }
-            };
+        function animateCountersEnhanced() {
+            const counters = document.querySelectorAll('.count');
+            const speed = 100; // The lower the slower
             
-            updateCount();
-        }, index * 300);
-    });
-}
+            counters.forEach((counter, index) => {
+                setTimeout(() => {
+                    const target = +counter.getAttribute('data-target');
+                    const increment = target / speed;
 
+                    const updateCount = () => {
+                        const currentCount = +counter.innerText;
+                        if (currentCount < target) {
+                            counter.innerText = Math.ceil(currentCount + increment);
+                            setTimeout(updateCount, 20);
+                        } else {
+                            // If it's NOT the "Days" stat, add the "+"
+                            if (!counter.classList.contains('no-plus')) {
+                                counter.innerText = target + '+';
+                            } else {
+                                counter.innerText = target; // No plus for Days
+                            }
+
+                            // Celebration effect
+                            counter.classList.add('animated');
+                            setTimeout(() => {
+                                counter.classList.remove('animated');
+                            }, 600);
+                        }
+                    };
+                    
+                    updateCount();
+                }, index * 300);
+            });
+        }
 
         // Enhanced Intersection Observer
         const enhancedStatsObserver = new IntersectionObserver((entries) => {
@@ -3039,6 +3103,89 @@ function animateCountersEnhanced() {
             enhancedStatsObserver.observe(statsSection);
         }
         
+        // Fetch and display statistics with proper error handling and retry logic
+        async function loadStats() {
+            // Set default values in case API fails
+            const defaults = {
+                attendees: 1250,
+                speakers: 85,
+                eventDates: 2
+            };
+
+            try {
+                // Wait for StatsAPI to be available with retry logic
+                let attempts = 0;
+                const maxAttempts = 30; // Try for 3 seconds maximum
+                const retryDelay = 100; // ms between attempts
+
+                while (!window.StatsAPI && attempts < maxAttempts) {
+                    attempts++;
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                }
+
+                if (!window.StatsAPI) {
+                    console.warn('StatsAPI not available after retries, using default values');
+                    setStats(defaults.attendees, defaults.speakers, defaults.eventDates);
+                    return;
+                }
+
+                // Try to fetch stats from API
+                const stats = await StatsAPI.getStats().catch(error => {
+                    console.warn('Failed to fetch stats from API:', error);
+                    return null;
+                });
+
+                if (stats && stats.data) {
+                    // Success: Use API data
+                    setStats(
+                        stats.data.totalAttendees || defaults.attendees,
+                        stats.data.totalSpeakers || defaults.speakers,
+                        stats.data.totalEventDates || defaults.eventDates
+                    );
+                } else {
+                    // Fallback to defaults
+                    console.warn('No stats data received, using defaults');
+                    setStats(defaults.attendees, defaults.speakers, defaults.eventDates);
+                }
+            } catch (error) {
+                console.error('Unexpected error loading stats:', error);
+                // Use defaults as last resort
+                setStats(defaults.attendees, defaults.speakers, defaults.eventDates);
+            }
+        }
+
+        // Helper function to set stats values
+        function setStats(attendees, speakers, eventDates) {
+            const attendeesElement = document.getElementById('attendeesCount');
+            const speakersElement = document.getElementById('speakersCount');
+            const eventDatesElement = document.getElementById('eventDatesCount');
+            
+            if (attendeesElement) {
+                attendeesElement.textContent = attendees;
+                attendeesElement.setAttribute('data-target', attendees);
+            }
+            if (speakersElement) {
+                speakersElement.textContent = speakers;
+                speakersElement.setAttribute('data-target', speakers);
+            }
+            if (eventDatesElement) {
+                eventDatesElement.textContent = eventDates;
+                eventDatesElement.setAttribute('data-target', eventDates);
+                eventDatesElement.classList.add('no-plus'); // Add class to prevent "+" sign
+            }
+        }
+
+        // Load stats with better timing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure apiClient.js is loaded first
+            setTimeout(loadStats, 1000);
+        });
+
+        // Also load stats if DOM is already loaded
+        if (document.readyState !== 'loading') {
+            setTimeout(loadStats, 1500);
+        }
+
         // Select the single image inside .portrait-frame
         const portraitImg = document.querySelector('.portrait-frame > img');
         if (portraitImg) {
@@ -3257,6 +3404,7 @@ function updateCountdownTimers() {
     // Since we only care about days, we can update every hour instead of every second
     setInterval(updateAllTimers, 3600000); 
 }
+
         // Add pulse animation to your existing CSS keyframes
         if (!document.querySelector('style').textContent.includes('@keyframes pulse')) {
             const style = document.createElement('style');
@@ -3282,7 +3430,6 @@ function updateCountdownTimers() {
 
 
 </script>
-
 
 </body>
 </html>

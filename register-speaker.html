@@ -552,6 +552,26 @@
             z-index: 1;
         }
 
+        /* Loading state for photo upload */
+        .photo-uploading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .photo-uploading::after {
+            content: 'Uploading...';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
         /* Mobile-specific improvements */
         @media (max-width: 768px) {
             .navbar-brand {
@@ -856,16 +876,16 @@
                     </div>
 
                     <div class="form-group">
-    <label class="has-star" for="speakerPhoto">Profile Photo (Optional)</label>
-    <div class="d-flex align-items-center gap-3">
-        <input type="file" id="speakerPhoto" name="speakerPhoto" class="form-control" accept="image/*" style="flex-grow: 1;">
-        <div id="photoPreviewContainer" style="display: none; flex-shrink: 0;">
-            <img id="photoPreview" src="#" alt="Profile Preview" style="height: 60px; width: 60px; object-fit: cover; border: 1px solid var(--border-color); border-radius: 50%; background: #fff; padding: 2px;">
-        </div>
-    </div>
-    <div class="help-block-error" id="speakerPhoto-error"></div>
-    <div class="hint-block">Optional: A professional headshot (Recommended: Square aspect ratio)</div>
-</div>
+                        <label for="speakerPhoto">Profile Photo (Optional)</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="file" id="speakerPhoto" name="speakerPhoto" class="form-control" accept="image/*" style="flex-grow: 1;">
+                            <div id="photoPreviewContainer" style="display: none; flex-shrink: 0; position: relative;">
+                                <img id="photoPreview" src="#" alt="Profile Preview" style="height: 60px; width: 60px; object-fit: cover; border: 1px solid var(--border-color); border-radius: 50%; background: #fff; padding: 2px;">
+                            </div>
+                        </div>
+                        <div class="help-block-error" id="speakerPhoto-error"></div>
+                        <div class="hint-block">Optional: A professional headshot (Recommended: Square aspect ratio, max 2MB)</div>
+                    </div>
                     
                     <div class="form-group">
                         <label class="has-star" for="speakerPhone">Phone</label>
@@ -875,40 +895,34 @@
                         <div class="help-block-error" id="speakerPhone-error"></div>
                     </div>
 
-<div class="form-group">
-    <label class="d-flex justify-content-between align-items-center">
-        Social Media Profiles
-        <button type="button" class="btn btn-sm btn-outline-primary" id="add-social-btn">
-            <i class="fas fa-plus-circle me-1"></i> Add Another
-        </button>
-    </label>
-    
-    <div id="social-handles-container">
-        <div class="social-row mb-2">
-            <div class="input-group">
-                <select class="form-control platform-select" style="max-width: 150px; background-color: #f8f9fa;">
-                    <option value="instagram.com/">Instagram</option>
-                    <option value="x.com/">X (Twitter)</option>
-                    <option value="linkedin.com/in/">LinkedIn</option>
-                    <option value="facebook.com/">Facebook</option>
-                </select>
-                <div class="input-group-prepend">
-                    <span class="input-group-text url-prefix">instagram.com/</span>
-                </div>
-                <input type="text" class="form-control handle-input" placeholder="username" required>
-                <button type="button" class="btn btn-outline-danger remove-social-btn" style="display:none;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <small class="form-text text-muted">Select platforms and enter your usernames. You can add up to 4 different platforms.</small>
-</div>
-
                     <div class="form-group">
-                        <label class="has-star" for="speakerWorkEmail">Work Email</label>
-                        <input type="email" id="speakerWorkEmail" name="speakerWorkEmail" class="form-control" required>
-                        <div class="help-block-error" id="speakerWorkEmail-error"></div>
+                        <label class="d-flex justify-content-between align-items-center">
+                            Social Media Profiles
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-social-btn">
+                                <i class="fas fa-plus-circle me-1"></i> Add Another
+                            </button>
+                        </label>
+                        
+                        <div id="social-handles-container">
+                            <div class="social-row mb-2">
+                                <div class="input-group">
+                                    <select class="form-control platform-select" style="max-width: 150px; background-color: #f8f9fa;">
+                                        <option value="instagram.com/">Instagram</option>
+                                        <option value="x.com/">X (Twitter)</option>
+                                        <option value="linkedin.com/in/">LinkedIn</option>
+                                        <option value="facebook.com/">Facebook</option>
+                                    </select>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text url-prefix">instagram.com/</span>
+                                    </div>
+                                    <input type="text" class="form-control handle-input" placeholder="username" required>
+                                    <button type="button" class="btn btn-outline-danger remove-social-btn" style="display:none;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">Select platforms and enter your usernames. You can add up to 4 different platforms.</small>
                     </div>
 
                     <div class="form-group">
@@ -920,6 +934,7 @@
                     <div class="form-group">
                         <label class="has-star" for="speakertopic">Proposed Topic/Area of Expertise</label>
                         <input type="text" id="speakertopic" name="speakertopic" class="form-control" placeholder="What topic would you like to speak about?" required>
+                        <div class="help-block-error" id="speakertopic-error"></div>
                     </div>
                     
                     <div class="form-group">
@@ -933,7 +948,7 @@
                         <i class="fas fa-arrow-circle-left me-2"></i> Back
                     </button>
                     <button type="button" class="btn btn-standard" id="continue-to-package-btn">
-                        Continue <i class="fas fa-arrow-circle-right ms-2"></i>
+                        Complete Registration <i class="fas fa-check-circle ms-2"></i>
                     </button>
                 </div>
             </div>
@@ -1013,317 +1028,560 @@
     <script src="js/apiClient.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
 
->
-
     <!-- Main Application Script -->
-<script>
-    // Global variables
-    let currentStep = 1;
-    let phoneInputs = [];
+    <script>
+        // Global variables
+        let currentStep = 1;
+        let phoneInputs = [];
+        let uploadedPhotoUrl = null; // Store uploaded photo URL
 
-    const countries = [
-        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
-        "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
-        "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
-        "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
-        "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
-        "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
-        "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
-        "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
-        "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
-        "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
-        "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
-        "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", 
-        "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", 
-        "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", 
-        "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", 
-        "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
-        "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
-        "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
-        "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
-        "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
-        "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
-        "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-    ];
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeApp();
-        setupSocialMediaLogic();
-        setupEventListeners();
-    });
-
-    function initializeApp() {
-        populateCountryDropdowns();
-        initializePhoneInputs();
-        updateProgressIndicator();
-    }
-
-    function populateCountryDropdowns() {
-        const select = document.getElementById('speakerCountry');
-        if (select) {
-            countries.forEach(country => {
-                const option = document.createElement('option');
-                option.value = country;
-                option.textContent = country;
-                select.appendChild(option);
-            });
-            select.value = 'Nigeria';
-        }
-    }
-
-    function initializePhoneInputs() {
-        const input = document.getElementById('speakerPhone');
-        if (input && window.intlTelInput) {
-            const iti = window.intlTelInput(input, {
-                initialCountry: "ng",
-                separateDialCode: true,
-                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
-            });
-            phoneInputs.push({ id: 'speakerPhone', iti: iti });
-        }
-    }
-
-    function setupSocialMediaLogic() {
-        const container = document.getElementById('social-handles-container');
-        const addBtn = document.getElementById('add-social-btn');
-        const platforms = [
-            { name: 'Instagram', value: 'instagram.com/' },
-            { name: 'X (Twitter)', value: 'x.com/' },
-            { name: 'LinkedIn', value: 'linkedin.com/in/' },
-            { name: 'Facebook', value: 'facebook.com/' }
+        const countries = [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+            "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
+            "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+            "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
+            "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
+            "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
+            "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+            "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
+            "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
+            "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
+            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
+            "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", 
+            "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", 
+            "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", 
+            "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", 
+            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
+            "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+            "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
+            "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
+            "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
+            "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
         ];
 
-        if (addBtn && container) {
-            addBtn.addEventListener('click', function() {
-                const rows = container.querySelectorAll('.social-row');
-                if (rows.length >= platforms.length) return alert("All platforms added.");
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupSocialMediaLogic();
+            setupEventListeners();
+        });
 
-                const used = Array.from(container.querySelectorAll('.platform-select')).map(s => s.value);
-                const available = platforms.filter(p => !used.includes(p.value));
+        function initializeApp() {
+            populateCountryDropdowns();
+            initializePhoneInputs();
+            updateProgressIndicator();
+        }
 
-                const newRow = document.createElement('div');
-                newRow.className = 'social-row mb-2';
-                newRow.innerHTML = `
-                    <div class="input-group">
-                        <select class="form-control platform-select" style="max-width: 150px;">
-                            ${available.map(p => `<option value="${p.value}">${p.name}</option>`).join('')}
-                        </select>
-                        <div class="input-group-prepend"><span class="input-group-text url-prefix">${available[0].value}</span></div>
-                        <input type="text" class="form-control handle-input" placeholder="username" required>
-                        <button type="button" class="btn btn-outline-danger remove-social-btn"><i class="fas fa-times"></i></button>
-                    </div>`;
-                container.appendChild(newRow);
-                toggleRemoveButtons();
-            });
+        function populateCountryDropdowns() {
+            const select = document.getElementById('speakerCountry');
+            if (select) {
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country;
+                    option.textContent = country;
+                    select.appendChild(option);
+                });
+                select.value = 'Nigeria';
+            }
+        }
 
-            container.addEventListener('change', (e) => {
-                if (e.target.classList.contains('platform-select')) {
-                    e.target.closest('.input-group').querySelector('.url-prefix').textContent = e.target.value;
-                }
-            });
+        function initializePhoneInputs() {
+            const input = document.getElementById('speakerPhone');
+            if (input && window.intlTelInput) {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ng",
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+                });
+                phoneInputs.push({ id: 'speakerPhone', iti: iti });
+            }
+        }
 
-            container.addEventListener('click', (e) => {
-                if (e.target.closest('.remove-social-btn')) {
-                    e.target.closest('.social-row').remove();
+        function setupSocialMediaLogic() {
+            const container = document.getElementById('social-handles-container');
+            const addBtn = document.getElementById('add-social-btn');
+            const platforms = [
+                { name: 'Instagram', value: 'instagram.com/' },
+                { name: 'X (Twitter)', value: 'x.com/' },
+                { name: 'LinkedIn', value: 'linkedin.com/in/' },
+                { name: 'Facebook', value: 'facebook.com/' }
+            ];
+
+            if (addBtn && container) {
+                addBtn.addEventListener('click', function() {
+                    const rows = container.querySelectorAll('.social-row');
+                    if (rows.length >= platforms.length) return alert("All platforms added.");
+
+                    const used = Array.from(container.querySelectorAll('.platform-select')).map(s => s.value);
+                    const available = platforms.filter(p => !used.includes(p.value));
+
+                    const newRow = document.createElement('div');
+                    newRow.className = 'social-row mb-2';
+                    newRow.innerHTML = `
+                        <div class="input-group">
+                            <select class="form-control platform-select" style="max-width: 150px;">
+                                ${available.map(p => `<option value="${p.value}">${p.name}</option>`).join('')}
+                            </select>
+                            <div class="input-group-prepend"><span class="input-group-text url-prefix">${available[0].value}</span></div>
+                            <input type="text" class="form-control handle-input" placeholder="username" required>
+                            <button type="button" class="btn btn-outline-danger remove-social-btn"><i class="fas fa-times"></i></button>
+                        </div>`;
+                    container.appendChild(newRow);
                     toggleRemoveButtons();
+                });
+
+                container.addEventListener('change', (e) => {
+                    if (e.target.classList.contains('platform-select')) {
+                        e.target.closest('.input-group').querySelector('.url-prefix').textContent = e.target.value;
+                    }
+                });
+
+                container.addEventListener('click', (e) => {
+                    if (e.target.closest('.remove-social-btn')) {
+                        e.target.closest('.social-row').remove();
+                        toggleRemoveButtons();
+                    }
+                });
+            }
+
+            function toggleRemoveButtons() {
+                const rows = container.querySelectorAll('.social-row');
+                rows.forEach(r => r.querySelector('.remove-social-btn').style.display = rows.length > 1 ? 'block' : 'none');
+            }
+        }
+
+        function setupEventListeners() {
+            // Password toggles
+            document.getElementById('togglePassword')?.addEventListener('click', function() {
+                togglePassVisibility('password', this);
+            });
+            document.getElementById('toggleConfirmPassword')?.addEventListener('click', function() {
+                togglePassVisibility('confirmPassword', this);
+            });
+
+            // Navigation
+            document.getElementById('continue-to-profile-btn')?.addEventListener('click', () => {
+                if (validateAccountForm()) showStep(2);
+            });
+            document.getElementById('back-to-account-btn')?.addEventListener('click', () => showStep(1));
+            
+            // Final Submission
+            document.getElementById('continue-to-package-btn')?.addEventListener('click', async () => {
+                if (validateProfileForm()) {
+                    await submitRegistration();
                 }
             });
-        }
 
-        function toggleRemoveButtons() {
-            const rows = container.querySelectorAll('.social-row');
-            rows.forEach(r => r.querySelector('.remove-social-btn').style.display = rows.length > 1 ? 'block' : 'none');
-        }
-    }
+            // Profile Photo Preview Logic
+            const photoInput = document.getElementById('speakerPhoto');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoPreviewContainer = document.getElementById('photoPreviewContainer');
 
-    function setupEventListeners() {
-        // Password toggles
-        document.getElementById('togglePassword')?.addEventListener('click', function() {
-            togglePassVisibility('password', this);
-        });
-        document.getElementById('toggleConfirmPassword')?.addEventListener('click', function() {
-            togglePassVisibility('confirmPassword', this);
-        });
-
-        // Navigation
-        document.getElementById('continue-to-profile-btn')?.addEventListener('click', () => {
-            if (validateAccountForm()) showStep(2);
-        });
-        document.getElementById('back-to-account-btn')?.addEventListener('click', () => showStep(1));
-        
-        // Final Submission
-        document.getElementById('continue-to-package-btn')?.addEventListener('click', async () => {
-            if (validateProfileForm()) await submitRegistration();
-        });
-
-        // Profile Photo Preview Logic
-const photoInput = document.getElementById('speakerPhoto');
-const photoPreview = document.getElementById('photoPreview');
-const photoPreviewContainer = document.getElementById('photoPreviewContainer');
-
-if (photoInput) {
-    photoInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            // Check file size (optional, e.g., max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                showError('speakerPhoto-error', 'Image must be less than 2MB');
-                this.value = '';
-                photoPreviewContainer.style.display = 'none';
-                return;
+            if (photoInput) {
+                photoInput.addEventListener('change', async function() {
+                    const file = this.files[0];
+                    if (file) {
+                        // Check file size (max 2MB)
+                        if (file.size > 2 * 1024 * 1024) {
+                            showError('speakerPhoto-error', 'Image must be less than 2MB');
+                            this.value = '';
+                            photoPreviewContainer.style.display = 'none';
+                            uploadedPhotoUrl = null;
+                            return;
+                        }
+                        
+                        // Check file type
+                        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                        if (!validTypes.includes(file.type)) {
+                            showError('speakerPhoto-error', 'Please upload a valid image file (JPEG, PNG, GIF, WebP)');
+                            this.value = '';
+                            photoPreviewContainer.style.display = 'none';
+                            uploadedPhotoUrl = null;
+                            return;
+                        }
+                        
+                        hideError('speakerPhoto-error');
+                        
+                        // Show preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            photoPreview.setAttribute('src', e.target.result);
+                            photoPreviewContainer.style.display = 'block';
+                        }
+                        reader.readAsDataURL(file);
+                        
+                        // Upload image to server
+                        try {
+                            photoPreviewContainer.classList.add('photo-uploading');
+                            const imageUrl = await uploadProfilePicture(file);
+                            uploadedPhotoUrl = imageUrl;
+                            console.log('Photo uploaded successfully:', imageUrl);
+                        } catch (error) {
+                            console.error('Photo upload failed:', error);
+                            showError('speakerPhoto-error', 'Failed to upload image. Please try again or skip.');
+                            this.value = '';
+                            photoPreviewContainer.style.display = 'none';
+                            uploadedPhotoUrl = null;
+                        } finally {
+                            photoPreviewContainer.classList.remove('photo-uploading');
+                        }
+                    } else {
+                        photoPreviewContainer.style.display = 'none';
+                        uploadedPhotoUrl = null;
+                    }
+                });
             }
-            hideError('speakerPhoto-error');
+
+            // Dashboard Redirect
+            document.getElementById('go-to-dashboard-btn')?.addEventListener('click', () => {
+                window.location.href = 'login.html';
+            });
+        }
+
+        async function uploadProfilePicture(file) {
+            const formData = new FormData();
+            formData.append('profile_picture', file);
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                photoPreview.setAttribute('src', e.target.result);
-                photoPreviewContainer.style.display = 'block';
+            try {
+                const response = await axios.post(
+                    `${window.API_BASE_URL}/misc/upload-profile-picture`,
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        timeout: 30000 // 30 seconds for file upload
+                    }
+                );
+                
+                if (response.data && response.data.url) {
+                    return response.data.url;
+                } else if (response.data && response.data.imageUrl) {
+                    return response.data.imageUrl;
+                } else if (response.data && response.data.image_url) {
+                    return response.data.image_url;
+                } else {
+                    throw new Error('No image URL returned from server');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                const errorMessage = error.response?.data?.message || error.message || 'Failed to upload image';
+                throw new Error(errorMessage);
             }
-            reader.readAsDataURL(file);
-        } else {
-            photoPreviewContainer.style.display = 'none';
         }
-    });
-}
 
-        // Dashboard Redirect
-        document.getElementById('go-to-dashboard-btn')?.addEventListener('click', () => {
-            window.location.href = 'login.html';
-        });
-    }
+        function togglePassVisibility(id, btn) {
+            const input = document.getElementById(id);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            btn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        }
 
-    function togglePassVisibility(id, btn) {
-        const input = document.getElementById(id);
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        btn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-    }
+        async function submitRegistration() {
+            const btn = document.getElementById('continue-to-package-btn');
+            btn.disabled = true;
+            btn.innerHTML = 'Processing... <i class="fas fa-spinner fa-spin ms-2"></i>';
 
-    async function submitRegistration() {
-        const btn = document.getElementById('continue-to-package-btn');
-        btn.disabled = true;
-        btn.innerHTML = 'Processing... <i class="fas fa-spinner fa-spin ms-2"></i>';
+            try {
+                // Collect Social Media
+                const socialRows = document.querySelectorAll('.social-row');
+                const socialMedia = [];
+                
+                Array.from(socialRows).forEach(row => {
+                    const select = row.querySelector('.platform-select');
+                    const handle = row.querySelector('.handle-input').value.trim();
+                    if (handle) {
+                        const platformName = select.options[select.selectedIndex].text;
+                        const url = 'https://' + select.value + handle;
+                        socialMedia.push({
+                            platform: platformName,
+                            url: url
+                        });
+                    }
+                });
 
-        try {
-            // Collect Social Media
-            const socialRows = document.querySelectorAll('.social-row');
-            const socialMediaList = Array.from(socialRows).map(row => {
-                const select = row.querySelector('.platform-select');
-                return {
-                    platform: select.options[select.selectedIndex].text,
-                    fullUrl: 'https://' + select.value + row.querySelector('.handle-input').value
+                // Get phone number with country code
+                let formattedPhone = '';
+                const phoneInput = document.getElementById('speakerPhone');
+                const itiInstance = phoneInputs.find(p => p.id === 'speakerPhone')?.iti;
+                if (itiInstance) {
+                    formattedPhone = itiInstance.getNumber();
+                } else {
+                    formattedPhone = phoneInput.value;
+                }
+
+                // Build Payload
+                const payload = {
+                    speakerWorkEmail: document.getElementById('email').value.trim(),
+                    password: document.getElementById('password').value,
+                    speakerPrefix: document.getElementById('speakerPrefix').value,
+                    speakerFirstName: document.getElementById('speakerFirstName').value.trim(),
+                    speakerLastName: document.getElementById('speakerLastName').value.trim(),
+                    speakerCountry: document.getElementById('speakerCountry').value,
+                    speakerJobTitle: document.getElementById('speakerJobTitle').value.trim(),
+                    speakerOrganization: document.getElementById('speakerOrganization').value.trim() || '',
+                    speakerPhone: formattedPhone,
+                    speakerBio: document.getElementById('speakerBio').value.trim(),
+                    speakertopic: document.getElementById('speakertopic').value.trim(),
+                    speakerExperience: document.getElementById('speakerExperience').value.trim() || '',
+                    ...(socialMedia.length > 0 && { socialMedia: socialMedia })
                 };
+
+                // Add photo URL if uploaded
+                if (uploadedPhotoUrl) {
+                    payload.profile_image = uploadedPhotoUrl;
+                }
+
+                console.log("Registration payload:", payload);
+
+                // Use the RegisterAPI from apiClient.js to submit to backend
+                const response = await window.RegisterAPI.registerSpeaker(payload);
+                
+                console.log("Backend response:", response);
+                
+                // Normalize response data and check for success
+                const resData = response && response.data ? response.data : response || {};
+                const speakerData = resData.speaker || resData.data?.speaker || resData;
+
+                if (resData.success || resData.status === 'success' || resData.status === 200 || resData.id || speakerData?.id) {
+                    // Store auth token if returned
+                    const tokenVal = resData.token || resData.access_token || response.token || response.access_token;
+                    if (tokenVal) {
+                        const authData = {
+                            token: tokenVal,
+                            user: speakerData ? {
+                                email: speakerData.work_email || speakerData.email || payload.speakerWorkEmail,
+                                name: speakerData.fullname || `${payload.speakerFirstName} ${payload.speakerLastName}`,
+                                type: speakerData.role || 'speaker'
+                            } : {
+                                email: payload.speakerWorkEmail,
+                                name: `${payload.speakerFirstName} ${payload.speakerLastName}`,
+                                type: 'speaker'
+                            }
+                        };
+                        localStorage.setItem('authUser', JSON.stringify(authData));
+                    }
+
+                    updateConfirmationSection(speakerData);
+                    showStep(3);
+
+                    // Auto-login message when token present
+                    if (tokenVal) {
+                        const autoLoginDiv = document.createElement('div');
+                        autoLoginDiv.className = 'auto-login-message';
+                        autoLoginDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i> You have been automatically logged in. You can now access your dashboard.';
+                        document.querySelector('.confirmation-details').before(autoLoginDiv);
+                    }
+                } else {
+                    throw new Error(resData.message || response.message || 'Registration failed. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                // Handle API validation errors (format you provided)
+                if (error.original?.response?.data?.errors) {
+                    const validationErrors = error.original.response.data.errors;
+                    clearAllErrors();
+                    
+                    // Map each validation error to the appropriate field
+                    validationErrors.forEach(err => {
+                        const fieldId = err.path;
+                        const errorElementId = `${fieldId}-error`;
+                        showError(errorElementId, err.msg);
+                    });
+                    
+                    // Show general error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.innerHTML = `<strong>Validation Error:</strong> Please correct the errors in the form below.`;
+                    errorDiv.style.display = 'block';
+                    
+                    // Remove any existing error messages
+                    const existingError = document.querySelector('.form-section .error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                    
+                    // Insert error at top of form
+                    const formSection = document.getElementById('profile-section');
+                    formSection.insertBefore(errorDiv, formSection.firstChild);
+                    
+                    // Scroll to first error
+                    const firstErrorField = document.querySelector('.help-block-error[style*="display: block"]');
+                    if (firstErrorField) {
+                        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    // Extract error message from apiClient error format
+                    const errorMessage = error.message || 
+                                        error.original?.response?.data?.message || 
+                                        error.original?.response?.data?.error ||
+                                        'Registration failed. Please try again.';
+                    
+                    // Show error in a user-friendly way
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.innerHTML = `<strong>Error:</strong> ${errorMessage}`;
+                    errorDiv.style.display = 'block';
+                    
+                    // Remove any existing error messages
+                    const existingError = document.querySelector('.form-section .error-message');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+                    
+                    // Insert error at top of form
+                    const formSection = document.getElementById('profile-section');
+                    formSection.insertBefore(errorDiv, formSection.firstChild);
+                    
+                    // Scroll to error
+                    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Complete Registration <i class="fas fa-check-circle ms-2"></i>';
+            }
+        }
+
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.help-block-error');
+            errorElements.forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input, select, textarea');
+            inputElements.forEach(el => {
+                el.classList.remove('error');
+            });
+        }
+
+        function validateAccountForm() {
+            let isValid = true;
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value;
+            const conf = document.getElementById('confirmPassword').value;
+
+            if (!email || !email.includes('@') || !email.includes('.')) { 
+                showError('email-error', 'Please enter a valid email address'); 
+                isValid = false; 
+            } else {
+                hideError('email-error');
+            }
+
+            if (pass.length < 8) { 
+                showError('password-error', 'Password must be at least 8 characters long'); 
+                isValid = false; 
+            } else {
+                hideError('password-error');
+            }
+
+            if (pass !== conf) { 
+                showError('confirmPassword-error', 'Passwords do not match'); 
+                isValid = false; 
+            } else {
+                hideError('confirmPassword-error');
+            }
+
+            return isValid;
+        }
+
+        function validateProfileForm() {
+            let isValid = true;
+            const required = ['speakerPrefix', 'speakerFirstName', 'speakerLastName', 'speakerCountry', 'speakerJobTitle', 'speakerPhone', 'speakerBio', 'speakertopic'];
+            
+            required.forEach(field => {
+                const el = document.getElementById(field);
+                if (!el || !el.value.trim()) { 
+                    showError(`${field}-error`, 'This field is required'); 
+                    isValid = false; 
+                } else {
+                    hideError(`${field}-error`);
+                }
             });
 
-            // Build Payload
-            const payload = {
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                speakerPrefix: document.getElementById('speakerPrefix').value,
-                speakerFirstName: document.getElementById('speakerFirstName').value,
-                speakerLastName: document.getElementById('speakerLastName').value,
-                speakerCountry: document.getElementById('speakerCountry').value,
-                speakerJobTitle: document.getElementById('speakerJobTitle').value,
-                speakerOrganization: document.getElementById('speakerOrganization').value,
-                speakerPhone: document.getElementById('speakerPhone').value,
-                speakerWorkEmail: document.getElementById('speakerWorkEmail').value,
-                speakerBio: document.getElementById('speakerBio').value,
-                speakertopic: document.getElementById('speakertopic').value,
-                speakerExperience: document.getElementById('speakerExperience').value,
-                socialMedia: socialMediaList
-            };
-
-            // --- BACKEND INTEGRATION POINT ---
-            // Replace this boss when your code is ready:
-            // const response = await axios.post('/api/auth/speaker-register', payload);
             
-            // Temporary Success Simulation (Remove when backend is ready)
-            console.log("Payload to send:", payload);
-            await new Promise(resolve => setTimeout(resolve, 1500)); 
-            const success = true; 
-
-            if (success) {
-                updateConfirmationSection();
-                showStep(3);
-            } else {
-                throw new Error("Registration failed.");
+            // Validate phone number
+            const phoneInput = document.getElementById('speakerPhone');
+            const itiInstance = phoneInputs.find(p => p.id === 'speakerPhone')?.iti;
+            if (phoneInput.value && itiInstance && !itiInstance.isValidNumber()) {
+                showError('speakerPhone-error', 'Please enter a valid phone number');
+                isValid = false;
             }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = 'Complete Registration <i class="fas fa-check-circle ms-2"></i>';
+            
+            // Validate social media handles
+            const socialRows = document.querySelectorAll('.social-row');
+            socialRows.forEach((row, index) => {
+                const handle = row.querySelector('.handle-input').value.trim();
+                if (handle && handle.length < 2) {
+                    showError('speakerPhone-error', `Social media handle is too short`);
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
         }
-    }
 
-    function validateAccountForm() {
-        let isValid = true;
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
-        const conf = document.getElementById('confirmPassword').value;
+        function updateConfirmationSection(speaker) {
+            let firstName = document.getElementById('speakerFirstName').value;
+            let lastName = document.getElementById('speakerLastName').value;
+            let email = document.getElementById('email').value;
 
-        if (!email || !email.includes('@')) { showError('email-error', 'Valid email required'); isValid = false; }
-        else hideError('email-error');
+            if (speaker) {
+                firstName = speaker.first_name || speaker.fname || speaker.fullname?.split(' ')[0] || firstName;
+                lastName = speaker.last_name || speaker.lname || (speaker.fullname ? speaker.fullname.split(' ').slice(1).join(' ') : lastName);
+                email = speaker.work_email || speaker.email || email;
+            }
 
-        if (pass.length < 8) { showError('password-error', 'Min 8 characters'); isValid = false; }
-        else hideError('password-error');
+            document.getElementById('confirmation-name').textContent = `${firstName} ${lastName}`;
+            document.getElementById('confirmation-email').textContent = email;
+            document.getElementById('confirmation-email-text').textContent = email;
+        }
 
-        if (pass !== conf) { showError('confirmPassword-error', 'Passwords do not match'); isValid = false; }
-        else hideError('confirmPassword-error');
+        function showStep(step) {
+            document.getElementById('account-section').style.display = step === 1 ? 'block' : 'none';
+            document.getElementById('profile-section').style.display = step === 2 ? 'block' : 'none';
+            document.getElementById('confirmation-section').style.display = step === 3 ? 'block' : 'none';
+            currentStep = step;
+            updateProgressIndicator();
+            window.scrollTo(0, 0);
+        }
 
-        return isValid;
-    }
+        function updateProgressIndicator() {
+            const dots = document.querySelectorAll('.progress-indicator.dots .dot');
+            const line = document.getElementById('progress-line');
+            if (line) line.style.width = ((currentStep - 1) / 2) * 100 + '%';
 
-    function validateProfileForm() {
-        let isValid = true;
-        const required = ['speakerPrefix', 'speakerFirstName', 'speakerLastName', 'speakerCountry', 'speakerJobTitle', 'speakerPhone', 'speakerBio', 'speakertopic', 'speakerWorkEmail', 'speakerPhoto'];
-        
-        required.forEach(field => {
-            const el = document.getElementById(field);
-            if (!el || !el.value) { showError(`${field}-error`, 'Required'); isValid = false; }
-            else hideError(`${field}-error`);
-        });
-        return isValid;
-    }
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('completed', i + 1 < currentStep);
+                dot.classList.toggle('active', i + 1 === currentStep);
+            });
+        }
 
-    function updateConfirmationSection() {
-        document.getElementById('confirmation-name').textContent = document.getElementById('speakerFirstName').value + ' ' + document.getElementById('speakerLastName').value;
-        const email = document.getElementById('speakerWorkEmail').value;
-        document.getElementById('confirmation-email').textContent = email;
-        document.getElementById('confirmation-email-text').textContent = email;
-    }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            if (el) { 
+                el.textContent = msg; 
+                el.style.display = 'block'; 
+            }
+            const inputId = id.replace('-error', '');
+            const inputElement = document.getElementById(inputId);
+            if (inputElement) {
+                inputElement.classList.add('error');
+            }
+        }
 
-    function showStep(step) {
-        document.getElementById('account-section').style.display = step === 1 ? 'block' : 'none';
-        document.getElementById('profile-section').style.display = step === 2 ? 'block' : 'none';
-        document.getElementById('confirmation-section').style.display = step === 3 ? 'block' : 'none';
-        currentStep = step;
-        updateProgressIndicator();
-        window.scrollTo(0, 0);
-    }
-
-    function updateProgressIndicator() {
-        const dots = document.querySelectorAll('.progress-indicator.dots .dot');
-        const line = document.getElementById('progress-line');
-        if (line) line.style.width = ((currentStep - 1) / 2) * 100 + '%';
-
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('completed', i + 1 < currentStep);
-            dot.classList.toggle('active', i + 1 === currentStep);
-        });
-    }
-
-    function showError(id, msg) {
-        const el = document.getElementById(id);
-        if (el) { el.textContent = msg; el.style.display = 'block'; }
-        document.getElementById(id.replace('-error', ''))?.classList.add('error');
-    }
-
-    function hideError(id) {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-        document.getElementById(id.replace('-error', ''))?.classList.remove('error');
-    }
-</script>
+        function hideError(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+            const inputId = id.replace('-error', '');
+            const inputElement = document.getElementById(inputId);
+            if (inputElement) {
+                inputElement.classList.remove('error');
+            }
+        }
+    </script>
 </body>
 </html>
