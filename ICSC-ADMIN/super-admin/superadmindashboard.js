@@ -35,8 +35,8 @@ const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 const addMinistryBtn = document.getElementById('addMinistryBtn');
 
 // API Configuration
-// const API_BASE_URL = 'http://localhost:9100/api/v1';
-const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
+const API_BASE_URL = 'http://localhost:9100/api/v1';
+// const API_BASE_URL = 'https://icsc-backend-api.afrikfarm.com/api/v1';
 window.API_BASE_URL = API_BASE_URL;
 
 // Tab Navigation
