@@ -146,8 +146,8 @@
                 <li><a href="#" data-tab="exhibitors"><i class="fas fa-store"></i> Exhibitors</a></li>
                 <li><a href="#" data-tab="partners"><i class="fas fa-handshake"></i> Partners</a></li>
                 <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                <li><a href="#" data-tab="packages"><i class="fas fa-gem"></i> Packages</a></li>
                 <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
-                <li><a href="#" data-tab="reports"><i class="fas fa-file-export"></i> Reports</a></li>
                  <li><a href="#" data-tab="bulk-approvals"><i class="fas fa-file-upload"></i> Bulk Approvals</a></li>
                 <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="#" id="superAdminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -262,7 +262,7 @@
                                     <th>Participant</th>
                                     <th>Ministry</th>
                                     <th>Date & Time</th>
-                                    <th>Status</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="recentActivityTable">
@@ -782,7 +782,7 @@
             <div id="attendees" class="tab-content">
                 <div class="dashboard-section">
                     <div class="section-header">
-                        <h2>All Participant</h2>
+                        <h2>All Participants</h2>
                         <div class="section-actions">
                             <button class="btn btn-secondary" id="exportAttendeesBtn">Export</button>
                             <a href="#" class="btn" data-tab="add-attendee">Add New Participants</a>
@@ -1302,16 +1302,16 @@
         } catch (e) {
             return safeText(dateString);
         }
-    }
+    // }
 
-    function statusClassFrom(status) {
-        if (!status) return 'status-pending';
-        const s = String(status).toLowerCase();
-        if (s === 'approved' || s === 'confirmed') return 'status-approved';
-        if (s === 'pending') return 'status-pending';
-        return 'status-rejected';
+    // function statusClassFrom(status) {
+    //     if (!status) return 'status-pending';
+    //     const s = String(status).toLowerCase();
+    //     if (s === 'approved' || s === 'confirmed') return 'status-approved';
+    //     if (s === 'pending') return 'status-pending';
+    //     return 'status-rejected';
+    // }
     }
-
     function renderActivity(list) {
         if (!activityBody) return;
         activityBody.innerHTML = '';
@@ -1325,15 +1325,13 @@
             const participant = safeText(attendee.fullname);
             const ministry = safeText(attendee.organization);
             const dateTime = formatDate(attendee.createdAt);
-            const status = safeText(attendee.status);
-            const statusClass = statusClassFrom(status);
-
+           
             tr.innerHTML = `
                 <td>${action}</td>
                 <td>${participant}</td>
                 <td>${ministry}</td>
                 <td>${dateTime}</td>
-                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                
             `;
             activityBody.appendChild(tr);
         });
@@ -1700,6 +1698,113 @@
     </div>
 </div>
 
+<!-- Packages Tab -->
+<div id="packages" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Package Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshPackagesBtn">Refresh</button>
+                <button class="btn" id="addPackageBtn">Create Package</button>
+            </div>
+        </div>
+
+        <!-- Package Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalPackages">4</h3>
+                    <p>Total Packages</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon approved">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="diamondCount">0</h3>
+                    <p>Diamond Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="goldCount">0</h3>
+                    <p>Gold Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ministries">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="silverCount">0</h3>
+                    <p>Silver Partners</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon ministries">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="bronzeCount">0</h3>
+                    <p>Bronze Partners</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchPackages" class="form-control" placeholder="Search by package name or benefits...">
+            </div>
+            <div class="filter-group">
+                <select id="filterPackageType" class="form-control filter-select">
+                    <option value="">All Types</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="bronze">Bronze</option>
+                </select>
+                <select id="filterPackageStatus" class="form-control filter-select">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="full">Full</option>
+                </select>
+                <button class="btn btn-secondary" id="clearPackageFiltersBtn">Clear Filters</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="packagesTable">
+                <thead>
+                    <tr>
+                        <th>Package Name</th>
+                        <th>Type</th>
+                        <th>Benefits</th>
+                        <th>Min Amount</th>
+                        <th>Max Available</th>
+                        <th>Speaking Slots</th>
+                        <th>Exhibition Slots</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="packagesTableBody">
+                    <!-- Packages will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!-- Resources Tab -->
 <div id="resources" class="tab-content">
     <div class="dashboard-section">
@@ -1809,752 +1914,7 @@
         </div>
     </div>
 </div>
-
-
-<!-- Reports Tab -->
-<div id="reports" class="tab-content">
-    <div class="dashboard-section">
-        <div class="section-header">
-            <h2>Reports & Analytics</h2>
-            <div class="section-actions">
-                <button class="btn btn-secondary" id="refreshReportsBtn">
-                    <i class="fas fa-sync-alt"></i> Refresh Reports
-                </button>
-                <button class="btn" id="generateReportBtn">
-                    <i class="fas fa-file-export"></i> Generate Custom Report
-                </button>
-            </div>
-        </div>
-
-        <!-- Quick Stats Summary -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon total">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalRegistrations">0</h3>
-                    <p>Total Registrations</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon approved">
-                    <i class="fas fa-money-bill-wave"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="totalRevenue">₦0</h3>
-                    <p>Total Revenue</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon pending">
-                    <i class="fas fa-percentage"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="attendanceRate">0%</h3>
-                    <p>Projected Attendance Rate</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon ministries">
-                    <i class="fas fa-trophy"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="topMinistry">-</h3>
-                    <p>Top Ministry by Registration</p>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="stat-card attendance-highlight">
-        <div class="stat-icon" style="background: #667eea;">
-            <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-info">
-            <h3 id="totalAttendance">0</h3>
-            <p>Total Attendance</p>
-            <div class="attendance-breakdown">
-                <small>Day 1: <span id="day1Attendance">0</span></small>
-                <small>Day 2: <span id="day2Attendance">0</span></small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add filter section for attendance reports -->
-<div class="attendance-filters">
-    <h4>Attendance Filter</h4>
-    <div class="filter-row">
-        <div class="filter-group">
-            <label class="filter-label">Event Day</label>
-            <select id="attendanceDayFilter" class="filter-select">
-                <option value="all">All Days</option>
-                <option value="wednesday">Wednesday 25 June</option>
-                <option value="thursday">Thursday 26 June</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label class="filter-label">User Type</label>
-            <select id="attendanceTypeFilter" class="filter-select">
-                <option value="all">All Types</option>
-                <option value="attendee">Participants</option>
-                <option value="speaker">Speakers</option>
-                <option value="partner">Partners</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label class="filter-label">Event</label>
-            <select id="attendanceEventFilter" class="filter-select">
-                <option value="all">All Events</option>
-                <option value="A001">Registration & Welcome Coffee</option>
-                <option value="A002">Opening Ceremony & Keynote</option>
-                <option value="A003">Coffee Break & Networking</option>
-                <option value="A004">Digital Transformation Panel</option>
-                <option value="A005">Leadership Workshop</option>
-            </select>
-        </div>
-    </div>
-    <button class="btn btn-secondary" id="applyAttendanceFilter">Apply Filter</button>
-    <button class="btn btn-secondary" id="exportAttendanceBtn">Export Report</button>
-</div>
-
-<!-- Attendance Details Table -->
-<div class="dashboard-section">
-    <div class="section-header">
-        <h3>Attendance Details</h3>
-        <div class="section-actions">
-            <button class="btn btn-secondary" id="refreshAttendanceBtn">Refresh</button>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="data-table" id="attendanceTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Email</th>
-                    <th>Event</th>
-                    <th>Day</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    <th>Approved By</th>
-                    <th>Approved At</th>
-                </tr>
-            </thead>
-            <tbody id="attendanceTableBody">
-                <!-- Will be populated dynamically -->
-            </tbody>
-        </table>
-    </div>
-</div>
-
-        <!-- Report Generation Options -->
-        <div class="reports-options">
-            <div class="report-type-selector">
-                <h3><i class="fas fa-filter"></i> Select Report Type</h3>
-                <div class="report-types">
-                    <div class="report-type-card active" data-report="overview">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <h4>Overview Dashboard</h4>
-                        <p>Comprehensive system overview</p>
-                    </div>
-                
-                    <!-- <div class="report-type-card" data-report="attendees">
-                        <i class="fas fa-users"></i>
-                        <h4>Attendee Reports</h4>
-                        <p>Detailed attendee analytics</p>
-                    </div> *// -->
-                    <div class="report-type-card" data-report="financial">
-                        <i class="fas fa-money-bill"></i>
-                        <h4>Financial Reports</h4>
-                        <p>Revenue and payment analysis</p>
-                    </div>
-                    <div class="report-type-card" data-report="ministry">
-                        <i class="fas fa-building"></i>
-                        <h4>Ministry Reports</h4>
-                        <p>Ministry-wise breakdown</p>
-                    </div>
-                    <div class="report-type-card" data-report="participation">
-                        <i class="fas fa-chart-pie"></i>
-                        <h4>Participation Reports</h4>
-                        <p>Speaker & exhibitor stats</p>
-                    </div>
-                    <div class="report-type-card" data-report="custom">
-                        <i class="fas fa-cog"></i>
-                        <h4>Custom Reports</h4>
-                        <p>Build your own report</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Date Range Filter -->
-            <div class="date-range-filter">
-                <h3><i class="fas fa-calendar-alt"></i> Select Date Range</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="reportStartDate">From Date</label>
-                        <input type="date" id="reportStartDate" class="form-control" value="2026-01-01">
-                    </div>
-                    <div class="form-group">
-                        <label for="reportEndDate">To Date</label>
-                        <input type="date" id="reportEndDate" class="form-control" value="2026-06-30">
-                    </div>
-                    <div class="form-group">
-                        <label for="quickDateRange">Quick Select</label>
-                        <select id="quickDateRange" class="form-control">
-                            <option value="all">All Time</option>
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                            <option value="quarter">This Quarter</option>
-                            <option value="year" selected>This Year</option>
-                            <option value="last_year">Last Year</option>
-                            <option value="custom">Custom Range</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Report Content Area -->
-        <div class="report-content">
-            <!-- Overview Report (Default) -->
-            <div id="overviewReport" class="report-section active">
-                <h3><i class="fas fa-chart-bar"></i> System Overview Report</h3>
-                
-                <div class="chart-container">
-                    <div class="chart-row">
-                        <div class="chart-box">
-                            <h4>Registration Trend</h4>
-                            <canvas id="registrationTrendChart" height="250"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <h4>Participants by Ministry (Top 10)</h4>
-                            <canvas id="ministryDistributionChart" height="250"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-row">
-                        <div class="chart-box">
-                            <h4>Registration Status Distribution</h4>
-                            <canvas id="statusDistributionChart" height="250"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <h4>Revenue by Category</h4>
-                            <canvas id="revenueCategoryChart" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Key Metrics Table -->
-                <div class="key-metrics-table">
-                    <h4>Key Performance Indicators</h4>
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Value</th>
-                                    <th>Change</th>
-                                    <th>Target</th>
-                                    <th>Achievement</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Total Registrations</td>
-                                    <td id="kpiTotalReg">0</td>
-                                    <td><span class="positive-change">+12%</span></td>
-                                    <td>2,500</td>
-                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Approval Rate</td>
-                                    <td id="kpiApprovalRate">0%</td>
-                                    <td><span class="positive-change">+5%</span></td>
-                                    <td>95%</td>
-                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Revenue Generated</td>
-                                    <td id="kpiRevenue">₦0</td>
-                                    <td><span class="positive-change">+18%</span></td>
-                                    <td>₦50,000,000</td>
-                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Ministry Participation</td>
-                                    <td id="kpiMinistryCount">0</td>
-                                    <td><span class="positive-change">+3%</span></td>
-                                    <td>35</td>
-                                    <td><div class="progress-bar" style="width: 0%"><span>0%</span></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attendee Reports -->
-            <div id="attendeeReport" class="report-section">
-                <h3><i class="fas fa-user-chart"></i> Participants Analytics Report</h3>
-                
-                <div class="report-filters">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Filter by Ministry</label>
-                            <select id="attendeeMinistryFilter" class="form-control" multiple>
-                                <option value="all">All Ministries</option>
-                                <!-- Ministry options will be populated dynamically -->
-                           <option value="">All Ministries</option>
-   <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
-<option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
-<option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
-<option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
-<option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
-<option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
-<option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
-<option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
-<option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
-<option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
-<option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
-<option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
-<option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
-<option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
-<option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
-<option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
-<option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
-<option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
-<option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
-<option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
-<option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
-<option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
-<option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
-<option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
-<option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
-<option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
-<option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
-<option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
-<option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
-<option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
-<option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
-<option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
-<option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
-<option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
-<option value="STATE HOUSE">STATE HOUSE</option>
-</select>
-                        </div>
-                        <div class="form-group">
-                            <label>Filter by Grade Level</label>
-                            <select id="attendeeGradeFilter" class="form-control" multiple>
-                                <option value="all">All Grades</option>
-                                <option value="Director">Director</option>
-                                <option value="Deputy Director">Deputy Director</option>
-                                <option value="Assistant Director">Assistant Director</option>
-                                <option value="Chief Officer">Chief Officer</option>
-                                <option value="Senior Officer">Senior Officer</option>
-                                <option value="Officer">Officer</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Filter by Status</label>
-                            <select id="attendeeStatusFilter" class="form-control" multiple>
-                                <option value="all">All Statuses</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-box full-width">
-                        <h4>Participants Distribution by Ministry & Grade</h4>
-                        <canvas id="attendeeDistributionChart" height="300"></canvas>
-                    </div>
-                </div>
-
-                <!-- Detailed Attendee Statistics -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Ministry</th>
-                                <th>Total Participant</th>
-                                <th>Approved</th>
-                                <th>Pending</th>
-                                <th>Rejected</th>
-                                <th>Directors</th>
-                                <th>Deputy Directors</th>
-                                <th>Assistant Directors</th>
-                                <th>Chief Officers</th>
-                                <th>Senior Officers</th>
-                                <th>Officers</th>
-                            </tr>
-                        </thead>
-                        <tbody id="attendeeDetailedStats">
-                            <!-- Will be populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Financial Reports -->
-            <div id="financialReport" class="report-section">
-                <h3><i class="fas fa-chart-line"></i> Financial Analysis Report</h3>
-                
-                <div class="financial-summary">
-                    <div class="financial-card">
-                        <h4>Total Revenue</h4>
-                        <h2 id="financialTotalRevenue">₦0</h2>
-                        <p class="subtext">From all sources</p>
-                    </div>
-                    <div class="financial-card">
-                        <h4>Booth Sales</h4>
-                        <h2 id="financialBoothRevenue">₦0</h2>
-                        <p class="subtext">Exhibition revenue</p>
-                    </div>
-                    <div class="financial-card">
-                        <h4>Partnerships</h4>
-                        <h2 id="financialPartnerRevenue">₦0</h2>
-                        <p class="subtext">Partner contributions</p>
-                    </div>
-                    <div class="financial-card">
-                        <h4>Speakers</h4>
-                        <h2 id="financialSpeakerRevenue">₦0</h2>
-                        <p class="subtext">Speaker packages</p>
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-row">
-                        <div class="chart-box">
-                            <h4>Revenue Trend (Monthly)</h4>
-                            <canvas id="revenueTrendChart" height="250"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <h4>Payment Status Distribution</h4>
-                            <canvas id="paymentStatusChart" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Revenue Details Table -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Total Amount</th>
-                                <th>Paid</th>
-                                <th>Pending</th>
-                                <th>Overdue</th>
-                                <th>Collection Rate</th>
-                                <th>Average Payment</th>
-                            </tr>
-                        </thead>
-                        <tbody id="revenueDetailsTable">
-                            <!-- Will be populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Ministry Reports -->
-            <div id="ministryReport" class="report-section">
-                <h3><i class="fas fa-university"></i> Ministry Performance Report</h3>
-                
-                <div class="ministry-ranking">
-                    <h4>Ministry Registration Ranking</h4>
-                    <div class="ranking-list" id="ministryRankingList">
-                        <!-- Will be populated dynamically -->
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-box full-width">
-                        <h4>Ministry Registration Timeline</h4>
-                        <canvas id="ministryTimelineChart" height="300"></canvas>
-                    </div>
-                </div>
-
-                <!-- Ministry Performance Metrics -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Ministry</th>
-                                <th>Code</th>
-                                <th>Total Registrations</th>
-                                <th>Approval Rate</th>
-                                <th>Completion Rate</th>
-                                <th>Avg. Processing Time</th>
-                                <th>Last Updated</th>
-                                <th>Performance Score</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ministryPerformanceTable">
-                            <!-- Will be populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Participation Reports -->
-            <div id="participationReport" class="report-section">
-                <h3><i class="fas fa-handshake"></i> Participation Analysis Report</h3>
-                
-                <div class="participation-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon total">
-                            <i class="fas fa-microphone"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="totalSpeakersCount">0</h3>
-                            <p>Total Speakers</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon approved">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="totalExhibitorsCount">0</h3>
-                            <p>Total Exhibitors</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon pending">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="totalPartnersCount">0</h3>
-                            <p>Total Partners</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon ministries">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 id="topSpeakerPackage">-</h3>
-                            <p>Top Speaker Package</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-row">
-                        <div class="chart-box">
-                            <h4>Speaker Package Distribution</h4>
-                            <canvas id="speakerPackageChart" height="250"></canvas>
-                        </div>
-                        <div class="chart-box">
-                            <h4>Exhibitor Booth Status</h4>
-                            <canvas id="exhibitorStatusChart" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Participation Details -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Confirmed</th>
-                                <th>Pending</th>
-                                <th>Rejected</th>
-                                <th>Paid</th>
-                                <th>Payment Pending</th>
-                                <th>Total Value</th>
-                                <th>Avg. Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="participationDetailsTable">
-                            <!-- Will be populated dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Custom Report Builder -->
-            <div id="customReport" class="report-section">
-                <h3><i class="fas fa-tools"></i> Custom Report Builder</h3>
-                
-                <div class="custom-report-builder">
-                    <div class="builder-sidebar">
-                        <h4>Report Components</h4>
-                        <div class="component-list">
-                            <div class="component-item" draggable="true" data-component="table">
-                                <i class="fas fa-table"></i>
-                                <span>Data Table</span>
-                            </div>
-                            <div class="component-item" draggable="true" data-component="chart">
-                                <i class="fas fa-chart-bar"></i>
-                                <span>Chart</span>
-                            </div>
-                            <div class="component-item" draggable="true" data-component="summary">
-                                <i class="fas fa-list-alt"></i>
-                                <span>Summary Card</span>
-                            </div>
-                            <div class="component-item" draggable="true" data-component="metrics">
-                                <i class="fas fa-chart-pie"></i>
-                                <span>Metrics Grid</span>
-                            </div>
-                        </div>
-                        
-                        <div class="data-sources">
-                            <h4>Data Sources</h4>
-                            <select id="customDataSource" class="form-control" multiple>
-                                <option value="attendees">Participants</option>
-                                <option value="speakers">Speakers</option>
-                                <option value="exhibitors">Exhibitors</option>
-                                <option value="partners">Partners</option>
-                                <option value="ministries">Ministries</option>
-                                <option value="payments">Payments</option>
-                                <option value="agenda">Agenda Items</option>
-                                <option value="resources">Resources</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="builder-canvas" id="reportCanvas">
-                        <div class="canvas-placeholder">
-                            <i class="fas fa-mouse-pointer"></i>
-                            <p>Drag components here to build your report</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="builder-actions">
-                    <button class="btn btn-secondary" id="clearCanvasBtn">
-                        <i class="fas fa-trash"></i> Clear Canvas
-                    </button>
-                    <button class="btn btn-secondary" id="saveTemplateBtn">
-                        <i class="fas fa-save"></i> Save Template
-                    </button>
-                    <button class="btn" id="generateCustomBtn">
-                        <i class="fas fa-play"></i> Generate Report
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Report Export Options -->
-        <div class="report-export-options">
-            <h3><i class="fas fa-download"></i> Export Options</h3>
-            <div class="export-buttons">
-                <button class="btn btn-secondary" id="exportPDFBtn">
-                    <i class="fas fa-file-pdf"></i> Export as PDF
-                </button>
-                <button class="btn btn-secondary" id="exportExcelBtn">
-                    <i class="fas fa-file-excel"></i> Export as Excel
-                </button>
-                <button class="btn btn-secondary" id="exportCSVBtn">
-                    <i class="fas fa-file-csv"></i> Export as CSV
-                </button>
-                <button class="btn" id="exportChartBtn">
-                    <i class="fas fa-image"></i> Export Charts
-                </button>
-            </div>
-            
-            <div class="export-settings">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="exportFileName">File Name</label>
-                        <input type="text" id="exportFileName" class="form-control" placeholder="ICSC2026_Report" value="ICSC2026_Report">
-                    </div>
-                    <div class="form-group">
-                        <label for="exportFormat">Format Options</label>
-                        <select id="exportFormat" class="form-control">
-                            <option value="detailed">Detailed Report</option>
-                            <option value="summary">Executive Summary</option>
-                            <option value="raw">Raw Data</option>
-                            <option value="formatted">Formatted Report</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="exportInclude">Include</label>
-                        <select id="exportInclude" class="form-control" multiple>
-                            <option value="charts" selected>Charts & Graphs</option>
-                            <option value="tables" selected>Data Tables</option>
-                            <option value="summary" selected>Summary</option>
-                            <option value="metadata" selected>Metadata</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Report History -->
-        <div class="report-history">
-            <h3><i class="fas fa-history"></i> Report History</h3>
-            <div class="table-responsive">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Type</th>
-                            <th>Generated By</th>
-                            <th>Date Generated</th>
-                            <th>Size</th>
-                            <th>Format</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportHistoryTable">
-                        <tr>
-                            <td>ICSC2026_Q1_Report</td>
-                            <td>Quarterly Summary</td>
-                            <td>Super Admin</td>
-                            <td>2024-03-31 14:30</td>
-                            <td>2.4 MB</td>
-                            <td>PDF</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-info btn-sm view-report-btn">View</button>
-                                    <button class="btn btn-success btn-sm download-report-btn">Download</button>
-                                    <button class="btn btn-danger btn-sm delete-report-btn">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Participants_Demographics</td>
-                            <td>Participant Analysis</td>
-                            <td>Super Admin</td>
-                            <td>2024-03-30 11:15</td>
-                            <td>1.8 MB</td>
-                            <td>Excel</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-info btn-sm view-report-btn">View</button>
-                                    <button class="btn btn-success btn-sm download-report-btn">Download</button>
-                                    <button class="btn btn-danger btn-sm delete-report-btn">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
     
-
-
 <!-- Bulk Approvals Tab -->
 <div id="bulk-approvals" class="tab-content">
     <div class="dashboard-section">
@@ -2673,87 +2033,6 @@
             <h2>System Settings</h2>
         </div>
 
-        <!-- Event Countdown Timer Settings
-        <div class="settings-section">
-            <div class="section-header">
-                <h3><i class="fas fa-clock"></i> Event Countdown Timer Settings</h3>
-                <p>Control the countdown timer displayed on the homepage</p>
-            </div>
-            
-            <form id="eventTimerForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="eventDateTime" class="has-star">Event Date & Time</label>
-                        <input type="datetime-local" id="eventDateTime" class="form-control" required>
-                        <small>This date controls the countdown timer on the homepage</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="eventTimezone">Timezone</label>
-                        <select id="eventTimezone" class="form-control">
-                            <option value="Africa/Lagos" selected>West Africa Time (WAT)</option>
-                            <option value="UTC">UTC</option>
-                            <option value="America/New_York">Eastern Time (ET)</option>
-                            <option value="Europe/London">London Time (GMT)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="popupDuration">Popup Auto-Close Duration</label>
-                        <select id="popupDuration" class="form-control">
-                            <option value="3">3 seconds</option>
-                            <option value="5" selected>5 seconds</option>
-                            <option value="10">10 seconds</option>
-                            <option value="0">No auto-close</option>
-                        </select>
-                        <small>How long the countdown popup stays before auto-closing</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="popupFrequency">Popup Display Frequency</label>
-                        <select id="popupFrequency" class="form-control">
-                            <option value="daily" selected>Once per day</option>
-                            <option value="weekly">Once per week</option>
-                            <option value="session">Once per browser session</option>
-                            <option value="always">Always show</option>
-                        </select>
-                        <small>How often visitors see the countdown popup</small>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Current Timer Setting</label>
-                        <div class="current-setting-box">
-                            <div id="currentTimerSetting">
-                                <p>Loading current timer settings...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="testTimerBtn">
-                        <i class="fas fa-vial"></i> Test Timer (1 min)
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="resetTimerBtn">
-                        <i class="fas fa-undo"></i> Reset to Default
-                    </button>
-                    <button type="submit" class="btn">
-                        <i class="fas fa-save"></i> Save Timer Settings
-                    </button>
-                </div>
-            </form>
-        </div> -->
-
-
-        <!-- Registration Caps Management -->
-        <div class="settings-section">
-            <div class="section-header">
-                <h3><i class="fas fa-users"></i> Registration Caps Management</h3>
-                <p>Set maximum limits for different registration categories</p>
-            </div>
-
             <!-- Current Registration Stats -->
             <div class="stats-container" id="registrationStats">
                 <div class="stat-card">
@@ -2848,7 +2127,7 @@
                         </div>
                     </div> -->
                     
-                    <div class="form-row">
+                    <!-- <div class="form-row">
                         <div class="form-group">
                             <label for="partnerCap">Partner Maximum</label>
                             <input type="number" id="partnerCap" class="form-control" min="0" placeholder="Enter maximum partners">
@@ -2862,7 +2141,7 @@
                                 <option value="show_message">Show "Partnerships Full" message</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                   <!-- Global Cap Settings -->
@@ -2875,7 +2154,7 @@
                     </div>
 
                     <!-- Enable/Disable All Registration -->
-                    <div class="form-row">
+                    <!-- <div class="form-row">
                         <div class="form-group">
                             <label for="registrationStatus">Registration Status</label>
                             <select id="registrationStatus" class="form-control">
@@ -2885,28 +2164,28 @@
                                 <option value="early_bird">Early Bird Registration Only</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
-                <div class="form-actions">
+                <!-- <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="resetCapsBtn">
                         <i class="fas fa-undo"></i> Reset All Caps
                     </button>
                     <button type="submit" class="btn">
                         <i class="fas fa-save"></i> Save Registration Caps
-                    </button>
+                    </button> -->
                 </div>
 
                     
 <!-- Partnership Package Management Section -->
 <div class="settings-section">
-    <div class="section-header">
+    <!-- <div class="section-header">
         <h3><i class="fas fa-handshake"></i> Partnership Package Management</h3>
         <p>Configure Diamond, Gold, Silver, and Bronze partnership packages</p>
-    </div>
+    </div> -->
 
     <!-- Package Statistics Overview -->
-    <div class="package-stats-overview">
+    <!-- <div class="package-stats-overview">
         <h4>Current Package Utilization</h4>
         <div class="stats-container">
             <div class="stat-card">
@@ -2950,769 +2229,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Package Configuration Form -->
-    <form id="packageConfigForm">
-        <!-- Package Capacity Settings -->
-        <div class="form-section">
-            <h4>Package Capacity Limits</h4>
-            
-            <div class="package-capacity-container">
-                <!-- Diamond Package -->
-                <div class="package-capacity-card" data-package="diamond">
-                    <div class="package-header">
-                        <i class="fas fa-gem"></i>
-                        <h5>Diamond Partner Package</h5>
-                        <span class="package-status status-available" id="diamondStatus">Available</span>
-                    </div>
-                    
-                    <div class="capacity-controls">
-                        <div class="form-group">
-                            <label for="diamondMaxRegistrants">Maximum Partners</label>
-                            <div class="input-with-actions">
-                                <input type="number" id="diamondMaxRegistrants" class="form-control" min="0" value="10">
-                                <div class="input-actions">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('diamond', -1)">-</button>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('diamond', 1)">+</button>
-                                </div>
-                            </div>
-                            <small>Set to 0 for unlimited</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="diamondCurrentCount">Current Partners</label>
-                            <input type="text" id="diamondCurrentCount" class="form-control" value="0" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="diamondAction">When Full</label>
-                            <select id="diamondAction" class="form-control">
-                                <option value="hide">Hide from registration</option>
-                                <option value="disable">Disable registration</option>
-                                <option value="show_message">Show "Full" message</option>
-                                <option value="waitlist">Enable waitlist</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gold Package -->
-                <div class="package-capacity-card" data-package="gold">
-                    <div class="package-header">
-                        <i class="fas fa-medal"></i>
-                        <h5>Gold Knowledge Partner</h5>
-                        <span class="package-status status-available" id="goldStatus">Available</span>
-                    </div>
-                    
-                    <div class="capacity-controls">
-                        <div class="form-group">
-                            <label for="goldMaxRegistrants">Maximum Partners</label>
-                            <div class="input-with-actions">
-                                <input type="number" id="goldMaxRegistrants" class="form-control" min="0" value="20">
-                                <div class="input-actions">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('gold', -1)">-</button>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('gold', 1)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="goldCurrentCount">Current Partners</label>
-                            <input type="text" id="goldCurrentCount" class="form-control" value="0" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="goldAction">When Full</label>
-                            <select id="goldAction" class="form-control">
-                                <option value="hide">Hide from registration</option>
-                                <option value="disable">Disable registration</option>
-                                <option value="show_message">Show "Full" message</option>
-                                <option value="waitlist">Enable waitlist</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Silver Package -->
-                <div class="package-capacity-card" data-package="silver">
-                    <div class="package-header">
-                        <i class="fas fa-award"></i>
-                        <h5>Silver Roundtable Partner</h5>
-                        <span class="package-status status-available" id="silverStatus">Available</span>
-                    </div>
-                    
-                    <div class="capacity-controls">
-                        <div class="form-group">
-                            <label for="silverMaxRegistrants">Maximum Partners</label>
-                            <div class="input-with-actions">
-                                <input type="number" id="silverMaxRegistrants" class="form-control" min="0" value="30">
-                                <div class="input-actions">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('silver', -1)">-</button>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('silver', 1)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="silverCurrentCount">Current Partners</label>
-                            <input type="text" id="silverCurrentCount" class="form-control" value="0" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="silverAction">When Full</label>
-                            <select id="silverAction" class="form-control">
-                                <option value="hide">Hide from registration</option>
-                                <option value="disable">Disable registration</option>
-                                <option value="show_message">Show "Full" message</option>
-                                <option value="waitlist">Enable waitlist</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bronze Package -->
-                <div class="package-capacity-card" data-package="bronze">
-                    <div class="package-header">
-                        <i class="fas fa-star"></i>
-                        <h5>Bronze Exhibition Partner</h5>
-                        <span class="package-status status-available" id="bronzeStatus">Available</span>
-                    </div>
-                    
-                    <div class="capacity-controls">
-                        <div class="form-group">
-                            <label for="bronzeMaxRegistrants">Maximum Partners</label>
-                            <div class="input-with-actions">
-                                <input type="number" id="bronzeMaxRegistrants" class="form-control" min="0" value="50">
-                                <div class="input-actions">
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('bronze', -1)">-</button>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="adjustCapacity('bronze', 1)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bronzeCurrentCount">Current Partners</label>
-                            <input type="text" id="bronzeCurrentCount" class="form-control" value="0" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="bronzeAction">When Full</label>
-                            <select id="bronzeAction" class="form-control">
-                                <option value="hide">Hide from registration</option>
-                                <option value="disable">Disable registration</option>
-                                <option value="show_message">Show "Full" message</option>
-                                <option value="waitlist">Enable waitlist</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- NEW: Feature Rights Configuration -->
-        <div class="form-section">
-            <h4>Package Feature Rights</h4>
-            <p>Control which packages have access to exhibition and speaking features</p>
-            
-            <div class="feature-rights-container">
-                <!-- Diamond Feature Rights -->
-                <div class="feature-rights-card" data-package="diamond">
-                    <div class="feature-header">
-                        <i class="fas fa-gem"></i>
-                        <h5>Diamond Package Features</h5>
-                    </div>
-                    
-                    <div class="feature-controls">
-                        <!-- Exhibit Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-store"></i>
-                                    <span>Exhibition Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="diamondExhibitRights" class="feature-checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="diamondExhibitDetails">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="diamondBoothSlots">Number of Booth Slots</label>
-                                        <input type="number" id="diamondBoothSlots" class="form-control" min="0" value="2">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="diamondBoothSize">Booth Size</label>
-                                        <select id="diamondBoothSize" class="form-control">
-                                            <option value="6x9m">Prime (6x9m)</option>
-                                            <option value="6x6m">Standard (6x6m)</option>
-                                            <option value="3x6m">Basic (3x6m)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="diamondBoothLocation">Preferred Booth Location</label>
-                                        <select id="diamondBoothLocation" class="form-control">
-                                            <option value="main_entrance">Near Main Entrance</option>
-                                            <option value="stage_front">Front of Stage</option>
-                                            <option value="networking_area">Networking Area</option>
-                                            <option value="food_court">Near Food Court</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="diamondSetupTime">Setup Time (hours)</label>
-                                        <input type="number" id="diamondSetupTime" class="form-control" min="1" value="4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Speak Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-microphone"></i>
-                                    <span>Speaking Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="diamondSpeakRights" class="feature-checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="diamondSpeakDetails">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="diamondSpeakingSlots">Number of Speaking Slots</label>
-                                        <input type="number" id="diamondSpeakingSlots" class="form-control" min="0" value="1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="diamondSessionType">Session Type</label>
-                                        <select id="diamondSessionType" class="form-control">
-                                            <option value="keynote">Keynote Speaker</option>
-                                            <option value="panel">Panel Discussion</option>
-                                            <option value="roundtable">Roundtable</option>
-                                            <option value="workshop">Workshop</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="diamondSessionDuration">Session Duration (minutes)</label>
-                                        <input type="number" id="diamondSessionDuration" class="form-control" min="5" value="45">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="diamondSpeakerPriority">Speaker Priority</label>
-                                        <select id="diamondSpeakerPriority" class="form-control">
-                                            <option value="1">Priority 1 (First Choice)</option>
-                                            <option value="2">Priority 2</option>
-                                            <option value="3">Priority 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gold Feature Rights -->
-                <div class="feature-rights-card" data-package="gold">
-                    <div class="feature-header">
-                        <i class="fas fa-medal"></i>
-                        <h5>Gold Package Features</h5>
-                    </div>
-                    
-                    <div class="feature-controls">
-                        <!-- Exhibit Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-store"></i>
-                                    <span>Exhibition Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="goldExhibitRights" class="feature-checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="goldExhibitDetails">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="goldBoothSlots">Number of Booth Slots</label>
-                                        <input type="number" id="goldBoothSlots" class="form-control" min="0" value="1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="goldBoothSize">Booth Size</label>
-                                        <select id="goldBoothSize" class="form-control">
-                                            <option value="6x6m">Standard (6x6m)</option>
-                                            <option value="3x6m">Basic (3x6m)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="goldBoothLocation">Preferred Booth Location</label>
-                                        <select id="goldBoothLocation" class="form-control">
-                                            <option value="stage_front">Front of Stage</option>
-                                            <option value="networking_area">Networking Area</option>
-                                            <option value="food_court">Near Food Court</option>
-                                            <option value="standard">Standard Location</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="goldSetupTime">Setup Time (hours)</label>
-                                        <input type="number" id="goldSetupTime" class="form-control" min="1" value="3">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Speak Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-microphone"></i>
-                                    <span>Speaking Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="goldSpeakRights" class="feature-checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="goldSpeakDetails">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="goldSpeakingSlots">Number of Speaking Slots</label>
-                                        <input type="number" id="goldSpeakingSlots" class="form-control" min="0" value="1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="goldSessionType">Session Type</label>
-                                        <select id="goldSessionType" class="form-control">
-                                            <option value="panel">Panel Discussion</option>
-                                            <option value="roundtable">Roundtable</option>
-                                            <option value="workshop">Workshop</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="goldSessionDuration">Session Duration (minutes)</label>
-                                        <input type="number" id="goldSessionDuration" class="form-control" min="5" value="30">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="goldSpeakerPriority">Speaker Priority</label>
-                                        <select id="goldSpeakerPriority" class="form-control">
-                                            <option value="2">Priority 2</option>
-                                            <option value="3">Priority 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Silver Feature Rights -->
-                <div class="feature-rights-card" data-package="silver">
-                    <div class="feature-header">
-                        <i class="fas fa-award"></i>
-                        <h5>Silver Package Features</h5>
-                    </div>
-                    
-                    <div class="feature-controls">
-                        <!-- Exhibit Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-store"></i>
-                                    <span>Exhibition Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="silverExhibitRights" class="feature-checkbox" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="silverExhibitDetails">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="silverBoothSlots">Number of Booth Slots</label>
-                                        <input type="number" id="silverBoothSlots" class="form-control" min="0" value="1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="silverBoothSize">Booth Size</label>
-                                        <select id="silverBoothSize" class="form-control">
-                                            <option value="3x6m">Basic (3x6m)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="silverBoothLocation">Booth Location</label>
-                                        <select id="silverBoothLocation" class="form-control">
-                                            <option value="standard">Standard Location</option>
-                                            <option value="general_area">General Area</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="silverSetupTime">Setup Time (hours)</label>
-                                        <input type="number" id="silverSetupTime" class="form-control" min="1" value="2">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Speak Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-microphone"></i>
-                                    <span>Speaking Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="silverSpeakRights" class="feature-checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="silverSpeakDetails" style="display: none;">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="silverSpeakingSlots">Number of Speaking Slots</label>
-                                        <input type="number" id="silverSpeakingSlots" class="form-control" min="0" value="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="silverSessionType">Session Type</label>
-                                        <select id="silverSessionType" class="form-control">
-                                            <option value="roundtable">Roundtable</option>
-                                            <option value="workshop">Workshop</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="silverSessionDuration">Session Duration (minutes)</label>
-                                        <input type="number" id="silverSessionDuration" class="form-control" min="5" value="20">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="silverSpeakerPriority">Speaker Priority</label>
-                                        <select id="silverSpeakerPriority" class="form-control">
-                                            <option value="3">Priority 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bronze Feature Rights -->
-                <div class="feature-rights-card" data-package="bronze">
-                    <div class="feature-header">
-                        <i class="fas fa-star"></i>
-                        <h5>Bronze Package Features</h5>
-                    </div>
-                    
-                    <div class="feature-controls">
-                        <!-- Exhibit Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-store"></i>
-                                    <span>Exhibition Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="bronzeExhibitRights" class="feature-checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="bronzeExhibitDetails" style="display: none;">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="bronzeBoothSlots">Number of Booth Slots</label>
-                                        <input type="number" id="bronzeBoothSlots" class="form-control" min="0" value="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="bronzeBoothSize">Booth Size</label>
-                                        <select id="bronzeBoothSize" class="form-control">
-                                            <option value="3x3m">Small (3x3m)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="bronzeBoothLocation">Booth Location</label>
-                                        <select id="bronzeBoothLocation" class="form-control">
-                                            <option value="general_area">General Area</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="bronzeSetupTime">Setup Time (hours)</label>
-                                        <input type="number" id="bronzeSetupTime" class="form-control" min="1" value="1">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Speak Rights -->
-                        <div class="feature-toggle">
-                            <div class="feature-toggle-header">
-                                <div class="feature-icon">
-                                    <i class="fas fa-microphone"></i>
-                                    <span>Speaking Rights</span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="bronzeSpeakRights" class="feature-checkbox">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            <div class="feature-details" id="bronzeSpeakDetails" style="display: none;">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="bronzeSpeakingSlots">Number of Speaking Slots</label>
-                                        <input type="number" id="bronzeSpeakingSlots" class="form-control" min="0" value="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="bronzeSessionType">Session Type</label>
-                                        <select id="bronzeSessionType" class="form-control">
-                                            <option value="workshop">Workshop</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="bronzeSessionDuration">Session Duration (minutes)</label>
-                                        <input type="number" id="bronzeSessionDuration" class="form-control" min="5" value="15">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="bronzeSpeakerPriority">Speaker Priority</label>
-                                        <select id="bronzeSpeakerPriority" class="form-control">
-                                            <option value="3">Priority 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Package Benefits Configuration -->
-        <div class="form-section">
-            <h4>Package Benefits Summary</h4>
-            
-            <div class="benefits-tabs">
-                <div class="benefits-tab-nav">
-                    <button type="button" class="benefits-tab-btn active" data-package="diamond">
-                        <i class="fas fa-gem"></i> Diamond
-                    </button>
-                    <button type="button" class="benefits-tab-btn" data-package="gold">
-                        <i class="fas fa-medal"></i> Gold
-                    </button>
-                    <button type="button" class="benefits-tab-btn" data-package="silver">
-                        <i class="fas fa-award"></i> Silver
-                    </button>
-                    <button type="button" class="benefits-tab-btn" data-package="bronze">
-                        <i class="fas fa-star"></i> Bronze
-                    </button>
-                </div>
-                
-                <!-- Diamond Benefits -->
-                <div class="benefits-tab-pane active" id="diamondBenefits">
-                    <div class="form-group">
-                        <label for="diamondInvestment">Investment Amount (₦)</label>
-                        <input type="number" id="diamondInvestment" class="form-control" value="5000000" step="100000">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="diamondFeatures">Key Features (one per line)</label>
-                        <textarea id="diamondFeatures" class="form-control" rows="5">• Prime booth location (6x9m)
-• 10 conference passes
-• Keynote speaking slot
-• Company logo on all promotional materials
-• VIP dinner with speakers
-• Dedicated event staff
-• Social media promotion
-• Full-page ad in conference brochure</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="diamondDescription">Package Description</label>
-                        <textarea id="diamondDescription" class="form-control" rows="3">Premium partnership with maximum visibility and exclusive benefits.</textarea>
-                    </div>
-                </div>
-
-                <!-- Gold Benefits -->
-                <div class="benefits-tab-pane" id="goldBenefits" style="display: none;">
-                    <div class="form-group">
-                        <label for="goldInvestment">Investment Amount (₦)</label>
-                        <input type="number" id="goldInvestment" class="form-control" value="3000000" step="100000">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="goldFeatures">Key Features (one per line)</label>
-                        <textarea id="goldFeatures" class="form-control" rows="5">• Standard booth location (6x6m)
-• 6 conference passes
-• Panel discussion participation
-• Company logo on event website
-• Networking reception access
-• Half-page ad in conference brochure</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="goldDescription">Package Description</label>
-                        <textarea id="goldDescription" class="form-control" rows="3">Strategic partnership with strong visibility and networking opportunities.</textarea>
-                    </div>
-                </div>
-
-                <!-- Silver Benefits -->
-                <div class="benefits-tab-pane" id="silverBenefits" style="display: none;">
-                    <div class="form-group">
-                        <label for="silverInvestment">Investment Amount (₦)</label>
-                        <input type="number" id="silverInvestment" class="form-control" value="1500000" step="50000">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="silverFeatures">Key Features (one per line)</label>
-                        <textarea id="silverFeatures" class="form-control" rows="5">• Standard booth location (3x6m)
-• 4 conference passes
-• Roundtable discussion participation
-• Company logo in event program
-• Listing on event website</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="silverDescription">Package Description</label>
-                        <textarea id="silverDescription" class="form-control" rows="3">Valued partnership with good visibility and engagement opportunities.</textarea>
-                    </div>
-                </div>
-
-                <!-- Bronze Benefits -->
-                <div class="benefits-tab-pane" id="bronzeBenefits" style="display: none;">
-                    <div class="form-group">
-                        <label for="bronzeInvestment">Investment Amount (₦)</label>
-                        <input type="number" id="bronzeInvestment" class="form-control" value="500000" step="25000">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bronzeFeatures">Key Features (one per line)</label>
-                        <textarea id="bronzeFeatures" class="form-control" rows="5">• Exhibition space (3x3m)
-• 2 conference passes
-• Company listing on event website
-• Basic promotional materials</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bronzeDescription">Package Description</label>
-                        <textarea id="bronzeDescription" class="form-control" rows="3">Entry-level partnership with exhibition presence and networking access.</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Payment & Grace Period Settings -->
-        <div class="form-section">
-            <h4>Payment & Grace Period Settings</h4>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="paymentGracePeriod">Payment Grace Period (hours)</label>
-                    <input type="number" id="paymentGracePeriod" class="form-control" value="48" min="1" max="168">
-                    <small>Time allowed for partners to complete payment before slot is reopened</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="autoReopenEnabled">Auto-Reopen Full Packages</label>
-                    <select id="autoReopenEnabled" class="form-control">
-                        <option value="yes">Yes - Automatically reopen when payment fails</option>
-                        <option value="no">No - Manual review required</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group full-width">
-                    <label for="paymentReminderTemplate">Payment Reminder Template</label>
-                    <textarea id="paymentReminderTemplate" class="form-control" rows="4">Dear {partner_name},
-
-This is a reminder that your payment for the {package_name} package at ICSC 2026 is due within {grace_period} hours.
-
-Please complete your payment to secure your partnership. If payment is not received within the grace period, your reserved slot will be reopened for other partners.
-
-Best regards,
-ICSC 2026 Team</textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- Package Availability Override -->
-        <div class="form-section">
-            <h4>Manual Package Control</h4>
-            
-            <div class="package-override-controls">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Force Package Status</label>
-                        <div class="override-buttons">
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('diamond', 'open')">
-                                Open Diamond
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('diamond', 'close')">
-                                Close Diamond
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('gold', 'open')">
-                                Open Gold
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('gold', 'close')">
-                                Close Gold
-                            </button>
-                        </div>
-                        <div class="override-buttons" style="margin-top: 10px;">
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('silver', 'open')">
-                                Open Silver
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('silver', 'close')">
-                                Close Silver
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('bronze', 'open')">
-                                Open Bronze
-                            </button>
-                            <button type="button" class="btn btn-secondary" onclick="forcePackageStatus('bronze', 'close')">
-                                Close Bronze
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="overrideReason">Override Reason (Optional)</label>
-                        <input type="text" id="overrideReason" class="form-control" placeholder="e.g., Special promotion, System maintenance">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="refreshPackageStatsBtn">
-                <i class="fas fa-sync-alt"></i> Refresh Stats
-            </button>
-            <button type="button" class="btn btn-secondary" id="resetPackageDefaultsBtn">
-                <i class="fas fa-undo"></i> Reset to Defaults
-            </button>
-            <button type="submit" class="btn">
-                <i class="fas fa-save"></i> Save Package Configuration
-            </button>
-        </div>
-    </form>
+    </div> -->
 </div>
 
         <!-- System Configuration -->
@@ -4383,7 +2900,6 @@ ICSC 2026 Team</textarea>
 </div>
 
 
-
     <!-- Add Speaker Modal -->
 <div id="addSpeakerModal" class="modal">
     <div class="modal-content modal-lg">
@@ -4521,6 +3037,457 @@ ICSC 2026 Team</textarea>
                     <button type="submit" class="btn-accept" style="background: var(--primary);">Save & Send Welcome Email</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Packages Tab - COMPLETE VERSION -->
+<div id="packages" class="tab-content">
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>Package Management</h2>
+            <div class="section-actions">
+                <button class="btn btn-secondary" id="refreshPackagesBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn" id="addPackageBtn">
+                    <i class="fas fa-plus"></i> Create Package
+                </button>
+            </div>
+        </div>
+
+        <!-- Package Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalPackages">0</h3>
+                    <p>Total Packages</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon diamond">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="diamondCount">0</h3>
+                    <p>Diamond</p>
+                    <small><span id="diamondAvailable">0</span> available</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="goldCount">0</h3>
+                    <p>Gold</p>
+                    <small><span id="goldAvailable">0</span> available</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon silver">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="silverCount">0</h3>
+                    <p>Silver</p>
+                    <small><span id="silverAvailable">0</span> available</small>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bronze">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="bronzeCount">0</h3>
+                    <p>Bronze</p>
+                    <small><span id="bronzeAvailable">0</span> available</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchPackages" class="form-control" placeholder="Search packages...">
+            </div>
+            <div class="filter-group">
+                <select id="filterPackageType" class="form-control filter-select">
+                    <option value="">All Types</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="gold">Gold</option>
+                    <option value="silver">Silver</option>
+                    <option value="bronze">Bronze</option>
+                </select>
+                <select id="filterPackageStatus" class="form-control filter-select">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="full">Full</option>
+                </select>
+                <select id="itemsPerPage" class="form-control filter-select">
+                    <option value="5">5 per page</option>
+                    <option value="10" selected>10 per page</option>
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                </select>
+                <button class="btn btn-secondary" id="clearPackageFiltersBtn">Clear</button>
+            </div>
+        </div>
+
+        <!-- Packages Table -->
+        <div class="table-responsive">
+            <table class="data-table" id="packagesTable">
+                <thead>
+                    <tr>
+                        <th>Package Name</th>
+                        <th>Type</th>
+                        <th>Benefits</th>
+                        <th>Price (₦)</th>
+                        <th>Availability</th>
+                        <th>Speaking</th>
+                        <th>Exhibition</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="packagesTableBody">
+                    <tr>
+                        <td colspan="9" class="text-center">Loading packages...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-container">
+            <div class="pagination-info" id="paginationInfo">
+                Showing 0-0 of 0 packages
+            </div>
+            <nav class="pagination-nav">
+                <ul class="pagination" id="paginationControls">
+                    <li class="page-item disabled" id="firstPageBtn">
+                        <a class="page-link" href="#" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item disabled" id="prevPageBtn">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Page numbers will be inserted here -->
+                    <div id="pageNumbers" style="display: flex;"></div>
+                    
+                    <li class="page-item disabled" id="nextPageBtn">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item disabled" id="lastPageBtn">
+                        <a class="page-link" href="#" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="pagination-jump">
+                <span>Go to page:</span>
+                <input type="number" id="pageJumpInput" class="form-control" min="1" value="1" style="width: 70px;">
+                <button class="btn btn-sm btn-secondary" id="jumpToPageBtn">Go</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create/Edit Package Modal -->
+<div id="packageModal" class="modal">
+    <div class="modal-content modal-lg">
+        <div class="modal-header">
+            <h2 id="packageModalTitle">Create Package</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <form id="packageForm">
+                <input type="hidden" id="packageId">
+                
+                <!-- Basic Package Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> Basic Package Information</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packageType">Package Type *</label>
+                            <select id="packageType" class="form-control" required>
+                                <option value="">Select Package Type</option>
+                                <option value="diamond">Diamond Partner</option>
+                                <option value="gold">Gold Knowledge Partner</option>
+                                <option value="silver">Silver Roundtable Partner</option>
+                                <option value="bronze">Bronze Exhibition Partner</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="packageName">Package Name </label>
+                            <input type="text" id="packageName" class="form-control" placeholder="e.g., Premium Partnership" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packagePrice">Price (₦) *</label>
+                            <input type="number" id="packagePrice" class="form-control" placeholder="Enter package price" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="packageStatus">Status *</label>
+                            <select id="packageStatus" class="form-control" required>
+                                <option value="active" selected>Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Capacity & Availability -->
+                <div class="form-section">
+                    <h3><i class="fas fa-chart-pie"></i> Capacity & Availability</h3>
+                    
+                    <!-- Availability Display -->
+                    <div class="availability-display" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e9ecef;">
+                        <div class="availability-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h4 style="margin: 0; font-size: 1rem;">Slot Availability</h4>
+                            <span class="badge" id="availabilityStatus" style="background: #28a745; color: white; padding: 4px 8px; border-radius: 12px;">
+                                Good Availability
+                            </span>
+                        </div>
+                        
+                        <div class="availability-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px;">
+                            <div class="stat-item" style="text-align: center;">
+                                <div class="stat-value" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-dark);" id="totalSlotsDisplay">0</div>
+                                <div class="stat-label" style="font-size: 0.85rem; color: var(--text-medium);">Total Slots</div>
+                            </div>
+                            <div class="stat-item" style="text-align: center;">
+                                <div class="stat-value" style="font-size: 1.5rem; font-weight: 600; color: #dc3545;" id="usedSlotsDisplay">0</div>
+                                <div class="stat-label" style="font-size: 0.85rem; color: var(--text-medium);">Used Slots</div>
+                            </div>
+                            <div class="stat-item" style="text-align: center;">
+                                <div class="stat-value" style="font-size: 1.5rem; font-weight: 600; color: #28a745;" id="availableSlotsDisplay">0</div>
+                                <div class="stat-label" style="font-size: 0.85rem; color: var(--text-medium);">Available Slots</div>
+                            </div>
+                            <div class="stat-item" style="text-align: center;">
+                                <div class="stat-value" style="font-size: 1.5rem; font-weight: 600;" id="utilizationDisplay">0%</div>
+                                <div class="stat-label" style="font-size: 0.85rem; color: var(--text-medium);">Utilization</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="availability-progress">
+                            <div class="progress-header" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <small style="color: var(--text-medium);">Slot Utilization</small>
+                                <small id="progressText" style="font-weight: 500;">0% used</small>
+                            </div>
+                            <div class="progress-bar-container" style="height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden; margin-bottom: 5px;">
+                                <div id="utilizationProgress" style="height: 100%; width: 0%; background: #28a745; transition: width 0.3s;"></div>
+                            </div>
+                            <div class="progress-labels" style="display: flex; justify-content: space-between;">
+                                <small style="color: #28a745;">Available</small>
+                                <small style="color: #dc3545;">Used</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Fields -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packageMaxAvailable">Maximum Available Slots *</label>
+                            <div class="input-group">
+                                <input type="number" id="packageMaxAvailable" class="form-control" placeholder="Total package slots" required min="1" onchange="updatePackageAvailability()" oninput="updatePackageAvailability()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">slots</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="packageCurrentUsed">Currently Used Slots</label>
+                            <div class="input-group">
+                                <input type="number" id="packageCurrentUsed" class="form-control" placeholder="Currently occupied slots" min="0" onchange="updatePackageAvailability()" oninput="updatePackageAvailability()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">slots</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- When Full Action -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="packageWhenFull">Action When Full *</label>
+                            <select id="packageWhenFull" class="form-control" required>
+                                <option value="hide">Hide from registration</option>
+                                <option value="disable" selected>Disable registration</option>
+                                <option value="show_message">Show "Full" message</option>
+                                <option value="waitlist">Enable waitlist</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="packageFullMessage">Full Package Message</label>
+                            <textarea id="packageFullMessage" class="form-control" placeholder="Message to show when package is full" rows="2">This package is currently full. Please check back later or contact us for waitlist options.</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Availability Alerts -->
+                    <div id="availabilityAlerts" style="display: none;"></div>
+                </div>
+                
+                <!-- Feature Rights -->
+                <div class="form-section">
+                    <h3><i class="fas fa-sliders-h"></i> Feature Rights</h3>
+                    
+                    <!-- Speaking Rights -->
+                    <div class="feature-toggle">
+                        <div class="feature-toggle-header">
+                            <div class="feature-icon">
+                                <i class="fas fa-microphone"></i>
+                                <span>Speaking Opportunities</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="packageSpeakRights" class="feature-checkbox" onchange="toggleFeatureDetails('packageSpeakRights', 'packageSpeakDetails')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="feature-details" id="packageSpeakDetails" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="packageSpeakingSlots">Number of Speaking Slots *</label>
+                                    <input type="number" id="packageSpeakingSlots" class="form-control" min="0" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="packageSessionType">Session Type *</label>
+                                    <select id="packageSessionType" class="form-control" required>
+                                        <option value="keynote">Keynote Speaker</option>
+                                        <option value="panel">Panel Discussion</option>
+                                        <option value="roundtable">Roundtable</option>
+                                        <option value="workshop">Workshop</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="packageSessionDuration">Session Duration (minutes) *</label>
+                                    <input type="number" id="packageSessionDuration" class="form-control" min="5" value="30" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="packageSpeakerPriority">Speaker Priority *</label>
+                                    <select id="packageSpeakerPriority" class="form-control" required>
+                                        <option value="1">Priority 1 (First Choice)</option>
+                                        <option value="2">Priority 2</option>
+                                        <option value="3">Priority 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Exhibition Rights -->
+                    <div class="feature-toggle">
+                        <div class="feature-toggle-header">
+                            <div class="feature-icon">
+                                <i class="fas fa-store"></i>
+                                <span>Exhibition Opportunities</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="packageExhibitRights" class="feature-checkbox" onchange="toggleFeatureDetails('packageExhibitRights', 'packageExhibitDetails')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="feature-details" id="packageExhibitDetails" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="packageExhibitSlots">Number of Booth Slots *</label>
+                                    <input type="number" id="packageExhibitSlots" class="form-control" min="0" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="packageBoothSize">Booth Size *</label>
+                                    <select id="packageBoothSize" class="form-control" required>
+                                        <option value="3x3m">Small (3x3m)</option>
+                                        <option value="3x6m">Basic (3x6m)</option>
+                                        <option value="6x6m">Standard (6x6m)</option>
+                                        <option value="6x9m">Prime (6x9m)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="packageBoothLocation">Preferred Booth Location *</label>
+                                    <select id="packageBoothLocation" class="form-control" required>
+                                        <option value="main_entrance">Near Main Entrance</option>
+                                        <option value="stage_front">Front of Stage</option>
+                                        <option value="networking_area">Networking Area</option>
+                                        <option value="food_court">Near Food Court</option>
+                                        <option value="standard">Standard Location</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="packageSetupTime">Setup Time (hours) *</label>
+                                    <input type="number" id="packageSetupTime" class="form-control" min="1" value="2" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Package Benefits -->
+                <div class="form-section">
+                    <h3><i class="fas fa-gift"></i> Package Benefits</h3>
+                    
+                    <div class="form-group">
+                        <label for="packageBenefits">Benefits List (one per line) *</label>
+                        <textarea id="packageBenefits" class="form-control" rows="6" placeholder="Enter benefits, one per line:
+• Prime booth location (6x9m)
+• 10 conference passes
+• Keynote speaking slot
+• Company logo on all promotional materials" required></textarea>
+                        <small class="form-text text-muted">Each line should start with a bullet point (•) or dash (-)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="packageDescription">Package Description *</label>
+                        <textarea id="packageDescription" class="form-control" rows="3" placeholder="Describe this package for potential partners" required></textarea>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+                    <button type="button" class="btn-cancel" id="cancelPackageBtn">Cancel</button>
+                    <button type="submit" class="btn-accept" id="savePackageBtn">Save Package</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deletePackageModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Confirm Deletion</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this package?</p>
+            <p><strong id="deletePackageName"></strong></p>
+            <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone.</p>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="cancelDeletePackageBtn">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDeletePackageBtn">Delete Package</button>
         </div>
     </div>
 </div>

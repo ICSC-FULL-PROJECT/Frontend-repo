@@ -61,7 +61,7 @@ function addToRecentActivity(attendeeData) {
         <td>Added</td>
         <td>${attendeeData.firstName} ${attendeeData.lastName}</td>
         <td>${attendeeData.position}</td>
-        <td><span class="status-badge status-pending">Pending</span></td>
+        
     `;
     
     table.insertBefore(row, table.firstChild);
@@ -96,14 +96,14 @@ function renderRecentActivity() {
 
     recentAttendees.forEach(attendee => {
         const row = document.createElement('tr');
-        const statusClass = attendee.status.toLowerCase() === 'approved' ? 'status-approved' : 
-                           attendee.status.toLowerCase() === 'rejected' ? 'status-rejected' : 'status-pending';
+        // const statusClass = attendee.status.toLowerCase() === 'approved' ? 'status-approved' : 
+        //                    attendee.status.toLowerCase() === 'rejected' ? 'status-rejected' : 'status-pending';
         
         row.innerHTML = `
             <td>Added</td>
             <td>${attendee.name}</td>
             <td>${attendee.position}</td>
-            <td><span class="status-badge ${statusClass}">${attendee.status}</span></td>
+            // 
         `;
         tbody.appendChild(row);
     });
@@ -335,967 +335,1122 @@ document.addEventListener('click', function(e) {
 
 // Event Listeners
 function initializeEventListeners() {
-    // Safely add form submit handlers only if elements exist
-    if (addAttendeeForm) addAttendeeForm.addEventListener('submit', handleAddAttendee);
-    if (editAttendeeForm) editAttendeeForm.addEventListener('submit', handleEditAttendee);
-    if (addMinistryForm) addMinistryForm.addEventListener('submit', handleAddMinistry);
-    if (editMinistryForm) editMinistryForm.addEventListener('submit', handleEditMinistry);
-    if (addSpeakerForm) addSpeakerForm.addEventListener('submit', handleAddSpeaker);
-    if (document.getElementById('addExhibitorForm')) document.getElementById('addExhibitorForm').addEventListener('submit', handleAddExhibitor);
-    
-    // Modal close buttons (simplified)
-    if (addAnotherBtn) addAnotherBtn.addEventListener('click', function() {
-        if (successModal) successModal.style.display = 'none';
-    });
-    
-    if (cancelEditBtn) cancelEditBtn.addEventListener('click', function() {
-        if (editAttendeeModal) editAttendeeModal.style.display = 'none';
+  // Safely add form submit handlers only if elements exist
+  if (addAttendeeForm)
+    addAttendeeForm.addEventListener("submit", handleAddAttendee);
+  if (editAttendeeForm)
+    editAttendeeForm.addEventListener("submit", handleEditAttendee);
+  if (addMinistryForm)
+    addMinistryForm.addEventListener("submit", handleAddMinistry);
+  if (editMinistryForm)
+    editMinistryForm.addEventListener("submit", handleEditMinistry);
+  if (addSpeakerForm)
+    addSpeakerForm.addEventListener("submit", handleAddSpeaker);
+  if (document.getElementById("addExhibitorForm"))
+    document
+      .getElementById("addExhibitorForm")
+      .addEventListener("submit", handleAddExhibitor);
+
+  // Modal close buttons (simplified)
+  if (addAnotherBtn)
+    addAnotherBtn.addEventListener("click", function () {
+      if (successModal) successModal.style.display = "none";
     });
 
-    if (cancelEditExhibitorBtn) {
-        cancelEditExhibitorBtn.addEventListener('click', function() {
-            const modal = document.getElementById('editExhibitorModal');
-            if (modal) modal.style.display = 'none';
-        });
-    }
-    
-    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', function() {
-        if (deleteModal) deleteModal.style.display = 'none';
+  if (cancelEditBtn)
+    cancelEditBtn.addEventListener("click", function () {
+      if (editAttendeeModal) editAttendeeModal.style.display = "none";
     });
-    if (cancelDeleteMinistryBtn) cancelDeleteMinistryBtn.addEventListener('click', function() {
-        if (deleteMinistryModal) deleteMinistryModal.style.display = 'none';
-    });
-    
-    if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', handleDeleteAttendee);
-    if (confirmDeleteMinistryBtn) confirmDeleteMinistryBtn.addEventListener('click', handleDeleteMinistry);
-    
-    if (cancelAddMinistryBtn) cancelAddMinistryBtn.addEventListener('click', function() {
-        if (addMinistryModal) addMinistryModal.style.display = 'none';
-    });
-    
-    if (closeViewMinistryBtn) closeViewMinistryBtn.addEventListener('click', function() {
-        if (viewMinistryModal) viewMinistryModal.style.display = 'none';
-    });
-    
-    if (cancelEditMinistryBtn) cancelEditMinistryBtn.addEventListener('click', function() {
-        if (editMinistryModal) editMinistryModal.style.display = 'none';
-    });
-    
-    if (generateNewPasswordBtn) generateNewPasswordBtn.addEventListener('click', generateNewPassword);
-    
-    // Search and filter
-    if (searchAttendees) searchAttendees.addEventListener('input', filterAttendees);
-    if (filterMinistry) filterMinistry.addEventListener('change', filterAttendees);
-    if (filterStatus) filterStatus.addEventListener('change', filterAttendees);
-    if (filterDepartment) filterDepartment.addEventListener('change', filterAttendees);
-    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
-    
-    // Add Ministry button
-    if (addMinistryBtn) {
-        addMinistryBtn.addEventListener('click', function() {
-            const mn = document.getElementById('ministryName');
-            const mc = document.getElementById('ministryCode');
-            const cp = document.getElementById('contactPerson');
-            const cpe = document.getElementById('contactPersonEmail');
 
-            if (mn) mn.value = '';
-            if (mc) mc.value = '';
-            if (cp) cp.value = 'Permanent Secretary';
-            if (cpe) cpe.value = '';
+  if (cancelEditExhibitorBtn) {
+    cancelEditExhibitorBtn.addEventListener("click", function () {
+      const modal = document.getElementById("editExhibitorModal");
+      if (modal) modal.style.display = "none";
+    });
+  }
 
-            generateMinistryCredentials();
-            if (addMinistryModal) addMinistryModal.style.display = 'flex';
-        });
-    }
+  if (cancelDeleteBtn)
+    cancelDeleteBtn.addEventListener("click", function () {
+      if (deleteModal) deleteModal.style.display = "none";
+    });
+  if (cancelDeleteMinistryBtn)
+    cancelDeleteMinistryBtn.addEventListener("click", function () {
+      if (deleteMinistryModal) deleteMinistryModal.style.display = "none";
+    });
 
-    // Global document click handlers for table actions
-document.addEventListener('click', function(e) {
-    const target = e.target;
-    const closestRow = target.closest('tr');
+  if (confirmDeleteBtn)
+    confirmDeleteBtn.addEventListener("click", handleDeleteAttendee);
+  if (confirmDeleteMinistryBtn)
+    confirmDeleteMinistryBtn.addEventListener("click", handleDeleteMinistry);
+
+  if (cancelAddMinistryBtn)
+    cancelAddMinistryBtn.addEventListener("click", function () {
+      if (addMinistryModal) addMinistryModal.style.display = "none";
+    });
+
+  if (closeViewMinistryBtn)
+    closeViewMinistryBtn.addEventListener("click", function () {
+      if (viewMinistryModal) viewMinistryModal.style.display = "none";
+    });
+
+  if (cancelEditMinistryBtn)
+    cancelEditMinistryBtn.addEventListener("click", function () {
+      if (editMinistryModal) editMinistryModal.style.display = "none";
+    });
+
+  if (generateNewPasswordBtn)
+    generateNewPasswordBtn.addEventListener("click", generateNewPassword);
+
+  // Search and filter
+  if (searchAttendees)
+    searchAttendees.addEventListener("input", filterAttendees);
+  if (filterMinistry)
+    filterMinistry.addEventListener("change", filterAttendees);
+  if (filterStatus) filterStatus.addEventListener("change", filterAttendees);
+  if (filterDepartment)
+    filterDepartment.addEventListener("change", filterAttendees);
+  if (clearFiltersBtn) clearFiltersBtn.addEventListener("click", clearFilters);
+
+  // Add Ministry button
+  if (addMinistryBtn) {
+    addMinistryBtn.addEventListener("click", function () {
+      const mn = document.getElementById("ministryName");
+      const mc = document.getElementById("ministryCode");
+      const cp = document.getElementById("contactPerson");
+      const cpe = document.getElementById("contactPersonEmail");
+
+      if (mn) mn.value = "";
+      if (mc) mc.value = "";
+      if (cp) cp.value = "Permanent Secretary";
+      if (cpe) cpe.value = "";
+
+      generateMinistryCredentials();
+      if (addMinistryModal) addMinistryModal.style.display = "flex";
+    });
+  }
+
+  // Global document click handlers for table actions
+  document.addEventListener("click", function (e) {
+    // 1. Find the button (handle clicks on the <i> icon inside)
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    // 2. Find the row and ID
+    const closestRow = btn.closest("tr");
     if (!closestRow) return;
 
-    const dataId = closestRow.getAttribute('data-id');
-
-    // --- ATTENDEE ACTIONS ---
-    if (target.classList.contains('edit-btn')) {
-        const attendeeId = parseInt(dataId);
-        if (!isNaN(attendeeId)) openEditModal(attendeeId);
-    }
-    if (target.classList.contains('view-btn')) {
-        openViewModal(dataId);
-    }
-    if (target.classList.contains('delete-btn')) {
-        const name = closestRow.cells[0].textContent;
-        openDeleteModal(dataId, name);
-    }
-
-    // --- EXHIBITOR ACTIONS (Fix for your specific buttons) ---
-    if (target.classList.contains('view-exhibitor-btn')) {
-        // Redirect to a view function or open a specific exhibitor modal
-        console.log("Viewing Exhibitor ID:", dataId);
-        // If using the same view modal:
-        openViewModal(dataId); 
-    }
-    if (target.classList.contains('edit-exhibitor-btn')) {
-        console.log("Editing Exhibitor ID:", dataId);
-        const editExhibitorModal = document.getElementById('editExhibitorModal');
-        if (editExhibitorModal) editExhibitorModal.style.display = 'flex';
-    }
+    // 3. Get ID as a STRING (Do not use parseInt)
+    const dataId = closestRow.getAttribute("data-id");
 
     // --- MINISTRY ACTIONS ---
-// Robust click handler for the Edit button
+    if (btn.classList.contains("view-ministry-btn")) {
+      e.preventDefault();
+      if (dataId) openViewMinistryModal(dataId);
+    }
+    if (btn.classList.contains("edit-ministry-btn")) {
+      e.preventDefault();
+      if (dataId) openEditMinistryModal(dataId);
+    }
+    if (btn.classList.contains("delete-ministry-btn")) {
+      e.preventDefault();
+      const ministryName = closestRow.cells[0].textContent;
+      if (dataId) openDeleteMinistryModal(dataId, ministryName);
+    }
 
-// 1. EDIT MINISTRY BUTTON
-if (target.closest(".edit-ministry-btn")) {
-  e.preventDefault();
+    // --- ATTENDEE ACTIONS ---
+    if (btn.classList.contains("view-btn")) {
+      e.preventDefault();
+      if (dataId) openViewModal(dataId);
+    }
+    if (btn.classList.contains("edit-btn")) {
+      e.preventDefault();
+      // Here parseInt is okay if your attendee IDs are strictly numbers,
+      // but removing it is safer:
+      if (dataId) openEditModal(parseInt(dataId) || dataId);
+    }
+    if (btn.classList.contains("delete-btn")) {
+      e.preventDefault();
+      const name = closestRow.cells[0].textContent;
+      if (dataId) openDeleteModal(dataId, name);
+    }
 
-  const btn = target.closest(".edit-ministry-btn");
-  const closestRow = btn.closest("tr");
+    // --- EXHIBITOR ACTIONS ---
+    if (btn.classList.contains("edit-exhibitor-btn")) {
+      e.preventDefault();
+      if (dataId) editExhibitor(dataId);
+    }
+    if (btn.classList.contains("view-exhibitor-btn")) {
+      e.preventDefault();
+      if (dataId) viewExhibitor(dataId);
+    }
 
-  // You defined it here as dataId (no hyphen)
-  const dataId =
-    btn.getAttribute("data-id") || closestRow?.getAttribute("data-id");
+    // --- PARTNER & SPEAKER ACTIONS ---
+    if (btn.classList.contains("edit-partner-btn")) {
+      e.preventDefault();
+      if (dataId) editPartner(dataId);
+    }
+    if (btn.classList.contains("view-partner-btn")) {
+      e.preventDefault();
+      if (dataId) viewPartner(dataId);
+    }
+    if (btn.classList.contains("edit-speaker-btn")) {
+      e.preventDefault();
+      if (dataId) editSpeaker(dataId);
+    }
+    if (btn.classList.contains("view-speaker-btn")) {
+      e.preventDefault();
+      if (dataId) viewSpeaker(dataId);
+    }
+  });
 
-  // FIX: Change 'data-id' to 'dataId'
-  if (dataId) {
-    console.log("Opening Edit Modal for ID:", dataId);
-    openEditMinistryModal(dataId);
-  } else {
-    console.error("Could not find data-id for this ministry");
-  }
-}
+  // Refresh & export buttons
+  const refreshActivityBtn = document.getElementById("refreshActivityBtn");
+  const refreshPendingBtn = document.getElementById("refreshPendingBtn");
+  const exportAttendeesBtn = document.getElementById("exportAttendeesBtn");
 
-// 2. DELETE MINISTRY BUTTON
-else if (target.closest(".delete-ministry-btn")) {
-  e.preventDefault();
-
-  const btn = target.closest(".delete-ministry-btn");
-  const closestRow = btn.closest("tr");
-
-  // Get ID and Name safely
-  const dataId =
-    btn.getAttribute("data-id") || closestRow?.getAttribute("data-id");
-  // We grab the name from the first cell (index 0)
-  const name = closestRow
-    ? closestRow.cells[0].textContent.trim()
-    : "this ministry";
-
-  if (dataId) {
-    console.log("Opening Delete Modal for:", name);
-    // Ensure this function is defined globally in your script
-    openDeleteMinistryModal(dataId, name);
-  } else {
-    console.error("Delete failed: No ID found for row");
-  }
-}
-
-        if (e.target.classList.contains('view-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(ministryId)) openViewMinistryModal(ministryId);
-        }
-        if (e.target.classList.contains('edit-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            if (!Number.isNaN(ministryId)) openEditMinistryModal(ministryId);
-        }
-        if (e.target.classList.contains('delete-ministry-btn') && closestRow) {
-            const ministryId = parseInt(closestRow.getAttribute('data-id'));
-            const ministryName = closestRow.cells && closestRow.cells[0] ? closestRow.cells[0].textContent : '';
-            if (!Number.isNaN(ministryId)) openDeleteMinistryModal(ministryId, ministryName);
-        }
-
-        // Exhibitor actions
-        if (e.target.classList.contains('edit-exhibitor-btn') && closestRow) {
-            const exhibitorId = closestRow.getAttribute('data-id');
-            editExhibitor(exhibitorId);
-        }
-        if (e.target.classList.contains('view-exhibitor-btn') && closestRow) {
-            const exhibitorId = closestRow.getAttribute('data-id');
-            viewExhibitor(exhibitorId);
-        }
-
-        // Partner actions
-        if (e.target.classList.contains('edit-partner-btn') && closestRow) {
-            const partnerId = closestRow.getAttribute('data-id');
-            editPartner(partnerId);
-        }
-        if (e.target.classList.contains('view-partner-btn') && closestRow) {
-            const partnerId = closestRow.getAttribute('data-id');
-            viewPartner(partnerId);
-        }
-
-        // Speaker actions
-        if (e.target.classList.contains('edit-speaker-btn') && closestRow) {
-            const speakerId = closestRow.getAttribute('data-id');
-            editSpeaker(speakerId);
-        }
-        if (e.target.classList.contains('view-speaker-btn') && closestRow) {
-            const speakerId = closestRow.getAttribute('data-id');
-            viewSpeaker(speakerId);
-        }
+  if (refreshActivityBtn)
+    refreshActivityBtn.addEventListener("click", function () {
+      alert("Refreshing recent activity...");
+    });
+  if (refreshPendingBtn)
+    refreshPendingBtn.addEventListener("click", function () {
+      alert("Refreshing pending attendees...");
+    });
+  if (exportAttendeesBtn)
+    exportAttendeesBtn.addEventListener("click", function () {
+      alert("Exporting attendees data...");
     });
 
-    // Refresh & export buttons
-    const refreshActivityBtn = document.getElementById('refreshActivityBtn');
-    const refreshPendingBtn = document.getElementById('refreshPendingBtn');
-    const exportAttendeesBtn = document.getElementById('exportAttendeesBtn');
-
-    if (refreshActivityBtn) refreshActivityBtn.addEventListener('click', function () { alert('Refreshing recent activity...'); });
-    if (refreshPendingBtn) refreshPendingBtn.addEventListener('click', function () { alert('Refreshing pending attendees...'); });
-    if (exportAttendeesBtn) exportAttendeesBtn.addEventListener('click', function () { alert('Exporting attendees data...'); });
-
-
-// Form Handlers
-async function handleAddAttendee(e) {
+  // Form Handlers
+  async function handleAddAttendee(e) {
     e.preventDefault();
 
     // Collect values from form (safe access)
     const values = {
-        prefix: (document.getElementById('attendeePrefix')?.value || '').trim(),
-        firstName: (document.getElementById('attendeeFirstName')?.value || '').trim(),
-        lastName: (document.getElementById('attendeeLastName')?.value || '').trim(),
-        email: (document.getElementById('attendeeEmail')?.value || '').trim(),
-        jobTitle: (document.getElementById('attendeeJobTitle')?.value || '').trim(),
-        organization: (document.getElementById('attendeeOrganization')?.value || '').trim(),
-        phone: (document.getElementById('attendeePhone')?.value || '').trim(),
-        ministry: (document.getElementById('attendeeMinistry')?.value || '').trim()
+      prefix: (document.getElementById("attendeePrefix")?.value || "").trim(),
+      firstName: (
+        document.getElementById("attendeeFirstName")?.value || ""
+      ).trim(),
+      lastName: (
+        document.getElementById("attendeeLastName")?.value || ""
+      ).trim(),
+      email: (document.getElementById("attendeeEmail")?.value || "").trim(),
+      jobTitle: (
+        document.getElementById("attendeeJobTitle")?.value || ""
+      ).trim(),
+      organization: (
+        document.getElementById("attendeeOrganization")?.value || ""
+      ).trim(),
+      phone: (document.getElementById("attendeePhone")?.value || "").trim(),
+      ministry: (
+        document.getElementById("attendeeMinistry")?.value || ""
+      ).trim(),
     };
 
-    const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
+    const fullName =
+      `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
 
     // Validate required fields that exist in the form
-    const required = ['prefix', 'firstName', 'lastName', 'email', 'phone', 'ministry'];
+    const required = [
+      "prefix",
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "ministry",
+    ];
     for (const field of required) {
-        if (!values[field]) {
-            toastr.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
-            return;
-        }
+      if (!values[field]) {
+        toastr.error(
+          `Please fill in the ${field.replace(/([A-Z])/g, " $1").toLowerCase()} field.`,
+        );
+        return;
+      }
     }
 
     // Helper: generate a temporary password for the attendee
     function generateRandomPassword(length = 10) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-        let pw = '';
-        for (let i = 0; i < length; i++) {
-            pw += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return pw;
+      const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+      let pw = "";
+      for (let i = 0; i < length; i++) {
+        pw += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return pw;
     }
 
     const tempPassword = generateRandomPassword(10);
 
     // Prepare payload using snake_case keys commonly expected by backend
     const payload = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        password: tempPassword,
-        phone_number: values.phone,
-        jobTitle: values.jobTitle,
-        organization: values.organization,
-        ministry: values.ministry
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      password: tempPassword,
+      phone_number: values.phone,
+      jobTitle: values.jobTitle,
+      organization: values.organization,
+      ministry: values.ministry,
     };
 
     const submitBtn = addAttendeeForm.querySelector('button[type="submit"]');
     const origText = submitBtn ? submitBtn.textContent : null;
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Adding...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Adding...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (err) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (err) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        if (window.apiClient) {
-            // apiClient should handle base path already
-            res = await window.apiClient.post('/admin/create-attendee', payload);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.post(`${API_BASE_URL}/admin/create-attendee`, payload, { headers });
-        }
+      let res;
+      if (window.apiClient) {
+        // apiClient should handle base path already
+        res = await window.apiClient.post("/admin/create-attendee", payload);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.post(
+          `${API_BASE_URL}/admin/create-attendee`,
+          payload,
+          { headers },
+        );
+      }
 
-        if (res && (res.status === 200 || res.status === 201)) {
-            const created = res.data?.data || res.data || payload;
+      if (res && (res.status === 200 || res.status === 201)) {
+        const created = res.data?.data || res.data || payload;
 
-            const newId = created.id || created._id || (attendees.length > 0 ? Math.max(...attendees.map(a => a.id || 0)) + 1 : 1);
-            const newAttendee = {
-                id: newId,
-                name: created.fullname || created.full_name || created.name || fullName,
-                email: created.email || payload.email,
-                phone: created.phone_number || created.phone || payload.phone_number,
-                jobTitle: created.job_title || payload.job_title || values.jobTitle,
-                organization: created.organization || payload.organization || values.organization,
-                ministry: created.ministry || payload.ministry || values.ministry,
-                jobTitle: created.job_title || payload.job_title || values.jobTitle || '',
-                position: created.position || created.job_title || '',
-                department: created.department || created.department_agency || '',
-                status: created.status || 'Pending',
-                dateAdded: created.createdAt || created.created_at || created.registeredAt || created.dateAdded || (new Date().toISOString().split('T')[0]),
-                addedBy: 'Super Admin'
-            };
+        const newId =
+          created.id ||
+          created._id ||
+          (attendees.length > 0
+            ? Math.max(...attendees.map((a) => a.id || 0)) + 1
+            : 1);
+        const newAttendee = {
+          id: newId,
+          name:
+            created.fullname || created.full_name || created.name || fullName,
+          email: created.email || payload.email,
+          phone: created.phone_number || created.phone || payload.phone_number,
+          jobTitle: created.job_title || payload.job_title || values.jobTitle,
+          organization:
+            created.organization || payload.organization || values.organization,
+          ministry: created.ministry || payload.ministry || values.ministry,
+          jobTitle:
+            created.job_title || payload.job_title || values.jobTitle || "",
+          position: created.position || created.job_title || "",
+          department: created.department || created.department_agency || "",
+          status: created.status || "Pending",
+          dateAdded:
+            created.createdAt ||
+            created.created_at ||
+            created.registeredAt ||
+            created.dateAdded ||
+            new Date().toISOString().split("T")[0],
+          addedBy: "Super Admin",
+        };
 
-            attendees.push(newAttendee);
-            renderAttendeesTable(attendees);
-            updatePendingTable();
-            updateStats();
+        attendees.push(newAttendee);
+        renderAttendeesTable(attendees);
+        updatePendingTable();
+        updateStats();
 
-            // Show generated password in the success message so admin can communicate it
-            const displayedPassword = created.password || payload.password || tempPassword;
-            toastr.success(`Participant has been successfully added`);
-            if (successModal) successModal.style.display = 'flex';
-            addAttendeeForm.reset();
-        } else {
-            const msg = res?.data?.message || 'Failed to add attendee';
-            throw new Error(msg);
-        }
+        // Show generated password in the success message so admin can communicate it
+        const displayedPassword =
+          created.password || payload.password || tempPassword;
+        toastr.success(`Participant has been successfully added`);
+        if (successModal) successModal.style.display = "flex";
+        addAttendeeForm.reset();
+      } else {
+        const msg = res?.data?.message || "Failed to add attendee";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const msg = err?.response?.data?.message || err.message || 'Add attendee failed';
-        toastr.error(msg);
-        console.error('Add attendee error:', err);
+      const msg =
+        err?.response?.data?.message || err.message || "Add attendee failed";
+      toastr.error(msg);
+      console.error("Add attendee error:", err);
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText || 'Add Attendee';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText || "Add Attendee";
+      }
     }
 
     // Add to recent activity
     addToRecentActivity(values);
-}
+  }
 
-async function handleAddSpeaker(e) {
+  async function handleAddSpeaker(e) {
     e.preventDefault();
 
     // Collect values from form (safe access)
     const values = {
-        prefix: (document.getElementById('speakerPrefix')?.value || '').trim(),
-        firstName: (document.getElementById('speakerFirstName')?.value || '').trim(),
-        lastName: (document.getElementById('speakerLastName')?.value || '').trim(),
-        email: (document.getElementById('speakerEmail')?.value || '').trim(),
-        experience: (document.getElementById('speakerExperience')?.value || '').trim(),
-        country: (document.getElementById('speakerCountry')?.value || '').trim(),
-        description: (document.getElementById('speakerDescription')?.value || '').trim(),
-        topic: (document.getElementById('speakerTopic')?.value || '').trim(),
-        affiliation: (document.getElementById('speakerAffiliation')?.value || '').trim(),
-        links: (document.getElementById('speakerLinks')?.value || '').trim(),
-        jobTitle: (document.getElementById('speakerJobTitle')?.value || '').trim(),
-        phone: (document.getElementById('speakerPhone')?.value || '').trim()
+      prefix: (document.getElementById("speakerPrefix")?.value || "").trim(),
+      firstName: (
+        document.getElementById("speakerFirstName")?.value || ""
+      ).trim(),
+      lastName: (
+        document.getElementById("speakerLastName")?.value || ""
+      ).trim(),
+      email: (document.getElementById("speakerEmail")?.value || "").trim(),
+      experience: (
+        document.getElementById("speakerExperience")?.value || ""
+      ).trim(),
+      country: (document.getElementById("speakerCountry")?.value || "").trim(),
+      description: (
+        document.getElementById("speakerDescription")?.value || ""
+      ).trim(),
+      topic: (document.getElementById("speakerTopic")?.value || "").trim(),
+      affiliation: (
+        document.getElementById("speakerAffiliation")?.value || ""
+      ).trim(),
+      links: (document.getElementById("speakerLinks")?.value || "").trim(),
+      jobTitle: (
+        document.getElementById("speakerJobTitle")?.value || ""
+      ).trim(),
+      phone: (document.getElementById("speakerPhone")?.value || "").trim(),
     };
 
-    const fullName = `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
+    const fullName =
+      `${values.prefix} ${values.firstName} ${values.lastName}`.trim();
 
     // Validate required fields
-    const required = ['prefix', 'firstName', 'lastName', 'email', 'country'];
+    const required = ["prefix", "firstName", "lastName", "email", "country"];
     for (const field of required) {
-        if (!values[field]) {
-            toastr.error(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
-            return;
-        }
+      if (!values[field]) {
+        toastr.error(
+          `Please fill in the ${field.replace(/([A-Z])/g, " $1").toLowerCase()} field.`,
+        );
+        return;
+      }
     }
 
     // Prepare payload
     const payload = {
-        first_name: values.firstName,
-        last_name: values.lastName,
-        work_email: values.email,
-        prefix: values.prefix,
-        experience: values.experience,
-        country: values.country,
-        bio: values.description,
-        topic: values.topic,
-        organization: values.affiliation,
-        socialMediaLinks: values.links,
-        job_title: values.jobTitle,
-        phone: values.phone
+      first_name: values.firstName,
+      last_name: values.lastName,
+      work_email: values.email,
+      prefix: values.prefix,
+      experience: values.experience,
+      country: values.country,
+      bio: values.description,
+      topic: values.topic,
+      organization: values.affiliation,
+      socialMediaLinks: values.links,
+      job_title: values.jobTitle,
+      phone: values.phone,
     };
 
     const submitBtn = addSpeakerForm.querySelector('button[type="submit"]');
     const origText = submitBtn ? submitBtn.textContent : null;
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Adding...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Adding...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (err) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (err) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        if (window.apiClient) {
-            res = await window.apiClient.post('/admin/create-speaker', payload);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.post(`${API_BASE_URL}/admin/create-speaker`, payload, { headers });
-        }
+      let res;
+      if (window.apiClient) {
+        res = await window.apiClient.post("/admin/create-speaker", payload);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.post(
+          `${API_BASE_URL}/admin/create-speaker`,
+          payload,
+          { headers },
+        );
+      }
 
-        if (res && (res.status === 200 || res.status === 201)) {
-            // Show success message
-            toastr.success(`Speaker has been successfully added!`);
-            addSpeakerForm.reset();
-            // Close the add speaker modal
-            const addSpeakerModal = document.getElementById('addSpeakerModal');
-            if (addSpeakerModal) addSpeakerModal.style.display = 'none';
-            // Optionally refresh the speakers list
-            // fetchSpeakers();
-        } else {
-            const msg = res?.data?.message || 'Failed to add speaker';
-            throw new Error(msg);
-        }
+      if (res && (res.status === 200 || res.status === 201)) {
+        // Show success message
+        toastr.success(`Speaker has been successfully added!`);
+        addSpeakerForm.reset();
+        // Close the add speaker modal
+        const addSpeakerModal = document.getElementById("addSpeakerModal");
+        if (addSpeakerModal) addSpeakerModal.style.display = "none";
+        // Optionally refresh the speakers list
+        // fetchSpeakers();
+      } else {
+        const msg = res?.data?.message || "Failed to add speaker";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const msg = err?.response?.data?.message || err.message || 'Add speaker failed';
-        toastr.error(msg);
-        console.error('Add speaker error:', err);
+      const msg =
+        err?.response?.data?.message || err.message || "Add speaker failed";
+      toastr.error(msg);
+      console.error("Add speaker error:", err);
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText || 'Add Speaker';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText || "Add Speaker";
+      }
     }
-}
+  }
 
-async function handleEditAttendee(e) {
+  async function handleEditAttendee(e) {
     e.preventDefault();
-    
+
     const updatedData = {
-        prefix: document.getElementById('editAttendeePrefix').value.trim(),
-        firstName: document.getElementById('editAttendeeFirstName').value.trim(),
-        lastName: document.getElementById('editAttendeeLastName').value.trim(),
-        email: document.getElementById('editAttendeeEmail').value.trim(),
-        jobTitle: document.getElementById('editAttendeeJobTitle').value.trim(),
-        organization: document.getElementById('editAttendeeOrganization').value.trim(),
-        phone: document.getElementById('editAttendeePhone').value.trim()
+      prefix: document.getElementById("editAttendeePrefix").value.trim(),
+      firstName: document.getElementById("editAttendeeFirstName").value.trim(),
+      lastName: document.getElementById("editAttendeeLastName").value.trim(),
+      email: document.getElementById("editAttendeeEmail").value.trim(),
+      jobTitle: document.getElementById("editAttendeeJobTitle").value.trim(),
+      organization: document
+        .getElementById("editAttendeeOrganization")
+        .value.trim(),
+      phone: document.getElementById("editAttendeePhone").value.trim(),
     };
 
-    const fullName = `${updatedData.prefix} ${updatedData.firstName} ${updatedData.lastName}`.trim();
+    const fullName =
+      `${updatedData.prefix} ${updatedData.firstName} ${updatedData.lastName}`.trim();
 
     const payload = {
-        fullname: fullName,
-        email: updatedData.email,
-        
-        phone_number: updatedData.phone,
-        job_title: updatedData.jobTitle,
-        organization: updatedData.organization
+      fullname: fullName,
+      email: updatedData.email,
+
+      phone_number: updatedData.phone,
+      job_title: updatedData.jobTitle,
+      organization: updatedData.organization,
     };
 
     const submitBtn = editAttendeeForm.querySelector('button[type="submit"]');
     const origText = submitBtn ? submitBtn.textContent : null;
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Updating...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Updating...";
     }
 
     try {
-        let res;
-        if (window.apiClient) {
-            res = await window.apiClient.put(`/admin/update-attendee?attendee_id=${currentAttendeeId}`, payload);
-        } else {
-            const token = localStorage.getItem('accessToken');
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.put(`${API_BASE_URL}/admin/update-attendee?attendee_id=${currentAttendeeId}`, payload, { headers });
-        }
+      let res;
+      if (window.apiClient) {
+        res = await window.apiClient.put(
+          `/admin/update-attendee?attendee_id=${currentAttendeeId}`,
+          payload,
+        );
+      } else {
+        const token = localStorage.getItem("accessToken");
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.put(
+          `${API_BASE_URL}/admin/update-attendee?attendee_id=${currentAttendeeId}`,
+          payload,
+          { headers },
+        );
+      }
 
-        if (res && (res.status === 200 || res.status === 201)) {
-            const attendeeIndex = attendees.findIndex(a => a.id === currentAttendeeId);
-            if (attendeeIndex !== -1) {
-                attendees[attendeeIndex] = {
-                    ...attendees[attendeeIndex],
-                    name: fullName,
-                    email: updatedData.email,
-                    phone: updatedData.phone,
-                    ministry: updatedData.organization
-                };
-                
-                renderAttendeesTable(attendees);
-                updatePendingTable();
-                updateStats();
-                
-                toastr.success('Attendee has been successfully updated!');
-                editAttendeeModal.style.display = 'none';
-            }
-        } else {
-            throw new Error(res?.data?.message || 'Failed to update attendee');
+      if (res && (res.status === 200 || res.status === 201)) {
+        const attendeeIndex = attendees.findIndex(
+          (a) => a.id === currentAttendeeId,
+        );
+        if (attendeeIndex !== -1) {
+          attendees[attendeeIndex] = {
+            ...attendees[attendeeIndex],
+            name: fullName,
+            email: updatedData.email,
+            phone: updatedData.phone,
+            ministry: updatedData.organization,
+          };
+
+          renderAttendeesTable(attendees);
+          updatePendingTable();
+          updateStats();
+
+          toastr.success("Attendee has been successfully updated!");
+          editAttendeeModal.style.display = "none";
         }
+      } else {
+        throw new Error(res?.data?.message || "Failed to update attendee");
+      }
     } catch (err) {
-        const msg = err?.response?.data?.message || err.message || 'Update failed';
-        toastr.error(msg);
-        console.error('Edit attendee error:', err);
+      const msg =
+        err?.response?.data?.message || err.message || "Update failed";
+      toastr.error(msg);
+      console.error("Edit attendee error:", err);
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText || 'Update Attendee';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText || "Update Attendee";
+      }
     }
-}
+  }
 
-async function handleDeleteAttendee() {
+  async function handleDeleteAttendee() {
     if (!currentAttendeeId) {
-        toastr.error('No attendee selected.');
-        return;
+      toastr.error("No attendee selected.");
+      return;
     }
 
     const confirmBtn = confirmDeleteBtn;
     if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.textContent = 'Deleting...';
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Deleting...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (e) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (e) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        const endpoint = `/admin/delete-attendee?attendee_id=${currentAttendeeId}`;
+      let res;
+      const endpoint = `/admin/delete-attendee?attendee_id=${currentAttendeeId}`;
 
-        if (window.apiClient) {
-            res = await window.apiClient.delete(endpoint);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.delete(`${API_BASE_URL}/admin/delete-attendee?attendee_id=${currentAttendeeId}`, { headers });
-        }
+      if (window.apiClient) {
+        res = await window.apiClient.delete(endpoint);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.delete(
+          `${API_BASE_URL}/admin/delete-attendee?attendee_id=${currentAttendeeId}`,
+          { headers },
+        );
+      }
 
-        if (res && (res.status === 200 || res.status === 204 || res.status === 202)) {
-            attendees = attendees.filter(a => String(a.id) !== String(currentAttendeeId));
+      if (
+        res &&
+        (res.status === 200 || res.status === 204 || res.status === 202)
+      ) {
+        attendees = attendees.filter(
+          (a) => String(a.id) !== String(currentAttendeeId),
+        );
 
-            renderAttendeesTable(attendees);
-            updatePendingTable();
-            updateStats();
+        renderAttendeesTable(attendees);
+        updatePendingTable();
+        updateStats();
 
-            toastr.success('Attendee has been successfully deleted!');
-            deleteModal.style.display = 'none';
-            currentAttendeeId = null;
-        } else {
-            const msg = res?.data?.message || 'Failed to delete attendee';
-            throw new Error(msg);
-        }
+        toastr.success("Attendee has been successfully deleted!");
+        deleteModal.style.display = "none";
+        currentAttendeeId = null;
+      } else {
+        const msg = res?.data?.message || "Failed to delete attendee";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const message = err?.response?.data?.message || err.message || 'Delete failed';
-        toastr.error(message);
-        console.error('Delete attendee error:', err);
+      const message =
+        err?.response?.data?.message || err.message || "Delete failed";
+      toastr.error(message);
+      console.error("Delete attendee error:", err);
     } finally {
-        if (confirmBtn) {
-            confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Delete';
-        }
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Delete";
+      }
     }
-}
+  }
 
-async function handleDeleteMinistry() {
+  async function handleDeleteMinistry() {
     if (!currentMinistryId) {
-        toastr.error('No ministry selected.');
-        return;
+      toastr.error("No ministry selected.");
+      return;
     }
 
     const confirmBtn = confirmDeleteMinistryBtn;
     if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.textContent = 'Deleting...';
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Deleting...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (e) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (e) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        const endpoint = `/admin/delete-user?user_id=${currentMinistryId}`;
+      let res;
+      const endpoint = `/admin/delete-user?user_id=${currentMinistryId}`;
 
-        if (window.apiClient) {
-            res = await window.apiClient.delete(endpoint);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.delete(`${API_BASE_URL}/admin/delete-user?user_id=${currentMinistryId}`, { headers });
-        }
+      if (window.apiClient) {
+        res = await window.apiClient.delete(endpoint);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.delete(
+          `${API_BASE_URL}/admin/delete-user?user_id=${currentMinistryId}`,
+          { headers },
+        );
+      }
 
-        if (res && (res.status === 200 || res.status === 204 || res.status === 202)) {
-            ministries = ministries.filter(m => String(m.id) !== String(currentMinistryId));
+      if (
+        res &&
+        (res.status === 200 || res.status === 204 || res.status === 202)
+      ) {
+        ministries = ministries.filter(
+          (m) => String(m.id) !== String(currentMinistryId),
+        );
 
-            renderMinistriesTable(ministries);
-            updateStats();
+        renderMinistriesTable(ministries);
+        updateStats();
 
-            toastr.success('Ministry has been successfully deleted!');
-            deleteMinistryModal.style.display = 'none';
-            currentMinistryId = null;
-        } else {
-            const msg = res?.data?.message || 'Failed to delete ministry';
-            throw new Error(msg);
-        }
+        toastr.success("Ministry has been successfully deleted!");
+        deleteMinistryModal.style.display = "none";
+        currentMinistryId = null;
+      } else {
+        const msg = res?.data?.message || "Failed to delete ministry";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const message = err?.response?.data?.message || err.message || 'Delete failed';
-        toastr.error(message);
-        console.error('Delete attendee error:', err);
+      const message =
+        err?.response?.data?.message || err.message || "Delete failed";
+      toastr.error(message);
+      console.error("Delete attendee error:", err);
     } finally {
-        if (confirmBtn) {
-            confirmBtn.disabled = false;
-            confirmBtn.textContent = 'Delete';
-        }
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Delete";
+      }
     }
-}
+  }
 
-async function handleAddMinistry(e) {
+  async function handleAddMinistry(e) {
     e.preventDefault();
 
-    const organization = document.getElementById('ministryName').value.trim();
-    const organization_short_code = document.getElementById('ministryCode').value.trim();
-    const contact_person = document.getElementById('contactPerson').value.trim();
-    const contact_person_email = document.getElementById('contactPersonEmail').value.trim();
-    const username = document.getElementById('generatedUsername').textContent.trim();
-    const password = document.getElementById('generatedPassword').textContent.trim();
+    const organization = document.getElementById("ministryName").value.trim();
+    const organization_short_code = document
+      .getElementById("ministryCode")
+      .value.trim();
+    const contact_person = document
+      .getElementById("contactPerson")
+      .value.trim();
+    const contact_person_email = document
+      .getElementById("contactPersonEmail")
+      .value.trim();
+    const username = document
+      .getElementById("generatedUsername")
+      .textContent.trim();
+    const password = document
+      .getElementById("generatedPassword")
+      .textContent.trim();
 
-    if (!organization || !organization_short_code || !contact_person || !contact_person_email || !username || !password) {
-        toastr.error('Please fill all required ministry fields.');
-        return;
+    if (
+      !organization ||
+      !organization_short_code ||
+      !contact_person ||
+      !contact_person_email ||
+      !username ||
+      !password
+    ) {
+      toastr.error("Please fill all required ministry fields.");
+      return;
     }
 
     const payload = {
-        organization,
-        organization_short_code,
-        username,
-        password,
-        contact_person,
-        contact_person_email
+      organization,
+      organization_short_code,
+      username,
+      password,
+      contact_person,
+      contact_person_email,
     };
 
     const submitBtn = addMinistryForm.querySelector('button[type="submit"]');
     const origText = submitBtn ? submitBtn.textContent : null;
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Creating...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (err) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (err) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        if (window.apiClient) {
-            res = await window.apiClient.post('/admin/create-user', payload);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-            res = await axios.post(`${API_BASE_URL}/admin/create-user`, payload, { headers });
-        }
+      let res;
+      if (window.apiClient) {
+        res = await window.apiClient.post("/admin/create-user", payload);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+        res = await axios.post(`${API_BASE_URL}/admin/create-user`, payload, {
+          headers,
+        });
+      }
 
-        if (res && (res.status === 200 || res.status === 201)) {
-            const created = res.data?.data || res.data || payload;
+      if (res && (res.status === 200 || res.status === 201)) {
+        const created = res.data?.data || res.data || payload;
 
-            const newMinistry = {
-                id: created.id || created._id || (ministries.length ? Math.max(...ministries.map(m => m.id || 0)) + 1 : 1),
-                name: created.organization || created.organization_name || organization,
-                code: created.organization_short_code || organization_short_code,
-                attendeesCount: created.attendeesCount || 0,
-                pendingCount: created.pendingCount || 0,
-                approvedCount: created.approvedCount || 0,
-                contactPerson: created.contact_person || contact_person,
-                contactPersonEmail: created.contact_person_email || contact_person_email,
-                username: created.username || username,
-                password: created.password || password
-            };
+        const newMinistry = {
+          id:
+            created.id ||
+            created._id ||
+            (ministries.length
+              ? Math.max(...ministries.map((m) => m.id || 0)) + 1
+              : 1),
+          name:
+            created.organization || created.organization_name || organization,
+          code: created.organization_short_code || organization_short_code,
+          attendeesCount: created.attendeesCount || 0,
+          pendingCount: created.pendingCount || 0,
+          approvedCount: created.approvedCount || 0,
+          contactPerson: created.contact_person || contact_person,
+          contactPersonEmail:
+            created.contact_person_email || contact_person_email,
+          username: created.username || username,
+          password: created.password || password,
+        };
 
-            ministries.push(newMinistry);
-            renderMinistriesTable();
-            updateStats();
+        ministries.push(newMinistry);
+        renderMinistriesTable();
+        updateStats();
 
-            toastr.success('Ministry has been successfully created!');
-            if (successModal) successModal.style.display = 'flex';
+        toastr.success("Ministry has been successfully created!");
+        if (successModal) successModal.style.display = "flex";
 
-            addMinistryForm.reset();
-            addMinistryModal.style.display = 'none';
-        } else {
-            const msg = res?.data?.message || 'Failed to create ministry';
-            throw new Error(msg);
-        }
+        addMinistryForm.reset();
+        addMinistryModal.style.display = "none";
+      } else {
+        const msg = res?.data?.message || "Failed to create ministry";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const message = err?.response?.data?.message || err.message || 'Create ministry failed';
-        toastr.error(message);
-        console.error('Create ministry error:', err);
+      const message =
+        err?.response?.data?.message || err.message || "Create ministry failed";
+      toastr.error(message);
+      console.error("Create ministry error:", err);
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText || 'Add Ministry';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText || "Add Ministry";
+      }
     }
-}
+  }
 
-async function handleAddExhibitor(e) {
+  async function handleAddExhibitor(e) {
     e.preventDefault();
 
-    const category = document.getElementById('exhibitorPrefix').value.trim();
-    const company_name = document.getElementById('exhibitorCompanyName').value.trim();
-    const contact_person = document.getElementById('exhibitorContactName').value.trim();
-    const contact_email = document.getElementById('exhibitorContactEmail').value.trim();
-    const contact_phone = document.getElementById('exhibitorContactPhone').value.trim();
-    const exhibition_title = document.getElementById('exhibitionTitle').value.trim();
-    const description = document.getElementById('exhibitionDescription').value.trim();
+    const category = document.getElementById("exhibitorPrefix").value.trim();
+    const company_name = document
+      .getElementById("exhibitorCompanyName")
+      .value.trim();
+    const contact_person = document
+      .getElementById("exhibitorContactName")
+      .value.trim();
+    const contact_email = document
+      .getElementById("exhibitorContactEmail")
+      .value.trim();
+    const contact_phone = document
+      .getElementById("exhibitorContactPhone")
+      .value.trim();
+    const exhibition_title = document
+      .getElementById("exhibitionTitle")
+      .value.trim();
+    const description = document
+      .getElementById("exhibitionDescription")
+      .value.trim();
 
-    console.log('Adding exhibitor with data:', {
-        category,
-        companyName: company_name,
-        contactPerson: contact_person,
-        contactEmail: contact_email,
-        contactPhone: contact_phone,
-        exhibitionTitle: exhibition_title,
-        description
+    console.log("Adding exhibitor with data:", {
+      category,
+      companyName: company_name,
+      contactPerson: contact_person,
+      contactEmail: contact_email,
+      contactPhone: contact_phone,
+      exhibitionTitle: exhibition_title,
+      description,
     });
 
     if (!category || !contact_person || !contact_email || !exhibition_title) {
-        toastr.error('Please fill all required exhibitor fields.');
-        return;
+      toastr.error("Please fill all required exhibitor fields.");
+      return;
     }
 
     const payload = {
-        category,
-        company_name: company_name,
-        contact_person: contact_person,
-        contact_email: contact_email,
-        contact_phone: contact_phone,
-        exhibition_title: exhibition_title,
-        description
+      category,
+      company_name: company_name,
+      contact_person: contact_person,
+      contact_email: contact_email,
+      contact_phone: contact_phone,
+      exhibition_title: exhibition_title,
+      description,
     };
 
-    const submitBtn = document.getElementById('addExhibitorForm').querySelector('button[type="submit"]');
+    const submitBtn = document
+      .getElementById("addExhibitorForm")
+      .querySelector('button[type="submit"]');
     const origText = submitBtn ? submitBtn.textContent : null;
     if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Creating...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating...";
     }
 
     function getToken() {
-        try {
-            const raw = localStorage.getItem('authUser');
-            if (raw) {
-                const a = JSON.parse(raw);
-                if (a && a.token) return a.token;
-            }
-        } catch (err) { /* ignore */ }
-        return localStorage.getItem('accessToken') || null;
+      try {
+        const raw = localStorage.getItem("authUser");
+        if (raw) {
+          const a = JSON.parse(raw);
+          if (a && a.token) return a.token;
+        }
+      } catch (err) {
+        /* ignore */
+      }
+      return localStorage.getItem("accessToken") || null;
     }
 
     try {
-        let res;
-        if (window.apiClient) {
-            res = await window.apiClient.post('/admin/create-exhibitor', payload);
-        } else {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-            res = await axios.post(`${API_BASE_URL}/admin/create-exhibitor`, payload, { headers });
+      let res;
+      if (window.apiClient) {
+        res = await window.apiClient.post("/admin/create-exhibitor", payload);
+      } else {
+        const token = getToken();
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+        res = await axios.post(
+          `${API_BASE_URL}/admin/create-exhibitor`,
+          payload,
+          { headers },
+        );
+      }
+
+      if (res && (res.status === 200 || res.status === 201)) {
+        document.getElementById("addExhibitorForm").reset();
+        document.getElementById("addExhibitorModal").style.display = "none";
+
+        // Refresh exhibitors list if there's a function to do so
+        if (typeof window.fetchExhibitors === "function") {
+          window.fetchExhibitors();
         }
 
-        if (res && (res.status === 200 || res.status === 201)) {
-            document.getElementById('addExhibitorForm').reset();
-            document.getElementById('addExhibitorModal').style.display = 'none';
-
-            // Refresh exhibitors list if there's a function to do so
-            if (typeof window.fetchExhibitors === 'function') {
-                window.fetchExhibitors();
-            }
-
-            toastr.success('Exhibitor has been successfully created!');
-        } else {
-            const msg = res?.data?.message || 'Failed to create exhibitor';
-            throw new Error(msg);
-        }
+        toastr.success("Exhibitor has been successfully created!");
+      } else {
+        const msg = res?.data?.message || "Failed to create exhibitor";
+        throw new Error(msg);
+      }
     } catch (err) {
-        const message = err?.response?.data?.message || err.message || 'Create exhibitor failed';
-        toastr.error(message);
-        console.error('Create exhibitor error:', err);
+      const message =
+        err?.response?.data?.message ||
+        err.message ||
+        "Create exhibitor failed";
+      toastr.error(message);
+      console.error("Create exhibitor error:", err);
     } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = origText || 'Add Exhibitor';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText || "Add Exhibitor";
+      }
     }
-}
+  }
 
-async function fetchMinistries() {
+  async function fetchMinistries() {
     try {
-        let res;
-        const endpoints = ['/admin/users'];
+      let res;
+      const endpoints = ["/admin/users"];
 
-        if (window.apiClient) {
-            for (const ep of endpoints) {
-                try {
-                    res = await window.apiClient.get(ep);
-                    if (res && (res.status === 200 || res.status === 201)) break;
-                } catch (e) {
-                    res = null;
-                }
-            }
-        } else {
-            let token = null;
-            try {
-                const raw = localStorage.getItem('authUser');
-                if (raw) {
-                    const a = JSON.parse(raw);
-                    token = a?.token || token;
-                }
-            } catch (e) { /* ignore */ }
-            if (!token) token = localStorage.getItem('accessToken') || null;
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-
-            for (const ep of endpoints) {
-                try {
-                    res = await axios.get(`${API_BASE_URL}${ep}`, { headers });
-                    if (res && (res.status === 200 || res.status === 201)) break;
-                } catch (e) {
-                    res = null;
-                }
-            }
+      if (window.apiClient) {
+        for (const ep of endpoints) {
+          try {
+            res = await window.apiClient.get(ep);
+            if (res && (res.status === 200 || res.status === 201)) break;
+          } catch (e) {
+            res = null;
+          }
         }
-
-        const list = res?.data?.data || res?.data || [];
-        if (Array.isArray(list)) {
-            ministries = list.map((m, idx) => ({
-                id: m.id || m._id || m.organization_short_code || idx + 1,
-                name: m.organization || m.organization_name || m.name || m.organization || '',
-                code: m.organization_short_code || m.code || m.short_code || '',
-                attendeesCount: m.attendeesCount || m.attendees_count || m.count || 0,
-                pendingCount: m.pendingCount || m.pending_count || 0,
-                approvedCount: m.approvedCount || m.approved_count || 0,
-                contactPerson: m.contact_person || m.contactPerson || m.contact || '',
-                contactPersonEmail: m.contact_person_email || m.contactPersonEmail || m.contact_email || '',
-                username: m.username || '',
-                password: m.password || ''
-            }));
-
-            renderMinistriesTable();
-            updateStats();
-            console.log(`Fetched ${ministries.length} ministries from backend`);
-        } else {
-            console.warn('Unexpected ministries response format', res);
+      } else {
+        let token = null;
+        try {
+          const raw = localStorage.getItem("authUser");
+          if (raw) {
+            const a = JSON.parse(raw);
+            token = a?.token || token;
+          }
+        } catch (e) {
+          /* ignore */
         }
-    } catch (err) {
-        console.error('Error fetching ministries:', err?.response?.data || err.message || err);
+        if (!token) token = localStorage.getItem("accessToken") || null;
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+
+        for (const ep of endpoints) {
+          try {
+            res = await axios.get(`${API_BASE_URL}${ep}`, { headers });
+            if (res && (res.status === 200 || res.status === 201)) break;
+          } catch (e) {
+            res = null;
+          }
+        }
+      }
+
+      const list = res?.data?.data || res?.data || [];
+      if (Array.isArray(list)) {
+        ministries = list.map((m, idx) => ({
+          id: m.id || m._id || m.organization_short_code || idx + 1,
+          name:
+            m.organization ||
+            m.organization_name ||
+            m.name ||
+            m.organization ||
+            "",
+          code: m.organization_short_code || m.code || m.short_code || "",
+          attendeesCount: m.attendeesCount || m.attendees_count || m.count || 0,
+          pendingCount: m.pendingCount || m.pending_count || 0,
+          approvedCount: m.approvedCount || m.approved_count || 0,
+          contactPerson: m.contact_person || m.contactPerson || m.contact || "",
+          contactPersonEmail:
+            m.contact_person_email ||
+            m.contactPersonEmail ||
+            m.contact_email ||
+            "",
+          username: m.username || "",
+          password: m.password || "",
+        }));
+
         renderMinistriesTable();
         updateStats();
-    }
-}
-
-async function fetchAttendees() {
-    try {
-        let res;
-        if (window.apiClient) {
-            res = await window.apiClient.get('/admin/attendees');
-        } else {
-            let token = null;
-            try {
-                const raw = localStorage.getItem('authUser');
-                if (raw) {
-                    const a = JSON.parse(raw);
-                    token = a?.token || token;
-                }
-            } catch (e) { /* ignore */ }
-            if (!token) token = localStorage.getItem('accessToken') || null;
-            const headers = { 'Content-Type': 'application/json' };
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
-        }
-
-        const list = res?.data?.data || res?.data || [];
-        if (Array.isArray(list)) {
-            attendees = list.map(item => ({
-                id: item.id || item._id || (item.attendeeId || null),
-                name: item.full_name || item.name || item.fullName || item.fullname || '',
-                email: item.email || '',
-                phone: item.phone || item.phone_number || '',
-                ministry: item.ministry || item.organization_name || item.organization || '',
-                department: item.department || '',
-                jobTitle: item.job_title || '',
-                status: (item.status || 'Pending'),
-                remarks: item.remark || '',
-                dateAdded: item.created_at || item.dateAdded || item.date || (new Date().toISOString().split('T')[0])
-            }));
-
-            renderAttendeesTable(attendees);
-            updatePendingTable();
-            updateStats();
-            console.log(`Fetched ${attendees.length} attendees from backend`);
-            return;
-        }
-
-        console.warn('Unexpected attendees response format', res);
+        console.log(`Fetched ${ministries.length} ministries from backend`);
+      } else {
+        console.warn("Unexpected ministries response format", res);
+      }
     } catch (err) {
-        console.error('Error fetching attendees:', err?.response?.data || err.message || err);
+      console.error(
+        "Error fetching ministries:",
+        err?.response?.data || err.message || err,
+      );
+      renderMinistriesTable();
+      updateStats();
+    }
+  }
+
+  async function fetchAttendees() {
+    try {
+      let res;
+      if (window.apiClient) {
+        res = await window.apiClient.get("/admin/attendees");
+      } else {
+        let token = null;
+        try {
+          const raw = localStorage.getItem("authUser");
+          if (raw) {
+            const a = JSON.parse(raw);
+            token = a?.token || token;
+          }
+        } catch (e) {
+          /* ignore */
+        }
+        if (!token) token = localStorage.getItem("accessToken") || null;
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
+      }
+
+      const list = res?.data?.data || res?.data || [];
+      if (Array.isArray(list)) {
+        attendees = list.map((item) => ({
+          id: item.id || item._id || item.attendeeId || null,
+          name:
+            item.full_name || item.name || item.fullName || item.fullname || "",
+          email: item.email || "",
+          phone: item.phone || item.phone_number || "",
+          ministry:
+            item.ministry || item.organization_name || item.organization || "",
+          department: item.department || "",
+          jobTitle: item.job_title || "",
+          status: item.status || "Pending",
+          remarks: item.remark || "",
+          dateAdded:
+            item.created_at ||
+            item.dateAdded ||
+            item.date ||
+            new Date().toISOString().split("T")[0],
+        }));
+
         renderAttendeesTable(attendees);
         updatePendingTable();
         updateStats();
-    }
-}
+        console.log(`Fetched ${attendees.length} attendees from backend`);
+        return;
+      }
 
-function handleEditMinistry(e) {
+      console.warn("Unexpected attendees response format", res);
+    } catch (err) {
+      console.error(
+        "Error fetching attendees:",
+        err?.response?.data || err.message || err,
+      );
+      renderAttendeesTable(attendees);
+      updatePendingTable();
+      updateStats();
+    }
+  }
+
+  function handleEditMinistry(e) {
     e.preventDefault();
-    
-    const ministryIndex = ministries.findIndex(m => m.id === currentMinistryId);
-    if (ministryIndex !== -1) {
-        ministries[ministryIndex] = {
-            ...ministries[ministryIndex],
-            name: document.getElementById('editMinistryName').value,
-            code: document.getElementById('editMinistryCode').value,
-            contactPerson: document.getElementById('editContactPerson').value,
-            contactPersonEmail: document.getElementById('editContactPersonEmail').value,
-            username: document.getElementById('editUsername').value,
-            password: document.getElementById('editPassword').value
-        };
-        
-        renderMinistriesTable();
-        
-        toastr.success('Ministry has been successfully updated!');
-        
-        editMinistryModal.style.display = 'none';
-    }
-}
 
+    const ministryIndex = ministries.findIndex(
+      (m) => m.id === currentMinistryId,
+    );
+    if (ministryIndex !== -1) {
+      ministries[ministryIndex] = {
+        ...ministries[ministryIndex],
+        name: document.getElementById("editMinistryName").value,
+        code: document.getElementById("editMinistryCode").value,
+        contactPerson: document.getElementById("editContactPerson").value,
+        contactPersonEmail: document.getElementById("editContactPersonEmail")
+          .value,
+        username: document.getElementById("editUsername").value,
+        password: document.getElementById("editPassword").value,
+      };
+
+      renderMinistriesTable();
+
+      toastr.success("Ministry has been successfully updated!");
+
+      editMinistryModal.style.display = "none";
+    }
+  }
 }
 
 // Modal Functions
@@ -2640,25 +2795,39 @@ function renderMinistriesTable() {
 }
 
 function renderAttendeesTable(attendeesList) {
-    if (!allAttendeesTable) {
-        console.warn('renderAttendeesTable: #allAttendeesTable element not found in DOM');
-        return;
-    }
+  if (!allAttendeesTable) {
+    console.warn(
+      "renderAttendeesTable: #allAttendeesTable element not found in DOM",
+    );
+    return;
+  }
 
-    let html = '';
+  // FIX: Filter out "Pending" status before rendering
+  const approvedList = attendeesList.filter((a) => {
+    const status = (a.status || "").toLowerCase();
+    return status !== "pending";
+  });
 
-    attendeesList.forEach(attendee => {
-        const statusVal = (attendee.status || '').toLowerCase();
-        const statusClass = statusVal ? `status-${statusVal}` : '';
+  let html = "";
 
-        html += `
+  if (approvedList.length === 0) {
+    allAttendeesTable.innerHTML =
+      '<tr><td colspan="7" style="text-align:center;">No approved participants found.</td></tr>';
+    return;
+  }
+
+  approvedList.forEach((attendee) => {
+    const statusVal = (attendee.status || "").toLowerCase();
+    const statusClass = statusVal ? `status-${statusVal}` : "";
+
+    html += `
             <tr data-id="${attendee.id}">
-                <td>${attendee.name || ''}</td>
-                <td>${attendee.email || ''}</td>
-                <td>${attendee.ministry || ''}</td>
-                <td>${attendee.jobTitle || ''}</td>
-                <td>${attendee.phone || ''}</td>
-                <td><span class="status-badge ${statusClass}">${attendee.status || ''}</span></td>
+                <td>${attendee.name || ""}</td>
+                <td>${attendee.email || ""}</td>
+                <td>${attendee.ministry || ""}</td>
+                <td>${attendee.jobTitle || ""}</td>
+                <td>${attendee.phone || ""}</td>
+                <td><span class="status-badge ${statusClass}">${attendee.status || ""}</span></td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-info btn-sm view-btn">View</button>
@@ -2668,9 +2837,9 @@ function renderAttendeesTable(attendeesList) {
                 </td>
             </tr>
         `;
-    });
+  });
 
-    allAttendeesTable.innerHTML = html;
+  allAttendeesTable.innerHTML = html;
 }
 
 function renderPendingTable(pendingAttendees) {
@@ -3316,53 +3485,1037 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Partnership Package Management
-let partnershipPackages = {
-    diamond: {
-        maxRegistrants: 10,
-        currentRegistrants: 0,
-        actionOnFull: "hide",
-        investment: 5000000,
-        features: [],
-        description: "",
-        isAvailable: true,
-        gracePeriod: 48,
-        autoReopen: false
-    },
-    gold: {
-        maxRegistrants: 20,
-        currentRegistrants: 0,
-        actionOnFull: "hide",
-        investment: 3000000,
-        features: [],
-        description: "",
-        isAvailable: true,
-        gracePeriod: 48,
-        autoReopen: false
-    },
-    silver: {
-        maxRegistrants: 30,
-        currentRegistrants: 0,
-        actionOnFull: "hide",
-        investment: 1500000,
-        features: [],
-        description: "",
-        isAvailable: true,
-        gracePeriod: 48,
-        autoReopen: false
-    },
-    bronze: {
-        maxRegistrants: 50,
-        currentRegistrants: 0,
-        actionOnFull: "hide",
-        investment: 500000,
-        features: [],
-        description: "",
-        isAvailable: true,
-        gracePeriod: 48,
-        autoReopen: false
+
+// Package Management with Pagination
+(function () {
+    // State management
+    let packages = [];
+    let filteredPackages = [];
+    let currentPage = 1;
+    let itemsPerPage = 10;
+    let totalPages = 1;
+    let totalPackages = 0;
+
+    // Initialize
+    function init() {
+        loadSampleData();
+        setupEventListeners();
+        renderTable();
+        updateStats();
     }
-};
+
+    // Generate sample data
+    function loadSampleData() {
+        const samplePackages = [];
+        const types = ['diamond', 'gold', 'silver', 'bronze'];
+        const typeNames = {
+            diamond: 'Diamond Partner',
+            gold: 'Gold Knowledge Partner',
+            silver: 'Silver Roundtable Partner',
+            bronze: 'Bronze Exhibition Partner'
+        };
+        const prices = {
+            diamond: 5000000,
+            gold: 3000000,
+            silver: 1500000,
+            bronze: 500000
+        };
+        const maxSlots = {
+            diamond: 10,
+            gold: 20,
+            silver: 30,
+            bronze: 50
+        };
+
+        for (let i = 1; i <= 45; i++) {
+            const type = types[Math.floor(Math.random() * types.length)];
+            const usedSlots = Math.floor(Math.random() * (maxSlots[type] * 0.8));
+            
+            samplePackages.push({
+                id: i,
+                name: `${typeNames[type]} Package ${i}`,
+                type: type,
+                price: prices[type],
+                benefits: `• Premium benefits package\n• Conference passes\n• Networking opportunities\n• Brand visibility\n• Speaking slot\n• Exhibition space`,
+                maxAvailable: maxSlots[type],
+                currentUsed: usedSlots,
+                speakRights: type === 'diamond' || type === 'gold',
+                speakingSlots: type === 'diamond' ? 2 : type === 'gold' ? 1 : 0,
+                exhibitRights: true,
+                exhibitSlots: type === 'diamond' ? 3 : type === 'gold' ? 2 : type === 'silver' ? 1 : 1,
+                status: Math.random() > 0.2 ? 'active' : 'inactive',
+                whenFull: 'show_message',
+                description: `${type.charAt(0).toUpperCase() + type.slice(1)} level partnership package`,
+                createdDate: new Date().toISOString()
+            });
+        }
+
+        packages = samplePackages;
+        filteredPackages = [...packages];
+        totalPackages = packages.length;
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Refresh button
+        document.getElementById('refreshPackagesBtn')?.addEventListener('click', refreshPackages);
+        
+        // Add package button
+        document.getElementById('addPackageBtn')?.addEventListener('click', openPackageModal);
+        
+        // Search and filter
+        document.getElementById('searchPackages')?.addEventListener('input', debounce(filterPackages, 300));
+        document.getElementById('filterPackageType')?.addEventListener('change', filterPackages);
+        document.getElementById('filterPackageStatus')?.addEventListener('change', filterPackages);
+        document.getElementById('itemsPerPage')?.addEventListener('change', function() {
+            itemsPerPage = parseInt(this.value);
+            currentPage = 1;
+            renderTable();
+        });
+        document.getElementById('clearPackageFiltersBtn')?.addEventListener('click', clearFilters);
+        
+        // Form submission
+        document.getElementById('packageForm')?.addEventListener('submit', savePackage);
+        document.getElementById('cancelPackageBtn')?.addEventListener('click', closePackageModal);
+        
+        // Pagination
+        document.getElementById('firstPageBtn')?.addEventListener('click', () => goToPage(1));
+        document.getElementById('prevPageBtn')?.addEventListener('click', () => goToPage(currentPage - 1));
+        document.getElementById('nextPageBtn')?.addEventListener('click', () => goToPage(currentPage + 1));
+        document.getElementById('lastPageBtn')?.addEventListener('click', () => goToPage(totalPages));
+        document.getElementById('jumpToPageBtn')?.addEventListener('click', jumpToPage);
+        document.getElementById('pageJumpInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') jumpToPage();
+        });
+        
+        // Modal close buttons
+        document.querySelectorAll('#packageModal .close-modal, #deletePackageModal .close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Filter packages
+    function filterPackages() {
+        const searchTerm = document.getElementById('searchPackages').value.toLowerCase();
+        const typeFilter = document.getElementById('filterPackageType').value;
+        const statusFilter = document.getElementById('filterPackageStatus').value;
+        
+        filteredPackages = packages.filter(pkg => {
+            const matchesSearch = !searchTerm || 
+                pkg.name.toLowerCase().includes(searchTerm) ||
+                pkg.description.toLowerCase().includes(searchTerm) ||
+                pkg.benefits.toLowerCase().includes(searchTerm);
+            
+            const matchesType = !typeFilter || pkg.type === typeFilter;
+            const matchesStatus = !statusFilter || pkg.status === statusFilter;
+            
+            return matchesSearch && matchesType && matchesStatus;
+        });
+        
+        currentPage = 1;
+        renderTable();
+    }
+
+    // Clear filters
+    function clearFilters() {
+        document.getElementById('searchPackages').value = '';
+        document.getElementById('filterPackageType').value = '';
+        document.getElementById('filterPackageStatus').value = '';
+        document.getElementById('itemsPerPage').value = '10';
+        itemsPerPage = 10;
+        filteredPackages = [...packages];
+        currentPage = 1;
+        renderTable();
+    }
+
+    // Render table with pagination
+    function renderTable() {
+        const tableBody = document.getElementById('packagesTableBody');
+        if (!tableBody) return;
+        
+        // Calculate pagination
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredPackages.length);
+        const pagePackages = filteredPackages.slice(startIndex, endIndex);
+        totalPages = Math.ceil(filteredPackages.length / itemsPerPage) || 1;
+        
+        // Update pagination info
+        document.getElementById('paginationInfo').textContent = 
+            `Showing ${startIndex + 1}-${endIndex} of ${filteredPackages.length} packages`;
+        
+        // Clear table
+        tableBody.innerHTML = '';
+        
+        if (pagePackages.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center" style="padding: 40px;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; color: #dee2e6; margin-bottom: 15px; display: block;"></i>
+                        <p style="color: #6c757d;">No packages found</p>
+                        ${filteredPackages.length === 0 && packages.length > 0 ? 
+                          '<p class="text-muted">Try adjusting your filters</p>' : ''}
+                    </td>
+                </tr>`;
+        } else {
+            pagePackages.forEach(pkg => {
+                const availableSlots = pkg.maxAvailable - pkg.currentUsed;
+                const utilization = (pkg.currentUsed / pkg.maxAvailable) * 100;
+                
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-id', pkg.id);
+                
+                // Type badge
+                const typeClass = `badge-${pkg.type}`;
+                const typeText = pkg.type.charAt(0).toUpperCase() + pkg.type.slice(1);
+                
+                // Status badge
+                const statusClass = pkg.status === 'active' ? 'status-approved' : 
+                                   pkg.status === 'inactive' ? 'status-pending' : 'status-rejected';
+                const statusText = pkg.status.charAt(0).toUpperCase() + pkg.status.slice(1);
+                
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight: 600; color: var(--primary-dark);">${pkg.name}</div>
+                        <small style="color: var(--text-medium);">${pkg.description}</small>
+                    </td>
+                    <td>
+                        <span class="status-badge ${typeClass}">${typeText}</span>
+                    </td>
+                    <td style="max-width: 250px;">
+                        <div style="max-height: 60px; overflow: hidden; line-height: 1.4;">
+                            ${pkg.benefits.split('\n').slice(0, 3).join('<br>')}
+                            ${pkg.benefits.split('\n').length > 3 ? '...' : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600;">₦${pkg.price.toLocaleString()}</div>
+                    </td>
+                    <td>
+                        <div style="margin-bottom: 5px;">
+                            <span style="font-weight: 500;">${availableSlots}/${pkg.maxAvailable}</span>
+                            <span style="float: right; color: ${availableSlots <= 2 ? '#dc3545' : '#28a745'}">
+                                ${availableSlots} left
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 6px; background: #e9ecef; border-radius: 3px;">
+                            <div class="progress-bar" style="width: ${utilization}%; background: ${utilization >= 90 ? '#dc3545' : utilization >= 70 ? '#ffc107' : '#28a745'}"></div>
+                        </div>
+                    </td>
+                    <td>
+                        ${pkg.speakRights ? 
+                          `<span class="badge badge-success" style="background: #28a745; padding: 4px 8px;">
+                            <i class="fas fa-microphone"></i> ${pkg.speakingSlots}
+                          </span>` : 
+                          `<span class="badge badge-secondary" style="background: #6c757d; padding: 4px 8px;">None</span>`}
+                    </td>
+                    <td>
+                        ${pkg.exhibitRights ? 
+                          `<span class="badge badge-info" style="background: #17a2b8; padding: 4px 8px;">
+                            <i class="fas fa-store"></i> ${pkg.exhibitSlots}
+                          </span>` : 
+                          `<span class="badge badge-secondary" style="background: #6c757d; padding: 4px 8px;">None</span>`}
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-info btn-sm view-package-btn" title="View">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm edit-package-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-package-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+        
+        // Render pagination controls
+        renderPagination();
+        
+        // Attach event listeners to buttons
+        attachRowEventListeners();
+    }
+
+    // Render pagination controls
+    function renderPagination() {
+        const pageNumbersContainer = document.getElementById('pageNumbers');
+        if (!pageNumbersContainer) return;
+        
+        pageNumbersContainer.innerHTML = '';
+        
+        // Determine which page numbers to show
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+        
+        // Adjust if near start
+        if (currentPage <= 3) {
+            endPage = Math.min(totalPages, 5);
+        }
+        
+        // Adjust if near end
+        if (currentPage >= totalPages - 2) {
+            startPage = Math.max(1, totalPages - 4);
+        }
+        
+        // Create page number buttons
+        for (let i = startPage; i <= endPage; i++) {
+            const li = document.createElement('li');
+            li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+            li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+            pageNumbersContainer.appendChild(li);
+            
+            // Add click event
+            li.querySelector('a').addEventListener('click', (e) => {
+                e.preventDefault();
+                goToPage(i);
+            });
+        }
+        
+        // Update pagination button states
+        document.getElementById('firstPageBtn').classList.toggle('disabled', currentPage === 1);
+        document.getElementById('prevPageBtn').classList.toggle('disabled', currentPage === 1);
+        document.getElementById('nextPageBtn').classList.toggle('disabled', currentPage === totalPages);
+        document.getElementById('lastPageBtn').classList.toggle('disabled', currentPage === totalPages);
+        
+        // Update page jump input
+        document.getElementById('pageJumpInput').value = currentPage;
+        document.getElementById('pageJumpInput').max = totalPages;
+    }
+
+    // Pagination functions
+    function goToPage(page) {
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderTable();
+        scrollToTop();
+    }
+
+    function jumpToPage() {
+        const input = document.getElementById('pageJumpInput');
+        const page = parseInt(input.value);
+        if (page >= 1 && page <= totalPages) {
+            goToPage(page);
+        } else {
+            input.value = currentPage;
+        }
+    }
+
+    function scrollToTop() {
+        const packagesTab = document.getElementById('packages');
+        if (packagesTab) {
+            packagesTab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // Update statistics
+    function updateStats() {
+        const diamondPackages = packages.filter(p => p.type === 'diamond');
+        const goldPackages = packages.filter(p => p.type === 'gold');
+        const silverPackages = packages.filter(p => p.type === 'silver');
+        const bronzePackages = packages.filter(p => p.type === 'bronze');
+        
+        // Calculate available slots
+        const diamondAvailable = diamondPackages.reduce((sum, p) => sum + (p.maxAvailable - p.currentUsed), 0);
+        const goldAvailable = goldPackages.reduce((sum, p) => sum + (p.maxAvailable - p.currentUsed), 0);
+        const silverAvailable = silverPackages.reduce((sum, p) => sum + (p.maxAvailable - p.currentUsed), 0);
+        const bronzeAvailable = bronzePackages.reduce((sum, p) => sum + (p.maxAvailable - p.currentUsed), 0);
+        
+        // Update display
+        document.getElementById('totalPackages').textContent = packages.length;
+        document.getElementById('diamondCount').textContent = diamondPackages.length;
+        document.getElementById('goldCount').textContent = goldPackages.length;
+        document.getElementById('silverCount').textContent = silverPackages.length;
+        document.getElementById('bronzeCount').textContent = bronzePackages.length;
+        
+        document.getElementById('diamondAvailable').textContent = diamondAvailable;
+        document.getElementById('goldAvailable').textContent = goldAvailable;
+        document.getElementById('silverAvailable').textContent = silverAvailable;
+        document.getElementById('bronzeAvailable').textContent = bronzeAvailable;
+    }
+
+    // Package modal functions
+    function openPackageModal(packageId = null) {
+        const modal = document.getElementById('packageModal');
+        const title = document.getElementById('packageModalTitle');
+        
+        if (packageId) {
+            // Edit mode
+            const pkg = packages.find(p => p.id == packageId);
+            if (pkg) {
+                title.textContent = 'Edit Package';
+                document.getElementById('packageId').value = pkg.id;
+                document.getElementById('packageType').value = pkg.type;
+                document.getElementById('packageName').value = pkg.name;
+                document.getElementById('packagePrice').value = pkg.price;
+                document.getElementById('packageStatus').value = pkg.status;
+                document.getElementById('packageMaxAvailable').value = pkg.maxAvailable;
+                document.getElementById('packageCurrentUsed').value = pkg.currentUsed;
+                document.getElementById('packageWhenFull').value = pkg.whenFull;
+                document.getElementById('packageFullMessage').value = pkg.fullMessage || '';
+                document.getElementById('packageSpeakRights').checked = pkg.speakRights;
+                document.getElementById('packageSpeakingSlots').value = pkg.speakingSlots || 0;
+                document.getElementById('packageExhibitRights').checked = pkg.exhibitRights;
+                document.getElementById('packageExhibitSlots').value = pkg.exhibitSlots || 0;
+                document.getElementById('packageBenefits').value = pkg.benefits;
+                document.getElementById('packageDescription').value = pkg.description;
+                
+                // Update availability display
+                updatePackageAvailability();
+                
+                // Toggle feature details
+                toggleFeatureDetails('packageSpeakRights', 'packageSpeakDetails');
+                toggleFeatureDetails('packageExhibitRights', 'packageExhibitDetails');
+            }
+        } else {
+            // Create mode
+            title.textContent = 'Create Package';
+            document.getElementById('packageForm').reset();
+            document.getElementById('packageId').value = '';
+            document.getElementById('packageStatus').value = 'active';
+            document.getElementById('packageWhenFull').value = 'disable';
+            document.getElementById('packageMaxAvailable').value = 10;
+            document.getElementById('packageCurrentUsed').value = 0;
+            document.getElementById('packageSpeakRights').checked = false;
+            document.getElementById('packageExhibitRights').checked = false;
+            document.getElementById('packageSpeakDetails').style.display = 'none';
+            document.getElementById('packageExhibitDetails').style.display = 'none';
+            
+            // Update availability display
+            updatePackageAvailability();
+        }
+        
+        modal.style.display = 'block';
+    }
+
+    function closePackageModal() {
+        document.getElementById('packageModal').style.display = 'none';
+    }
+
+    // Feature toggle function
+    window.toggleFeatureDetails = function(checkboxId, detailsId) {
+        const checkbox = document.getElementById(checkboxId);
+        const details = document.getElementById(detailsId);
+        
+        if (checkbox.checked) {
+            details.style.display = 'block';
+        } else {
+            details.style.display = 'none';
+        }
+    };
+
+    // Update package availability display
+    window.updatePackageAvailability = function() {
+        const maxAvailable = parseInt(document.getElementById('packageMaxAvailable').value) || 0;
+        const currentUsed = parseInt(document.getElementById('packageCurrentUsed').value) || 0;
+        const available = maxAvailable - currentUsed;
+        
+        // Update display values
+        document.getElementById('totalSlotsDisplay').textContent = maxAvailable;
+        document.getElementById('usedSlotsDisplay').textContent = currentUsed;
+        document.getElementById('availableSlotsDisplay').textContent = Math.max(0, available);
+        
+        // Calculate and update utilization
+        const utilization = maxAvailable > 0 ? (currentUsed / maxAvailable) * 100 : 0;
+        document.getElementById('utilizationDisplay').textContent = utilization.toFixed(1) + '%';
+        
+        // Update progress bar
+        const progressBar = document.getElementById('utilizationProgress');
+        progressBar.style.width = Math.min(100, utilization) + '%';
+        
+        // Update status and colors
+        let status = 'Good Availability';
+        let statusColor = '#28a745';
+        let progressColor = '#28a745';
+        let progressText = `${utilization.toFixed(1)}% used`;
+        
+        if (available <= 0) {
+            status = 'No Slots Available';
+            statusColor = '#dc3545';
+            progressColor = '#dc3545';
+            progressText = '100% used - FULL';
+        } else if (available <= 2) {
+            status = 'Limited Availability';
+            statusColor = '#ffc107';
+            progressColor = '#ffc107';
+            progressText = `${utilization.toFixed(1)}% used - LOW`;
+        } else if (utilization >= 90) {
+            status = 'Critical Availability';
+            statusColor = '#dc3545';
+            progressColor = '#dc3545';
+            progressText = `${utilization.toFixed(1)}% used - CRITICAL`;
+        } else if (utilization >= 70) {
+            status = 'High Utilization';
+            statusColor = '#fd7e14';
+            progressColor = '#fd7e14';
+            progressText = `${utilization.toFixed(1)}% used - HIGH`;
+        }
+        
+        // Apply styles
+        document.getElementById('availabilityStatus').textContent = status;
+        document.getElementById('availabilityStatus').style.backgroundColor = statusColor;
+        progressBar.style.backgroundColor = progressColor;
+        document.getElementById('progressText').textContent = progressText;
+        document.getElementById('progressText').style.color = statusColor;
+        
+        // Update slots left display color
+        const availableDisplay = document.getElementById('availableSlotsDisplay');
+        availableDisplay.style.color = statusColor;
+        
+        // Show/hide alerts
+        const alertsContainer = document.getElementById('availabilityAlerts');
+        if (available <= 0) {
+            alertsContainer.innerHTML = `
+                <div class="alert alert-danger" style="margin-top: 15px; padding: 10px; border-radius: 5px;">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>Package is full!</strong> All ${maxAvailable} slots are occupied.
+                </div>`;
+            alertsContainer.style.display = 'block';
+        } else if (available <= 2) {
+            alertsContainer.innerHTML = `
+                <div class="alert alert-warning" style="margin-top: 15px; padding: 10px; border-radius: 5px;">
+                    <i class="fas fa-exclamation-circle"></i> 
+                    <strong>Limited availability!</strong> Only ${available} slot${available === 1 ? '' : 's'} left.
+                </div>`;
+            alertsContainer.style.display = 'block';
+        } else {
+            alertsContainer.style.display = 'none';
+        }
+    };
+
+    // Save package
+    function savePackage(e) {
+        e.preventDefault();
+        
+        const packageId = document.getElementById('packageId').value;
+        const packageData = {
+            id: packageId ? parseInt(packageId) : packages.length > 0 ? Math.max(...packages.map(p => p.id)) + 1 : 1,
+            name: document.getElementById('packageName').value,
+            type: document.getElementById('packageType').value,
+            price: parseInt(document.getElementById('packagePrice').value),
+            status: document.getElementById('packageStatus').value,
+            maxAvailable: parseInt(document.getElementById('packageMaxAvailable').value),
+            currentUsed: parseInt(document.getElementById('packageCurrentUsed').value) || 0,
+            whenFull: document.getElementById('packageWhenFull').value,
+            fullMessage: document.getElementById('packageFullMessage').value,
+            speakRights: document.getElementById('packageSpeakRights').checked,
+            speakingSlots: parseInt(document.getElementById('packageSpeakingSlots').value) || 0,
+            exhibitRights: document.getElementById('packageExhibitRights').checked,
+            exhibitSlots: parseInt(document.getElementById('packageExhibitSlots').value) || 0,
+            benefits: document.getElementById('packageBenefits').value,
+            description: document.getElementById('packageDescription').value,
+            createdDate: new Date().toISOString()
+        };
+        
+        if (packageId) {
+            // Update existing
+            const index = packages.findIndex(p => p.id == packageId);
+            if (index !== -1) {
+                packages[index] = packageData;
+            }
+        } else {
+            // Add new
+            packages.push(packageData);
+        }
+        
+        // Update filtered packages
+        filteredPackages = [...packages];
+        
+        // Update UI
+        renderTable();
+        updateStats();
+        closePackageModal();
+        
+        // Show success message
+        showSuccessMessage(packageId ? 'Package updated successfully!' : 'Package created successfully!');
+    }
+
+    // Delete package
+    function deletePackage(packageId) {
+        const pkg = packages.find(p => p.id == packageId);
+        if (!pkg) return;
+        
+        // Show confirmation modal
+        document.getElementById('deletePackageName').textContent = pkg.name;
+        document.getElementById('deletePackageModal').setAttribute('data-package-id', packageId);
+        document.getElementById('deletePackageModal').style.display = 'block';
+        
+        // Setup confirmation button
+        document.getElementById('confirmDeletePackageBtn').onclick = function() {
+            packages = packages.filter(p => p.id != packageId);
+            filteredPackages = packages.filter(p => p.id != packageId);
+            
+            renderTable();
+            updateStats();
+            
+            document.getElementById('deletePackageModal').style.display = 'none';
+            showSuccessMessage('Package deleted successfully!');
+        };
+        
+        // Setup cancel button
+        document.getElementById('cancelDeletePackageBtn').onclick = function() {
+            document.getElementById('deletePackageModal').style.display = 'none';
+        };
+    }
+
+    // View package
+    function viewPackage(packageId) {
+        const pkg = packages.find(p => p.id == packageId);
+        if (!pkg) return;
+        
+        alert(`Package Details:\n\n` +
+              `Name: ${pkg.name}\n` +
+              `Type: ${pkg.type}\n` +
+              `Price: ₦${pkg.price.toLocaleString()}\n` +
+              `Status: ${pkg.status}\n` +
+              `Slots: ${pkg.currentUsed}/${pkg.maxAvailable} (${pkg.maxAvailable - pkg.currentUsed} available)\n` +
+              `Speaking Slots: ${pkg.speakRights ? pkg.speakingSlots : 'None'}\n` +
+              `Exhibition Slots: ${pkg.exhibitRights ? pkg.exhibitSlots : 'None'}\n\n` +
+              `Description: ${pkg.description}\n\n` +
+              `Benefits:\n${pkg.benefits}`);
+    }
+
+    // Attach event listeners to row buttons
+    function attachRowEventListeners() {
+        document.querySelectorAll('.view-package-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const packageId = this.closest('tr').getAttribute('data-id');
+                viewPackage(packageId);
+            });
+        });
+        
+        document.querySelectorAll('.edit-package-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const packageId = this.closest('tr').getAttribute('data-id');
+                openPackageModal(packageId);
+            });
+        });
+        
+        document.querySelectorAll('.delete-package-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const packageId = this.closest('tr').getAttribute('data-id');
+                deletePackage(packageId);
+            });
+        });
+    }
+
+    // Refresh packages
+    function refreshPackages() {
+        renderTable();
+        showSuccessMessage('Packages refreshed!');
+    }
+
+    // Show success message
+    function showSuccessMessage(message) {
+        // You can implement a toast notification here
+        console.log('Success:', message);
+        alert(message);
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
+
+
+// Package Management JavaScript
+(function () {
+    const packagesBody = document.getElementById('packagesTableBody');
+    const refreshBtn = document.getElementById('refreshPackagesBtn');
+    const addPackageBtn = document.getElementById('addPackageBtn');
+    const packageModal = document.getElementById('packageModal');
+    const packageForm = document.getElementById('packageForm');
+    const packageModalTitle = document.getElementById('packageModalTitle');
+    const deletePackageModal = document.getElementById('deletePackageModal');
+    
+    // Sample data for demonstration
+    let packages = [
+        {
+            id: 1,
+            name: "Premium Partnership",
+            type: "diamond",
+            price: 5000000,
+            benefits: "• Prime booth location (6x9m)\n• 10 conference passes\n• Keynote speaking slot\n• Company logo on all promotional materials",
+            maxAvailable: 10,
+            currentUsed: 0,
+            speakRights: true,
+            speakingSlots: 1,
+            exhibitRights: true,
+            exhibitSlots: 2,
+            status: "active",
+            whenFull: "show_message",
+            fullMessage: "Diamond partnership slots are currently full"
+        },
+        {
+            id: 2,
+            name: "Gold Knowledge Partner",
+            type: "gold",
+            price: 3000000,
+            benefits: "• Standard booth location (6x6m)\n• 6 conference passes\n• Panel discussion participation",
+            maxAvailable: 20,
+            currentUsed: 0,
+            speakRights: true,
+            speakingSlots: 1,
+            exhibitRights: true,
+            exhibitSlots: 1,
+            status: "active",
+            whenFull: "waitlist"
+        }
+    ];
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-NG', {
+            style: 'currency',
+            currency: 'NGN',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
+
+    function renderPackages() {
+        if (!packagesBody) return;
+        
+        packagesBody.innerHTML = '';
+        
+        if (!Array.isArray(packages) || packages.length === 0) {
+            packagesBody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align:center;">
+                        No packages found. <a href="#" id="addFirstPackage" style="color: var(--primary);">Create your first package</a>
+                    </td>
+                </tr>`;
+            
+            document.getElementById('addFirstPackage')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                openPackageModal();
+            });
+            return;
+        }
+        
+        packages.forEach(pkg => {
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-id', pkg.id);
+            
+            // Status badge
+            const statusClass = pkg.status === 'active' ? 'status-approved' : 
+                               pkg.status === 'full' ? 'status-rejected' : 'status-pending';
+            const statusText = pkg.status === 'active' ? 'Active' : 
+                               pkg.status === 'full' ? 'Full' : 'Inactive';
+            
+            // Type badge
+            const typeClass = pkg.type === 'diamond' ? 'badge-diamond' :
+                              pkg.type === 'gold' ? 'badge-gold' :
+                              pkg.type === 'silver' ? 'badge-silver' : 'badge-bronze';
+            const typeText = pkg.type.charAt(0).toUpperCase() + pkg.type.slice(1);
+            
+            // Preview first 2 benefits
+            const benefitsPreview = pkg.benefits.split('\n').slice(0, 2).join('<br>') + 
+                                   (pkg.benefits.split('\n').length > 2 ? '...' : '');
+            
+            tr.innerHTML = `
+                <td>
+                    <div style="font-weight: 600;">${pkg.name}</div>
+                    <small style="color: var(--text-medium);">${formatCurrency(pkg.price)}</small>
+                </td>
+                <td><span class="status-badge ${typeClass}">${typeText}</span></td>
+                <td style="max-width: 250px;">${benefitsPreview}</td>
+                <td>${formatCurrency(pkg.price)}</td>
+                <td>${pkg.currentUsed}/${pkg.maxAvailable}</td>
+                <td>${pkg.speakRights ? pkg.speakingSlots : 'None'}</td>
+                <td>${pkg.exhibitRights ? pkg.exhibitSlots : 'None'}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-info btn-sm view-package-btn" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-warning btn-sm edit-package-btn" title="Edit Package">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm delete-package-btn" title="Delete Package">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            packagesBody.appendChild(tr);
+        });
+        
+        updatePackageStats();
+        attachPackageEventListeners();
+    }
+
+    function updatePackageStats() {
+        document.getElementById('totalPackages').textContent = packages.length;
+        document.getElementById('diamondCount').textContent = packages.filter(p => p.type === 'diamond').length;
+        document.getElementById('goldCount').textContent = packages.filter(p => p.type === 'gold').length;
+        document.getElementById('silverCount').textContent = packages.filter(p => p.type === 'silver').length;
+        document.getElementById('bronzeCount').textContent = packages.filter(p => p.type === 'bronze').length;
+    }
+
+    function openPackageModal(packageId = null) {
+        const modal = document.getElementById('packageModal');
+        const form = document.getElementById('packageForm');
+        const title = document.getElementById('packageModalTitle');
+        
+        if (packageId) {
+            // Edit mode
+            const pkg = packages.find(p => p.id == packageId);
+            if (pkg) {
+                title.textContent = 'Edit Package';
+                document.getElementById('packageId').value = pkg.id;
+                document.getElementById('packageType').value = pkg.type;
+                document.getElementById('packageName').value = pkg.name;
+                document.getElementById('packagePrice').value = pkg.price;
+                document.getElementById('packageStatus').value = pkg.status;
+                document.getElementById('packageMaxAvailable').value = pkg.maxAvailable;
+                document.getElementById('packageWhenFull').value = pkg.whenFull;
+                document.getElementById('packageFullMessage').value = pkg.fullMessage || '';
+                document.getElementById('packageSpeakRights').checked = pkg.speakRights;
+                document.getElementById('packageSpeakingSlots').value = pkg.speakingSlots || 0;
+                document.getElementById('packageExhibitRights').checked = pkg.exhibitRights;
+                document.getElementById('packageExhibitSlots').value = pkg.exhibitSlots || 0;
+                document.getElementById('packageBenefits').value = pkg.benefits;
+                document.getElementById('packageDescription').value = pkg.description || '';
+                document.getElementById('packageGracePeriod').value = pkg.gracePeriod || 48;
+                document.getElementById('packageAutoReopen').value = pkg.autoReopen || 'yes';
+                document.getElementById('packageNotes').value = pkg.notes || '';
+                
+                // Toggle feature details visibility
+                toggleFeatureDetails('packageSpeakRights', 'packageSpeakDetails');
+                toggleFeatureDetails('packageExhibitRights', 'packageExhibitDetails');
+            }
+        } else {
+            // Create mode
+            title.textContent = 'Create Package';
+            form.reset();
+            document.getElementById('packageId').value = '';
+            document.getElementById('packageStatus').value = 'active';
+            document.getElementById('packageWhenFull').value = 'show_message';
+            document.getElementById('packageSpeakRights').checked = false;
+            document.getElementById('packageExhibitRights').checked = false;
+            document.getElementById('packageSpeakDetails').style.display = 'none';
+            document.getElementById('packageExhibitDetails').style.display = 'none';
+        }
+        
+        modal.style.display = 'block';
+    }
+
+    function toggleFeatureDetails(checkboxId, detailsId) {
+        const checkbox = document.getElementById(checkboxId);
+        const details = document.getElementById(detailsId);
+        
+        if (checkbox.checked) {
+            details.style.display = 'block';
+        } else {
+            details.style.display = 'none';
+        }
+    }
+
+    function attachPackageEventListeners() {
+        // Edit buttons
+        document.querySelectorAll('.edit-package-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const packageId = btn.closest('tr').getAttribute('data-id');
+                openPackageModal(packageId);
+            });
+        });
+        
+        // Delete buttons
+        document.querySelectorAll('.delete-package-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const packageId = btn.closest('tr').getAttribute('data-id');
+                const packageName = btn.closest('tr').querySelector('td:first-child div').textContent;
+                openDeletePackageModal(packageId, packageName);
+            });
+        });
+        
+        // View buttons
+        document.querySelectorAll('.view-package-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const packageId = btn.closest('tr').getAttribute('data-id');
+                viewPackageDetails(packageId);
+            });
+        });
+    }
+
+    function openDeletePackageModal(packageId, packageName) {
+        document.getElementById('deletePackageName').textContent = packageName;
+        document.getElementById('deletePackageModal').setAttribute('data-package-id', packageId);
+        document.getElementById('deletePackageModal').style.display = 'block';
+    }
+
+    function viewPackageDetails(packageId) {
+        const pkg = packages.find(p => p.id == packageId);
+        if (!pkg) return;
+        
+        alert(`Package Details:\n\n` +
+              `Name: ${pkg.name}\n` +
+              `Type: ${pkg.type}\n` +
+              `Price: ${formatCurrency(pkg.price)}\n` +
+              `Status: ${pkg.status}\n` +
+              `Benefits:\n${pkg.benefits}\n` +
+              `Slots: ${pkg.currentUsed}/${pkg.maxAvailable}\n` +
+              `Speaking Slots: ${pkg.speakRights ? pkg.speakingSlots : 'None'}\n` +
+              `Exhibition Slots: ${pkg.exhibitRights ? pkg.exhibitSlots : 'None'}`);
+    }
+
+    // Feature toggle event listeners
+    document.getElementById('packageSpeakRights')?.addEventListener('change', function() {
+        toggleFeatureDetails('packageSpeakRights', 'packageSpeakDetails');
+    });
+    
+    document.getElementById('packageExhibitRights')?.addEventListener('change', function() {
+        toggleFeatureDetails('packageExhibitRights', 'packageExhibitDetails');
+    });
+
+    // Form submission
+    packageForm?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const packageId = document.getElementById('packageId').value;
+        const packageData = {
+            name: document.getElementById('packageName').value,
+            type: document.getElementById('packageType').value,
+            price: parseInt(document.getElementById('packagePrice').value),
+            status: document.getElementById('packageStatus').value,
+            maxAvailable: parseInt(document.getElementById('packageMaxAvailable').value),
+            whenFull: document.getElementById('packageWhenFull').value,
+            fullMessage: document.getElementById('packageFullMessage').value,
+            speakRights: document.getElementById('packageSpeakRights').checked,
+            speakingSlots: parseInt(document.getElementById('packageSpeakingSlots').value) || 0,
+            exhibitRights: document.getElementById('packageExhibitRights').checked,
+            exhibitSlots: parseInt(document.getElementById('packageExhibitSlots').value) || 0,
+            benefits: document.getElementById('packageBenefits').value,
+            description: document.getElementById('packageDescription').value,
+            gracePeriod: parseInt(document.getElementById('packageGracePeriod').value),
+            autoReopen: document.getElementById('packageAutoReopen').value,
+            notes: document.getElementById('packageNotes').value,
+            currentUsed: 0
+        };
+        
+        if (packageId) {
+            // Update existing package
+            const index = packages.findIndex(p => p.id == packageId);
+            if (index !== -1) {
+                packageData.id = parseInt(packageId);
+                packages[index] = packageData;
+            }
+        } else {
+            // Create new package
+            packageData.id = packages.length > 0 ? Math.max(...packages.map(p => p.id)) + 1 : 1;
+            packages.push(packageData);
+        }
+        
+        renderPackages();
+        document.getElementById('packageModal').style.display = 'none';
+        
+        // Show success message
+        showSuccessMessage(packageId ? 'Package updated successfully!' : 'Package created successfully!');
+    });
+
+    // Delete package
+    document.getElementById('confirmDeletePackageBtn')?.addEventListener('click', function() {
+        const modal = document.getElementById('deletePackageModal');
+        const packageId = modal.getAttribute('data-package-id');
+        
+        if (packageId) {
+            packages = packages.filter(p => p.id != packageId);
+            renderPackages();
+            modal.style.display = 'none';
+            showSuccessMessage('Package deleted successfully!');
+        }
+    });
+
+    // Cancel delete
+    document.getElementById('cancelDeletePackageBtn')?.addEventListener('click', function() {
+        document.getElementById('deletePackageModal').style.display = 'none';
+    });
+
+    // Cancel package form
+    document.getElementById('cancelPackageBtn')?.addEventListener('click', function() {
+        document.getElementById('packageModal').style.display = 'none';
+    });
+
+    // Add package button
+    addPackageBtn?.addEventListener('click', function(e) {
+        e.preventDefault();
+        openPackageModal();
+    });
+
+    // Refresh button
+    refreshBtn?.addEventListener('click', function(e) {
+        e.preventDefault();
+        renderPackages();
+        showSuccessMessage('Packages refreshed!');
+    });
+
+    // Modal close buttons
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
+        });
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    function showSuccessMessage(message) {
+        // You can implement a toast notification here
+        console.log('Success:', message);
+        // For now, let's use alert
+        alert(message);
+    }
+
+    // Initial render
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderPackages);
+    } else {
+        renderPackages();
+    }
+
+})();
 
 
 // Initialize
