@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
     <link rel="icon" href="title.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/package.css">
     <style>
         :root {
             --primary-color: #28a745;
@@ -96,6 +97,53 @@
             background-color: #218838;
             border-color: #218838;
             color: white;
+        }
+        
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 500;
         }
         
         .btn-outline-standard {
@@ -434,66 +482,96 @@
             border-radius: 8px;
             margin: 15px 0;
         }
-    /* Notification styles for mock mode */
-    .mock-notice {
-        background-color: #fff3cd;
-        border: 1px solid #ffeaa7;
-        border-radius: 8px;
-        padding: 12px 15px;
-        margin-bottom: 20px;
-        text-align: center;
-        color: #856404;
-    }
-    
-    .mock-notice i {
-        margin-right: 8px;
-    }
-    
-    .package-description {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 10px;
-        line-height: 1.4;
-    }
-    
-    /* Improved disabled package styling */
-    .package-card.disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        position: relative;
-    }
-    
-    .package-card.disabled::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 8px;
-    }
-    
-    .limited {
-        margin-top: 8px;
-        font-size: 0.85rem;
-        text-align: center;
-        font-weight: 500;
-        padding: 4px 8px;
-        border-radius: 4px;
-        background: #f8f9fa;
-    }
-    
-    .payment-amount {
-        background: #e8f5e9;
-        padding: 10px 15px;
-        border-radius: 6px;
-        margin-bottom: 15px;
-        border-left: 3px solid #28a745;
-    }
+        
+        .mock-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+        }
+        
+        .mock-notice i {
+            margin-right: 8px;
+        }
+        
+        .package-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .package-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            position: relative;
+        }
+        
+        .package-card.disabled::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .limited {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+        
+        .payment-amount {
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 3px solid #28a745;
+        }
+        
+        .payment-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .payment-card h5 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .payment-details {
+            font-size: 0.95rem;
+        }
+        
+        .payment-details strong {
+            color: var(--text-dark);
+        }
+        
+        .payment-details ol {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .payment-details li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
 
-
-        /* Fix for button layout issue */
         .content-section .container {
             position: relative;
             z-index: 1;
@@ -620,6 +698,22 @@
             animation: spin 1s linear infinite;
         }
 
+        /* Add this to your CSS */
+        #inline-remita-payment-form {
+            display: block !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        #inline-remita-payment-form .payment-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
@@ -669,7 +763,7 @@
     <div class="content-section">
         <div class="container">
             <div class="text-center mb-4">
-                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="Index.html" target="_blank">here</a>.</strong></p>
+                <p class="lead"><strong>To return to the International Civil Service Conference website please click <a href="index.html" target="_blank">here</a>.</strong></p>
             </div>
 
             <!-- Single Comprehensive Form Section -->
@@ -755,16 +849,16 @@
                     </div>
 
                     <div class="form-group">
-    <label for="companyLogo">Company Logo (Optional)</label>
-    <div class="d-flex align-items-center gap-3">
-        <input type="file" id="companyLogo" name="companyLogo" class="form-control" accept="image/*" style="flex-grow: 1;">
-        <div id="logoPreviewContainer" style="display: none; flex-shrink: 0;">
-            <img id="logoPreview" src="#" alt="Logo Preview" style="height: 45px; width: 45px; object-fit: contain; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; padding: 2px;">
-        </div>
-    </div>
-    <div class="help-block-error" id="companyLogo-error"></div>
-    <div class="hint-block">Recommended: PNG or JPG (Square format works best)</div>
-</div>
+                        <label for="companyLogo">Company Logo (Optional)</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="file" id="companyLogo" name="companyLogo" class="form-control" accept="image/*" style="flex-grow: 1;">
+                            <div id="logoPreviewContainer" style="display: none; flex-shrink: 0;">
+                                <img id="logoPreview" src="#" alt="Logo Preview" style="height: 45px; width: 45px; object-fit: contain; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; padding: 2px;">
+                            </div>
+                        </div>
+                        <div class="help-block-error" id="companyLogo-error"></div>
+                        <div class="hint-block">Recommended: PNG or JPG (Square format works best)</div>
+                    </div>
                     
                     <div class="form-group">
                         <label class="has-star" for="workPhone">Work phone</label>
@@ -836,7 +930,7 @@
                         </div>
                         
                         <div class="checkbox-note">
-                            *Tick this box if you would like to have the weekly Global Government Forum newsletters sent directly to your inbox. It's free and if you change your mind you can unsubscribe at any time.
+                            Tick this box if you would like to have the weekly Civil  Service newsletters sent directly to your inbox. It's free and if you change your mind you can unsubscribe at any time.
                         </div>
                     </div>
                 </form>
@@ -861,9 +955,156 @@
                 </div>
                 
                 <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals</p>
-                
-                <div class="package-cards">
-                    <!-- Packages will be loaded dynamically from the admin system -->
+
+                <div class="package-container">
+                    <table>
+                        <thead>
+                            <tr class="package-header">
+                                <th style="background-color: #f2f2f2;">Partnership Packages</th>
+                                <th>Diamond Partner</th>
+                                <th>Gold Knowledge Partner</th>
+                                <th>Silver Roundtable Partner</th>
+                                <th>Bronze Exhibition Partner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="category-row">
+                                <td>Content delivery</td>
+                                <td style="text-align: center;">Limited to 4</td>
+                                <td colspan="3" style="text-align: center;">Limited to 10</td>
+                        </tr>
+                            <tr>
+                                <td>Speaking opportunity to deliver a keynote address during the conference</td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                                <td class="cross">X</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>Speaking opportunity within a panel session of your choice</td>
+                                <td>Panel Speaker</td>
+                                <td>Panel Speaker</td>
+                                <td>Roundtable hosts x2</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>Invitation-only roundtable on a topic of your choice, included on the official agneda ( for delegate to request to join) </td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>Speaker/panelist/roundtable delegate profile promoted in line with the event agenda</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>News coverage of your session published on the OHCSF website and shared in the civil service newsletter</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            
+                            <tr class="category-row">
+                                <td colspan="5">Promotion</td>
+                            </tr>
+                            <tr>
+                                <td>Company logo included on all delegate and commenrcial emails, social media posts and world press conference announncing your company as a partner</td>
+                                <td>Full coverage</td>
+                                <td>Full coverage</td>
+                                <td>Full coverage</td>
+                                <td>Basic coverage</td>
+                            </tr>
+                            <tr>
+                                <td>Company logo and profile on event website</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                            </tr>
+                            <tr>
+                                <td>Company logo onsite at the event on multimedia screens</td>
+                                <td>Throughout</td>
+                                <td>Throughout</td>
+                                <td>Throughout</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            
+                            <tr class="category-row">
+                                <td colspan="5">Engagement</td>
+                            </tr>
+                            <tr>
+                                <td>space located in the main exhibition area 2 days, offered as space only </td>
+                                <td>9 x 3M Space Only (Estimated)</td>
+                                <td>3 x 3M Space Only (Estimated)</td>
+                                <td>3 x 3M Space Only (Estimated)</td>
+                                <td>3 x 3M Space Only (Estimated)</td>
+                            </tr>
+                            
+                            <tr class="category-row">
+                                <td colspan="5">Attend</td>
+                            </tr>
+                            <tr>
+                                <td>Full event passes, includes access to all networking elements, (includes speaker passes listed above)</td>
+                                <td>10</td>
+                                <td>6</td>
+                                <td>4</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Guest passes, opportunity to invite a limited number of your own VIPs to the event. (Not to be used for members of your own organisation)</td>
+                                <td>3</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            
+                            <tr class="category-row">
+                                <td colspan="5">Connect</td>
+                            </tr>
+                            <tr>
+                                <td>Detailed registration report 1 week from the event</td>
+                                <td class="tick">✓</td>
+                                <td class="cross">X</td>
+                                <td class="cross">X</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>Final delegate list post-event</td>
+                                <td>All event attendees</td>
+                                <td>Panel registrations</td>
+                                <td>Roundtable attendees</td>
+                                <td class="cross">X</td>
+                            </tr>
+                            <tr>
+                                <td>Final PDF analytics report</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                                <td class="tick">✓</td>
+                            </tr>
+                            
+                            <tr class="investment-row">
+                                <td class="investment-label">Investment</td>
+                                <td>₦30,000,000</td>
+                                <td>₦15,000,000</td>
+                                <td>₦10,000,000</td>
+                                <td>₦5,000,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="note">
+                        <p><strong>Note:</strong> ✓ - Applicable | <strong>X</strong> - Not applicable</p>
+                    </div>
+
+                    <div class="package-cards">
+                        <!-- Packages will be loaded dynamically from the admin system -->
+                    </div>
                 </div>
                 
                 <div class="button-container">
@@ -883,49 +1124,60 @@
                 <div class="payment-section">
                     <div class="form-group">
                         <label class="has-star">Select Payment Method</label>
-                        <!-- <div class="payment-option">
-                            <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
-                            <label for="bank-transfer">Bank Transfer</label>
-                        </div> -->
                         <div class="payment-option">
-                            <input type="radio" id="flutterwave" name="payment-method" value="flutterwave">
-                            <label for="flutterwave">Flutterwave</label>
+                            <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
+                            <label for="bank-transfer">Manual</label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="remita" name="payment-method" value="remita">
+                            <label for="remita">Remita</label>
                         </div>
                     </div>
                     
-                    <div class="payment-form" id="bank-transfer-form">
-                        <h5>Bank Transfer Details</h5>
-                        <!-- Add payment amount dynamically here -->
-                        <div id="bank-transfer-amount"></div>
-                        <p><strong>Bank Name:</strong> First Bank Nigeria</p>
-                        <p><strong>Account Name:</strong> ICSC 2026 Conference</p>
-                        <p><strong>Account Number:</strong> 1234567890</p>
-                        <p><strong>Sort Code:</strong> 123456</p>
-                        <p>Please include your registration ID as the payment reference.</p>
-                        
-                        <!-- Payment Receipt Upload - Only for Bank Transfer -->
-                        <div class="form-group mt-4">
-                            <label class="has-star" for="paymentReceipt">Upload Payment Receipt</label>
-                            <input type="file" id="paymentReceipt" name="paymentReceipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                            <div class="help-block-error" id="paymentReceipt-error"></div>
-                            <div class="hint-block">Accepted formats: PDF, JPG, PNG, DOC (Max size: 5MB)</div>
+                    <div class="payment-form" id="bank-transfer-form" style="display: none;">
+                        <div class="payment-card">
+                            <h5>Bank Transfer Details</h5>
+                            <div id="bank-transfer-amount" class="payment-amount"></div>
+                            
+                            <div class="payment-details">
+                                <p><strong>Paying to:</strong> OFFICE OF THE HEAD OF THE CIVIL SERVICE OF THE FEDERATION (OHCSF)-HQTRS - 012500100100</p>
+                                <p><strong>Service/Purpose:</strong> International Civil Service Conference 2026 - Partner Registration</p>
+                                <p><strong><a href="https://login.remita.net/remita/onepage/OAGFCRF/biller.spa" target="_blank" id="generate-rrr-link">Click Here To Generate The RRR</a></strong></p>
+                                
+                                <div class="alert alert-info mt-3">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <strong>Payment Instructions:</strong>
+                                    <ol class="mt-2 mb-0">
+                                        <li>Click the link above to generate your unique RRR (Remita Retrieval Reference)</li>
+                                        <li>Select Pay TSA and State</li>
+                                        <li>Select FGN</li>
+                                        <li>Make payment to remita using details above</li>
+                                        <li>Use your registration details as the payment reference</li>
+                                        <li>Your registration will be verified within 24-48 hours</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <a href="partners-dash.html" class="btn btn-standard">Proced to dashboard</a>
                         </div>
                     </div>
                     
-                    <div class="payment-form" id="flutterwave-form">
-                        <h5>Flutterwave Payment</h5>
-                        <div id="flutterwave-amount"></div>
-                        <p>You will be redirected to Flutterwave's secure payment gateway to complete your transaction.</p>
-                        <p>Accepted payment methods:</p>
-                        <ul>
-                            <li>Visa/Mastercard</li>
-                            <li>Bank Transfer</li>
-                            <li>USSD</li>
-                            <li>Mobile Money</li>
-                        </ul>
-                        <button type="button" class="btn btn-standard" id="pay-with-flutterwave">
-                            <i class="fas fa-credit-card me-2"></i>Pay with Flutterwave
-                        </button>
+                    <div class="payment-form" id="remita-form">
+                        <div class="payment-form-content">
+                            <h5>Remita Payment</h5>
+                            <div id="remita-amount"></div>
+                            <p>You will be redirected to Remita's secure payment gateway to complete your transaction.</p>
+                            <p>Accepted payment methods:</p>
+                            <ul>
+                                <li>Visa/Mastercard</li>
+                                <li>Bank Transfer</li>
+                                <li>USSD</li>
+                                <li>Mobile Money</li>
+                            </ul>
+                            <button type="button" class="btn btn-standard" id="pay-with-remita">
+                                <i class="fas fa-credit-card me-2"></i>Pay with Remita
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -940,6 +1192,33 @@
             </div>
 
             <!-- Step 4: Confirmation Section -->
+            <!-- Error Section -->
+            <div id="error-section" class="form-section" style="display: none;">
+                <h2 class="text-center mb-4">Payment Verification Error</h2>
+                
+                <div class="error-message" style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                    <i class="fas fa-exclamation-circle fa-3x" style="color: #dc3545; margin-bottom: 15px;"></i>
+                    <h3 style="color: #721c24;">Payment Verification Failed</h3>
+                    <p id="error-message-text" class="mb-0" style="color: #721c24;">An error occurred while verifying your payment. Please try again or contact support.</p>
+                </div>
+                
+                <div class="error-details" style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                    <h4 style="color: #856404;">Error Details</h4>
+                    <p id="error-detail-text" style="color: #856404; margin-bottom: 0;">No additional information available</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="button-container">
+                        <button type="button" class="btn btn-standard" id="retry-payment-btn">
+                            <i class="fas fa-redo me-2"></i>Retry Payment
+                        </button>
+                        <a href="register-partner.html" class="btn btn-outline-standard">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Registration
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
             <div id="confirmation-section" class="form-section" style="display: none;">
                 <h2 class="text-center mb-4">Registration Confirmation</h2>
                 
@@ -983,10 +1262,18 @@
                         <button type="button" class="btn btn-standard" id="go-to-dashboard-btn">
                             Go to Dashboard
                         </button>
-                        <a href="Index.html" class="btn btn-outline-standard">Return to Conference Website</a>
+                        <a href="index.html" class="btn btn-outline-standard">Return to Conference Website</a>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Verifying your payment...</div>
         </div>
     </div>
 
@@ -1000,8 +1287,8 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <h5>Contact Us</h5>
-                    <p>Email: info@icsc2026.org</p>
-                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Email: info@icsc.ohcsf.gov.ng</p>
+                    <p>Phone: +2348103247323</p>
                     <div class="social-media-links mt-3">
                         <a href="#" class="me-3"><i class="fab fa-twitter fa-lg"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-linkedin fa-lg"></i></a>
@@ -1022,12 +1309,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
     <script src="js/apiClient.js"></script>
     <script src="js/auth.js"></script>
-   <script>
-
-           // ============================================
+    <script>
+        // ============================================
         // MAIN APPLICATION CODE
         // ============================================
 
@@ -1038,11 +1323,11 @@
         let selectedPackageId = null;
         let selectedPaymentMethod = '';
         let phoneInputs = [];
-        let uploadedLogoUrl = ''; // holds the uploaded company logo URL returned by /misc/upload-image
+        let uploadedLogoUrl = '';
         let lastPartnerRegistrationResponse = null;
         let availablePackages = [];
-        let selectedPackageDashboard = 'partners-dash.html'; // Default dashboard
-        let partnerAccountId = null; // Store the partner ID after successful registration
+        let selectedPackageDashboard = 'partners-dash.html';
+        let partnerAccountId = null;
         
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -1051,10 +1336,9 @@
 
         async function initializeApp() {
             try {
-
-                 // Populate country dropdowns
-        populateCountryDropdowns();
-        
+                // Populate country dropdowns
+                populateCountryDropdowns();
+                
                 // Fetch packages from backend and render them
                 await fetchAndRenderPackages();
 
@@ -1070,7 +1354,7 @@
                 // Setup payment section
                 setupPaymentSection();
 
-                // Check for payment callback/return from Flutterwave
+                // Check for payment callback/return from Remita
                 await handlePaymentCallback();
 
             } catch (error) {
@@ -1080,107 +1364,151 @@
 
         async function handlePaymentCallback() {
             try {
-                // Check if returning from Flutterwave payment
                 const urlParams = new URLSearchParams(window.location.search);
-                // Prefer Flutterwave-generated identifiers
-                const flwRef = urlParams.get('flw_ref');
-                const transactionId = urlParams.get('transaction_id') || urlParams.get('transactionId');
-                const txRef = urlParams.get('tx_ref');
+                const paymentSuccess = urlParams.get('payment_success');
+                const remitaRef = urlParams.get('rrr') || urlParams.get('remita_reference') || urlParams.get('RRR');
                 const status = urlParams.get('status');
-
-                // Fallback to any previously stored reference (if present)
-                const storedRef = sessionStorage.getItem('lastTxRef');
-                if (!flwRef && !transactionId && !txRef && !status && !storedRef) return;
-
-                console.log('=== PAYMENT CALLBACK HANDLER ===');
-                console.log('URL flw_ref:', flwRef);
-                console.log('URL transaction_id:', transactionId);
-                console.log('URL tx_ref:', txRef);
-                console.log('URL status:', status);
-
-                // Prefer using `transaction_id` for verification, then `flw_ref`, then fall back to `tx_ref` or stored reference
-                const verifyIdentifier = transactionId || flwRef || txRef || storedRef;
-                if (verifyIdentifier) {
-                    console.log('Verifying payment with identifier (transaction_id preferred):', verifyIdentifier);
-
-                    // Ensure we have the package id (fall back to sessionStorage if needed)
-                    const storedPackageId = sessionStorage.getItem('selectedPackageId');
-                    const packageIdForVerify = selectedPackageId || (storedPackageId ? Number(storedPackageId) : null);
-
-                    // Call backend to verify payment using `transaction_id` as the primary parameter
+                
+                // Handle successful Remita payment redirect from payment gateway
+                if (paymentSuccess === 'true' && remitaRef) {
+                    console.log('Payment callback: successful payment detected with RRR:', remitaRef);
+                    
+                    // Show loading overlay
+                    showLoadingOverlay();
+                    
                     try {
-                        console.log('Making verification request to: /payments/verify-event-partner-payment with reference=' + transactionId + ' and packageId=' + packageIdForVerify);
-                        // Build query params; include event_package_id only if available
-                        const queryParams = `reference=${encodeURIComponent(transactionId)}` + (packageIdForVerify ? `&event_package_id=${encodeURIComponent(packageIdForVerify)}` : '');
-                        const verifyResponse = await window.apiClient.get(`/payments/verify-event-partner-payment?${queryParams}`);
-                        const verifyData = verifyResponse && (verifyResponse.data || verifyResponse);
-                        
-                        console.log('Payment verification response:', verifyData);
-                        console.log('Response keys:', verifyData ? Object.keys(verifyData) : 'null');
-                        
-                        // Check if payment is successful
-                        // Handle multiple response formats for success
-                        let isPaymentSuccessful = false;
-                        
-                        // Format 1: {status: 'success'}
-                        if (verifyData && verifyData.status === 'success') {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment verified successfully (status === success)');
-                        }
-                        // Format 2: {success: true}
-                        else if (verifyData && verifyData.success === true) {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment verified successfully (success === true)');
-                        }
-                        // Format 3: {data: {status: 'success'}}
-                        else if (verifyData && verifyData.data && verifyData.data.status === 'success') {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment verified successfully (data.status === success)');
-                        }
-                        // Format 4: {data: {success: true}}
-                        else if (verifyData && verifyData.data && verifyData.data.success === true) {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment verified successfully (data.success === true)');
-                        }
-                        // Format 5: {verified: true}
-                        else if (verifyData && verifyData.verified === true) {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment verified successfully (verified === true)');
-                        }
-                        // Format 6: Trust URL status parameter as fallback
-                        else if (status === 'successful' || status === 'completed') {
-                            isPaymentSuccessful = true;
-                            console.log('✓ Payment completed (from URL parameter)');
-                        }
-                        
-                        if (isPaymentSuccessful) {
-                            completePaymentFlow(verifyIdentifier);
-                        } else {
-                            console.warn('Payment verification returned unexpected status:', verifyData);
-                        }
+                        // Verify payment with loading overlay
+                        await verifyPaymentWithOverlay(remitaRef);
                     } catch (verifyErr) {
-                        console.warn('Payment verification API call failed:', verifyErr);
-                        console.warn('Error status:', verifyErr.response?.status);
-                        console.warn('Error data:', verifyErr.response?.data);
-                        
-                        // Fallback: if verification fails but we have URL status, trust it
-                        if (status === 'successful' || status === 'completed') {
-                            console.log('Verification failed, but trusting URL status parameter');
-                            completePaymentFlow(verifyIdentifier);
-                        }
-                        // Otherwise don't show error - user may have just navigated back
+                        console.error('Payment verification failed:', verifyErr);
+                        // Error handling is done in verifyPaymentWithOverlay
+                    } finally {
+                        // Clean up URL to remove payment parameters
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                    return;
+                }
+                
+                if (remitaRef) {
+                    console.log('Handling Remita payment callback with RRR:', remitaRef);
+                    
+                    // Show loading overlay
+                    showLoadingOverlay();
+                    
+                    try {
+                        // Verify the payment with overlay
+                        await verifyPaymentWithOverlay(remitaRef);
+                    } catch (verifyErr) {
+                        console.warn('Payment verification failed:', verifyErr);
+                        // Error handling is done in verifyPaymentWithOverlay
+                    } finally {
+                        // Clean up URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
                     }
                 }
             } catch (err) {
                 console.error('Error in payment callback handler:', err);
+                hideLoadingOverlay();
+            }
+        }
+        
+        function showLoadingOverlay() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.classList.add('active');
+            }
+        }
+        
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+        
+        async function verifyPaymentWithOverlay(rrr) {
+            try {
+                console.log('Verifying payment for RRR:', rrr);
+                
+                // Call verification endpoint
+                const response = await window.apiClient.get(`/payments/verify-remita-event-partner-payment?reference=${encodeURIComponent(rrr)}`);
+                const respData = response && (response.data || response);
+                
+                console.log('Payment verification response:', respData);
+                
+                // Check if payment is successful
+                let isPaymentSuccessful = false;
+                
+                if (respData && respData.status === 'success') isPaymentSuccessful = true;
+                else if (respData && respData.success === true) isPaymentSuccessful = true;
+                else if (respData && respData.data && respData.data.status === 'success') isPaymentSuccessful = true;
+                else if (respData && respData.data && respData.data.success === true) isPaymentSuccessful = true;
+                else if (respData && respData.verified === true) isPaymentSuccessful = true;
+                
+                if (isPaymentSuccessful) {
+                    // Payment verified successfully
+                    console.log('Payment verified successfully');
+                    
+                    // Mark payment as completed
+                    sessionStorage.setItem('paymentCompleted', 'true');
+                    sessionStorage.setItem('completedTxRef', rrr);
+                    
+                    // Hide overlay
+                    hideLoadingOverlay();
+                    
+                    // Update confirmation section and show it
+                    updateConfirmationSection();
+                    showStep(4);
+                    
+                    // Show success notification
+                    showNotification('Payment verified successfully! Thank you for your registration.', 'success');
+                } else {
+                    // Payment verification failed
+                    throw new Error(respData?.message || 'Payment verification returned unsuccessful status');
+                }
+            } catch (err) {
+                console.error('Payment verification error:', err);
+                
+                // Hide overlay
+                hideLoadingOverlay();
+                
+                // Extract error message
+                let errorMessage = 'Payment verification failed';
+                let errorDetail = 'An unexpected error occurred while verifying your payment.';
+                
+                if (err.response && err.response.data) {
+                    errorMessage = err.response.data.message || errorMessage;
+                    errorDetail = err.response.data.detail || errorMessage;
+                } else if (err.message) {
+                    errorDetail = err.message;
+                }
+                
+                // Set error details
+                const errorMessageEl = document.getElementById('error-message-text');
+                const errorDetailEl = document.getElementById('error-detail-text');
+                
+                if (errorMessageEl) {
+                    errorMessageEl.textContent = errorMessage;
+                }
+                if (errorDetailEl) {
+                    errorDetailEl.textContent = errorDetail;
+                }
+                
+                // Show error section (step 5)
+                showStep(5);
+                
+                // Show error notification
+                showNotification('Payment verification failed: ' + errorMessage, 'error', 7000);
+                
+                throw err;
             }
         }
 
         function completePaymentFlow(txRef) {
             console.log('=== COMPLETING PAYMENT FLOW ===');
             
-            // Update Flutterwave button to show paid status
-            const payBtn = document.getElementById('pay-with-flutterwave');
+            // Update Remita button to show paid status
+            const payBtn = document.getElementById('pay-with-remita');
             if (payBtn) {
                 payBtn.disabled = true;
                 payBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Payment Completed';
@@ -1262,13 +1590,8 @@
                 const price = pkg.investment || pkg.price || 0;
                 const priceText = Number(price).toLocaleString();
                 
-                // Features HTML
+                // Features/description intentionally hidden in package cards per UI requirement
                 let featuresHtml = '';
-                if (Array.isArray(pkg.features) && pkg.features.length > 0) {
-                    featuresHtml = '<ul>' + pkg.features.map(f => `<li>${f}</li>`).join('') + '</ul>';
-                } else if (pkg.description) {
-                    featuresHtml = `<p class="package-description">${pkg.description}</p>`;
-                }
                 
                 // Availability
                 const maxCount = Number(pkg.total_slot || pkg.max_count || 0);
@@ -1292,10 +1615,10 @@
                     limitedText = `<div class="limited">${pkg.limitedText}</div>`;
                 }
 
-                // Card HTML
+                // Card HTML (price commented out)
                 card.innerHTML = `
                     <h4>${pkg.title || pkg.name}</h4>
-                    <div class="price">₦${priceText}</div>
+                    <!-- <div class="price">₦${priceText}</div> -->
                     ${featuresHtml}
                     ${limitedText}
                 `;
@@ -1306,8 +1629,6 @@
             // Add refresh / loaded status indicator
             updateRefreshStatus();
         }
-        
-        
         
         // Update refresh status indicator
         function updateRefreshStatus() {
@@ -1395,7 +1716,7 @@
             }
         }
         
-        // Check package availability function - FIXED VERSION
+        // Check package availability function
         async function checkPackageAvailability(packageId) {
             try {
                 const resp = await window.apiClient.get(`/packages/check-availability/${packageId}`);
@@ -1458,6 +1779,13 @@
             }
             
             // Navigation buttons
+            const retryPaymentBtn = document.getElementById('retry-payment-btn');
+            if (retryPaymentBtn) {
+                retryPaymentBtn.addEventListener('click', function() {
+                    showStep(3);
+                });
+            }
+            
             const continueToPackageBtn = document.getElementById('continue-to-package-btn');
             if (continueToPackageBtn) {
                 continueToPackageBtn.addEventListener('click', function() {
@@ -1513,9 +1841,9 @@
             if (completeRegistrationBtn) {
                 completeRegistrationBtn.addEventListener('click', async function() {
                     if (validatePaymentForm()) {
-                        // For Flutterwave, don't process here - user clicks the Flutterwave button
-                        if (selectedPaymentMethod === 'flutterwave') {
-                            showNotification('Please click the "Pay with Flutterwave" button to proceed to payment', 'info');
+                        // For Remita, don't process here - user clicks the Remita button
+                        if (selectedPaymentMethod === 'remita') {
+                            showNotification('Please click the "Pay with Remita" button to proceed to payment', 'info');
                             return;
                         }
                         // For bank transfer, process immediately
@@ -1524,35 +1852,35 @@
                 });
             }
             
-            // Flutterwave payment button
-            const flutterwaveBtn = document.getElementById('pay-with-flutterwave');
-            if (flutterwaveBtn) {
-                flutterwaveBtn.addEventListener('click', function() {
-                    processFlutterwavePayment();
+            // Remita payment button
+            const remitaBtn = document.getElementById('pay-with-remita');
+            if (remitaBtn) {
+                remitaBtn.addEventListener('click', function() {
+                    processRemitaPayment();
                 });
             }
-            const logoInput = document.getElementById('companyLogo');
-    const logoPreview = document.getElementById('logoPreview');
-    const logoPreviewContainer = document.getElementById('logoPreviewContainer');
-
-    if (logoInput) {
-        logoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    logoPreview.setAttribute('src', e.target.result);
-                    logoPreviewContainer.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            } else {
-                logoPreviewContainer.style.display = 'none';
-            }
-        });
-    }
-
             
-            // Dashboard button - Updated to use dynamic dashboard URL
+            const logoInput = document.getElementById('companyLogo');
+            const logoPreview = document.getElementById('logoPreview');
+            const logoPreviewContainer = document.getElementById('logoPreviewContainer');
+
+            if (logoInput) {
+                logoInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            logoPreview.setAttribute('src', e.target.result);
+                            logoPreviewContainer.style.display = 'block';
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        logoPreviewContainer.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Dashboard button
             const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
             if (goToDashboardBtn) {
                 goToDashboardBtn.addEventListener('click', function() {
@@ -1582,7 +1910,7 @@
                     const pkgIdAttr = this.getAttribute('data-package-id');
                     selectedPackageId = pkgIdAttr ? Number(pkgIdAttr) : null;
                     
-                    // Get package details - FIXED: Use the package from availablePackages array
+                    // Get package details
                     const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
                     if (selectedPkg) {
                         console.log('Selected package:', selectedPkg.name || selectedPkg.title, 'Price:', selectedPkg.price);
@@ -1609,59 +1937,60 @@
                 });
             });
         }
+        
         // Country list for dropdowns 
-const countries = [
-    "Nigeria", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
-    "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
-    "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
-    "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
-    "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
-    "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
-    "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
-    "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
-    "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
-    "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
-    "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", 
-    "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", 
-    "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", 
-    "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", 
-    "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", 
-    "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
-    "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
-    "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
-    "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
-    "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
-    "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
-    "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-];
+        const countries = [
+            "Nigeria", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+            "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", 
+            "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", 
+            "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", 
+            "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", 
+            "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", 
+            "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+            "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", 
+            "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", 
+            "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", 
+            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", 
+            "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", 
+            "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", 
+            "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", 
+            "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", 
+            "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", 
+            "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", 
+            "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", 
+            "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", 
+            "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", 
+            "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+        ];
 
-function populateCountryDropdowns() {
-    const countrySelectors = ['country'];
-    
-    countrySelectors.forEach(selector => {
-        const select = document.getElementById(selector);
-        if (select) {
-            const placeholder = select.options.length ? select.options[0].outerHTML : '<option value="" disabled>Select your country</option>';
-            select.innerHTML = placeholder;
+        function populateCountryDropdowns() {
+            const countrySelectors = ['country'];
             
-            countries.forEach(country => {
-                const option = document.createElement('option');
-                option.value = country;
-                option.textContent = country;
-                select.appendChild(option);
-            });
-            
-            Array.from(select.options).forEach(opt => {
-                if (!opt.value || opt.value.trim() === '') {
-                    opt.value = opt.textContent.trim();
+            countrySelectors.forEach(selector => {
+                const select = document.getElementById(selector);
+                if (select) {
+                    // Clear existing options
+                    select.innerHTML = '';
+                    
+                    // Add placeholder option
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.disabled = true;
+                    placeholder.selected = true;
+                    placeholder.textContent = 'Select your country';
+                    select.appendChild(placeholder);
+                    
+                    // Add all countries
+                    countries.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country;
+                        option.textContent = country;
+                        select.appendChild(option);
+                    });
                 }
             });
-            
-            // Set empty default
-            select.selectedIndex = 0;
         }
-    });
-}
 
         async function registerEventPartnerOnPackageSelect() {
             try {
@@ -1700,18 +2029,14 @@ function populateCountryDropdowns() {
                 
                 console.log('Partner registration response:', respData);
                 
-                // Handle both response formats:
-                // Format 1: {data: {id, token}}
-                // Format 2: {partner: {id}, token}
+                // Handle both response formats
                 let partnerId = null;
                 let token = null;
                 
                 if (respData && respData.data && respData.data.id) {
-                    // Format 1: Standard format
                     partnerId = respData.data.id;
                     token = respData.data.token;
                 } else if (respData && respData.partner && respData.partner.id) {
-                    // Format 2: Actual backend format
                     partnerId = respData.partner.id;
                     token = respData.token;
                 }
@@ -1720,7 +2045,7 @@ function populateCountryDropdowns() {
                     partnerAccountId = partnerId;
                     lastPartnerRegistrationResponse = respData;
                     
-                    // Persist key partner details to sessionStorage so they can be shown after redirect/verification
+                    // Persist key partner details to sessionStorage
                     try {
                         sessionStorage.setItem('partnerEmail', String(email || ''));
                         sessionStorage.setItem('partnerFirstName', String(firstName || ''));
@@ -1768,8 +2093,8 @@ function populateCountryDropdowns() {
                         // Show/hide payment forms based on selection
                         document.getElementById('bank-transfer-form').style.display = 
                             selectedPaymentMethod === 'bank-transfer' ? 'block' : 'none';
-                        document.getElementById('flutterwave-form').style.display = 
-                            selectedPaymentMethod === 'flutterwave' ? 'block' : 'none';
+                        document.getElementById('remita-form').style.display = 
+                            selectedPaymentMethod === 'remita' ? 'block' : 'none';
                         
                         // Update amount display
                         const selectedPkg = availablePackages.find(p => p.id === selectedPackageId);
@@ -1779,22 +2104,48 @@ function populateCountryDropdowns() {
                             // Update bank transfer amount
                             const bankTransferAmount = document.getElementById('bank-transfer-amount');
                             if (bankTransferAmount) {
-                                bankTransferAmount.innerHTML = `<div class="payment-amount"><strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN</div>`;
+                                bankTransferAmount.innerHTML = `<strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN`;
                             }
                             
-                            // Update Flutterwave amount
-                            const flutterwaveAmount = document.getElementById('flutterwave-amount');
-                            if (flutterwaveAmount) {
-                                flutterwaveAmount.innerHTML = `<div class="payment-amount"><strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN</div>`;
+                            // Update Remita amount
+                            const remitaAmount = document.getElementById('remita-amount');
+                            if (remitaAmount) {
+                                remitaAmount.innerHTML = `<strong>Amount Due:</strong> ₦${amount.toLocaleString()} NGN`;
                             }
                         }
                         
-                        // Enable complete button
+                        // Enable complete registration button for bank transfer
                         const completeBtn = document.getElementById('complete-registration-btn');
-                        if (completeBtn) completeBtn.disabled = false;
+                        if (completeBtn) {
+                            if (selectedPaymentMethod === 'bank-transfer') {
+                                // For bank transfer, enable immediately
+                                completeBtn.disabled = false;
+                            } else {
+                                // For Remita, keep disabled until payment is completed
+                                completeBtn.disabled = true;
+                            }
+                        }
                     }
                 });
             });
+            
+            // Add file input validation for payment receipt
+            const paymentReceipt = document.getElementById('paymentReceipt');
+            if (paymentReceipt) {
+                paymentReceipt.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        const file = this.files[0];
+                        const maxSize = 5 * 1024 * 1024; // 5MB
+                        
+                        if (file.size > maxSize) {
+                            showError('paymentReceipt-error', 'File size must be less than 5MB');
+                            this.value = ''; // Clear the file input
+                        } else {
+                            hideError('paymentReceipt-error');
+                        }
+                    }
+                });
+            }
         }
         
         function validateMainForm() {
@@ -1874,7 +2225,7 @@ function populateCountryDropdowns() {
                 return false;
             }
             
-            // Validate bank transfer receipt upload - ONLY for bank transfers
+            // Validate bank transfer receipt upload
             if (selectedPaymentMethod === 'bank-transfer') {
                 const paymentReceipt = document.getElementById('paymentReceipt');
                 if (!paymentReceipt || !paymentReceipt.files || paymentReceipt.files.length === 0) {
@@ -1891,9 +2242,9 @@ function populateCountryDropdowns() {
                 }
                 
                 // Validate file type
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
                 if (!allowedTypes.includes(file.type)) {
-                    showError('paymentReceipt-error', 'Please upload a valid file type (PDF, JPG, PNG, DOC)');
+                    showError('paymentReceipt-error', 'Please upload a valid file type (PDF, JPG, PNG)');
                     return false;
                 }
                 
@@ -1903,8 +2254,8 @@ function populateCountryDropdowns() {
             return true;
         }
         
-        async function processFlutterwavePayment() {
-            const payBtn = document.getElementById('pay-with-flutterwave');
+        async function processRemitaPayment() {
+            const payBtn = document.getElementById('pay-with-remita');
             if (!payBtn) {
                 console.error('Pay button not found');
                 showNotification('Payment button not found', 'error');
@@ -1912,15 +2263,40 @@ function populateCountryDropdowns() {
             }
             
             try {
-                console.log('=== FLUTTERWAVE PAYMENT INITIALIZATION START ===');
+                console.log('=== REMITA PAYMENT INITIALIZATION START ===');
                 
                 payBtn.disabled = true;
                 payBtn.classList.add('btn-loading');
+                
+                // Verify authentication token exists
+                const authUser = localStorage.getItem('authUser');
+                if (!authUser) {
+                    console.error('Authentication token not found in localStorage');
+                    showNotification('Error: Authentication required. Please complete your registration first.', 'error');
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('btn-loading');
+                    return;
+                }
+                
+                let authToken = null;
+                try {
+                    const authData = JSON.parse(authUser);
+                    authToken = authData.token;
+                    console.log('Auth token found, length:', authToken ? authToken.length : 0);
+                } catch (e) {
+                    console.error('Failed to parse auth token from localStorage:', e);
+                    showNotification('Error: Invalid authentication data. Please re-register.', 'error');
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('btn-loading');
+                    return;
+                }
                 
                 // Ensure partner account exists
                 if (!partnerAccountId) {
                     console.error('Partner account ID not found:', partnerAccountId);
                     showNotification('Error: Partner account not created. Please go back and complete registration.', 'error');
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('btn-loading');
                     return;
                 }
                 
@@ -1930,112 +2306,285 @@ function populateCountryDropdowns() {
                 if (!selectedPkg) {
                     console.error('Selected package not found. Package ID:', selectedPackageId);
                     showNotification('Error: Package not found', 'error');
+                    payBtn.disabled = false;
+                    payBtn.classList.remove('btn-loading');
                     return;
                 }
                 
                 console.log('Selected Package:', selectedPkg);
                 
                 // Prepare payment initialization payload
-                // Note: deliberately NOT sending a customer-generated `tx_ref` so Flutterwave will assign its own reference.
                 const paymentPayload = {
                     event_package_id: selectedPackageId,
                     currency: 'NGN'
                 };
                 
                 console.log('Payment Payload:', paymentPayload);
-                console.log('Making request to: /payments/initialize-event-partner-payment');
+                console.log('Making authenticated request to: /payments/initialize-remita-event-partner-payment');
                 
                 // Call backend payment initialization endpoint
-                const response = await window.apiClient.post('/payments/initialize-event-partner-payment', paymentPayload);
+                const response = await window.apiClient.post('/payments/initialize-remita-event-partner-payment', paymentPayload);
                 
                 console.log('Raw response:', response);
                 
                 const respData = response && (response.data || response);
                 
                 console.log('Full payment response:', respData);
-                console.log('Response type:', typeof respData);
-                console.log('Response keys:', respData ? Object.keys(respData) : 'null');
                 
-                // Handle multiple possible response formats
-                let paymentUrl = null;
-                
-                // Format 0: {data: {data: {link}}} - Actual backend format
-                if (respData && respData.data && respData.data.data && respData.data.data.link) {
-                    paymentUrl = respData.data.data.link;
-                    console.log('✓ Found link in respData.data.data.link');
-                }
-                // Format 1: {data: {authorization_url}}
-                else if (respData && respData.data && respData.data.authorization_url) {
-                    paymentUrl = respData.data.authorization_url;
-                    console.log('✓ Found authorization_url in respData.data.authorization_url');
-                }
-                // Format 2: {authorization_url} - direct at root
-                else if (respData && respData.authorization_url) {
-                    paymentUrl = respData.authorization_url;
-                    console.log('✓ Found authorization_url in respData.authorization_url');
-                }
-                // Format 3: {data: {url}}
-                else if (respData && respData.data && respData.data.url) {
-                    paymentUrl = respData.data.url;
-                    console.log('✓ Found url in respData.data.url');
-                }
-                // Format 4: {url} - direct at root
-                else if (respData && respData.url) {
-                    paymentUrl = respData.url;
-                    console.log('✓ Found url in respData.url');
-                }
-                // Format 5: {payment_link}
-                else if (respData && respData.payment_link) {
-                    paymentUrl = respData.payment_link;
-                    console.log('✓ Found payment_link in respData.payment_link');
-                }
-                // Format 6: {link}
-                else if (respData && respData.link) {
-                    paymentUrl = respData.link;
-                    console.log('✓ Found link in respData.link');
-                }
-                
-                if (paymentUrl) {
-                    console.log('Payment URL extracted successfully:', paymentUrl);
-                    console.log('=== PAYMENT URL READY - REDIRECTING ===');
-                    
-                    showNotification('Redirecting to Flutterwave payment...', 'success');
-                    
-                    // Store partner context for post-payment handling
-                    sessionStorage.setItem('partnerId', String(partnerAccountId));
-                    sessionStorage.setItem('selectedPackageId', String(selectedPackageId));
-                    
-                    // Append callback URL to redirect user back after payment. Do NOT include a merchant tx_ref here;
-                    // Flutterwave will append its own reference parameters (e.g. flw_ref) to the callback URL.
-                    const callbackUrl = `${window.location.origin}${window.location.pathname}?status=successful`;
-                    const fullPaymentUrl = `${paymentUrl}${paymentUrl.includes('?') ? '&' : '?'}callback=${encodeURIComponent(callbackUrl)}`;
-                    
-                    // Redirect after a short delay to allow notification to be seen
-                    setTimeout(() => {
-                        console.log('Performing redirect to:', fullPaymentUrl);
-                        window.location.href = fullPaymentUrl;
-                    }, 1500);
+                // Parse the JSONP response from Remita
+                if (respData && respData.success && respData.data && respData.data.startsWith('jsonp')) {
+                    try {
+                        // Extract the JSON from the JSONP response
+                        const jsonpString = respData.data;
+                        // Remove 'jsonp (' from start and ')' from end
+                        const jsonString = jsonpString.substring(7, jsonpString.length - 1);
+                        const remitaResponse = JSON.parse(jsonString);
+                        
+                        console.log('Parsed Remita response:', remitaResponse);
+                        
+                        if (remitaResponse.statuscode === '025' && remitaResponse.RRR) {
+                            const rrr = remitaResponse.RRR;
+                            console.log('RRR generated:', rrr);
+                            
+                            // Redirect to Remita payment portal
+                            redirectToRemitaPayment(rrr, selectedPkg);
+                            
+                        } else {
+                            throw new Error(`Remita error: ${remitaResponse.status || remitaResponse.statuscode}`);
+                        }
+                    } catch (parseError) {
+                        console.error('Error parsing Remita JSONP response:', parseError);
+                        throw new Error('Invalid response from payment gateway');
+                    }
                 } else {
-                    console.error('Payment URL not found in response');
-                    console.error('Response structure:', JSON.stringify(respData, null, 2));
-                    throw new Error('No payment URL found in server response. Check console for response structure.');
+                    console.error('Unexpected response format:', respData);
+                    throw new Error('Unexpected response from payment gateway');
                 }
+                
             } catch (err) {
-                console.error('=== FLUTTERWAVE PAYMENT ERROR ===');
+                console.error('=== REMITA PAYMENT ERROR ===');
                 console.error('Error message:', err.message);
                 console.error('Error:', err);
                 if (err.response) {
                     console.error('Response status:', err.response.status);
                     console.error('Response data:', err.response.data);
+                    
+                    if (err.response.status === 401) {
+                        console.error('Unauthorized: Authentication token is invalid or expired');
+                        showNotification('Error: Your session has expired. Please re-register and try again.', 'error');
+                    } else if (err.response.status === 403) {
+                        console.error('Forbidden: User does not have permission to access this endpoint');
+                        showNotification('Error: You do not have permission to initialize payment. Please contact support.', 'error');
+                    } else if (err.response.status === 400) {
+                        const errorMsg = err.response.data?.message || 'Invalid payment request';
+                        showNotification(`Error: ${errorMsg}`, 'error');
+                    } else {
+                        showNotification(`Error: Payment initialization failed (${err.response.status}). Please try again.`, 'error');
+                    }
+                } else {
+                    console.error('Error stack:', err.stack);
+                    showNotification(err.message || 'Failed to initialize payment. Check console for details.', 'error');
                 }
-                console.error('Error stack:', err.stack);
-                
-                showNotification(err.message || 'Failed to initialize payment. Check console for details.', 'error');
             } finally {
                 if (payBtn) {
                     payBtn.disabled = false;
                     payBtn.classList.remove('btn-loading');
                 }
+            }
+        }
+        
+        // Function to display inline payment form with details fetched from RRR
+        function redirectToRemitaPayment(rrr, selectedPkg) {
+            console.log('Displaying inline payment checkout');
+            console.log('RRR:', rrr);
+            
+            // Show inline payment form with fetched details
+            showInlinePaymentForm(rrr, selectedPkg);
+        }
+        
+        // Function to show inline payment form
+        function showInlinePaymentForm(rrr, selectedPkg) {
+            var paymentEngine = RmPaymentEngine.init({
+            key:"QzAwMDAyNzEyNTl8MTEwNjE4NjF8OWZjOWYwNmMyZDk3MDRhYWM3YThiOThlNTNjZTE3ZjYxOTY5NDdmZWE1YzU3NDc0ZjE2ZDZjNTg1YWYxNWY3NWM4ZjMzNzZhNjNhZWZlOWQwNmJhNTFkMjIxYTRiMjYzZDkzNGQ3NTUxNDIxYWNlOGY4ZWEyODY3ZjlhNGUwYTY=",
+            processRrr: true,
+            // transactionId: Math.floor(Math.random()*1101233), // Replace with a reference you generated or remove the entire field for us to auto-generate a reference for you. Note that you will be able to check the status of this transaction using this transaction Id
+            extendedData: { 
+                customFields: [ 
+                    { 
+                        name: "rrr", 
+                        value: rrr
+                    }
+                ]
+            },
+                onSuccess: function (response) {
+                    console.log('callback Successful Response', response);
+                    // Redirect to the same page with success indicator
+                    const currentUrl = window.location.pathname + window.location.search;
+                    const successUrl = currentUrl.includes('?') 
+                        ? currentUrl + '&payment_success=true&rrr=' + rrr
+                        : currentUrl + '?payment_success=true&rrr=' + rrr;
+                    window.location.href = successUrl;
+                },
+                onError: function (response) {
+                    console.log('callback Error Response', response);
+                    const currentUrl = window.location.pathname + window.location.search;
+                    const errorUrl = currentUrl.includes('?') 
+                        ? currentUrl + '&payment_error=true&rrr=' + rrr
+                        : currentUrl + '?payment_error=true&rrr=' + rrr;
+                    window.location.href = errorUrl;
+                },
+                onClose: function () {
+                    console.log("closed");
+                    setTimeout(() => {
+                    if (!paymentProcessed) {
+                    const currentUrl = window.location.pathname + window.location.search;
+                    const closeUrl = currentUrl.includes('?') 
+                        ? currentUrl + '&payment_closed=true&rrr=' + rrr
+                        : currentUrl + '?payment_closed=true&rrr=' + rrr;
+                    window.location.href = closeUrl;
+                    }
+                }, 2000); 
+                }
+            });
+            paymentEngine.showPaymentWidget();
+        }
+
+        // Function to verify Remita payment
+        async function verifyRemitaPayment(rrr, selectedPkg) {
+            const verifyBtn = document.getElementById('verify-payment-btn');
+            if (!verifyBtn) return;
+            
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying...';
+            
+            try {
+                console.log('Verifying Remita payment with RRR:', rrr);
+                
+                // Call verification endpoint
+                const response = await window.apiClient.get(`/payments/verify-remita-event-partner-payment?reference=${encodeURIComponent(rrr)}`);
+                const respData = response && (response.data || response);
+                
+                console.log('Verification response:', respData);
+                
+                // Check if payment is successful
+                let isPaymentSuccessful = false;
+                
+                // Handle different response formats
+                if (respData && respData.status === 'success') {
+                    isPaymentSuccessful = true;
+                } else if (respData && respData.success === true) {
+                    isPaymentSuccessful = true;
+                } else if (respData && respData.data && respData.data.status === 'success') {
+                    isPaymentSuccessful = true;
+                } else if (respData && respData.data && respData.data.success === true) {
+                    isPaymentSuccessful = true;
+                } else if (respData && respData.verified === true) {
+                    isPaymentSuccessful = true;
+                }
+                
+                if (isPaymentSuccessful) {
+                    // Payment verified successfully
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Payment Verified!';
+                    verifyBtn.className = 'btn btn-success';
+                    
+                    // Store payment completion status
+                    sessionStorage.setItem('paymentCompleted', 'true');
+                    sessionStorage.setItem('completedTxRef', rrr);
+                    
+                    // Update confirmation section
+                    updateConfirmationSection();
+                    
+                    // Show success notification
+                    showNotification('Payment verified successfully!', 'success');
+                    
+                    // Remove the inline payment form
+                    const paymentForm = document.getElementById('inline-remita-payment-form');
+                    if (paymentForm) {
+                        setTimeout(() => {
+                            paymentForm.remove();
+                        }, 2000);
+                    }
+                    
+                    // Enable complete registration button
+                    const completeBtn = document.getElementById('complete-registration-btn');
+                    if (completeBtn) {
+                        completeBtn.disabled = false;
+                    }
+                    
+                    // You can optionally auto-proceed to next step
+                    setTimeout(() => {
+                        processRegistration();
+                    }, 1500);
+                    
+                } else {
+                    // Payment not yet verified
+                    verifyBtn.innerHTML = '<i class="fas fa-redo me-2"></i>Try Again';
+                    verifyBtn.disabled = false;
+                    showNotification('Payment not yet verified. Please ensure payment has been completed and try again.', 'warning');
+                }
+                
+            } catch (err) {
+                console.error('Payment verification error:', err);
+                verifyBtn.innerHTML = '<i class="fas fa-redo me-2"></i>Try Again';
+                verifyBtn.disabled = false;
+                
+                showNotification(err.message || 'Failed to verify payment. Please try again.', 'error');
+            }
+        }
+        
+        async function uploadPaymentReceipt(userId, eventPackageId) {
+            try {
+                const paymentReceiptInput = document.getElementById('paymentReceipt');
+                if (!paymentReceiptInput || !paymentReceiptInput.files || paymentReceiptInput.files.length === 0) {
+                    throw new Error('No receipt file selected');
+                }
+                
+                const file = paymentReceiptInput.files[0];
+                
+                // Validate file size (5MB max)
+                const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    throw new Error('File size exceeds 5MB limit');
+                }
+                
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    throw new Error('File type not allowed. Please upload PDF, JPG, PNG, or DOC files.');
+                }
+                
+                // Create FormData for multipart upload
+                const formData = new FormData();
+                formData.append('user_id', userId);
+                formData.append('event_package_id', eventPackageId);
+                formData.append('receipt', file);
+                
+                console.log('Uploading payment receipt:', {
+                    userId,
+                    eventPackageId,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    fileType: file.type
+                });
+                
+                // Upload receipt to backend (unauthenticated endpoint)
+                const response = await fetch('/misc/upload-payment-receipt', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: response.statusText }));
+                    throw new Error(errorData.message || `Upload failed with status ${response.status}`);
+                }
+                
+                const uploadResponse = await response.json();
+                console.log('Receipt upload successful:', uploadResponse);
+                
+                return uploadResponse;
+            } catch (err) {
+                console.error('Receipt upload error:', err);
+                throw err;
             }
         }
         
@@ -2048,26 +2597,49 @@ function populateCountryDropdowns() {
             }
             
             try {
-                // Handle bank transfer payment
                 if (selectedPaymentMethod === 'bank-transfer') {
-                    // For bank transfer, we just show confirmation
-                    // The payment will be verified later when admin receives the receipt
-                    
                     console.log('Processing bank transfer registration');
+                    
+                    // Upload payment receipt
+                    if (!partnerAccountId || !selectedPackageId) {
+                        throw new Error('Missing partner account or package information');
+                    }
+                    
+                    try {
+                        console.log('Uploading payment receipt for partner:', partnerAccountId, 'package:', selectedPackageId);
+                        const uploadResponse = await uploadPaymentReceipt(partnerAccountId, selectedPackageId);
+                        console.log('Receipt uploaded successfully:', uploadResponse);
+                        showNotification('Receipt uploaded successfully!', 'success', 3000);
+                    } catch (uploadErr) {
+                        console.error('Receipt upload failed:', uploadErr);
+                        showNotification('Receipt upload failed: ' + uploadErr.message, 'error', 5000);
+                        throw uploadErr;
+                    }
                     
                     // Update confirmation with actual data
                     updateConfirmationSection();
                     
                     // Show success
-                    showNotification('Registration submitted! Please complete the bank transfer and await admin verification.', 'success');
+                    showNotification('Registration submitted! Please await admin verification of your bank transfer.', 'success');
                     
                     // Move to confirmation step
                     showStep(4);
-                } else if (selectedPaymentMethod === 'flutterwave') {
-                    // For Flutterwave, initiate payment
-                    console.log('Redirecting to Flutterwave payment');
-                    await processFlutterwavePayment();
-                    // User will be redirected to Flutterwave, so we don't need to continue here
+                } else if (selectedPaymentMethod === 'remita') {
+                    // Check if payment is already verified
+                    const paymentCompleted = sessionStorage.getItem('paymentCompleted') === 'true';
+                    
+                    if (paymentCompleted) {
+                        // Update confirmation with actual data
+                        updateConfirmationSection();
+                        
+                        // Show success
+                        showNotification('Registration and payment completed successfully!', 'success');
+                        
+                        // Move to confirmation step
+                        showStep(4);
+                    } else {
+                        showNotification('Please complete and verify your Remita payment first', 'warning');
+                    }
                 } else {
                     showNotification('Please select a payment method', 'warning');
                 }
@@ -2144,8 +2716,8 @@ function populateCountryDropdowns() {
                     confirmationPayment.innerHTML = '<span style="color: #28a745; font-weight: bold;"><i class="fas fa-check-circle me-2"></i>Payment Completed</span>';
                 } else if (selectedPaymentMethod === 'bank-transfer') {
                     confirmationPayment.textContent = 'Bank Transfer (Pending Verification)';
-                } else if (selectedPaymentMethod === 'flutterwave') {
-                    confirmationPayment.textContent = 'Flutterwave (Payment Completed)';
+                } else if (selectedPaymentMethod === 'remita') {
+                    confirmationPayment.textContent = 'Remita (Payment Completed)';
                 } else {
                     confirmationPayment.textContent = 'Pending';
                 }
@@ -2174,14 +2746,18 @@ function populateCountryDropdowns() {
         
         function redirectToDashboard() {
             // Show notification about mock mode
-            showNotification(`In mock mode, would redirect to: ${selectedPackageDashboard}`, 'info');
-            
-            // In real implementation:
-            // window.location.href = selectedPackageDashboard;
+            // Redirect to the selected package dashboard
+            try {
+                // Use location.assign to create a proper navigation entry
+                window.location.assign(selectedPackageDashboard || 'partners-dash.html');
+            } catch (err) {
+                console.error('Redirect to dashboard failed:', err);
+                showNotification('Unable to redirect to dashboard. Please try again.', 'error');
+            }
         }
         
         function showStep(step) {
-            const sections = ['main-form-section', 'package-section', 'payment-section', 'confirmation-section'];
+            const sections = ['main-form-section', 'package-section', 'payment-section', 'confirmation-section', 'error-section'];
             
             sections.forEach(section => {
                 const element = document.getElementById(section);
@@ -2207,6 +2783,8 @@ function populateCountryDropdowns() {
                         mockNotice.style.display = 'block';
                     }
                 }
+            } else if (step === 5) {
+                currentSection = document.getElementById('error-section');
             }
             
             if (currentSection) {
@@ -2294,5 +2872,6 @@ function populateCountryDropdowns() {
             }
         }
     </script>
+    <script type="text/javascript" src="https://demo.remita.net/payment/v1/remita-pay-inline.bundle.js"></script>
 </body>
 </html>

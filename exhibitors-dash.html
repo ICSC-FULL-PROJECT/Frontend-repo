@@ -1284,7 +1284,7 @@
                     <li><a href="#" data-tab="resources"><i class="fas fa-receipt"></i> Receipts & Resources</a></li>
                     <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
                     <li><a href="#" data-tab="help"><i class="fas fa-question-circle"></i> Help</a></li>
-                    <li><a href="Index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
             </div>
             
@@ -1532,54 +1532,6 @@
                                             <i class="fas fa-calendar-check"></i> Add to Schedule
                                         </button>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Email Instructions -->
-                            <div class="email-instructions">
-                                <h4>How to Claim Your Benefits</h4>
-                                <p>To claim your benefits or submit requirements, please send the required information to our exhibition team:</p>
-                                
-                                <div class="email-box">
-                                    <div class="email-info">
-                                        <div class="email-info-item">
-                                            <div class="email-label">Email to:</div>
-                                            <div class="email-value">exhibitors@icsc2026.org</div>
-                                        </div>
-                                        <div class="email-info-item">
-                                            <div class="email-label">Subject:</div>
-                                            <div class="email-value">Exhibitor Benefit Claim - [Your Company Name]</div>
-                                        </div>
-                                        <div class="email-info-item">
-                                            <div class="email-label">CC:</div>
-                                            <div class="email-value">admin@icsc2026.org</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="email-template">
-                                        <strong>Email Template:</strong><br><br>
-                                        To: exhibitors@icsc2026.org<br>
-                                        CC: admin@icsc2026.org<br>
-                                        Subject: Exhibitor Benefit Claim - [Your Company Name]<br><br>
-                                        
-                                        Dear ICSC 2026 Exhibition Team,<br><br>
-                                        
-                                        I am writing to claim the following benefit from our Exhibitor Package:<br><br>
-                                        
-                                        <strong>Benefit:</strong> [e.g., Booth Setup, Staff Registration, etc.]<br>
-                                        <strong>Details:</strong> [Provide specific details, names, requirements, etc.]<br>
-                                        <strong>Attachments:</strong> [List any attached files]<br><br>
-                                        
-                                        Please confirm receipt and let me know if any additional information is required.<br><br>
-                                        
-                                        Best regards,<br>
-                                        [Your Name]<br>
-                                        [Your Company Name]
-                                    </div>
-                                    
-                                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="copyEmailTemplate()">
-                                        <i class="fas fa-copy"></i> Copy Email Template
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1917,7 +1869,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phone-number">Phone Number</label>
-                                    <input type="tel" id="phone-number" value="+1 (555) 123-4567" placeholder="Enter your phone number">
+                                    <input type="tel" id="phone-number" value="+2348103247323" placeholder="Enter your phone number">
                                 </div>
                                 <div class="form-group">
                                     <label for="contact-person">Contact Person</label>
@@ -2058,7 +2010,7 @@
                                     </div>
                                     <div class="contact-details">
                                         <h4>Email Support</h4>
-                                        <p>exhibitors@icsc2026.gov.ng</p>
+                                        <p>exhibitors@icsc.ohcsf.gov.ng</p>
                                         <p>Response within 2 hours</p>
                                     </div>
                                 </div>
@@ -4038,7 +3990,7 @@
         
         // Logout functionality
         document.addEventListener('DOMContentLoaded', () => {
-            const logoutLink = document.querySelector('.sidebar-menu a[href="Index.html"]');
+            const logoutLink = document.querySelector('.sidebar-menu a[href="index.html"]');
             if (logoutLink) {
                 logoutLink.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -4051,7 +4003,7 @@
                     alert('You have been logged out successfully.');
 
                     // Redirect to home/login page
-                    window.location.href = 'Index.html';
+                    window.location.href = 'index.html';
                 });
             }
         });

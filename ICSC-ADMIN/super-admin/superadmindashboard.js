@@ -2842,6 +2842,23 @@ function renderAttendeesTable(attendeesList) {
   allAttendeesTable.innerHTML = html;
 }
 
+let pendingAttendeesDataTable = null;
+
+function initializePendingAttendeesDataTable() {
+    const pendingAttendeesTableEl = pendingAttendeesTable?.closest('table') || document.querySelector('table:has(#pendingAttendeesTable)');
+    if (pendingAttendeesDataTable) {
+        pendingAttendeesDataTable.destroy();
+    }
+    if (pendingAttendeesTableEl && $.fn.dataTable) {
+        pendingAttendeesDataTable = $(pendingAttendeesTableEl).DataTable({
+            autoWidth: false,
+            pageLength: 10,
+            bDestroy: true,
+            retrieve: false
+        });
+    }
+}
+
 function renderPendingTable(pendingAttendees) {
     if (!pendingAttendeesTable) {
         console.warn('renderPendingTable: #pendingAttendeesTable element not found in DOM');
@@ -2852,6 +2869,7 @@ function renderPendingTable(pendingAttendees) {
 
     if (pendingAttendees.length === 0) {
         pendingAttendeesTable.innerHTML = '<tr><td colspan="7" style="text-align:center;">No pending attendees</td></tr>';
+        initializePendingAttendeesDataTable();
         return;
     }
 
@@ -2875,6 +2893,7 @@ function renderPendingTable(pendingAttendees) {
     });
 
     pendingAttendeesTable.innerHTML = html;
+    initializePendingAttendeesDataTable();
 }
 
 // Logout Functionality
@@ -4483,7 +4502,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Refresh button
     refreshBtn?.addEventListener('click', function(e) {
         e.preventDefault();
-        renderPackages();
+        fetchAndRenderPackages();
         showSuccessMessage('Packages refreshed!');
     });
 
@@ -4508,11 +4527,69 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(message);
     }
 
-    // Initial render
+    // Fetch real packages from API and render (falls back to sample data)
+    async function fetchAndRenderPackages() {
+        try {
+            const token = localStorage.getItem('accessToken') || '';
+            const res = await fetch(`${API_BASE_URL}/packages/event-partner-packages`, {
+                headers: {
+                    'Authorization': token ? `Bearer ${token}` : '',
+                    'Content-Type': 'application/json'
+                }
+            });
+            const result = await res.json();
+            const data = Array.isArray(result && result.data) ? result.data : [];
+
+            // Map API response to local package shape used by renderPackages()
+            packages = data.map(p => {
+                const title = p.title || p.slug || `Package ${p.id}`;
+                const slug = (p.slug || '').toLowerCase();
+                const type = slug.includes('platinum') || slug.includes('diamond') ? 'diamond'
+                            : slug.includes('gold') ? 'gold'
+                            : slug.includes('silver') ? 'silver' : 'bronze';
+                const features = Array.isArray(p.features) ? p.features : [];
+                const benefits = features.join('\n');
+                const maxAvailable = Number(p.total_slot || p.totalSlot || 0);
+                const remaining = Number(p.remaining_slot || p.remainingSlot || 0);
+                const currentUsed = Math.max(0, maxAvailable - remaining);
+
+                // crude detection for speaking/exhibit rights
+                const speakRights = features.some(f => /speak|keynote|speaking|speaker/i.test(f));
+                const speakingSlots = speakRights ? (features.join(' ').match(/(\d+)\s*mins?/i)?.[1] ? 1 : 1) : 0;
+                const exhibitRights = features.some(f => /exhibit|exhibition|booth/i.test(f));
+                const exhibitSlots = exhibitRights ? (p.exhibitSlots || 0) : 0;
+
+                return {
+                    id: p.id,
+                    name: title,
+                    type,
+                    price: Number(p.price || 0),
+                    benefits: benefits,
+                    maxAvailable: maxAvailable,
+                    currentUsed: currentUsed,
+                    speakRights: speakRights,
+                    speakingSlots: speakingSlots,
+                    exhibitRights: exhibitRights,
+                    exhibitSlots: exhibitSlots,
+                    status: remaining > 0 ? 'active' : 'full',
+                    whenFull: p.limitedText || p.whenFull || 'show_message',
+                    description: p.description || ''
+                };
+            });
+
+            renderPackages();
+        } catch (err) {
+            console.error('Error fetching packages from API, using local data:', err);
+            // fallback to rendering whatever is in `packages` (sample data)
+            renderPackages();
+        }
+    }
+
+    // Initial fetch/render on load
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderPackages);
+        document.addEventListener('DOMContentLoaded', fetchAndRenderPackages);
     } else {
-        renderPackages();
+        fetchAndRenderPackages();
     }
 
 })();
@@ -8073,8 +8150,6 @@ document.body.style.display = 'block';
                 <td>${price}</td>
                 <td>${size}</td>
                 <td><span class="status-badge ${statusClass}">${status}</span></td>
-                <td>${exhibitor}</td>
-                <td>${company}</td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn btn-success btn-sm view-booth-btn">View</button>
@@ -8306,12 +8381,31 @@ document.body.style.display = 'block';
                 };
             }
             
-            if (data.wednesday && Array.isArray(data.wednesday)) {
-                agendaData.wednesday = data.wednesday.map(transformItem);
+            // Support two possible response shapes:
+            // 1) { wednesday: [ {...}, {...} ], thursday: [ ... ] }
+            // 2) { wednesday: { "Main Hall": [...], "Room B": [...] }, thursday: { ... } }
+            function flattenDay(dayObj) {
+                if (!dayObj) return [];
+                if (Array.isArray(dayObj)) return dayObj.map(transformItem);
+                if (typeof dayObj === 'object') {
+                    const out = [];
+                    Object.keys(dayObj).forEach(venueKey => {
+                        const list = dayObj[venueKey];
+                        if (Array.isArray(list)) {
+                            list.forEach(it => {
+                                // ensure item has a venue/location when the API nests by venue
+                                if (!it.location && venueKey) it.location = venueKey;
+                                out.push(transformItem(it));
+                            });
+                        }
+                    });
+                    return out;
+                }
+                return [];
             }
-            if (data.thursday && Array.isArray(data.thursday)) {
-                agendaData.thursday = data.thursday.map(transformItem);
-            }
+
+            agendaData.wednesday = flattenDay(data.wednesday);
+            agendaData.thursday = flattenDay(data.thursday);
             
             // Create flat list for search/filter
             agendaList = [...agendaData.wednesday, ...agendaData.thursday];
@@ -8972,12 +9066,30 @@ document.body.style.display = 'block';
         return 'status-rejected';
     }
 
+    let exhibitorsDataTable = null;
+    
+    function initializeExhibitorsDataTable() {
+        const exhibitorsTableEl = document.getElementById('exhibitorsTable');
+        if (exhibitorsDataTable) {
+            exhibitorsDataTable.destroy();
+        }
+        if (exhibitorsTableEl && $.fn.dataTable) {
+            exhibitorsDataTable = $(exhibitorsTableEl).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
+    }
+    
     function renderExhibitors(list) {
         const exhibitorsBody = document.getElementById('exhibitors-table-body');
         if (!exhibitorsBody) return;
         exhibitorsBody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
             exhibitorsBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No exhibitors found.</td></tr>';
+            initializeExhibitorsDataTable();
             return;
         }
         list.forEach(ex => {
@@ -9008,6 +9120,7 @@ document.body.style.display = 'block';
             `;
             exhibitorsBody.appendChild(tr);
         });
+        initializeExhibitorsDataTable();
     }
 
     function updateStats(list) {
@@ -9070,13 +9183,29 @@ document.body.style.display = 'block';
             
             const res = await axios.post(endpoint, data, { headers });
             console.log('Added exhibitor:', res.data);
-            fetchExhibitors(); // Refresh the list
+            
+            // Close the add exhibitor modal
             closeModal('addExhibitorModal');
+            
             // Reset form
             document.getElementById('addExhibitorForm').reset();
+            
+            // Update success message and show modal
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.textContent = 'Exhibitor has been successfully created!';
+            }
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                successModal.style.display = 'flex';
+            }
+            
+            // Refresh the exhibitors list
+            fetchExhibitors();
         } catch (err) {
             console.error('Error adding exhibitor:', err);
-            alert('Failed to add exhibitor. Please try again.');
+            const errorMsg = err?.response?.data?.message || 'Failed to add exhibitor. Please try again.';
+            alert(errorMsg);
         }
     }
 
@@ -9101,6 +9230,7 @@ document.body.style.display = 'block';
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(form);
+            console.log('Form data:', formData);
             const data = Object.fromEntries(formData);
             addExhibitor(data);
         });
@@ -9135,10 +9265,12 @@ document.body.style.display = 'block';
 
     function renderPartners(list) {
         const tbody = document.querySelector('#partnersTable tbody');
+        const partnersTableEl = document.getElementById('partnersTable');
         if (!tbody) return;
         tbody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No partners found.</td></tr>';
+            initializePartnersDataTable(partnersTableEl);
             return;
         }
         list.forEach(partner => {
@@ -9159,6 +9291,22 @@ document.body.style.display = 'block';
             `;
             tbody.appendChild(tr);
         });
+        initializePartnersDataTable(partnersTableEl);
+    }
+
+    let partnersDataTable = null;
+    function initializePartnersDataTable(partnersTableEl) {
+        if (partnersDataTable) {
+            partnersDataTable.destroy();
+        }
+        if (partnersTableEl && $.fn.dataTable) {
+            partnersDataTable = $(partnersTableEl).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
     }
 
     function updatePartnerStats(list) {

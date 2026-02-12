@@ -1071,7 +1071,12 @@
                 display: none;
             }
         }
+        #pdf-viewer canvas {
+            width: 50000px;
+            height: 50000px;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 </head>
 <body>
     <!-- Fixed Header -->
@@ -1079,7 +1084,7 @@
     <header id="header">
         <div class="header-container">
             <div class="logo">
-                <a href="Index.html">
+                <a href="index.html">
                     <img src="icsc-logos.png" alt="International Civil Service Conference">
                 </a>
                 <div class="logo-text">
@@ -1182,10 +1187,12 @@
     <div class="package-container">
         <h3 class="text-center mb-4">Select Your Partnership Package</h3>
         <p class="text-center mb-4">Choose the partnership package that best fits your organization's goals. Click any package to begin registration.</p>
+        <div id="pdf-viewer"></div>
+        <a href="register-partner.html" target="_blank" class="btn">REGISTER NOW</a>
         
-        <div class="package-cards">
-            <div class="text-center">Loading packages...</div>
-        </div>
+        <!--<div class="package-cards">-->
+        <!--    <div class="text-center">Loading packages...</div>-->
+        <!--</div>-->
     </div>
 </div>
                 
@@ -1319,6 +1326,47 @@
 
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top"><i class="fas fa-chevron-up"></i></a>
+    
+    <script>
+    const pdfUrl = "ICSC Sponsor Packages.pdf";
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+    const container = document.getElementById("pdf-viewer");
+
+    pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            pdf.getPage(pageNum).then(page => {
+
+                const dpr = window.devicePixelRatio || 1;
+                const scale = window.innerWidth < 1024 ? 2.0 : 2.0;
+                const viewport = page.getViewport({ scale: scale * dpr });
+
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // 👇 STYLE AFTER creation
+                canvas.style.width = "100%";
+                canvas.style.height = "auto";
+                canvas.style.display = "block";
+                canvas.style.margin = "0 auto 30px";
+                canvas.style.maxWidth = "1200px";
+
+                container.appendChild(canvas);
+
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                });
+            });
+        }
+    });
+</script>
+
 
     <script>
         // Mobile Menu Toggle

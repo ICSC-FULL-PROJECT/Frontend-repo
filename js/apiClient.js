@@ -139,12 +139,17 @@
 		return getJSON(path);
 	}
 
+	async function getPartnerProfile() {
+		return getJSON('/partner/profile');
+	}
+
 	global.RegisterAPI = {
 		registerAttendee,
 		registerSpeaker,
 		registerExhibitor,
-		registerPartner
-		,getPackages
+		registerPartner,
+		getPackages,
+		getPartnerProfile // Add this line to expose the partner profile function
 	};
 
 	// Helper to fetch statistics

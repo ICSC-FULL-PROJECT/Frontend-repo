@@ -2,10 +2,12 @@
 <script>
 (function () {
     const boothsBody = document.getElementById('boothsTableBody');
+    const boothsTable = document.querySelector('#boothsTable');
     const totalEl = document.getElementById('totalExhibitors');
     const confirmedEl = document.getElementById('confirmedExhibitors');
     const pendingEl = document.getElementById('pendingExhibitors');
     const refreshBtn = document.getElementById('refreshExhibitorsBtn');
+    let boothsDataTable = null;
 
     function safeText(v) {
         return (v === null || v === undefined || v === '') ? '-' : String(v);
@@ -27,11 +29,26 @@
         return 'status-rejected';
     }
 
+    function initializeBoothsDataTable() {
+        if (boothsDataTable) {
+            boothsDataTable.destroy();
+        }
+        if (boothsTable && $.fn.dataTable) {
+            boothsDataTable = $(boothsTable).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
+    }
+
     function renderBooths(list) {
         if (!boothsBody) return;
         boothsBody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
             boothsBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No exhibitors found.</td></tr>';
+            initializeBoothsDataTable();
             return;
         }
         list.forEach(ex => {
@@ -66,6 +83,7 @@
             `;
             boothsBody.appendChild(tr);
         });
+        initializeBoothsDataTable();
     }
 
     function updateStats(list) {
@@ -124,6 +142,7 @@
     <script src="path/to/xlsx.full.min.js"></script>
 <script src="notification-attendance-system.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.css" />
 </head>
 <body style="display: none;" data-protected="super_admin">
     <!-- Super Admin Dashboard -->
@@ -148,8 +167,8 @@
                 <li><a href="#" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
                 <li><a href="#" data-tab="packages"><i class="fas fa-gem"></i> Packages</a></li>
                 <li><a href="#" data-tab="resources"><i class="fas fa-file-alt"></i> Resources</a></li>
-                 <li><a href="#" data-tab="bulk-approvals"><i class="fas fa-file-upload"></i> Bulk Approvals</a></li>
-                <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                 <!-- <li><a href="#" data-tab="bulk-approvals"><i class="fas fa-file-upload"></i> Bulk Approvals</a></li> -->
+                <!-- <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li> -->
                 <li><a href="#" id="superAdminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
 
             </ul>
@@ -867,17 +886,16 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="data-table">
+                        <table id="myTable" class="data-table">
                             <thead>
                                 <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Ministry</th>
-    <th>Job Title</th>
-    <th>Phone</th>
-    <th>Status</th>
-    <th>Actions</th>
-                                <!-- <th>Actions</th> -->
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Ministry</th>
+                                    <th>Job Title</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="allAttendeesTable">
@@ -944,7 +962,7 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="data-table">
+                        <table id="ministriesTable" class="data-table">
                             <thead>
                                 <tr>
                                     <th>Ministry Name</th>
@@ -953,54 +971,11 @@
                                     <th>Pending</th>
                                     <th>Approved</th>
                                     <th>Contact Person</th>
-                                    <th>Contact Email</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="ministriesTable">
-                                <tr data-id="1">
-                                    <td>Ministry of Finance</td>
-                                    <td>MOF</td>
-                                    <td>45</td>
-                                    <td>3</td>
-                                    <td>42</td>
-                                    <td>Permanent Secretary Finance</td>
-                                    <td>ps-finance@gov.ng</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm view-ministry-btn">View</button>
-                                            <button class="btn-accept">Edit</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-id="2">
-                                    <td>Ministry of Education</td>
-                                    <td>MOE</td>
-                                    <td>32</td>
-                                    <td>2</td>
-                                    <td>30</td>
-                                    <td>Permanent Secretary Education</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm view-ministry-btn">View</button>
-                                            <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-id="3">
-                                    <td>Ministry of Health</td>
-                                    <td>MOH</td>
-                                    <td>28</td>
-                                    <td>5</td>
-                                    <td>23</td>
-                                    <td>Permanent Secretary Health</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn btn-success btn-sm view-ministry-btn">View</button>
-                                            <button class="btn btn-warning btn-sm edit-ministry-btn">Edit</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="ministriesTableBody">
+                                <tr><td colspan="7">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1079,9 +1054,8 @@
                         <th>Booth ID</th>
                         <th>Location</th>
                         <th>Price (₦)</th>
+                        <th>Size</th>
                         <th>Status</th>
-                        <th>Exhibitor</th>
-                        <th>Company</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -1187,10 +1161,12 @@
 <script>
 (function () {
     const speakersBody = document.getElementById('speakersTableBody');
+    const speakersTableEl = document.querySelector('#speakersTable');
     const totalEl = document.getElementById('totalSpeakers');
     const confirmedEl = document.getElementById('confirmedSpeakers');
     const pendingEl = document.getElementById('pendingSpeakers');
     const refreshBtn = document.getElementById('refreshSpeakersBtn');
+    let speakersDataTable = null;
 
     function safeText(v) {
         return (v === null || v === undefined || v === '') ? '-' : String(v);
@@ -1204,11 +1180,26 @@
         return 'status-rejected';
     }
 
+    function initializeSpeakersDataTable() {
+        if (speakersDataTable) {
+            speakersDataTable.destroy();
+        }
+        if (speakersTableEl && $.fn.dataTable) {
+            speakersDataTable = $(speakersTableEl).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
+    }
+
     function renderSpeakers(list) {
         if (!speakersBody) return;
         speakersBody.innerHTML = '';
         if (!Array.isArray(list) || list.length === 0) {
             speakersBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">No speakers found.</td></tr>';
+            initializeSpeakersDataTable();
             return;
         }
         list.forEach(speaker => {
@@ -1237,6 +1228,7 @@
             `;
             speakersBody.appendChild(tr);
         });
+        initializeSpeakersDataTable();
     }
 
     function updateStats(list) {
@@ -1302,16 +1294,8 @@
         } catch (e) {
             return safeText(dateString);
         }
-    // }
-
-    // function statusClassFrom(status) {
-    //     if (!status) return 'status-pending';
-    //     const s = String(status).toLowerCase();
-    //     if (s === 'approved' || s === 'confirmed') return 'status-approved';
-    //     if (s === 'pending') return 'status-pending';
-    //     return 'status-rejected';
-    // }
     }
+
     function renderActivity(list) {
         if (!activityBody) return;
         activityBody.innerHTML = '';
@@ -1322,16 +1306,15 @@
         list.forEach(attendee => {
             const tr = document.createElement('tr');
             const action = 'Registration';
-            const participant = safeText(attendee.fullname);
-            const ministry = safeText(attendee.organization);
-            const dateTime = formatDate(attendee.createdAt);
+            const participant = safeText(attendee.fullname || attendee.name);
+            const ministry = safeText(attendee.organization || attendee.ministry);
+            const dateTime = formatDate(attendee.createdAt || attendee.created_at || attendee.registration_date);
            
             tr.innerHTML = `
                 <td>${action}</td>
                 <td>${participant}</td>
                 <td>${ministry}</td>
                 <td>${dateTime}</td>
-                
             `;
             activityBody.appendChild(tr);
         });
@@ -1350,10 +1333,10 @@
             if (!token) token = localStorage.getItem('accessToken') || null;
             const headers = { 'Content-Type': 'application/json' };
             if (token) headers['Authorization'] = 'Bearer ' + token;
-            res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
+            const res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
             const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
             // Sort by date descending and take first 4
-            const sorted = list.sort((a, b) => new Date(b.created_at || b.registration_date || 0) - new Date(a.created_at || a.registration_date || 0));
+            const sorted = list.sort((a, b) => new Date(b.created_at || b.registration_date || b.createdAt || 0) - new Date(a.created_at || a.registration_date || a.createdAt || 0));
             const recent = sorted.slice(0, 4);
             renderActivity(recent);
         } catch (err) {
@@ -1369,6 +1352,9 @@
         });
     }
 
+    // Expose for manual refresh elsewhere
+    window.fetchRecentActivity = fetchRecentActivity;
+
     // Fetch once DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', fetchRecentActivity);
@@ -1377,6 +1363,260 @@
     }
 })();
 </script>
+
+<!-- Fetch and render All Participants table -->
+<script>
+(function(){
+    const tbody = document.getElementById('allAttendeesTable');
+    const table = document.getElementById('allAttendeesTable')?.closest('table') || document.querySelector('table:has(#allAttendeesTable)');
+    const searchInput = document.getElementById('searchAttendees');
+    const filterMinistry = document.getElementById('filterMinistry');
+    const filterStatus = document.getElementById('filterStatus');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const exportBtn = document.getElementById('exportAttendeesBtn');
+    let attendeesDataTable = null;
+
+    function safeText(v){ return (v === null || v === undefined || v === '') ? '-' : String(v); }
+
+    function initializeDataTable(){
+        if (attendeesDataTable) {
+            attendeesDataTable.destroy();
+        }
+        if (table && $.fn.dataTable) {
+            attendeesDataTable = $(table).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
+    }
+
+    async function refreshAttendeesTable(){
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="7">Loading attendees...</td></tr>';
+        try{
+            let token = null;
+            try{ const raw = localStorage.getItem('authUser'); if (raw) { const a = JSON.parse(raw); token = a?.token || token; } } catch(e){}
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            const res = await axios.get(`${API_BASE_URL}/admin/attendees`, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            renderAttendees(list);
+        } catch(err){
+            console.error('Failed to load attendees', err);
+            tbody.innerHTML = '<tr><td colspan="7" style="color:#c00;text-align:center;">Failed to load attendees.</td></tr>';
+        }
+    }
+
+    function renderAttendees(list){
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0){
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No attendees found.</td></tr>';
+            initializeDataTable();
+            return;
+        }
+
+        list.forEach(a => {
+            const id = a.id || a._id || a.attendeeId || '';
+            const name = safeText(a.fullname || a.name || ((a.first_name||'') + ' ' + (a.last_name||'')));
+            const email = safeText(a.email);
+            const ministry = safeText(a.organization || a.ministry || a.department);
+            const job = safeText(a.job_title || a.jobTitle || a.title);
+            const phone = safeText(a.phone || a.contactPhone || a.mobile);
+            const status = safeText(a.status || a.approval_status || a.registration_status || 'Pending');
+
+            const tr = document.createElement('tr');
+            tr.dataset.id = id;
+            tr.innerHTML = `
+                <td>${name}</td>
+                <td>${email}</td>
+                <td>${ministry}</td>
+                <td>${job}</td>
+                <td>${phone}</td>
+                <td>${status}</td>
+                <td>
+                    <button class="btn btn-secondary" onclick="viewAttendee('${encodeURIComponent(id)}')">View</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Reinitialize DataTable after rendering
+        initializeDataTable();
+    }
+
+    // Make available globally so other code can call it
+    window.refreshAttendeesTable = refreshAttendeesTable;
+
+    // View attendee details (fetch by id and populate modal)
+    window.viewAttendee = function(attendeeId){
+        try{ attendeeId = decodeURIComponent(attendeeId); } catch(e){}
+        const modal = document.getElementById('viewAttendeeModal');
+        if (!modal) { alert('View modal not found'); return; }
+
+        (async function(){
+            try{
+                let token = null;
+                try{ const raw = localStorage.getItem('authUser'); if (raw){ const a = JSON.parse(raw); token = a?.token || token; } } catch(e){}
+                if (!token) token = localStorage.getItem('accessToken') || null;
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = 'Bearer ' + token;
+                const resp = await axios.get(`${API_BASE_URL}/admin/attendees/${attendeeId}`, { headers });
+                const a = (resp && resp.data && resp.data.data) ? resp.data.data : resp.data;
+
+                document.getElementById('viewName').textContent = a?.fullname || a?.name || ((a?.first_name||'') + ' ' + (a?.last_name||'')) || '-';
+                document.getElementById('viewEmail').textContent = a?.email || '-';
+                document.getElementById('viewPhone').textContent = a?.phone || a?.contactPhone || '-';
+                document.getElementById('viewJobTitle').textContent = a?.job_title || a?.jobTitle || '-';
+
+                modal.style.display = 'flex';
+            } catch(err){
+                console.error('Failed to load attendee details', err);
+                alert('Failed to load attendee details.');
+            }
+        })();
+    };
+
+    // Client-side filtering and search
+    function applyFilters(){
+        if (!tbody) return;
+        const q = (searchInput && searchInput.value || '').toLowerCase().trim();
+        const ministryF = filterMinistry ? filterMinistry.value : '';
+        const statusF = filterStatus ? filterStatus.value : '';
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach(r => {
+            if (!r.dataset.id) { r.style.display = ''; return; }
+            const cells = r.children;
+            const text = `${cells[0].textContent} ${cells[1].textContent} ${cells[2].textContent}`.toLowerCase();
+            const matchesQ = q === '' || text.indexOf(q) !== -1;
+            const matchesMin = ministryF === '' || (cells[2].textContent || '').toLowerCase().indexOf(ministryF.toLowerCase()) !== -1;
+            const matchesStatus = statusF === '' || (cells[5].textContent || '').toLowerCase() === statusF.toLowerCase();
+            r.style.display = (matchesQ && matchesMin && matchesStatus) ? '' : 'none';
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (filterMinistry) filterMinistry.addEventListener('change', applyFilters);
+    if (filterStatus) filterStatus.addEventListener('change', applyFilters);
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', function(){ if (searchInput) searchInput.value=''; if (filterMinistry) filterMinistry.value=''; if (filterStatus) filterStatus.value=''; applyFilters(); });
+
+    if (exportBtn) exportBtn.addEventListener('click', function(){
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => r.style.display !== 'none' && r.dataset.id);
+        if (rows.length === 0) { alert('No attendees to export'); return; }
+        let csv = 'Name,Email,Ministry,Job Title,Phone,Status\n';
+        rows.forEach(r => {
+            const cells = Array.from(r.children).slice(0,6).map(c => '"' + (c.textContent || '').replace(/"/g,'""') + '"');
+            csv += cells.join(',') + '\n';
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'attendees.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', function(){ try { refreshAttendeesTable(); } catch(e){ console.error(e); } });
+
+})();
+</script>
+
+<!-- Fetch and render Participating Ministries table -->
+<script>
+(function(){
+    const tbody = document.getElementById('ministriesTableBody');
+    const table = document.getElementById('ministriesTable');
+    const addMinistryBtn = document.getElementById('addMinistryBtn');
+    let ministriesDataTable = null;
+
+    function safeText(v){ return (v === null || v === undefined || v === '') ? '-' : String(v); }
+
+    function initializeMinistriesDataTable(){
+        if (ministriesDataTable) {
+            ministriesDataTable.destroy();
+        }
+        if (table && $.fn.dataTable) {
+            ministriesDataTable = $(table).DataTable({
+                autoWidth: false,
+                pageLength: 10,
+                bDestroy: true,
+                retrieve: false
+            });
+        }
+    }
+
+    async function fetchMinistries(){
+        if (!tbody) return;
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading ministries...</td></tr>';
+        try{
+            let token = null;
+            try{ const raw = localStorage.getItem('authUser'); if (raw) { const a = JSON.parse(raw); token = a?.token || token; } } catch(e){}
+            if (!token) token = localStorage.getItem('accessToken') || null;
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            const res = await axios.get(`${API_BASE_URL}/admin/users`, { headers });
+            const list = (res && res.data && res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+            renderMinistries(list);
+        } catch(err){
+            console.error('Failed to load ministries', err);
+            tbody.innerHTML = '<tr><td colspan="7" style="color:#c00;text-align:center;">Failed to load ministries.</td></tr>';
+        }
+    }
+
+    function renderMinistries(list){
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0){
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No ministries found.</td></tr>';
+            initializeMinistriesDataTable();
+            return;
+        }
+
+        list.forEach(ministry => {
+            const id = ministry.id || ministry._id || '';
+            const ministryName = safeText(ministry.organization || ministry.ministry_name || ministry.name || '-');
+            const code = safeText(ministry.organization_short_code || ministry.ministry_code || '-');
+            const participantCount = safeText(ministry.participant_count || ministry.total_users || '-');
+            const pending = safeText(ministry.pending_count || ministry.pending_users || '0');
+            const approved = safeText(ministry.approved_count || ministry.approved_users || '0');
+            const contactPerson = safeText(ministry.contact_person || ministry.contact_name || ministry.primary_contact || '-');
+
+            const tr = document.createElement('tr');
+            tr.dataset.id = id;
+            tr.innerHTML = `
+                <td>${ministryName}</td>
+                <td>${code}</td>
+                <td>${participantCount}</td>
+                <td>${pending}</td>
+                <td>${approved}</td>
+                <td>${contactPerson}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-info btn-sm">View</button>
+                        <button class="btn btn-warning btn-sm">Edit</button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // Reinitialize DataTable after rendering
+        initializeMinistriesDataTable();
+    }
+
+    // Expose for manual refresh elsewhere
+    window.fetchMinistries = fetchMinistries;
+
+    // Initial load on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchMinistries);
+    } else {
+        fetchMinistries();
+    }
+})();
+</script>
+
 
 <!-- Exhibitors Tab -->
 <div id="exhibitors" class="tab-content">
@@ -1972,53 +2212,53 @@
                 </select>
                 <select id="filterBulkMinistry" class="form-control filter-select">
                     <option value="">All Ministries</option>
-<option value="">All Ministries</option>
-   <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
-<option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
-<option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
-<option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
-<option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
-<option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
-<option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
-<option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
-<option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
-<option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
-<option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
-<option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
-<option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
-<option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
-<option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
-<option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
-<option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
-<option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
-<option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
-<option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
-<option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
-<option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
-<option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
-<option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
-<option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
-<option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
-<option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
-<option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
-<option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
-<option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
-<option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
-<option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
-<option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
-<option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
-<option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
-<option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
-<option value="STATE HOUSE">STATE HOUSE</option>
-</select>
+                <option value="">All Ministries</option>
+                <option value="FEDERAL MINISTRY OF JUSTICE">FEDERAL MINISTRY OF JUSTICE</option>
+                <option value="MINISTRY OF DEFENCE">MINISTRY OF DEFENCE</option>
+                <option value="FEDERAL MINISTRY OF EDUCATION">FEDERAL MINISTRY OF EDUCATION</option>
+                <option value="MINISTRY OF INTERIOR">MINISTRY OF INTERIOR</option>
+                <option value="FEDERAL MINISTRY OF POWER">FEDERAL MINISTRY OF POWER</option>
+                <option value="FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT">FEDERAL MINISTRY OF HOUSING & URBAN DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY">FEDERAL MINISTRY OF AGRICULTURE AND FOOD SECURITY</option>
+                <option value="FEDERAL MINISTRY OF WORKS">FEDERAL MINISTRY OF WORKS</option>
+                <option value="FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT">FEDERAL MINISTRY OF AVIATION & AEROSPACE DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE">FEDERAL MINISTRY OF HEALTH AND SOCIAL WELFARE</option>
+                <option value="FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT">FEDERAL MINISTRY OF SOLID MINERALS DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF FINANCE">FEDERAL MINISTRY OF FINANCE</option>
+                <option value="FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY">FEDERAL MINISTRY OF COMMUNICATIONS, INNOVATION & DIGITAL ECONOMY</option>
+                <option value="FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION">FEDERAL MINISTRY OF HUMANITARIAN AFFAIRS AND POVERTY REDUCTION</option>
+                <option value="FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY">FEDERAL MINISTRY OF INNOVATION, SCIENCE & TECHNOLOGY</option>
+                <option value="FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION">FEDERAL MINISTRY OF WATER RESOURCES AND SANITATION</option>
+                <option value="FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY">FEDERAL MINISTRY OF MARINE AND BLUE ECONOMY</option>
+                <option value="FEDERAL MINISTRY OF ENVIRONMENT">FEDERAL MINISTRY OF ENVIRONMENT</option>
+                <option value="MINISTRY OF REGIONAL DEVELOPMENT">MINISTRY OF REGIONAL DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT">FEDERAL MINISTRY OF INDUSTRY TRADE AND INVESTMENT</option>
+                <option value="MINISTRY OF PETROLEUM RESOURCES">MINISTRY OF PETROLEUM RESOURCES</option>
+                <option value="FEDERAL MINISTRY OF YOUTH DEVELOPMENT">FEDERAL MINISTRY OF YOUTH DEVELOPMENT</option>
+                <option value="MINISTRY OF FOREIGN AFFAIRS">MINISTRY OF FOREIGN AFFAIRS</option>
+                <option value="FEDERAL MINISTRY OF WOMEN AFFAIRS">FEDERAL MINISTRY OF WOMEN AFFAIRS</option>
+                <option value="FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT">FEDERAL MINISTRY OF LIVESTOCK DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF STEEL DEVELOPMENT">FEDERAL MINISTRY OF STEEL DEVELOPMENT</option>
+                <option value="FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING">FEDERAL MINISTRY OF BUDGET AND ECONOMIC PLANNING</option>
+                <option value="FEDERAL MINISTRY OF TRANSPORTATION">FEDERAL MINISTRY OF TRANSPORTATION</option>
+                <option value="FEDERAL MINISTRY OF POLICE AFFAIRS">FEDERAL MINISTRY OF POLICE AFFAIRS</option>
+                <option value="FEDERAL MINISTRY OF LABOUR & EMPLOYMENT">FEDERAL MINISTRY OF LABOUR & EMPLOYMENT</option>
+                <option value="FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS">FEDERAL MINISTRY OF SPECIAL DUTIES & INTER-GOVERNMENTAL AFFAIRS</option>
+                <option value="FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY">FEDERAL MINISTRY OF ARTS, CULTURE, TOURISM & CREATIVE ECONOMY</option>
+                <option value="FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION">FEDERAL MINISTRY OF INFORMATION & NATIONAL ORIENTATION</option>
+                <option value="ECOLOGICAL PROJECT OFFICE (OSGF)">ECOLOGICAL PROJECT OFFICE (OSGF)</option>
+                <option value="CABINET AFFAIRS OFFICE (OSGF)">CABINET AFFAIRS OFFICE (OSGF)</option>
+                <option value="GENERAL SERVICES OFFICE (OSGF)">GENERAL SERVICES OFFICE (OSGF)</option>
+                <option value="ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)">ECONOMIC & POLITICAL AFFAIRS OFFICE (OSGF)</option>
+                <option value="SPECIAL SERVICE OFFICE (OSGF)">SPECIAL SERVICE OFFICE (OSGF)</option>
+                <option value="SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)">SERVICE POLICIES & STRATEGIES OFFICE (OHCSF)</option>
+                <option value="CAREER MANAGEMENT OFFICE (OHCSF)">CAREER MANAGEMENT OFFICE (OHCSF)</option>
+                <option value="SPECIAL DUTIES OFFICE (OHCSF)">SPECIAL DUTIES OFFICE (OHCSF)</option>
+                <option value="COMMON SERVICE OFFICE(OHCSF)">COMMON SERVICE OFFICE(OHCSF)</option>
+                <option value="SERVICE WELFARE OFFICE (OHCSF)">SERVICE WELFARE OFFICE (OHCSF)</option>
+                <option value="FEDERAL CIVIL SERVICE COMMISSION">FEDERAL CIVIL SERVICE COMMISSION</option>
+                <option value="STATE HOUSE">STATE HOUSE</option>
+                </select>
                 <button class="btn btn-secondary" id="clearBulkFiltersBtn">Clear Filters</button>
             </div>
         </div>
@@ -2093,55 +2333,6 @@
                                 <option value="show_message">Show "Full" message</option>
                             </select>
                         </div>
-                   
-
-                    <!-- <div class="form-row">
-                        <div class="form-group">
-                            <label for="speakerCap">Speaker Maximum</label>
-                            <input type="number" id="speakerCap" class="form-control" min="0" placeholder="Enter maximum speakers">
-                            <small>Set to 0 for unlimited</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="speakerCapAction">When Cap is Reached</label>
-                            <select id="speakerCapAction" class="form-control">
-                                <option value="hide">Hide speaker application</option>
-                                <option value="disable">Disable speaker application</option>
-                                <option value="show_message">Show "Closed" message</option>
-                            </select>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="form-row">
-                        <div class="form-group">
-                            <label for="exhibitorCap">Exhibitor Maximum</label>
-                            <input type="number" id="exhibitorCap" class="form-control" min="0" placeholder="Enter maximum exhibitors">
-                            <small>Set to 0 for unlimited</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="exhibitorCapAction">When Cap is Reached</label>
-                            <select id="exhibitorCapAction" class="form-control">
-                                <option value="hide">Hide exhibitor registration</option>
-                                <option value="disable">Disable exhibitor registration</option>
-                                <option value="show_message">Show "Booths Full" message</option>
-                            </select>
-                        </div>
-                    </div> -->
-                    
-                    <!-- <div class="form-row">
-                        <div class="form-group">
-                            <label for="partnerCap">Partner Maximum</label>
-                            <input type="number" id="partnerCap" class="form-control" min="0" placeholder="Enter maximum partners">
-                            <small>Set to 0 for unlimited</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="partnerCapAction">When Cap is Reached</label>
-                            <select id="partnerCapAction" class="form-control">
-                                <option value="hide">Hide partnership form</option>
-                                <option value="disable">Disable partnership form</option>
-                                <option value="show_message">Show "Partnerships Full" message</option>
-                            </select>
-                        </div>
-                    </div> -->
                 </div>
 
                   <!-- Global Cap Settings -->
@@ -2152,84 +2343,13 @@
                             <small>This message will be displayed when registration caps are reached</small>
                         </div>
                     </div>
-
-                    <!-- Enable/Disable All Registration -->
-                    <!-- <div class="form-row">
-                        <div class="form-group">
-                            <label for="registrationStatus">Registration Status</label>
-                            <select id="registrationStatus" class="form-control">
-                                <option value="open" selected>Open for Registration</option>
-                                <option value="closed">Closed for Registration</option>
-                                <option value="invite_only">Invite Only</option>
-                                <option value="early_bird">Early Bird Registration Only</option>
-                            </select>
-                        </div>
-                    </div> -->
                 </div>
-
-                <!-- <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="resetCapsBtn">
-                        <i class="fas fa-undo"></i> Reset All Caps
-                    </button>
-                    <button type="submit" class="btn">
-                        <i class="fas fa-save"></i> Save Registration Caps
-                    </button> -->
                 </div>
 
                     
 <!-- Partnership Package Management Section -->
 <div class="settings-section">
-    <!-- <div class="section-header">
-        <h3><i class="fas fa-handshake"></i> Partnership Package Management</h3>
-        <p>Configure Diamond, Gold, Silver, and Bronze partnership packages</p>
-    </div> -->
-
-    <!-- Package Statistics Overview -->
-    <!-- <div class="package-stats-overview">
-        <h4>Current Package Utilization</h4>
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon diamond">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="diamondUtilization">0/0</h3>
-                    <p>Diamond Partners</p>
-                    <small><span id="diamondPercentage">0%</span> utilized</small>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon gold">
-                    <i class="fas fa-medal"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="goldUtilization">0/0</h3>
-                    <p>Gold Partners</p>
-                    <small><span id="goldPercentage">0%</span> utilized</small>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon silver">
-                    <i class="fas fa-award"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="silverUtilization">0/0</h3>
-                    <p>Silver Partners</p>
-                    <small><span id="silverPercentage">0%</span> utilized</small>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bronze">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stat-info">
-                    <h3 id="bronzeUtilization">0/0</h3>
-                    <p>Bronze Partners</p>
-                    <small><span id="bronzePercentage">0%</span> utilized</small>
-                </div>
-            </div>
-        </div>
-    </div> -->
+    
 </div>
 
         <!-- System Configuration -->
@@ -2245,11 +2365,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="systemEmail">System Email</label>
-                            <input type="email" id="systemEmail" class="form-control" placeholder="system@icsc2026.gov.ng">
+                            <input type="email" id="systemEmail" class="form-control" placeholder="system@icsc.ohcsf.gov.ng">
                         </div>
                         <div class="form-group">
                             <label for="adminEmail">Admin Notification Email</label>
-                            <input type="email" id="adminEmail" class="form-control" placeholder="admin@icsc2026.gov.ng">
+                            <input type="email" id="adminEmail" class="form-control" placeholder="admin@icsc.ohcsf.gov.ng">
                         </div>
                     </div>
 
@@ -3492,6 +3612,8 @@
     </div>
 </div>
 
+
+
 <script>
 // Function to generate a random secure password for the Admin
 function generatePassword() {
@@ -3979,7 +4101,7 @@ function generatePassword() {
                <div class="form-row">
     <div class="form-group">
         <label for="exhibitorPrefix">Category *</label>
-        <select id="exhibitorPrefix" class="form-control" required>
+        <select id="exhibitorPrefix" name="category" class="form-control" required>
             <option value="">Select Type</option>
             <option>Company</option>
             <option>Organization</option>
@@ -3991,44 +4113,44 @@ function generatePassword() {
 
     <div class="form-group">
         <label for="exhibitorName">Company / Organisation Name</label>
-        <input type="text" id="exhibitorName" class="form-control" placeholder="Enter name" required>
+        <input type="text" id="exhibitorName" name="company_name" class="form-control" placeholder="Enter name" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
         <label for="exhibitorContactName">Contact Person Name </label>
-        <input type="text" id="exhibitorContactName" class="form-control" placeholder="Enter contact name" required>
+        <input type="text" id="exhibitorContactName" name="contact_person" class="form-control" placeholder="Enter contact name" required>
     </div>
 
     <div class="form-group">
         <label for="exhibitorContactEmail">Contact Email</label>
-        <input type="email" id="exhibitorContactEmail" class="form-control" placeholder="Enter contact email" required>
+        <input type="email" id="exhibitorContactEmail" name="contact_email" class="form-control" placeholder="Enter contact email" required>
     </div>
 </div>
 
 <div class="form-row">
     <div class="form-group">
         <label for="exhibitorContactPhone">Contact Phone Number</label>
-        <input type="tel" id="exhibitorContactPhone" class="form-control" placeholder="Enter contact phone" >
+        <input type="tel" id="exhibitorContactPhone" name="contact_phone" class="form-control" placeholder="Enter contact phone" >
     </div>
 
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="exhibitionTitle">Exhibition Title *</label>
-                        <input type="text" id="exhibitionTitle" class="form-control" placeholder="Enter exhibition title">
+                        <input type="text" id="exhibitionTitle" name="exhibition_title" class="form-control" placeholder="Enter exhibition title">
                     </div>
                     <div class="form-group">
                         <label for="exhibitionDescription">Description</label>
-                        <textarea id="exhibitionDescription" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
+                        <textarea id="exhibitionDescription" name="description" class="form-control" placeholder="Describe the exhibition" rows="3"></textarea>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="exhibitorBooth">Booth Assignment </label>
-                        <select id="exhibitorBooth" class="form-control">
+                        <select id="exhibitorBooth" name="booth" class="form-control">
                             <option value="">Select Booth</option>
                             <option value="B001">B001 - Main Hall A1</option>
                             <option value="B002">B002 - Main Hall A2</option>
@@ -4041,7 +4163,7 @@ function generatePassword() {
                     </div>
                     <div class="form-group">
                         <label for="exhibitionDay">Exhibition Day *</label>
-                        <select id="exhibitionDay" class="form-control">
+                        <select id="exhibitionDay" name="exhibition_day" class="form-control">
                             <option value="">Select Day</option>
                             <option value="wednesday">Wednesday 25 June 2026</option>
                             <option value="thursday">Thursday 26 June 2026</option>
@@ -4053,10 +4175,10 @@ function generatePassword() {
                 <div class="form-row">
                     <div class="form-group">
                         <label for="exhibitorStatus">Status</label>
-                        <select id="exhibitorStatus" class="form-control">
-                            <option value="pending">Pending</option>
-                            <option value="confirmed" selected>Confirmed</option>
-                            <option value="rejected">Rejected</option>
+                        <select id="exhibitorStatus" name="status" class="form-control">
+                            <option value="Pending">Pending</option>
+                            <option value="Reserved" selected>Confirmed</option>
+                            <option value="Rejected">Rejected</option>
                         </select>
                     </div>
                 </div>
@@ -4064,7 +4186,7 @@ function generatePassword() {
                 <div class="form-row">
                     <div class="form-group">
                         <label for="paymentStatus">Payment Status</label>
-                        <select id="paymentStatus" class="form-control">
+                        <select id="paymentStatus" name="payment_status" class="form-control">
                             <option value="pending">Pending</option>
                             <option value="paid" selected>Paid</option>
                             <option value="overdue">Overdue</option>
@@ -4072,7 +4194,7 @@ function generatePassword() {
                     </div>
                     <div class="form-group">
                         <label for="exhibitorRemarks">Remarks</label>
-                        <textarea id="exhibitorRemarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
+                        <textarea id="exhibitorRemarks" name="remarks" class="form-control" placeholder="Any additional remarks" rows="2"></textarea>
                     </div>
                 </div>
 
@@ -5172,22 +5294,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to submit booth data to backend
 async function submitBoothData(formData) {
+    const submitBtn = document.querySelector('#addBoothForm button[type="submit"]');
+    const origText = submitBtn ? submitBtn.textContent : 'Add Booth';
+    
     try {
-        // BACKEND INTEGRATION: Replace with actual API call
-        console.log('Booth data submitted:', formData);
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Adding...';
+        }
         
-        // Show success message
-        showSuccessMessage('Booth has been successfully added!');
+        // Prepare payload for the API
+        const payload = {
+            booth_number: formData.id,
+            location: formData.location,
+            price: parseFloat(formData.price),
+            booth_size: formData.size,
+            status: formData.status,
+            features: formData.features,
+        };
         
-        // Close modal
-        document.getElementById('addBoothModal').style.display = 'none';
+        let res;
+        if (window.apiClient) {
+            res = await window.apiClient.post('/admin/create-booth', payload);
+        } else {
+            const token = localStorage.getItem('accessToken') || 
+                         (localStorage.getItem('authUser') ? JSON.parse(localStorage.getItem('authUser')).token : null);
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+            
+            const API_BASE = window.API_BASE_URL || 'http://localhost:9100/api/v1';
+            res = await axios.post(`${API_BASE}/admin/create-booth`, payload, { headers });
+        }
         
-        // Refresh booths table
-        refreshBoothsTable();
+        if (res && (res.status === 200 || res.status === 201)) {
+            // Close add booth modal
+            document.getElementById('addBoothModal').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('addBoothForm').reset();
+            
+            // Update success message and show modal
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.textContent = 'Booth has been successfully created!';
+            }
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                successModal.style.display = 'flex';
+            }
+            
+            // Refresh booths table if function exists
+            if (typeof window.fetchBooths === 'function') {
+                window.fetchBooths();
+            }
+        } else {
+            const msg = res?.data?.message || 'Failed to add booth';
+            throw new Error(msg);
+        }
         
     } catch (error) {
+        const msg = error?.response?.data?.message || error.message || 'Error adding booth. Please try again.';
+        toastr.error(msg);
         console.error('Error submitting booth data:', error);
-        alert('Error adding booth. Please try again.');
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = origText;
+        }
     }
 }
 
@@ -7448,6 +7621,81 @@ function refreshPartnersTable() {
             document.getElementById('csvUpload').value = '';
             selectedCsvFile = null;
         }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
+
+    <script>
+        $(document).ready(async function () {
+            try {
+                // Ensure attendees are loaded first (our refreshAttendeesTable is exposed globally)
+                if (typeof window.refreshAttendeesTable === 'function') {
+                    await window.refreshAttendeesTable();
+                }
+
+                // Initialize or reinitialize DataTable safely
+                if ($.fn && $.fn.DataTable) {
+                    if ($.fn.dataTable && $.fn.dataTable.isDataTable && $.fn.dataTable.isDataTable('#myTable')) {
+                        $('#myTable').DataTable().destroy();
+                    }
+                    $('#myTable').DataTable();
+                }
+            } catch (e) {
+                console.error('Failed to initialize DataTable for #myTable', e);
+            }
+
+            try {
+                // Ensure attendees are loaded first (our refreshAttendeesTable is exposed globally)
+                if (typeof window.refreshAttendeesTable === 'function') {
+                    await window.refreshAttendeesTable();
+                }
+
+                // Initialize or reinitialize DataTable safely
+                if ($.fn && $.fn.DataTable) {
+                    if ($.fn.dataTable && $.fn.dataTable.isDataTable && $.fn.dataTable.isDataTable('#ministriesTable')) {
+                        $('#ministriesTable').DataTable().destroy();
+                    }
+                    $('#ministriesTable').DataTable();
+                }
+            } catch (e) {
+                console.error('Failed to initialize DataTable for #ministriesTable', e);
+            }
+
+            try {
+                // Ensure attendees are loaded first (our refreshAttendeesTable is exposed globally)
+                if (typeof window.refreshAttendeesTable === 'function') {
+                    await window.refreshAttendeesTable();
+                }
+
+                // Initialize or reinitialize DataTable safely
+                if ($.fn && $.fn.DataTable) {
+                    if ($.fn.dataTable && $.fn.dataTable.isDataTable && $.fn.dataTable.isDataTable('#boothsTable')) {
+                        $('#boothsTable').DataTable().destroy();
+                    }
+                    $('#boothsTable').DataTable();
+                }
+            } catch (e) {
+                console.error('Failed to initialize DataTable for #boothsTable', e);
+            }
+
+            try {
+                // Ensure attendees are loaded first (our refreshAttendeesTable is exposed globally)
+                if (typeof window.refreshAttendeesTable === 'function') {
+                    await window.refreshAttendeesTable();
+                }
+
+                // Initialize or reinitialize DataTable safely
+                if ($.fn && $.fn.DataTable) {
+                    if ($.fn.dataTable && $.fn.dataTable.isDataTable && $.fn.dataTable.isDataTable('#speakersTable')) {
+                        $('#speakersTable').DataTable().destroy();
+                    }
+                    $('#speakersTable').DataTable();
+                }
+            } catch (e) {
+                console.error('Failed to initialize DataTable for #speakersTable', e);
+            }
+        });
     </script>
 
     <script src="../../js/auth.js"></script>
